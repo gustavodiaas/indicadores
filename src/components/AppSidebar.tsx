@@ -22,7 +22,8 @@ interface Props {
 
 export function AppSidebar({ active, onSelect }: Props) {
   return (
-    <aside className="w-64 min-h-screen bg-sidebar border-r border-sidebar-border flex flex-col shrink-0 transition-all duration-300">
+    // A mágica acontece aqui: 'print:hidden' garante que a sidebar suma no PDF
+    <aside className="print:hidden w-64 min-h-screen bg-sidebar border-r border-sidebar-border flex flex-col shrink-0 transition-all duration-300">
       
       {/* Header da Sidebar - Branding Premium */}
       <div className="px-6 py-6 border-b border-sidebar-border flex items-center gap-3">
