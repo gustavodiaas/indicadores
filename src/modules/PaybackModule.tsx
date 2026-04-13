@@ -30,11 +30,10 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
     onChange({ valorConsultoria: valor });
   };
 
-  // Cálculos visuais para exibir no laudo o "Custo Total por Mês" antes de aplicar a % de dedicação
-  const encI = data.encargosInicial > 10 ? 1 + (data.encargosInicial / 100) : data.encargosInicial;
+  const encI = data.tipoSalario === "bruto" ? 1 : (data.encargosInicial > 10 ? 1 + (data.encargosInicial / 100) : data.encargosInicial || 1);
   const custoTotalI = data.salarioBaseInicial * encI * data.colaboradoresInicial;
   
-  const encF = data.encargosFinal > 10 ? 1 + (data.encargosFinal / 100) : data.encargosFinal;
+  const encF = data.tipoSalario === "bruto" ? 1 : (data.encargosFinal > 10 ? 1 + (data.encargosFinal / 100) : data.encargosFinal || 1);
   const custoTotalF = data.salarioBaseFinal * encF * data.colaboradoresFinal;
 
   return (
@@ -43,20 +42,37 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
       {/* Formulários (60%) */}
       <div className="w-[60%] grid grid-cols-2 gap-x-8 gap-y-6 content-start">
         
+        {/* Toggle Estratégico de Encargos */}
+        <div className="col-span-2 p-4 bg-blue-50 border border-blue-100 rounded-lg flex items-center justify-between shadow-sm">
+          <span className="text-sm font-semibold text-blue-900">Como você deseja calcular a folha de pagamento?</span>
+          <select 
+            className="h-10 bg-white border border-blue-200 text-sm shadow-sm rounded-md px-3 outline-none focus:ring-blue-600 font-medium"
+            value={data.tipoSalario || "encargos"}
+            onChange={e => onChange({ tipoSalario: e.target.value as "bruto" | "encargos" })}
+          >
+            <option value="encargos">Salário Base + Encargos</option>
+            <option value="bruto">Apenas Salário Bruto</option>
+          </select>
+        </div>
+
         <div className="space-y-4">
           <h3 className="font-semibold text-slate-800 border-b pb-2">Estado Inicial (T1)</h3>
-          <InputField label="Salário Base (R$)" value={data.salarioBaseInicial} onChange={v => onChange({ salarioBaseInicial: Number(v) || 0 })} />
-          <InputField label="Encargos (Mult/%)" value={data.encargosInicial} onChange={v => onChange({ encargosInicial: Number(v) || 0 })} />
-          <InputField label="Nº de Colaboradores" value={data.colaboradoresInicial} onChange={v => onChange({ colaboradoresInicial: Number(v) || 0 })} />
-          <InputField label="Dedicação à Operação" value={data.dedicacaoInicial} onChange={v => onChange({ dedicacaoInicial: Number(v) || 0 })} suffix="%" />
+          <InputField label="Salário/Mão de Obra (R$)" value={data.salarioBaseInicial} onChange={v => onChange({ salarioBaseInicial: parseFloat(v) || 0 })} type="number" />
+          {data.tipoSalario !== "bruto" && (
+            <InputField label="Encargos (Mult/%)" value={data.encargosInicial} onChange={v => onChange({ encargosInicial: parseFloat(v) || 0 })} type="number" />
+          )}
+          <InputField label="Nº de Colaboradores" value={data.colaboradoresInicial} onChange={v => onChange({ colaboradoresInicial: parseFloat(v) || 0 })} type="number" />
+          <InputField label="Dedicação à Operação" value={data.dedicacaoInicial} onChange={v => onChange({ dedicacaoInicial: parseFloat(v) || 0 })} type="number" suffix="%" />
         </div>
 
         <div className="space-y-4">
           <h3 className="font-semibold text-slate-800 border-b pb-2">Estado Final (T3)</h3>
-          <InputField label="Salário Base (R$)" value={data.salarioBaseFinal} onChange={v => onChange({ salarioBaseFinal: Number(v) || 0 })} />
-          <InputField label="Encargos (Mult/%)" value={data.encargosFinal} onChange={v => onChange({ encargosFinal: Number(v) || 0 })} />
-          <InputField label="Nº de Colaboradores" value={data.colaboradoresFinal} onChange={v => onChange({ colaboradoresFinal: Number(v) || 0 })} />
-          <InputField label="Dedicação à Operação" value={data.dedicacaoFinal} onChange={v => onChange({ dedicacaoFinal: Number(v) || 0 })} suffix="%" />
+          <InputField label="Salário/Mão de Obra (R$)" value={data.salarioBaseFinal} onChange={v => onChange({ salarioBaseFinal: parseFloat(v) || 0 })} type="number" />
+          {data.tipoSalario !== "bruto" && (
+            <InputField label="Encargos (Mult/%)" value={data.encargosFinal} onChange={v => onChange({ encargosFinal: parseFloat(v) || 0 })} type="number" />
+          )}
+          <InputField label="Nº de Colaboradores" value={data.colaboradoresFinal} onChange={v => onChange({ colaboradoresFinal: parseFloat(v) || 0 })} type="number" />
+          <InputField label="Dedicação à Operação" value={data.dedicacaoFinal} onChange={v => onChange({ dedicacaoFinal: parseFloat(v) || 0 })} type="number" suffix="%" />
         </div>
 
         <div className="col-span-2 space-y-4 pt-4">
@@ -75,8 +91,8 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
                 <option value="media">Média (R$ 22.800,00)</option>
               </select>
             </div>
-            <InputField label="Valor Consultoria (R$)" value={data.valorConsultoria} onChange={v => onChange({ valorConsultoria: Number(v) || 0 })} />
-            <InputField label="Investimento Extra (R$)" value={data.investimentoExtra} onChange={v => onChange({ investimentoExtra: Number(v) || 0 })} />
+            <InputField label="Valor Consultoria (R$)" value={data.valorConsultoria} onChange={v => onChange({ valorConsultoria: parseFloat(v) || 0 })} type="number" />
+            <InputField label="Investimento Extra (R$)" value={data.investimentoExtra} onChange={v => onChange({ investimentoExtra: parseFloat(v) || 0 })} type="number" />
           </div>
         </div>
       </div>
