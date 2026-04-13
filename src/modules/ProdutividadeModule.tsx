@@ -1,5 +1,5 @@
 import { type ProdutividadeData, calcProdutividade } from "@/store/useAppStore";
-import { T1T3Group } from "@/components/T1T3Group";
+import { InputField } from "@/components/InputField";
 import { KpiCard } from "@/components/KpiCard";
 import { ComparisonChart } from "@/components/ComparisonChart";
 
@@ -11,28 +11,50 @@ interface Props {
 export function ProdutividadeModule({ data, onChange }: Props) {
   const r = calcProdutividade(data);
 
+  // Gráfico focado exclusivamente na eficiência. Misturar Volume aqui distorceria a escala visual.
   const chartData = [
-    { name: "Peças/h/op", T1: +r.pphT1.toFixed(2), T3: +r.pphT3.toFixed(2) },
-    { name: "Volume", T1: data.volumeT1, T3: data.volumeT3 },
+    { name: "Produtividade (pçs/h/op)", T1: Number(r.pphT1.toFixed(2)), T3: Number(r.pphT3.toFixed(2)) },
   ];
 
   return (
-    <div className="flex gap-6 h-full">
-      <div className="w-[60%] space-y-5">
-        <h3 className="section-title">Produtividade</h3>
-        <T1T3Group label="Volume produzido" t1={data.volumeT1} t3={data.volumeT3}
-          onT1={v => onChange({ volumeT1: v })} onT3={v => onChange({ volumeT3: v })} suffix="pçs" />
-        <T1T3Group label="Horas do turno" t1={data.horasT1} t3={data.horasT3}
-          onT1={v => onChange({ horasT1: v })} onT3={v => onChange({ horasT3: v })} suffix="h" />
-        <T1T3Group label="Nº de operadores" t1={data.operadoresT1} t3={data.operadoresT3}
-          onT1={v => onChange({ operadoresT1: v })} onT3={v => onChange({ operadoresT3: v })} />
+    <div className="flex gap-8 h-full">
+      {/* Formulários Estratégicos */}
+      <div className="w-[60%] grid grid-cols-2 gap-x-8 gap-y-6 content-start">
+        
+        <div className="space-y-4">
+          <h3 className="font-semibold text-slate-800 border-b pb-2">Estado Inicial (T1)</h3>
+          <InputField label="Volume Produzido (peças)" value={data.volumeT1} onChange={v => onChange({ volumeT1: Number(v) || 0 })} />
+          <InputField label="Horas do Turno (h)" value={data.horasT1} onChange={v => onChange({ horasT1: Number(v) || 0 })} />
+          <InputField label="Nº de Operadores" value={data.operadoresT1} onChange={v => onChange({ operadoresT1: Number(v) || 0 })} />
+        </div>
+
+        <div className="space-y-4">
+          <h3 className="font-semibold text-slate-800 border-b pb-2">Estado Final (T3)</h3>
+          <InputField label="Volume Produzido (peças)" value={data.volumeT3} onChange={v => onChange({ volumeT3: Number(v) || 0 })} />
+          <InputField label="Horas do Turno (h)" value={data.horasT3} onChange={v => onChange({ horasT3: Number(v) || 0 })} />
+          <InputField label="Nº de Operadores" value={data.operadoresT3} onChange={v => onChange({ operadoresT3: Number(v) || 0 })} />
+        </div>
       </div>
-      <div className="w-[40%] space-y-4">
-        <h3 className="section-title">Resultados</h3>
-        <KpiCard label="Peças/hora/operador (T1)" value={r.pphT1.toFixed(2)} />
-        <KpiCard label="Peças/hora/operador (T3)" value={r.pphT3.toFixed(2)} />
-        <KpiCard label="Ganho de Produtividade" value={r.ganho.toFixed(1)} suffix="%" trend={r.ganho} />
-        <ComparisonChart data={chartData} title="Comparativo T1 vs T3" />
+
+      {/* Dashboard de Impacto */}
+      <div className="w-[40%] flex flex-col gap-4 bg-slate-50 p-6 rounded-xl border border-slate-200 shadow-sm">
+        <h3 className="font-semibold text-slate-800 mb-2">Impacto Operacional</h3>
+        
+        <div className="grid grid-cols-2 gap-4">
+          <KpiCard label="Produtividade T1" value={r.pphT1.toFixed(2)} suffix="pçs/h" />
+          <KpiCard label="Produtividade T3" value={r.pphT3.toFixed(2)} suffix="pçs/h" />
+        </div>
+        
+        <KpiCard 
+          label="Ganho de Produtividade" 
+          value={r.ganho.toFixed(2)} 
+          suffix="%" 
+          trend={r.ganho} 
+        />
+        
+        <div className="flex-1 mt-4 min-h-[200px]">
+          <ComparisonChart data={chartData} title="Evolução da Eficiência" />
+        </div>
       </div>
     </div>
   );
