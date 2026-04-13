@@ -17,9 +17,12 @@ export interface ProdutividadeData {
 }
 
 export interface PaybackData {
-  salarioBase: number;
-  encargosMultiplicador: number;
-  colaboradores: number;
+  salarioBaseInicial: number;
+  encargosInicial: number;
+  colaboradoresInicial: number;
+  salarioBaseFinal: number;
+  encargosFinal: number;
+  colaboradoresFinal: number;
   valorConsultoria: number;
   investimentoExtra: number;
 }
@@ -27,6 +30,7 @@ export interface PaybackData {
 export interface MovimentacaoData {
   distanciaT1: number; distanciaT3: number;
   tempoT1: number; tempoT3: number;
+  unidadeTempo: "segundos" | "minutos" | "horas";
 }
 
 export interface QualidadeData {
@@ -38,6 +42,7 @@ export interface DisponibilidadeData {
   tempoTotalT1: number; tempoTotalT3: number;
   paradasPlanT1: number; paradasPlanT3: number;
   paradasNaoPlanT1: number; paradasNaoPlanT3: number;
+  unidadeTempo: "segundos" | "minutos" | "horas";
 }
 
 export interface LeadTimeData {
@@ -66,6 +71,12 @@ export interface ResumoData {
   ramo: string;
   turnos: number;
   processos: string;
+  metodo: "empurrada" | "puxada" | "";
+  origem: string;
+  oportunidades: string;
+  problemas: string;
+  atuacao: string;
+  motivacao: string;
   ferramentas: string;
   acoes: Acao5W2H[];
 }
@@ -83,21 +94,26 @@ export interface AppState {
 
 const defaultState: AppState = {
   produtividade: { volumeT1: 0, volumeT3: 0, horasT1: 8, horasT3: 8, operadoresT1: 1, operadoresT3: 1 },
-  payback: { salarioBase: 2000, encargosMultiplicador: 2.5, colaboradores: 0, valorConsultoria: 0, investimentoExtra: 0 },
-  movimentacao: { distanciaT1: 0, distanciaT3: 0, tempoT1: 0, tempoT3: 0 },
+  payback: { salarioBaseInicial: 0, encargosInicial: 1.9, colaboradoresInicial: 1, salarioBaseFinal: 0, encargosFinal: 1.9, colaboradoresFinal: 1, valorConsultoria: 0, investimentoExtra: 0 },
+  movimentacao: { distanciaT1: 0, distanciaT3: 0, tempoT1: 0, tempoT3: 0, unidadeTempo: "minutos" },
   qualidade: { quantidadeT1: 0, quantidadeT3: 0, perdasT1: 0, perdasT3: 0 },
-  disponibilidade: { tempoTotalT1: 480, tempoTotalT3: 480, paradasPlanT1: 0, paradasPlanT3: 0, paradasNaoPlanT1: 0, paradasNaoPlanT3: 0 },
+  disponibilidade: { tempoTotalT1: 480, tempoTotalT3: 480, paradasPlanT1: 0, paradasPlanT3: 0, paradasNaoPlanT1: 0, paradasNaoPlanT3: 0, unidadeTempo: "minutos" },
   leadtime: { leadTimeT1: 0, leadTimeT3: 0 },
   area: { areaT1: 0, areaT3: 0, valorAluguel: 0 },
-  resumo: { nomeEmpresa: "", cidade: "", ramo: "", turnos: 1, processos: "", ferramentas: "", acoes: [] },
+  resumo: { nomeEmpresa: "", cidade: "", ramo: "", turnos: 1, processos: "", metodo: "", origem: "", oportunidades: "", problemas: "", atuacao: "", motivacao: "", ferramentas: "", acoes: [] },
 };
+
+// Utils: Proteção contra NaNs e Divisões por Zero
+const safeDiv = (num: number, den: number) => (den > 0 ? num / den : 0);
+// Utils: Tratamento de Encargos para o Payback (Se digitar 80, entende 1.8)
+const tratarEncargo = (v: number) => (v > 10 ? 1 + (v / 100) : v);
 
 export function useAppStore() {
   const [state, setState] = useState<AppState>(defaultState);
   const [activeModule, setActiveModule] = useState<ModuleKey>("resumo");
 
   const updateModule = useCallback(<K extends keyof AppState>(key: K, data: Partial<AppState[K]>) => {
-    setState(prev => ({ ...prev, [key]: { ...prev[key], ...data } }));
+    setState(prev => ({ ...prev, [key]: { ...prev[key], ...data } as any }));
   }, []);
 
   const exportJSON = useCallback(() => {
@@ -105,7 +121,7 @@ export function useAppStore() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "consultoria-lean.json";
+    a.download = "consultoria-lean-backup.json";
     a.click();
     URL.revokeObjectURL(url);
   }, [state]);
@@ -116,7 +132,9 @@ export function useAppStore() {
       try {
         const data = JSON.parse(e.target?.result as string);
         setState({ ...defaultState, ...data });
-      } catch { /* ignore */ }
+      } catch {
+        alert("Erro ao importar arquivo JSON. Formato inválido.");
+      }
     };
     reader.readAsText(file);
   }, []);
@@ -128,21 +146,39 @@ export function useAppStore() {
   return { state, activeModule, setActiveModule, updateModule, exportJSON, importJSON, loadState };
 }
 
-// Calculation helpers
+// === CÁLCULOS DE ALTA PRECISÃO (REGRAS DE NEGÓCIO) ===
+
 export function calcProdutividade(d: ProdutividadeData) {
-  const pphT1 = d.horasT1 > 0 && d.operadoresT1 > 0 ? d.volumeT1 / d.horasT1 / d.operadoresT1 : 0;
-  const pphT3 = d.horasT3 > 0 && d.operadoresT3 > 0 ? d.volumeT3 / d.horasT3 / d.operadoresT3 : 0;
+  const pphT1 = safeDiv(d.volumeT1, (d.horasT1 * d.operadoresT1));
+  const pphT3 = safeDiv(d.volumeT3, (d.horasT3 * d.operadoresT3));
   const ganho = pphT1 > 0 ? ((pphT3 - pphT1) / pphT1) * 100 : 0;
   return { pphT1, pphT3, ganho };
 }
 
-export function calcPayback(d: PaybackData, prod: ProdutividadeData) {
-  const custoColab = d.salarioBase * d.encargosMultiplicador;
-  const reducaoColabs = prod.operadoresT1 - prod.operadoresT3;
-  const reducaoMensal = reducaoColabs > 0 ? reducaoColabs * custoColab : 0;
+export function calcPayback(d: PaybackData, prod: ProdutividadeData, res: ResumoData) {
+  const turnos = res.turnos || 1;
+  const prodMensalI = prod.volumeT1 * turnos * 21;
+  const prodMensalF = prod.volumeT3 * turnos * 21;
+
+  const encI = tratarEncargo(d.encargosInicial);
+  const encF = tratarEncargo(d.encargosFinal);
+
+  const salI = d.salarioBaseInicial * encI * d.colaboradoresInicial;
+  const salF = d.salarioBaseFinal * encF * d.colaboradoresFinal;
+
+  const custoI = safeDiv(salI, prodMensalI);
+  const custoF = safeDiv(salF, prodMensalF);
+
+  const reducaoMensal = (custoI - custoF) * prodMensalF;
   const investTotal = d.valorConsultoria + d.investimentoExtra;
-  const paybackMeses = reducaoMensal > 0 ? investTotal / reducaoMensal : 0;
-  return { custoColab, reducaoMensal, paybackMeses, investTotal };
+  const paybackMeses = safeDiv(investTotal, reducaoMensal);
+
+  return { 
+    prodMensalI, prodMensalF, 
+    salI, salF, 
+    custoI, custoF, 
+    reducaoMensal, investTotal, paybackMeses 
+  };
 }
 
 export function calcMovimentacao(d: MovimentacaoData) {
@@ -152,17 +188,27 @@ export function calcMovimentacao(d: MovimentacaoData) {
 }
 
 export function calcQualidade(d: QualidadeData) {
-  const indiceT1 = d.quantidadeT1 > 0 ? ((d.quantidadeT1 - d.perdasT1) / d.quantidadeT1) * 100 : 0;
-  const indiceT3 = d.quantidadeT3 > 0 ? ((d.quantidadeT3 - d.perdasT3) / d.quantidadeT3) * 100 : 0;
-  const aumento = indiceT3 - indiceT1;
-  return { indiceT1, indiceT3, aumento };
+  const boasT1 = Math.max(0, d.quantidadeT1 - d.perdasT1);
+  const boasT3 = Math.max(0, d.quantidadeT3 - d.perdasT3);
+  
+  const indiceT1 = safeDiv(boasT1, d.quantidadeT1) * 100;
+  const indiceT3 = safeDiv(boasT3, d.quantidadeT3) * 100;
+  
+  const aumento = indiceT1 > 0 ? ((indiceT3 - indiceT1) / indiceT1) * 100 : 0;
+  return { boasT1, boasT3, indiceT1, indiceT3, aumento };
 }
 
 export function calcDisponibilidade(d: DisponibilidadeData) {
-  const dispT1 = d.tempoTotalT1 > 0 ? ((d.tempoTotalT1 - d.paradasPlanT1 - d.paradasNaoPlanT1) / d.tempoTotalT1) * 100 : 0;
-  const dispT3 = d.tempoTotalT3 > 0 ? ((d.tempoTotalT3 - d.paradasPlanT3 - d.paradasNaoPlanT3) / d.tempoTotalT3) * 100 : 0;
-  const aumento = dispT3 - dispT1;
-  return { dispT1, dispT3, aumento };
+  const dispT1 = d.tempoTotalT1 - d.paradasPlanT1;
+  const realT1 = dispT1 - d.paradasNaoPlanT1;
+  const indT1 = safeDiv(realT1, dispT1) * 100;
+
+  const dispT3 = d.tempoTotalT3 - d.paradasPlanT3;
+  const realT3 = dispT3 - d.paradasNaoPlanT3;
+  const indT3 = safeDiv(realT3, dispT3) * 100;
+
+  const aumento = indT1 > 0 ? ((indT3 - indT1) / indT1) * 100 : 0;
+  return { dispT1, realT1, indT1, dispT3, realT3, indT3, aumento };
 }
 
 export function calcLeadTime(d: LeadTimeData) {
@@ -171,8 +217,8 @@ export function calcLeadTime(d: LeadTimeData) {
 }
 
 export function calcArea(d: AreaData) {
-  const reducaoArea = d.areaT1 > 0 ? ((d.areaT1 - d.areaT3) / d.areaT1) * 100 : 0;
+  const reducaoPercent = d.areaT1 > 0 ? ((d.areaT1 - d.areaT3) / d.areaT1) * 100 : 0;
   const economiaM2 = d.areaT1 - d.areaT3;
-  const economiaMensal = d.areaT1 > 0 ? (economiaM2 / d.areaT1) * d.valorAluguel : 0;
-  return { reducaoArea, economiaM2, economiaMensal };
+  const economiaMensal = economiaM2 * d.valorAluguel;
+  return { reducaoPercent, economiaM2, economiaMensal };
 }
