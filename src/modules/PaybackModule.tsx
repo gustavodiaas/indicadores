@@ -30,7 +30,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
     onChange({ valorConsultoria: valor });
   };
 
-  // Cálculos visuais para exibir no laudo (Custo Total antes da dedicação)
+  // Cálculos visuais para exibir no laudo o "Custo Total por Mês" antes de aplicar a % de dedicação
   const encI = data.encargosInicial > 10 ? 1 + (data.encargosInicial / 100) : data.encargosInicial;
   const custoTotalI = data.salarioBaseInicial * encI * data.colaboradoresInicial;
   
@@ -39,6 +39,8 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
 
   return (
     <div className="flex gap-8 h-full">
+      
+      {/* Formulários (60%) */}
       <div className="w-[60%] grid grid-cols-2 gap-x-8 gap-y-6 content-start">
         
         <div className="space-y-4">
@@ -79,6 +81,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
         </div>
       </div>
 
+      {/* Resultados e Laudo (40%) */}
       <div className="w-[40%] flex flex-col gap-4 bg-slate-50 p-6 rounded-xl border border-slate-200 shadow-sm overflow-y-auto">
         <h3 className="font-semibold text-slate-800 mb-2">Impacto Financeiro</h3>
         
@@ -91,15 +94,17 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
         <KpiCard label="Retorno (Payback)" value={r.paybackMeses > 0 ? r.paybackMeses.toFixed(1) : "—"} suffix="meses" />
         
         <div className="mt-4 bg-white p-5 border border-slate-200 rounded-lg text-sm text-slate-700 leading-relaxed text-justify shadow-sm">
-          <p className="font-bold text-slate-800 mb-2">Relatório do Indicador:</p>
           <p>
-            No estágio inicial, havia <strong>{data.colaboradoresInicial}</strong> funcionário(s), com custo total por mês de <strong>{formatBRL(custoTotalI)}</strong>, sendo <strong>{data.dedicacaoInicial}%</strong> utilizados na operação que sofreu a intervenção. Produziam-se <strong>{r.prodMensalI.toLocaleString("pt-BR")} peças/mês</strong>, a custo de mão de obra alocada de <strong>{formatBRL(r.salI)}</strong>.
+            No estágio inicial, havia <strong>{data.colaboradoresInicial}</strong> funcionários, com custo total por mês de <strong>{formatBRL(custoTotalI)}</strong>, <strong>{data.dedicacaoInicial}%</strong> utilizados na operação que sofreu a intervenção. Produziam-se <strong>{r.prodMensalI.toLocaleString("pt-BR")} peças/mês</strong>, a custo de mão de obra de <strong>{formatBRL(r.custoI)}</strong>.
           </p>
           <p className="mt-2">
-            Após intervenção, permaneceram <strong>{data.colaboradoresFinal}</strong> funcionário(s), com custo total por mês de <strong>{formatBRL(custoTotalF)}</strong>, sendo <strong>{data.dedicacaoFinal}%</strong> utilizado no processo. Passaram a produzir <strong>{r.prodMensalF.toLocaleString("pt-BR")} peças/mês</strong>, a custo de mão de obra alocada de <strong>{formatBRL(r.salF)}</strong>.
+            Após intervenção, permaneceram <strong>{data.colaboradoresFinal}</strong> funcionários, com custo total por mês de <strong>{formatBRL(custoTotalF)}</strong>, <strong>{data.dedicacaoFinal}%</strong> utilizado no processo. Passaram a produzir <strong>{r.prodMensalF.toLocaleString("pt-BR")} peças/mês</strong>, a custo de mão de obra de <strong>{formatBRL(r.custoF)}</strong>.
           </p>
           <p className="mt-2 text-blue-800 bg-blue-50 p-2 rounded border border-blue-100">
-            Reduziu-se então <strong>{formatBRL(Math.max(0, r.custoI - r.custoF))}</strong> no custo unitário de mão de obra, que multiplicado pela produção final de <strong>{r.prodMensalF.toLocaleString("pt-BR")} peças/mês</strong>, gera o retorno mensal de <strong>{formatBRL(r.reducaoMensal)}</strong>. Portanto, um payback de <strong>{r.paybackMeses > 0 ? r.paybackMeses.toFixed(1) : "—"} meses</strong>.
+            Reduziu-se então <strong>{formatBRL(Math.max(0, r.custoI - r.custoF))}</strong> no custo de mão de obra, que multiplicado pela produção final mensal após intervenção de <strong>{r.prodMensalF.toLocaleString("pt-BR")}/mês</strong>, gera o retorno mensal de <strong>{formatBRL(r.reducaoMensal)}</strong>.
+          </p>
+          <p className="mt-2 font-bold text-slate-800">
+            Portanto, um payback de {r.paybackMeses > 0 ? r.paybackMeses.toFixed(1) : "—"} meses.
           </p>
         </div>
       </div>
