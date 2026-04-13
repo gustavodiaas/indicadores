@@ -162,8 +162,8 @@ export function calcPayback(d: PaybackData, prod: ProdutividadeData, res: Resumo
   const prodMensalI = prod.volumeT1 * turnos * 21;
   const prodMensalF = prod.volumeT3 * turnos * 21;
 
-  const encI = tratarEncargo(d.encargosInicial);
-  const encF = tratarEncargo(d.encargosFinal);
+  const salI = d.salarioBaseInicial * encI * d.colaboradoresInicial * safeDiv(d.dedicacaoInicial, 100);
+  const salF = d.salarioBaseFinal * encF * d.colaboradoresFinal * safeDiv(d.dedicacaoFinal, 100);
 
   const salI = d.salarioBaseInicial * encI * d.colaboradoresInicial;
   const salF = d.salarioBaseFinal * encF * d.colaboradoresFinal;
