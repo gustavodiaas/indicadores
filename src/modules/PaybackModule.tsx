@@ -15,7 +15,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
 
   const chartData = [
     { name: "Custo/Peça (R$)", T1: Number(r.custoI.toFixed(2)), T3: Number(r.custoF.toFixed(2)) },
-    { name: "Folha Total (k)", T1: Number((r.salI / 1000).toFixed(1)), T3: Number((r.salF / 1000).toFixed(1)) },
+    { name: "Folha Alocada (k)", T1: Number((r.salI / 1000).toFixed(1)), T3: Number((r.salF / 1000).toFixed(1)) },
   ];
 
   const formatBRL = (val: number) => 
@@ -30,6 +30,13 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
     onChange({ valorConsultoria: valor });
   };
 
+  // Cálculos visuais para exibir no laudo (Custo Total antes da dedicação)
+  const encI = data.encargosInicial > 10 ? 1 + (data.encargosInicial / 100) : data.encargosInicial;
+  const custoTotalI = data.salarioBaseInicial * encI * data.colaboradoresInicial;
+  
+  const encF = data.encargosFinal > 10 ? 1 + (data.encargosFinal / 100) : data.encargosFinal;
+  const custoTotalF = data.salarioBaseFinal * encF * data.colaboradoresFinal;
+
   return (
     <div className="flex gap-8 h-full">
       <div className="w-[60%] grid grid-cols-2 gap-x-8 gap-y-6 content-start">
@@ -39,6 +46,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
           <InputField label="Salário Base (R$)" value={data.salarioBaseInicial} onChange={v => onChange({ salarioBaseInicial: Number(v) || 0 })} />
           <InputField label="Encargos (Mult/%)" value={data.encargosInicial} onChange={v => onChange({ encargosInicial: Number(v) || 0 })} />
           <InputField label="Nº de Colaboradores" value={data.colaboradoresInicial} onChange={v => onChange({ colaboradoresInicial: Number(v) || 0 })} />
+          <InputField label="Dedicação à Operação" value={data.dedicacaoInicial} onChange={v => onChange({ dedicacaoInicial: Number(v) || 0 })} suffix="%" />
         </div>
 
         <div className="space-y-4">
@@ -46,6 +54,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
           <InputField label="Salário Base (R$)" value={data.salarioBaseFinal} onChange={v => onChange({ salarioBaseFinal: Number(v) || 0 })} />
           <InputField label="Encargos (Mult/%)" value={data.encargosFinal} onChange={v => onChange({ encargosFinal: Number(v) || 0 })} />
           <InputField label="Nº de Colaboradores" value={data.colaboradoresFinal} onChange={v => onChange({ colaboradoresFinal: Number(v) || 0 })} />
+          <InputField label="Dedicação à Operação" value={data.dedicacaoFinal} onChange={v => onChange({ dedicacaoFinal: Number(v) || 0 })} suffix="%" />
         </div>
 
         <div className="col-span-2 space-y-4 pt-4">
@@ -84,16 +93,13 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
         <div className="mt-4 bg-white p-5 border border-slate-200 rounded-lg text-sm text-slate-700 leading-relaxed text-justify shadow-sm">
           <p className="font-bold text-slate-800 mb-2">Relatório do Indicador:</p>
           <p>
-            O retorno do programa foi calculado considerando a redução do custo da mão de obra por kit/peça mensal. 
-            No <strong>Estado Inicial (T1)</strong>, a folha total era de <strong>{formatBRL(r.salI)}</strong>. 
-            Com produção de <strong>{r.prodMensalI.toLocaleString("pt-BR")} peças/mês</strong>, o custo unitário era <strong>{formatBRL(r.custoI)}</strong>.
+            No estágio inicial, havia <strong>{data.colaboradoresInicial}</strong> funcionário(s), com custo total por mês de <strong>{formatBRL(custoTotalI)}</strong>, sendo <strong>{data.dedicacaoInicial}%</strong> utilizados na operação que sofreu a intervenção. Produziam-se <strong>{r.prodMensalI.toLocaleString("pt-BR")} peças/mês</strong>, a custo de mão de obra alocada de <strong>{formatBRL(r.salI)}</strong>.
           </p>
           <p className="mt-2">
-            No <strong>Estado Final (T3)</strong>, a folha passou a ser <strong>{formatBRL(r.salF)}</strong>. 
-            Com produção de <strong>{r.prodMensalF.toLocaleString("pt-BR")} peças/mês</strong>, o custo unitário caiu para <strong>{formatBRL(r.custoF)}</strong>.
+            Após intervenção, permaneceram <strong>{data.colaboradoresFinal}</strong> funcionário(s), com custo total por mês de <strong>{formatBRL(custoTotalF)}</strong>, sendo <strong>{data.dedicacaoFinal}%</strong> utilizado no processo. Passaram a produzir <strong>{r.prodMensalF.toLocaleString("pt-BR")} peças/mês</strong>, a custo de mão de obra alocada de <strong>{formatBRL(r.salF)}</strong>.
           </p>
           <p className="mt-2 text-blue-800 bg-blue-50 p-2 rounded border border-blue-100">
-            A redução de custo mensal é de <strong>{formatBRL(r.reducaoMensal)}</strong>. Frente ao investimento de <strong>{formatBRL(r.investTotal)}</strong>, o Payback é de <strong>{r.paybackMeses > 0 ? r.paybackMeses.toFixed(1) : "—"} meses</strong>.
+            Reduziu-se então <strong>{formatBRL(Math.max(0, r.custoI - r.custoF))}</strong> no custo unitário de mão de obra, que multiplicado pela produção final de <strong>{r.prodMensalF.toLocaleString("pt-BR")} peças/mês</strong>, gera o retorno mensal de <strong>{formatBRL(r.reducaoMensal)}</strong>. Portanto, um payback de <strong>{r.paybackMeses > 0 ? r.paybackMeses.toFixed(1) : "—"} meses</strong>.
           </p>
         </div>
       </div>
