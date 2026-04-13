@@ -5,7 +5,7 @@ import {
 import { type ModuleKey } from "@/store/useAppStore";
 
 const modules: { key: ModuleKey; label: string; icon: React.ElementType }[] = [
-  { key: "resumo", label: "Descrição do Processo", icon: FileText },
+  { key: "resumo", label: "Resumo Executivo", icon: FileText },
   { key: "produtividade", label: "Produtividade", icon: BarChart3 },
   { key: "payback", label: "Payback", icon: Calculator },
   { key: "movimentacao", label: "Movimentação", icon: ArrowRightLeft },
@@ -24,24 +24,24 @@ export function AppSidebar({ active, onSelect }: Props) {
   return (
     <aside className="print:hidden w-64 min-h-screen bg-[#0f172a] border-r border-slate-800 flex flex-col shrink-0 transition-all duration-300">
       
-      {/* Header - Branding */}
+      {/* Header - Branding Restaurado */}
       <div className="px-6 py-8 border-b border-slate-800 flex items-center gap-3">
-        <div className="bg-blue-600 p-2 rounded-lg shadow-lg">
+        <div className="bg-blue-600 p-2.5 rounded-lg shadow-lg">
           <Factory className="h-5 w-5 text-white" />
         </div>
         <div className="flex flex-col">
-          <h1 className="text-sm font-bold text-white uppercase tracking-wider leading-tight">
-            Lean Consulting
+          <h1 className="text-sm font-bold text-white uppercase tracking-tight leading-tight">
+            Consultoria Lean
           </h1>
-          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">
-            Engenharia
+          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">
+            Análise de Indicadores
           </span>
         </div>
       </div>
 
       {/* Navegação */}
       <nav className="flex-1 py-6 px-3 space-y-1.5 overflow-y-auto">
-        <div className="px-3 mb-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+        <div className="px-3 mb-4 text-[10px] font-bold text-slate-600 uppercase tracking-widest">
           Menu de Análise
         </div>
         
@@ -64,10 +64,10 @@ export function AppSidebar({ active, onSelect }: Props) {
         })}
       </nav>
 
-      {/* Rodapé da Sidebar */}
+      {/* Footer */}
       <div className="p-4 border-t border-slate-800">
-        <div className="bg-slate-800/50 rounded-lg p-3">
-          <p className="text-[10px] text-slate-500 font-medium text-center uppercase tracking-tighter">
+        <div className="bg-slate-800/30 rounded-lg p-3">
+          <p className="text-[10px] text-slate-500 font-bold text-center uppercase tracking-tighter">
             Sistema de Indicadores v1.0
           </p>
         </div>
