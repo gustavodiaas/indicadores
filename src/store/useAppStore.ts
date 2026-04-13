@@ -72,6 +72,8 @@ export interface ResumoData {
   nomeEmpresa: string;
   cidade: string;
   ramo: string;
+  especialista: string; // Novo
+  totalColaboradores: number; // Novo
   turnos: number;
   processos: string;
   metodo: "empurrada" | "puxada" | "";
@@ -103,8 +105,23 @@ const defaultState: AppState = {
   disponibilidade: { tempoTotalT1: 480, tempoTotalT3: 480, paradasPlanT1: 0, paradasPlanT3: 0, paradasNaoPlanT1: 0, paradasNaoPlanT3: 0, unidadeTempo: "minutos" },
   leadtime: { leadTimeT1: 0, leadTimeT3: 0 },
   area: { areaT1: 0, areaT3: 0, valorAluguel: 0 },
-  resumo: { nomeEmpresa: "", cidade: "", ramo: "", turnos: 1, processos: "", metodo: "", origem: "", oportunidades: "", problemas: "", atuacao: "", motivacao: "", ferramentas: "", acoes: [] },
-};
+  resumo: { 
+  nomeEmpresa: "", 
+  cidade: "", 
+  ramo: "", 
+  especialista: "", 
+  totalColaboradores: 0, 
+  turnos: 1, 
+  processos: "", 
+  metodo: "", 
+  origem: "", 
+  oportunidades: "", 
+  problemas: "", 
+  atuacao: "", 
+  motivacao: "", 
+  ferramentas: "", 
+  acoes: [] 
+},
 
 const safeDiv = (num: number, den: number) => (den > 0 ? num / den : 0);
 // Ajuste fino: Se o encargo for 0, multiplicador é 1 (apenas o salário puro)
