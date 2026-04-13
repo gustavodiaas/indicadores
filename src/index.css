@@ -4,6 +4,7 @@
 
 @layer base {
   :root {
+    /* Cores Base - Estilo SaaS Corporativo */
     --background: 210 20% 98%;
     --foreground: 215 25% 15%;
 
@@ -34,25 +35,21 @@
 
     --radius: 0.5rem;
 
-    --sidebar-bg: 217 33% 17%;
-    --sidebar-fg: 210 20% 80%;
-    --sidebar-active: 221 83% 53%;
-    --sidebar-active-fg: 0 0% 100%;
-    --sidebar-hover: 217 30% 22%;
+    /* Sidebar - Dark Premium */
+    --sidebar-background: 217 33% 17%;
+    --sidebar-foreground: 210 20% 80%;
+    --sidebar-primary: 221 83% 53%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 217 30% 22%;
+    --sidebar-accent-foreground: 0 0% 100%;
     --sidebar-border: 217 25% 25%;
+    --sidebar-ring: 221 83% 53%;
 
+    /* Gráficos e KPIs */
     --kpi-positive: 142 71% 45%;
     --kpi-negative: 0 84% 60%;
     --chart-t1: 215 20% 65%;
     --chart-t3: 221 83% 53%;
-
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 
@@ -61,25 +58,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  }
-}
-
-@layer components {
-  .kpi-card {
-    @apply rounded-lg border bg-card p-5 shadow-sm;
-  }
-  .kpi-value {
-    @apply text-3xl font-bold tracking-tight;
-  }
-  .kpi-label {
-    @apply text-sm text-muted-foreground;
-  }
-  .input-group {
-    @apply space-y-2;
-  }
-  .section-title {
-    @apply text-lg font-semibold tracking-tight;
   }
 }
