@@ -20,9 +20,11 @@ export interface PaybackData {
   salarioBaseInicial: number;
   encargosInicial: number;
   colaboradoresInicial: number;
+  dedicacaoInicial: number;
   salarioBaseFinal: number;
   encargosFinal: number;
   colaboradoresFinal: number;
+  dedicacaoFinal: number;
   valorConsultoria: number;
   investimentoExtra: number;
 }
