@@ -2,6 +2,9 @@ import { type PaybackData, type ProdutividadeData, type ResumoData, calcPayback 
 import { InputField } from "@/components/InputField";
 import { KpiCard } from "@/components/KpiCard";
 import { ComparisonChart } from "@/components/ComparisonChart";
+import { Copy, Check } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 interface Props {
   data: PaybackData;
@@ -11,117 +14,61 @@ interface Props {
 }
 
 export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
+  const [copied, setCopied] = useState(false);
   const r = calcPayback(data, prodData, resumoData);
 
-  const chartData = [
-    { name: "Custo/Peça (R$)", T1: Number(r.custoI.toFixed(2)), T3: Number(r.custoF.toFixed(2)) },
-    { name: "Folha Alocada (k)", T1: Number((r.salI / 1000).toFixed(1)), T3: Number((r.salF / 1000).toFixed(1)) },
-  ];
+  const chartData = [{ name: "Custo/Peça (R$)", T1: Number(r.custoI.toFixed(2)), T3: Number(r.custoF.toFixed(2)) }];
+  const formatBRL = (v: number) => `R$ ${v.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`;
 
-  const formatBRL = (val: number) => 
-    `R$ ${val.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
-  const handlePorteChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const porte = e.target.value;
-    let valor = data.valorConsultoria;
-    if (porte === "micro") valor = 15834.40;
-    if (porte === "pequena") valor = 21772.30;
-    if (porte === "media") valor = 22800.00;
-    onChange({ valorConsultoria: valor });
-  };
-
-  const encI = data.tipoSalario === "bruto" ? 1 : (data.encargosInicial > 10 ? 1 + (data.encargosInicial / 100) : data.encargosInicial || 1);
-  const custoTotalI = data.salarioBaseInicial * encI * data.colaboradoresInicial;
-  
-  const encF = data.tipoSalario === "bruto" ? 1 : (data.encargosFinal > 10 ? 1 + (data.encargosFinal / 100) : data.encargosFinal || 1);
-  const custoTotalF = data.salarioBaseFinal * encF * data.colaboradoresFinal;
+  const laudo = `No estágio inicial, havia ${data.colaboradoresInicial} funcionários, com custo total por mês de ${formatBRL(data.salarioBaseInicial * (data.encargosInicial > 10 ? 1 + data.encargosInicial/100 : data.encargosInicial) * data.colaboradoresInicial)}, ${data.dedicacaoInicial}% utilizados na operação. Produziam-se ${r.prodMensalI.toLocaleString()} pçs/mês, a custo de mão de obra de ${formatBRL(r.custoI)}. Após intervenção, permaneceram ${data.colaboradoresFinal} funcionários, com custo total por mês de ${formatBRL(data.salarioBaseFinal * (data.encargosFinal > 10 ? 1 + data.encargosFinal/100 : data.encargosFinal) * data.colaboradoresFinal)}, ${data.dedicacaoFinal}% utilizado no processo. Passaram a produzir ${r.prodMensalF.toLocaleString()} pçs/mês, a custo de mão de obra de ${formatBRL(r.custoF)}. Reduziu-se então ${formatBRL(Math.max(0, r.custoI - r.custoF))} no custo de mão de obra, que gerou o retorno mensal de ${formatBRL(r.reducaoMensal)}. Portanto, um payback de ${r.paybackMeses.toFixed(1)} meses.`;
 
   return (
     <div className="flex gap-8 h-full">
-      
-      {/* Formulários (60%) */}
-      <div className="w-[60%] grid grid-cols-2 gap-x-8 gap-y-6 content-start">
-        
-        {/* Toggle Estratégico de Encargos */}
-        <div className="col-span-2 p-4 bg-blue-50 border border-blue-100 rounded-lg flex items-center justify-between shadow-sm">
-          <span className="text-sm font-semibold text-blue-900">Como você deseja calcular a folha de pagamento?</span>
-          <select 
-            className="h-10 bg-white border border-blue-200 text-sm shadow-sm rounded-md px-3 outline-none focus:ring-blue-600 font-medium"
-            value={data.tipoSalario || "encargos"}
-            onChange={e => onChange({ tipoSalario: e.target.value as "bruto" | "encargos" })}
-          >
-            <option value="encargos">Salário Base + Encargos</option>
-            <option value="bruto">Apenas Salário Bruto</option>
+      <div className="w-[60%] grid grid-cols-2 gap-x-8 gap-y-6 overflow-y-auto pr-2 pb-10">
+        <div className="col-span-2 p-4 bg-blue-50 border border-blue-100 rounded-xl flex items-center justify-between">
+          <span className="text-xs font-bold text-blue-900 uppercase">Modelo de Cálculo</span>
+          <select className="h-9 bg-white border border-blue-200 text-xs rounded-md px-2 outline-none" value={data.tipoSalario} onChange={e => onChange({ tipoSalario: e.target.value as any })}>
+            <option value="encargos">Salário + Encargos</option>
+            <option value="bruto">Salário Bruto</option>
           </select>
         </div>
-
         <div className="space-y-4">
-          <h3 className="font-semibold text-slate-800 border-b pb-2">Estado Inicial (T1)</h3>
-          <InputField label="Salário/Mão de Obra (R$)" value={data.salarioBaseInicial} onChange={v => onChange({ salarioBaseInicial: parseFloat(v) || 0 })} type="number" />
-          {data.tipoSalario !== "bruto" && (
-            <InputField label="Encargos (Mult/%)" value={data.encargosInicial} onChange={v => onChange({ encargosInicial: parseFloat(v) || 0 })} type="number" />
-          )}
-          <InputField label="Nº de Colaboradores" value={data.colaboradoresInicial} onChange={v => onChange({ colaboradoresInicial: parseFloat(v) || 0 })} type="number" />
-          <InputField label="Dedicação à Operação" value={data.dedicacaoInicial} onChange={v => onChange({ dedicacaoInicial: parseFloat(v) || 0 })} type="number" suffix="%" />
+          <h3 className="font-bold text-slate-800 border-b pb-2">Estado Inicial (T1)</h3>
+          <InputField label="Salário Base" value={data.salarioBaseInicial} onChange={v => onChange({ salarioBaseInicial: Number(v) })} />
+          {data.tipoSalario !== "bruto" && <InputField label="Encargos" value={data.encargosInicial} onChange={v => onChange({ encargosInicial: Number(v) })} />}
+          <InputField label="Colaboradores" value={data.colaboradoresInicial} onChange={v => onChange({ colaboradoresInicial: Number(v) })} />
+          <InputField label="Dedicação" value={data.dedicacaoInicial} onChange={v => onChange({ dedicacaoInicial: Number(v) })} suffix="%" />
         </div>
-
         <div className="space-y-4">
-          <h3 className="font-semibold text-slate-800 border-b pb-2">Estado Final (T3)</h3>
-          <InputField label="Salário/Mão de Obra (R$)" value={data.salarioBaseFinal} onChange={v => onChange({ salarioBaseFinal: parseFloat(v) || 0 })} type="number" />
-          {data.tipoSalario !== "bruto" && (
-            <InputField label="Encargos (Mult/%)" value={data.encargosFinal} onChange={v => onChange({ encargosFinal: parseFloat(v) || 0 })} type="number" />
-          )}
-          <InputField label="Nº de Colaboradores" value={data.colaboradoresFinal} onChange={v => onChange({ colaboradoresFinal: parseFloat(v) || 0 })} type="number" />
-          <InputField label="Dedicação à Operação" value={data.dedicacaoFinal} onChange={v => onChange({ dedicacaoFinal: parseFloat(v) || 0 })} type="number" suffix="%" />
+          <h3 className="font-bold text-slate-800 border-b pb-2">Estado Final (T3)</h3>
+          <InputField label="Salário Base" value={data.salarioBaseFinal} onChange={v => onChange({ salarioBaseFinal: Number(v) })} />
+          {data.tipoSalario !== "bruto" && <InputField label="Encargos" value={data.encargosFinal} onChange={v => onChange({ encargosFinal: Number(v) })} />}
+          <InputField label="Colaboradores" value={data.colaboradoresFinal} onChange={v => onChange({ colaboradoresFinal: Number(v) })} />
+          <InputField label="Dedicação" value={data.dedicacaoFinal} onChange={v => onChange({ dedicacaoFinal: Number(v) })} suffix="%" />
         </div>
-
         <div className="col-span-2 space-y-4 pt-4">
-          <h3 className="font-semibold text-slate-800 border-b pb-2">Investimentos</h3>
-          <div className="grid grid-cols-3 gap-6">
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Porte da Empresa</label>
-              <select 
-                className="h-10 bg-white border border-slate-300 text-sm shadow-sm focus-visible:ring-blue-600 rounded-md px-3 outline-none"
-                onChange={handlePorteChange}
-                defaultValue=""
-              >
-                <option value="" disabled>Tabela Padrão...</option>
-                <option value="micro">Micro (R$ 15.834,40)</option>
-                <option value="pequena">Pequena (R$ 21.772,30)</option>
-                <option value="media">Média (R$ 22.800,00)</option>
-              </select>
-            </div>
-            <InputField label="Valor Consultoria (R$)" value={data.valorConsultoria} onChange={v => onChange({ valorConsultoria: parseFloat(v) || 0 })} type="number" />
-            <InputField label="Investimento Extra (R$)" value={data.investimentoExtra} onChange={v => onChange({ investimentoExtra: parseFloat(v) || 0 })} type="number" />
+          <h3 className="font-bold text-slate-800 border-b pb-2">Investimentos</h3>
+          <div className="grid grid-cols-2 gap-6">
+            <InputField label="Consultoria" value={data.valorConsultoria} onChange={v => onChange({ valorConsultoria: Number(v) })} suffix="R$" />
+            <InputField label="Extra" value={data.investimentoExtra} onChange={v => onChange({ investimentoExtra: Number(v) })} suffix="R$" />
           </div>
         </div>
       </div>
 
-      {/* Resultados e Laudo (40%) */}
-      <div className="w-[40%] flex flex-col gap-4 bg-slate-50 p-6 rounded-xl border border-slate-200 shadow-sm overflow-y-auto">
-        <h3 className="font-semibold text-slate-800 mb-2">Impacto Financeiro</h3>
-        
-        <div className="grid grid-cols-2 gap-4">
-          <KpiCard label="Custo Unitário T1" value={formatBRL(r.custoI)} />
-          <KpiCard label="Custo Unitário T3" value={formatBRL(r.custoF)} />
+      <div className="w-[40%] flex flex-col gap-4 overflow-y-auto">
+        <div className="grid grid-cols-2 gap-3">
+          <KpiCard label="Custo T1" value={formatBRL(r.custoI)} />
+          <KpiCard label="Payback" value={r.paybackMeses.toFixed(1)} suffix="meses" />
         </div>
-        
-        <KpiCard label="Redução Mensal" value={formatBRL(r.reducaoMensal)} trend={r.reducaoMensal} />
-        <KpiCard label="Retorno (Payback)" value={r.paybackMeses > 0 ? r.paybackMeses.toFixed(1) : "—"} suffix="meses" />
-        
-        <div className="mt-4 bg-white p-5 border border-slate-200 rounded-lg text-sm text-slate-700 leading-relaxed text-justify shadow-sm">
-          <p>
-            No estágio inicial, havia <strong>{data.colaboradoresInicial}</strong> funcionários, com custo total por mês de <strong>{formatBRL(custoTotalI)}</strong>, <strong>{data.dedicacaoInicial}%</strong> utilizados na operação que sofreu a intervenção. Produziam-se <strong>{r.prodMensalI.toLocaleString("pt-BR")} peças/mês</strong>, a custo de mão de obra de <strong>{formatBRL(r.custoI)}</strong>.
-          </p>
-          <p className="mt-2">
-            Após intervenção, permaneceram <strong>{data.colaboradoresFinal}</strong> funcionários, com custo total por mês de <strong>{formatBRL(custoTotalF)}</strong>, <strong>{data.dedicacaoFinal}%</strong> utilizado no processo. Passaram a produzir <strong>{r.prodMensalF.toLocaleString("pt-BR")} peças/mês</strong>, a custo de mão de obra de <strong>{formatBRL(r.custoF)}</strong>.
-          </p>
-          <p className="mt-2 text-blue-800 bg-blue-50 p-2 rounded border border-blue-100">
-            Reduziu-se então <strong>{formatBRL(Math.max(0, r.custoI - r.custoF))}</strong> no custo de mão de obra, que multiplicado pela produção final mensal após intervenção de <strong>{r.prodMensalF.toLocaleString("pt-BR")}/mês</strong>, gera o retorno mensal de <strong>{formatBRL(r.reducaoMensal)}</strong>.
-          </p>
-          <p className="mt-2 font-bold text-slate-800">
-            Portanto, um payback de {r.paybackMeses > 0 ? r.paybackMeses.toFixed(1) : "—"} meses.
-          </p>
+        <div className="relative bg-white p-5 border border-slate-200 rounded-2xl shadow-sm">
+          <button onClick={() => { navigator.clipboard.writeText(laudo); setCopied(true); toast.success("Copiado!"); setTimeout(() => setCopied(false), 2000); }} className="absolute top-3 right-3 p-2 rounded-md bg-slate-50 text-slate-400 hover:text-blue-600 transition-all">
+            {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+          </button>
+          <h4 className="text-[10px] font-bold text-blue-600 uppercase mb-3 tracking-widest">Laudo de Payback</h4>
+          <p className="text-xs text-slate-600 leading-relaxed text-justify">{laudo}</p>
+        </div>
+        <div className="mt-auto pt-6 min-h-[250px]">
+          <ComparisonChart data={chartData} title="Evolução de Custos" />
         </div>
       </div>
     </div>
