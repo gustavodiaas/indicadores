@@ -105,9 +105,7 @@ const defaultState: AppState = {
   resumo: { nomeEmpresa: "", cidade: "", ramo: "", turnos: 1, processos: "", metodo: "", origem: "", oportunidades: "", problemas: "", atuacao: "", motivacao: "", ferramentas: "", acoes: [] },
 };
 
-// Utils: Proteção contra NaNs e Divisões por Zero
 const safeDiv = (num: number, den: number) => (den > 0 ? num / den : 0);
-// Utils: Tratamento de Encargos para o Payback (Se digitar 80, entende 1.8)
 const tratarEncargo = (v: number) => (v > 10 ? 1 + (v / 100) : v);
 
 export function useAppStore() {
@@ -148,8 +146,6 @@ export function useAppStore() {
   return { state, activeModule, setActiveModule, updateModule, exportJSON, importJSON, loadState };
 }
 
-// === CÁLCULOS DE ALTA PRECISÃO (REGRAS DE NEGÓCIO) ===
-
 export function calcProdutividade(d: ProdutividadeData) {
   const pphT1 = safeDiv(d.volumeT1, (d.horasT1 * d.operadoresT1));
   const pphT3 = safeDiv(d.volumeT3, (d.horasT3 * d.operadoresT3));
@@ -162,11 +158,11 @@ export function calcPayback(d: PaybackData, prod: ProdutividadeData, res: Resumo
   const prodMensalI = prod.volumeT1 * turnos * 21;
   const prodMensalF = prod.volumeT3 * turnos * 21;
 
+  const encI = tratarEncargo(d.encargosInicial);
+  const encF = tratarEncargo(d.encargosFinal);
+
   const salI = d.salarioBaseInicial * encI * d.colaboradoresInicial * safeDiv(d.dedicacaoInicial, 100);
   const salF = d.salarioBaseFinal * encF * d.colaboradoresFinal * safeDiv(d.dedicacaoFinal, 100);
-
-  const salI = d.salarioBaseInicial * encI * d.colaboradoresInicial;
-  const salF = d.salarioBaseFinal * encF * d.colaboradoresFinal;
 
   const custoI = safeDiv(salI, prodMensalI);
   const custoF = safeDiv(salF, prodMensalF);
