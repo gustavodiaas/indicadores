@@ -26,7 +26,7 @@ const Index = () => {
       case "produtividade":
         return <ProdutividadeModule data={state.produtividade} onChange={d => updateModule("produtividade", d)} />;
       case "payback":
-        return <PaybackModule data={state.payback} prodData={state.produtividade} onChange={d => updateModule("payback", d)} />;
+        return <PaybackModule data={state.payback} prodData={state.produtividade} resumoData={state.resumo} onChange={d => updateModule("payback", d)} />;
       case "movimentacao":
         return <MovimentacaoModule data={state.movimentacao} onChange={d => updateModule("movimentacao", d)} />;
       case "qualidade":
