@@ -1,64 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    /* Cores Base - Estilo SaaS Corporativo */
     --background: 210 20% 98%;
     --foreground: 215 25% 15%;
-
     --card: 0 0% 100%;
     --card-foreground: 215 25% 15%;
-
     --popover: 0 0% 100%;
     --popover-foreground: 215 25% 15%;
-
     --primary: 221 83% 53%;
     --primary-foreground: 0 0% 100%;
-
     --secondary: 210 40% 96%;
     --secondary-foreground: 215 25% 27%;
-
     --muted: 210 30% 95%;
     --muted-foreground: 215 15% 47%;
-
     --accent: 226 70% 55%;
     --accent-foreground: 0 0% 100%;
-
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-
     --border: 214 25% 89%;
     --input: 214 25% 89%;
     --ring: 221 83% 53%;
-
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     /* Sidebar - Dark Premium */
-    --sidebar-background: 217 33% 17%;
+    --sidebar-background: 222 47% 11%;
     --sidebar-foreground: 210 20% 80%;
     --sidebar-primary: 221 83% 53%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 217 30% 22%;
+    --sidebar-accent: 217 30% 18%;
     --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 217 25% 25%;
-    --sidebar-ring: 221 83% 53%;
-
-    /* Gráficos e KPIs */
-    --kpi-positive: 142 71% 45%;
-    --kpi-negative: 0 84% 60%;
-    --chart-t1: 215 20% 65%;
-    --chart-t3: 221 83% 53%;
+    --sidebar-border: 217 25% 15%;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
+  
   body {
-    @apply bg-background text-foreground antialiased;
+    /* Fundo levemente acinzentado para destacar os painéis brancos */
+    @apply bg-[#F1F5F9] text-slate-800 antialiased;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
+}
+
+/* Scrollbar Premium */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
