@@ -17,6 +17,7 @@ export interface ProdutividadeData {
 }
 
 export interface PaybackData {
+  tipoSalario: "bruto" | "encargos";
   salarioBaseInicial: number;
   encargosInicial: number;
   colaboradoresInicial: number;
@@ -96,7 +97,7 @@ export interface AppState {
 
 const defaultState: AppState = {
   produtividade: { volumeT1: 0, volumeT3: 0, horasT1: 8, horasT3: 8, operadoresT1: 1, operadoresT3: 1 },
-  payback: { salarioBaseInicial: 0, encargosInicial: 1.9, colaboradoresInicial: 1, dedicacaoInicial: 100, salarioBaseFinal: 0, encargosFinal: 1.9, colaboradoresFinal: 1, dedicacaoFinal: 100, valorConsultoria: 0, investimentoExtra: 0 },
+  payback: { tipoSalario: "encargos", salarioBaseInicial: 0, encargosInicial: 1.9, colaboradoresInicial: 1, dedicacaoInicial: 100, salarioBaseFinal: 0, encargosFinal: 1.9, colaboradoresFinal: 1, dedicacaoFinal: 100, valorConsultoria: 0, investimentoExtra: 0 },
   movimentacao: { distanciaT1: 0, distanciaT3: 0, tempoT1: 0, tempoT3: 0, unidadeTempo: "minutos" },
   qualidade: { quantidadeT1: 0, quantidadeT3: 0, perdasT1: 0, perdasT3: 0 },
   disponibilidade: { tempoTotalT1: 480, tempoTotalT3: 480, paradasPlanT1: 0, paradasPlanT3: 0, paradasNaoPlanT1: 0, paradasNaoPlanT3: 0, unidadeTempo: "minutos" },
@@ -106,7 +107,8 @@ const defaultState: AppState = {
 };
 
 const safeDiv = (num: number, den: number) => (den > 0 ? num / den : 0);
-const tratarEncargo = (v: number) => (v > 10 ? 1 + (v / 100) : v);
+// Ajuste fino: Se o encargo for 0, multiplicador é 1 (apenas o salário puro)
+const tratarEncargo = (v: number) => (v <= 0 ? 1 : v > 10 ? 1 + (v / 100) : v);
 
 export function useAppStore() {
   const [state, setState] = useState<AppState>(defaultState);
@@ -158,8 +160,9 @@ export function calcPayback(d: PaybackData, prod: ProdutividadeData, res: Resumo
   const prodMensalI = prod.volumeT1 * turnos * 21;
   const prodMensalF = prod.volumeT3 * turnos * 21;
 
-  const encI = tratarEncargo(d.encargosInicial);
-  const encF = tratarEncargo(d.encargosFinal);
+  // Se o usuário selecionou "Bruto", o multiplicador é fixado em 1 (sem encargos)
+  const encI = d.tipoSalario === "bruto" ? 1 : tratarEncargo(d.encargosInicial);
+  const encF = d.tipoSalario === "bruto" ? 1 : tratarEncargo(d.encargosFinal);
 
   const salI = d.salarioBaseInicial * encI * d.colaboradoresInicial * safeDiv(d.dedicacaoInicial, 100);
   const salF = d.salarioBaseFinal * encF * d.colaboradoresFinal * safeDiv(d.dedicacaoFinal, 100);
