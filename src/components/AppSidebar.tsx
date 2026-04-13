@@ -22,28 +22,27 @@ interface Props {
 
 export function AppSidebar({ active, onSelect }: Props) {
   return (
-    // A mágica acontece aqui: 'print:hidden' garante que a sidebar suma no PDF
-    <aside className="print:hidden w-64 min-h-screen bg-sidebar border-r border-sidebar-border flex flex-col shrink-0 transition-all duration-300">
+    <aside className="print:hidden w-64 min-h-screen bg-[#0f172a] border-r border-slate-800 flex flex-col shrink-0 transition-all duration-300">
       
-      {/* Header da Sidebar - Branding Premium */}
-      <div className="px-6 py-6 border-b border-sidebar-border flex items-center gap-3">
-        <div className="bg-sidebar-primary p-2.5 rounded-lg shadow-sm">
-          <Factory className="h-5 w-5 text-sidebar-primary-foreground" />
+      {/* Header - Branding */}
+      <div className="px-6 py-8 border-b border-slate-800 flex items-center gap-3">
+        <div className="bg-blue-600 p-2 rounded-lg shadow-lg">
+          <Factory className="h-5 w-5 text-white" />
         </div>
         <div className="flex flex-col">
-          <h1 className="text-base font-bold text-sidebar-foreground tracking-tight leading-tight">
+          <h1 className="text-sm font-bold text-white uppercase tracking-wider leading-tight">
             Lean Consulting
           </h1>
-          <span className="text-[10px] font-semibold text-sidebar-foreground/50 uppercase tracking-wider mt-0.5">
-            Engenharia de Produção
+          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">
+            Engenharia
           </span>
         </div>
       </div>
 
       {/* Navegação */}
       <nav className="flex-1 py-6 px-3 space-y-1.5 overflow-y-auto">
-        <div className="px-3 mb-3 text-xs font-semibold text-sidebar-foreground/40 uppercase tracking-wider">
-          Módulos de Análise
+        <div className="px-3 mb-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+          Menu de Análise
         </div>
         
         {modules.map(m => {
@@ -54,16 +53,25 @@ export function AppSidebar({ active, onSelect }: Props) {
               onClick={() => onSelect(m.key)}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-all duration-200 ${
                 isActive
-                  ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-md"
-                  : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                  ? "bg-blue-600 text-white shadow-lg shadow-blue-900/20"
+                  : "text-slate-400 hover:bg-slate-800 hover:text-white"
               }`}
             >
-              <m.icon className={`h-4 w-4 shrink-0 transition-opacity ${isActive ? "opacity-100" : "opacity-60"}`} />
+              <m.icon className={`h-4 w-4 shrink-0 ${isActive ? "text-white" : "text-slate-500"}`} />
               <span>{m.label}</span>
             </button>
           );
         })}
       </nav>
+
+      {/* Rodapé da Sidebar */}
+      <div className="p-4 border-t border-slate-800">
+        <div className="bg-slate-800/50 rounded-lg p-3">
+          <p className="text-[10px] text-slate-500 font-medium text-center uppercase tracking-tighter">
+            Sistema de Indicadores v1.0
+          </p>
+        </div>
+      </div>
 
     </aside>
   );
