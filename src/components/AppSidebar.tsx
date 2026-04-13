@@ -5,7 +5,7 @@ import {
 import { type ModuleKey } from "@/store/useAppStore";
 
 const modules: { key: ModuleKey; label: string; icon: React.ElementType }[] = [
-  { key: "resumo", label: "Resumo Executivo", icon: FileText },
+  { key: "resumo", label: "Descrição do Processo", icon: FileText },
   { key: "produtividade", label: "Produtividade", icon: BarChart3 },
   { key: "payback", label: "Payback", icon: Calculator },
   { key: "movimentacao", label: "Movimentação", icon: ArrowRightLeft },
