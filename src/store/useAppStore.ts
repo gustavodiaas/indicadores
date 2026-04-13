@@ -72,8 +72,8 @@ export interface ResumoData {
   nomeEmpresa: string;
   cidade: string;
   ramo: string;
-  especialista: string; // Novo
-  totalColaboradores: number; // Novo
+  especialista: string;
+  totalColaboradores: number;
   turnos: number;
   processos: string;
   metodo: "empurrada" | "puxada" | "";
@@ -105,26 +105,11 @@ const defaultState: AppState = {
   disponibilidade: { tempoTotalT1: 480, tempoTotalT3: 480, paradasPlanT1: 0, paradasPlanT3: 0, paradasNaoPlanT1: 0, paradasNaoPlanT3: 0, unidadeTempo: "minutos" },
   leadtime: { leadTimeT1: 0, leadTimeT3: 0 },
   area: { areaT1: 0, areaT3: 0, valorAluguel: 0 },
-  resumo: { 
-  nomeEmpresa: "", 
-  cidade: "", 
-  ramo: "", 
-  especialista: "", 
-  totalColaboradores: 0, 
-  turnos: 1, 
-  processos: "", 
-  metodo: "", 
-  origem: "", 
-  oportunidades: "", 
-  problemas: "", 
-  atuacao: "", 
-  motivacao: "", 
-  ferramentas: "", 
-  acoes: [] 
-},
+  resumo: { nomeEmpresa: "", cidade: "", ramo: "", especialista: "", totalColaboradores: 0, turnos: 1, processos: "", metodo: "", origem: "", oportunidades: "", problemas: "", atuacao: "", motivacao: "", ferramentas: "", acoes: [] },
+};
 
+// Funções Utilitárias fora dos objetos
 const safeDiv = (num: number, den: number) => (den > 0 ? num / den : 0);
-// Ajuste fino: Se o encargo for 0, multiplicador é 1 (apenas o salário puro)
 const tratarEncargo = (v: number) => (v <= 0 ? 1 : v > 10 ? 1 + (v / 100) : v);
 
 export function useAppStore() {
@@ -177,7 +162,6 @@ export function calcPayback(d: PaybackData, prod: ProdutividadeData, res: Resumo
   const prodMensalI = prod.volumeT1 * turnos * 21;
   const prodMensalF = prod.volumeT3 * turnos * 21;
 
-  // Se o usuário selecionou "Bruto", o multiplicador é fixado em 1 (sem encargos)
   const encI = d.tipoSalario === "bruto" ? 1 : tratarEncargo(d.encargosInicial);
   const encF = d.tipoSalario === "bruto" ? 1 : tratarEncargo(d.encargosFinal);
 
