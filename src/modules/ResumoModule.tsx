@@ -142,13 +142,13 @@ export function ResumoModule({ data, state, onChange }: Props) {
               </button>
               <h4 className="text-[10px] font-bold text-white uppercase tracking-widest mb-8 border-b border-slate-800 pb-4">Conclusão Brasil Mais Produtivo</h4>
               <div className="text-[13px] text-slate-300 leading-relaxed text-justify space-y-6">
-                <p>O presente programa proporcionou consultoria em Manufatura Enxuta na Empresa <strong>{data.nomeEmpresa || "—"}</strong>.</p>
+                <p>O presente programa de fomento ao setor industrial brasileiro Brasil Mais Produtivo, proporcionou consultoria em Manufatura Enxuta na Empresa <strong>{data.nomeEmpresa || "—"}</strong>.</p>
                 <div className="bg-blue-600/10 border-l-4 border-blue-500 p-5 space-y-3 rounded-r-xl">
                   <p className="font-bold text-white text-sm">Aumento de {prod.ganho.toFixed(2)}% em produtividade.</p>
                   <p className="font-bold text-white text-sm">Payback de {pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2) : "0.00"} meses.</p>
                 </div>
                 <p className="text-[11px] text-slate-500 italic border-t border-slate-800 pt-6 leading-relaxed">
-                  O resultado geral do projeto foi agregador e positivo... garantindo o aculturamento do pensamento Lean.
+                  O resultado geral do projeto foi agregador e positivo para a empresa pois o envolimento da equipe foi primordial para entendimento e aplicação dos conceitos, ficando o legado para continuidade de novas ações e melhorias.
                 </p>
               </div>
             </div>
