@@ -43,8 +43,8 @@ export function FloatingNav({ active, onSelect }: Props) {
       }
     `}>
       <div className={`
-        flex flex-col items-center gap-2 py-4 bg-white border border-slate-200 shadow-2xl transition-all duration-500
-        ${isFixed ? "h-full rounded-none border-y-0 border-l-0" : "rounded-[3rem]"}
+        flex flex-col items-center gap-1 py-6 bg-white border border-slate-200 shadow-2xl transition-all duration-500
+        ${isFixed ? "h-full rounded-none border-y-0 border-l-0" : "rounded-[3.5rem]"}
       `}>
         
         {/* BOTÃO PARA FIXAR / FLUTUAR */}
@@ -58,7 +58,7 @@ export function FloatingNav({ active, onSelect }: Props) {
           {isFixed ? <Pin className="w-4 h-4 rotate-45" /> : <PinOff className="w-4 h-4" />}
         </button>
 
-        <div className="flex-1 flex flex-col gap-2 overflow-y-auto no-scrollbar w-full px-2">
+        <div className="flex-1 flex flex-col gap-1 w-full px-2 justify-center">
           {navItems.map((item) => {
             const isActive = active === item.key;
             const Icon = item.icon;
@@ -68,7 +68,7 @@ export function FloatingNav({ active, onSelect }: Props) {
                 key={item.key}
                 onClick={() => onSelect(item.key)}
                 className={`
-                  group relative w-full h-20 rounded-2xl transition-all duration-300 flex flex-col items-center justify-center flex-shrink-0 gap-1
+                  group relative w-full h-[72px] rounded-2xl transition-all duration-300 flex flex-col items-center justify-center flex-shrink-0 gap-1
                   ${isActive 
                     ? `${item.color} text-white scale-105 shadow-md` 
                     : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"
