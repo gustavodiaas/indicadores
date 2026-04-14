@@ -1,5 +1,4 @@
-import { Download, Upload, LayoutDashboard, Printer } from "lucide-react";
-import { useRef } from "react";
+import { Download, Upload, FileDown, TrendingUp } from "lucide-react";
 
 interface Props {
   onExport: () => void;
@@ -8,66 +7,34 @@ interface Props {
 }
 
 export function Topbar({ onExport, onImport, onPDF }: Props) {
-  const fileRef = useRef<HTMLInputElement>(null);
-
   return (
-    // A classe print:hidden garante que este menu suma quando o PDF for gerado
-    <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 shrink-0 sticky top-0 z-10 shadow-sm print:hidden">
+    <header className="h-20 border-b border-slate-200 bg-white/80 backdrop-blur-md sticky top-0 z-40 px-8 flex items-center justify-between">
       
-      {/* Título e Identidade Visual */}
+      {/* Branding agora na horizontal */}
       <div className="flex items-center gap-3">
-        <div className="flex items-center justify-center w-8 h-8 rounded-md bg-blue-600 text-white shadow-sm">
-          <LayoutDashboard className="w-4 h-4" />
+        <div className="bg-blue-600 p-2 rounded-lg shadow-md">
+          <TrendingUp className="h-5 w-5 text-white" />
         </div>
         <div className="flex flex-col">
-          <h2 className="text-sm font-bold text-slate-800 uppercase tracking-wider leading-tight">
-            Painel de Gestão
-          </h2>
-          <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest mt-0.5">
-            Indicadores de Performance
-          </p>
+          <h1 className="text-sm font-black text-slate-800 uppercase tracking-tight leading-tight">
+            Consultoria Lean
+          </h1>
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+            Análise de Indicadores
+          </span>
         </div>
       </div>
-      
-      {/* Ações e Controles */}
+
       <div className="flex items-center gap-3">
-        <button 
-          onClick={() => fileRef.current?.click()}
-          className="inline-flex items-center justify-center h-9 px-4 rounded-md text-sm font-medium text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 hover:text-slate-900 transition-colors shadow-sm"
-        >
-          <Upload className="h-4 w-4 mr-2 text-slate-500" /> 
-          Importar
+        <button onClick={onExport} className="flex items-center gap-2 px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50 rounded-lg transition-all border border-slate-200">
+          <Download className="h-4 w-4" /> BACKUP
         </button>
-        
-        <button 
-          onClick={onExport}
-          className="inline-flex items-center justify-center h-9 px-4 rounded-md text-sm font-medium text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 hover:text-slate-900 transition-colors shadow-sm"
-        >
-          <Download className="h-4 w-4 mr-2 text-slate-500" /> 
-          Backup
-        </button>
-        
-        <input 
-          ref={fileRef} 
-          type="file" 
-          accept=".json" 
-          className="hidden" 
-          onChange={e => {
-            const f = e.target.files?.[0];
-            if (f) onImport(f);
-            // Reseta o input para permitir importar o mesmo arquivo novamente se houver erro
-            e.target.value = "";
-          }} 
-        />
-        
-        <div className="h-6 w-px bg-slate-200 mx-1"></div>
-        
-        <button 
-          onClick={onPDF}
-          className="inline-flex items-center justify-center h-9 px-4 rounded-md text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-sm"
-        >
-          <Printer className="h-4 w-4 mr-2 opacity-90" /> 
-          Exportar PDF
+        <label className="flex items-center gap-2 px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50 rounded-lg transition-all border border-slate-200 cursor-pointer">
+          <Upload className="h-4 w-4" /> IMPORTAR
+          <input type="file" className="hidden" accept=".json" onChange={e => e.target.files?.[0] && onImport(e.target.files[0])} />
+        </label>
+        <button onClick={onPDF} className="flex items-center gap-2 px-4 py-2 text-xs font-bold bg-blue-600 text-white hover:bg-blue-700 rounded-lg transition-all shadow-md shadow-blue-200">
+          <FileDown className="h-4 w-4" /> EXPORTAR PDF
         </button>
       </div>
     </header>
