@@ -8,7 +8,8 @@ export type ModuleKey =
   | "qualidade"
   | "disponibilidade"
   | "leadtime"
-  | "area";
+  | "area"
+  | "gbo";
 
 export interface ProdutividadeData {
   volumeT1: number; volumeT3: number;
