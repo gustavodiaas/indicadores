@@ -1,6 +1,6 @@
 import { 
   BarChart3, Calculator, ArrowRightLeft, ShieldCheck, 
-  Clock, Timer, Square, FileText, LayoutDashboard 
+  Clock, Timer, Square, FileText 
 } from "lucide-react";
 import { type ModuleKey } from "@/store/useAppStore";
 
@@ -22,8 +22,8 @@ interface Props {
 
 export function FloatingNav({ active, onSelect }: Props) {
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
-      <nav className="flex items-center gap-1 bg-slate-900/80 backdrop-blur-xl p-2 rounded-2xl border border-white/10 shadow-2xl">
+    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 w-fit">
+      <nav className="flex items-center gap-2 bg-slate-900/90 backdrop-blur-md p-2 rounded-2xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
         {modules.map(m => {
           const isActive = active === m.key;
           return (
@@ -31,14 +31,21 @@ export function FloatingNav({ active, onSelect }: Props) {
               key={m.key}
               onClick={() => onSelect(m.key)}
               className={`group relative flex flex-col items-center justify-center w-12 h-12 rounded-xl transition-all duration-300 ${
-                isActive ? "bg-blue-600 text-white shadow-lg" : "text-slate-400 hover:bg-white/10 hover:text-white"
+                isActive 
+                  ? "bg-blue-600 text-white shadow-lg" 
+                  : "text-slate-400 hover:bg-white/10 hover:text-white"
               }`}
             >
               <m.icon className="h-5 w-5" />
-              {/* Tooltip elegante */}
-              <span className="absolute -top-10 scale-0 group-hover:scale-100 transition-all bg-slate-800 text-white text-[10px] font-bold px-2 py-1 rounded border border-slate-700 uppercase tracking-widest pointer-events-none whitespace-nowrap">
-                {m.label}
-              </span>
+              
+              {/* Tooltip flutuante */}
+              <div className="absolute -top-12 scale-0 group-hover:scale-100 transition-all duration-200 pointer-events-none">
+                <div className="bg-slate-800 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg border border-slate-700 uppercase tracking-widest whitespace-nowrap shadow-xl">
+                  {m.label}
+                </div>
+                {/* Triângulo do tooltip */}
+                <div className="w-2 h-2 bg-slate-800 border-r border-b border-slate-700 rotate-45 mx-auto -mt-1" />
+              </div>
             </button>
           );
         })}
