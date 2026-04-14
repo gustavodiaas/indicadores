@@ -53,9 +53,9 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
           </select>
         </div>
 
-        {/* T1 - INICIAL */}
-        <div className="space-y-4 bg-blue-50/50 p-5 rounded-xl border border-blue-100">
-          <h3 className="font-bold text-slate-800 border-b border-blue-200 pb-2">Estado Inicial (T1)</h3>
+       {/* T1 - INICIAL */}
+        <div className="space-y-4 bg-slate-100/50 p-5 rounded-xl border border-slate-200">
+          <h3 className="font-bold text-slate-800 border-b border-slate-200 pb-2">Estado Inicial (T1)</h3>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-bold text-slate-500 mb-1">Salário Base (Total R$)</label>
@@ -86,9 +86,9 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
           </div>
         </div>
 
-        {/* T3 - FINAL */}
-        <div className="space-y-4 bg-emerald-50/50 p-5 rounded-xl border border-emerald-100">
-          <h3 className="font-bold text-slate-800 border-b border-emerald-200 pb-2">Estado Final (T3)</h3>
+       {/* T3 - FINAL */}
+        <div className="space-y-4 bg-indigo-50/50 p-5 rounded-xl border border-indigo-100">
+          <h3 className="font-bold text-slate-800 border-b border-indigo-200 pb-2">Estado Final (T3)</h3>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-bold text-slate-500 mb-1">Salário Base (Total R$)</label>
