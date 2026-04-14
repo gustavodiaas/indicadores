@@ -38,19 +38,18 @@ export function FloatingNav({ active, onSelect }: Props) {
     <div className={`
       fixed z-[100] transition-all duration-500 print:hidden
       ${isFixed 
-        ? "left-0 top-0 h-full w-20" 
-        : "left-6 top-1/2 -translate-y-1/2 w-20"
+        ? "left-0 top-0 h-full w-28" 
+        : "left-6 top-1/2 -translate-y-1/2 w-28"
       }
     `}>
       <div className={`
         flex flex-col items-center gap-2 py-4 bg-white border border-slate-200 shadow-2xl transition-all duration-500
-        ${isFixed ? "h-full rounded-none border-y-0 border-l-0" : "rounded-[2.5rem]"}
+        ${isFixed ? "h-full rounded-none border-y-0 border-l-0" : "rounded-[3rem]"}
       `}>
         
         {/* BOTÃO PARA FIXAR / FLUTUAR */}
         <button 
           onClick={() => setIsFixed(!isFixed)}
-          title={isFixed ? "Modo Flutuante" : "Fixar na Lateral"}
           className={`
             p-2 mb-2 rounded-full transition-colors
             ${isFixed ? "text-blue-600 bg-blue-50" : "text-slate-300 hover:text-slate-500"}
@@ -59,7 +58,7 @@ export function FloatingNav({ active, onSelect }: Props) {
           {isFixed ? <Pin className="w-4 h-4 rotate-45" /> : <PinOff className="w-4 h-4" />}
         </button>
 
-        <div className="flex-1 flex flex-col gap-2 overflow-y-auto no-scrollbar px-2">
+        <div className="flex-1 flex flex-col gap-2 overflow-y-auto no-scrollbar w-full px-2">
           {navItems.map((item) => {
             const isActive = active === item.key;
             const Icon = item.icon;
@@ -69,20 +68,17 @@ export function FloatingNav({ active, onSelect }: Props) {
                 key={item.key}
                 onClick={() => onSelect(item.key)}
                 className={`
-                  group relative w-14 h-14 rounded-2xl transition-all duration-300 ease-out flex flex-col items-center justify-center flex-shrink-0
+                  group relative w-full h-20 rounded-2xl transition-all duration-300 flex flex-col items-center justify-center flex-shrink-0 gap-1
                   ${isActive 
-                    ? `${item.color} text-white scale-105 shadow-lg` 
+                    ? `${item.color} text-white scale-105 shadow-md` 
                     : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"
                   }
                 `}
               >
-                <Icon className={`w-6 h-6 transition-transform duration-300 ${isActive ? "scale-100" : "group-hover:scale-110"}`} />
-                
-                {/* TOOLTIP NO HOVER (Opcional, já que a barra é fina) */}
-                <div className="absolute left-full ml-4 px-3 py-1 bg-slate-900 text-white text-[10px] font-bold rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-[110] shadow-xl">
+                <Icon className={`w-5 h-5 transition-transform duration-300 ${isActive ? "scale-100" : "group-hover:scale-110"}`} />
+                <span className={`text-[9px] font-bold text-center leading-tight px-1 ${isActive ? "text-white" : "text-slate-500"}`}>
                   {item.label}
-                  <div className="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-2 bg-slate-900 rotate-45" />
-                </div>
+                </span>
               </button>
             );
           })}
