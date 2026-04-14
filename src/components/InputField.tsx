@@ -12,21 +12,31 @@ interface Props {
 }
 
 export function InputField({ label, value, onChange, type = "text", suffix, placeholder }: Props) {
-  // Estado local protege a digitação de decimais (evita que o React apague o ".")
   const [localValue, setLocalValue] = useState(value?.toString() || "");
 
   useEffect(() => {
-    // Só atualiza o estado local se o valor numérico for realmente diferente
-    if (Number(value) !== Number(localValue?.replace(',', '.'))) {
-      setLocalValue(value?.toString() || "");
+    // Se for número, compara matematicamente. Se for texto, compara a string exata.
+    if (type === "number") {
+      if (Number(value) !== Number(localValue?.replace(',', '.'))) {
+        setLocalValue(value?.toString() || "");
+      }
+    } else {
+      if (value?.toString() !== localValue) {
+        setLocalValue(value?.toString() || "");
+      }
     }
-  }, [value]);
+  }, [value, type]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setLocalValue(val);
-    // Troca vírgula por ponto automaticamente para evitar erros matemáticos
-    onChange(val.replace(',', '.'));
+    
+    // Aplica a regra da vírgula APENAS em campos numéricos
+    if (type === "number") {
+      onChange(val.replace(',', '.'));
+    } else {
+      onChange(val); // Texto livre, passa a vírgula adiante
+    }
   };
 
   return (
