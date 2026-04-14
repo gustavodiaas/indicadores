@@ -97,16 +97,16 @@ export function ResumoModule({ data, state, onChange }: Props) {
         </div>
 
         {/* Card 2: Conclusão Completa (Brasil Mais Produtivo) */}
-        <div className="relative bg-[#0f172a] p-8 rounded-2xl shadow-xl border border-slate-800">
-          <button onClick={() => handleCopy(conclusaoTexto, "conc")} className="absolute top-6 right-6 p-2 rounded-lg bg-white/5 text-slate-500 hover:bg-blue-600 hover:text-white transition-all shadow-sm">
+        <div className="relative bg-blue-50/50 p-6 rounded-2xl border border-blue-100 shadow-sm">
+          <button onClick={() => handleCopy(conclusaoTexto, "conc")} className="absolute top-4 right-4 p-2 rounded-lg bg-white text-slate-400 hover:text-blue-600 transition-all shadow-sm border border-slate-100">
             {copiedId === "conc" ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
           </button>
-          <h4 className="text-xs font-bold text-white uppercase tracking-widest mb-6 border-b border-slate-800 pb-2">Conclusão do Projeto</h4>
-          <div className="text-[13px] text-slate-300 leading-relaxed text-justify space-y-6">
+          <h4 className="text-[10px] font-bold text-blue-700 uppercase tracking-widest mb-4 border-b border-blue-200/50 pb-2">Conclusão do Projeto</h4>
+          <div className="text-[13px] text-slate-700 leading-relaxed text-justify space-y-6">
             <p className="italic">{conclusaoTexto}</p>
-            <div className="bg-blue-600/10 border-l-4 border-blue-500 p-5 space-y-3 rounded-r-xl">
-              <p className="font-bold text-white text-sm tracking-tight">• Aumento de {prod.ganho.toFixed(2)}% em produtividade.</p>
-              <p className="font-bold text-white text-sm tracking-tight">• Payback de {pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2) : "0.00"} meses.</p>
+            <div className="bg-white border-l-4 border-blue-500 p-5 space-y-3 rounded-r-xl shadow-sm">
+              <p className="font-bold text-slate-800 text-sm tracking-tight">• Aumento de {prod.ganho.toFixed(2)}% em produtividade.</p>
+              <p className="font-bold text-slate-800 text-sm tracking-tight">• Payback de {pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2) : "0.00"} meses.</p>
             </div>
           </div>
         </div>
