@@ -94,7 +94,7 @@ export interface GboOperation {
 }
 
 export interface GboData {
-  turnoTempo: number; // Em horas ou minutos
+  turnoTempo: number;
   turnoUnidade: "minutes" | "hours";
   demanda: number;
   demandaUnidade: string;
@@ -123,12 +123,10 @@ const defaultState: AppState = {
   leadtime: { leadTimeT1: 0, leadTimeT3: 0 },
   area: { areaT1: 0, areaT3: 0, valorAluguel: 0 },
   resumo: { nomeEmpresa: "", cidade: "", ramo: "", especialista: "", totalColaboradores: 0, turnos: 1, processos: "", metodo: "", origem: "", oportunidades: "", problemas: "", atuacao: "", motivacao: "", ferramentas: "", acoes: [] },
-  gbo: { turnoTempo: 0, turnoUnidade: "hours", demanda: 0, demandaUnidade: "peças", tempoUnidade: "seconds", operacoes: [] }, // <- CORREÇÃO AQUI
+  gbo: { turnoTempo: 0, turnoUnidade: "hours", demanda: 0, demandaUnidade: "peças", tempoUnidade: "seconds", operacoes: [] },
 };
 
-// Funções Utilitárias fora dos objetos
 const safeDiv = (num: number, den: number) => (den > 0 ? num / den : 0);
-const tratarEncargo = (v: number) => (v <= 0 ? 1 : v > 10 ? 1 + (v / 100) : v);
 
 export function useAppStore() {
   const [state, setState] = useState<AppState>(defaultState);
@@ -175,16 +173,14 @@ export function calcProdutividade(d: ProdutividadeData) {
   return { pphT1, pphT3, ganho };
 }
 
-export function calcPayback(d: PaybackData, prod: ProdutividadeData, res: ResumoData) {
-  const turnos = res.turnos || 1;
-  const prodMensalI = prod.volumeT1 * turnos * 21;
-  const prodMensalF = prod.volumeT3 * turnos * 21;
+export function calcPayback(d: PaybackData, prod: ProdutividadeData, res?: ResumoData) {
+  // LÓGICA IDÊNTICA AO HTML (Volume * 21)
+  const prodMensalI = prod.volumeT1 * 21;
+  const prodMensalF = prod.volumeT3 * 21;
 
-  const encI = d.tipoSalario === "bruto" ? 1 : tratarEncargo(d.encargosInicial);
-  const encF = d.tipoSalario === "bruto" ? 1 : tratarEncargo(d.encargosFinal);
-
-  const salI = d.salarioBaseInicial * encI * d.colaboradoresInicial * safeDiv(d.dedicacaoInicial, 100);
-  const salF = d.salarioBaseFinal * encF * d.colaboradoresFinal * safeDiv(d.dedicacaoFinal, 100);
+  // LÓGICA IDÊNTICA AO HTML (Salário * Encargos * Colaboradores)
+  const salI = d.salarioBaseInicial * d.encargosInicial * d.colaboradoresInicial;
+  const salF = d.salarioBaseFinal * d.encargosFinal * d.colaboradoresFinal;
 
   const custoI = safeDiv(salI, prodMensalI);
   const custoF = safeDiv(salF, prodMensalF);
