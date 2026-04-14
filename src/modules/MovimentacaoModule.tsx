@@ -14,22 +14,23 @@ export function MovimentacaoModule({ data, onChange }: Props) {
   const [copied, setCopied] = useState(false);
   const r = calcMovimentacao(data);
 
-  const chartData = [
-    { name: "Distância (m)", T1: data.distanciaT1 || 0, T3: data.distanciaT3 || 0 },
-    { name: "Tempo", T1: data.tempoT1 || 0, T3: data.tempoT3 || 0 },
-  ];
-
-  // Variáveis para o laudo
   const dI = data.distanciaT1 || 0;
   const dF = data.distanciaT3 || 0;
   const tI = data.tempoT1 || 0;
   const tF = data.tempoT3 || 0;
   const redD = r.reducaoDist.toFixed(2);
   const redT = r.reducaoTempo.toFixed(2);
-  const u = data.unidadeTempo || "minutos";
+  const uBase = data.unidadeTempo || "minutos";
 
-  // TEXTO PADRÃO
-  const laudo = `Por intermédio da ferramenta xx foi realizado (descreva ações e ou melhorias efetuadas).\n\nDistância: A medição inicial de movimentação/transporte era de ${dI}m (ida e volta), onde foi reduzido para ${dF}m (ida e volta), representando redução de ${redD}% em distância.\nCálculo Distância: (${dI} - ${dF}) / ${dI > 0 ? dI : 1} × 100 = ${redD}%\n\nTempo: O tempo de movimentação era de ${tI} ${u}, onde foi reduzido para ${tF} ${u}, representando redução de ${redT}% em tempo por intermédio (descrever melhorias e ou ações).\nCálculo Tempo: (${tI} - ${tF}) / ${tI > 0 ? tI : 1} × 100 = ${redT}%`;
+  // Inteligência de Unidade
+  const getUnit = (val: number, unit: string) => {
+    if (unit === "segundos") return val === 1 ? "segundo" : "segundos";
+    if (unit === "minutos") return val === 1 ? "minuto" : "minutos";
+    if (unit === "horas") return val === 1 ? "hora" : "horas";
+    return unit;
+  };
+
+  const laudo = `Por intermédio da ferramenta xx foi realizado (descreva ações e ou melhorias efetuadas).\n\nDistância: A medição inicial de movimentação/transporte era de ${dI}m (ida e volta), onde foi reduzido para ${dF}m (ida e volta), representando redução de ${redD}% em distância.\nCálculo Distância: (${dI} - ${dF}) / ${dI > 0 ? dI : 1} × 100 = ${redD}%\n\nTempo: O tempo de movimentação era de ${tI} ${getUnit(tI, uBase)}, onde foi reduzido para ${tF} ${getUnit(tF, uBase)}, representando redução de ${redT}% em tempo por intermédio (descrever melhorias e ou ações).\nCálculo Tempo: (${tI} - ${tF}) / ${tI > 0 ? tI : 1} × 100 = ${redT}%`;
 
   // Previne quebra de vírgula na digitação
   const parseDecimal = (val: string) => {
