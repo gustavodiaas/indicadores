@@ -15,7 +15,10 @@ export function QualidadeModule({ data, onChange }: Props) {
   const r = calcQualidade(data);
   const chartData = [{ name: "Índice Boas (%)", T1: Number(r.indiceT1.toFixed(1)), T3: Number(r.indiceT3.toFixed(1)) }];
 
-  const laudo = `O índice de peças boas inicial era de ${r.indiceT1.toFixed(1)}%, com um total de ${data.perdasT1} perdas mapeadas. Com a intervenção, o índice de qualidade saltou para ${r.indiceT3.toFixed(1)}%, representando um aumento de ${r.aumento.toFixed(1)}% na conformidade dos produtos.`;
+  const p1Txt = data.perdasT1 === 1 ? "peça não conforme" : "peças não conformes";
+  const p3Txt = data.perdasT3 === 1 ? "peça não conforme" : "peças não conformes";
+
+  const laudo = `No estágio inicial, de um total de ${data.quantidadeT1} peças produzidas, identificou-se ${data.perdasT1} ${p1Txt}, resultando em um índice de conformidade de ${r.indiceT1.toFixed(1)}%. Após as melhorias, de um total de ${data.quantidadeT3} peças, identificou-se ${data.perdasT3} ${p3Txt}, elevando o índice para ${r.indiceT3.toFixed(1)}%, representando um aumento de ${r.aumento.toFixed(1)}% na conformidade.`;
 
   return (
     <div className="flex gap-8 h-full">
