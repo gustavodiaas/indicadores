@@ -1,4 +1,4 @@
-import { useAppStore, calcProdutividade, calcPayback } from "@/store/useAppStore";
+import { useAppStore, calcProdutividade, calcPayback, calcMovimentacao, calcQualidade, calcDisponibilidade, calcLeadTime, calcArea } from "@/store/useAppStore";
 import { FloatingNav } from "@/components/FloatingNav";
 import { Topbar } from "@/components/Topbar";
 
@@ -12,16 +12,25 @@ import { DisponibilidadeModule } from "@/modules/DisponibilidadeModule";
 import { LeadTimeModule } from "@/modules/LeadTimeModule";
 import { AreaModule } from "@/modules/AreaModule";
 
-// O SEU GBO ORIGINAL (Plug and Play)
+// GBO ORIGINAL
 import GBOAnalysis from "@/modules/GboModule"; 
 
 const Index = () => {
   const { state, activeModule, setActiveModule, updateModule } = useAppStore();
 
   const handleExportWord = () => {
-    const { resumo, produtividade, payback } = state;
+    // Puxa o estado de todas as abas
+    const { resumo, produtividade, payback, movimentacao, qualidade, disponibilidade, leadtime, area } = state;
+    
+    // Roda os motores de cálculo
     const prod = calcProdutividade(produtividade);
     const pb = calcPayback(payback, produtividade, resumo);
+    const mov = calcMovimentacao(movimentacao);
+    const qual = calcQualidade(qualidade);
+    const disp = calcDisponibilidade(disponibilidade);
+    const lt = calcLeadTime(leadtime);
+    const ar = calcArea(area);
+    
     const acoesStr = resumo.acoes.length > 0 ? resumo.acoes.map(a => a.what).join(", ") : "ações de melhoria contínua";
 
     const content = `
@@ -30,19 +39,27 @@ const Index = () => {
       <body style="font-family: Arial, sans-serif; line-height: 1.6;">
         <h1 style="color: #2563eb; text-align: center;">RELATÓRIO TÉCNICO DE CONSULTORIA</h1>
         <hr>
+        
         <h3 style="text-transform: uppercase;">1. Descrição do Processo</h3>
         <p style="text-align: justify;">A Empresa ${resumo.nomeEmpresa || "—"}, da cidade de ${resumo.cidade || "—"} no Estado do Rio Grande do Sul, atua no ramo de ${resumo.ramo || "—"}, especialista em ${resumo.especialista || "—"}, conta com ${resumo.totalColaboradores || "0"} colaboradores atuando em ${resumo.turnos} Turno(s). O produto mapeado segue o seguinte processo produtivo: ${resumo.processos || "—"}, com método de produção ${resumo.metodo || "—"}, onde a demanda é originada por ${resumo.origem || "—"}. Ao longo do mapeamento foi identificado oportunidades no setor de ${resumo.oportunidades || "—"}, por problemas de ${resumo.problemas || "—"}. Nesta consultoria, a área de atuação/intervenção foi ${resumo.atuacao || "—"}.</p>
         
-        <h3 style="text-transform: uppercase;">2. Conclusão do Projeto</h3>
-        <p style="text-align: justify;">O presente programa de fomento ao setor industrial brasileiro Brasil Mais Produtivo, proporcionou a realização de consultoria em Manufatura Enxuta na Empresa ${resumo.nomeEmpresa || "—"}, na cidade de ${resumo.cidade || "—"} no Estado do Rio Grande do Sul. A escolha do produto a ser mapeado foi motivada ${resumo.motivacao || "—"}. As ferramentas aplicadas foram ${resumo.ferramentas || "—"}. Foram elaborados um conjunto de ações através da ferramenta 5W2H, onde definiu-se diversas ações para as oportunidades elencadas, tais como: ${acoesStr}.</p>
+        <h3 style="text-transform: uppercase;">2. Laudo Operacional e Resultados</h3>
+        <p style="text-align: justify;">Após definição do ponto de intervenção, monitoramento e validação das melhorias nas operações, obtiveram-se os seguintes indicadores técnicos:</p>
         
-        <p style="text-align: justify;">Após definição do ponto de intervenção, monitoramento e validação das melhorias, obteve-se:</p>
-        <ul style="font-weight: bold;">
-          <li>Aumento de ${prod.ganho.toFixed(2)}% em produtividade.</li>
-          <li>Payback: Com as ações aplicadas obtém-se um Payback de ${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2) : "0.00"} meses.</li>
+        <ul style="font-weight: bold; line-height: 1.8;">
+          <li>Produtividade: Aumento de ${prod.ganho.toFixed(2)}% (de ${prod.pphT1.toFixed(2)} para ${prod.pphT3.toFixed(2)} PPH).</li>
+          <li>Qualidade: Evolução de ${qual.indiceT1.toFixed(2)}% para ${qual.indiceT3.toFixed(2)}% de eficiência.</li>
+          <li>Disponibilidade: Aumento de ${disp.aumento.toFixed(2)}% no índice de disponibilidade.</li>
+          <li>Movimentação Logística: Redução de ${mov.reducaoDist.toFixed(2)}% na distância percorrida e ${mov.reducaoTempo.toFixed(2)}% no tempo.</li>
+          <li>Lead Time: Redução de ${lt.reducao.toFixed(2)}% no tempo total de atravessamento.</li>
+          <li>Área Ocupada: Otimização de ${ar.reducaoPercent.toFixed(2)}% (${ar.economiaM2.toFixed(2)} m² liberados), gerando impacto de R$ ${ar.economiaMensal.toFixed(2)}/mês.</li>
+          <li style="color: #2563eb; margin-top: 8px;">Retorno do Investimento (Payback): ${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2) : "0.00"} meses.</li>
         </ul>
         
-        <p style="text-align: justify; font-style: italic;">O resultado geral do projeto foi agregador e positivo para a empresa pois o envolvimento da equipe foi primordial para garantir o conhecimento necessário através do plano de ação, treinamentos, trabalho realizado e resultados alcançados, com isso a empresa pode manter o aculturamento do pensamento Lean e replicar os conceitos da melhoria contínua para os demais setores e linhas de trabalho da produção.</p>
+        <h3 style="text-transform: uppercase;">3. Plano de Ação</h3>
+        <p style="text-align: justify;">Foram elaboradas diversas ações utilizando a ferramenta 5W2H para atacar as causas raiz identificadas. Principais intervenções: ${acoesStr}.</p>
+        
+        <p style="text-align: justify; font-style: italic; margin-top: 20px;">O resultado geral do projeto foi agregador e positivo para a empresa. O envolvimento da equipe foi primordial para garantir o conhecimento necessário através do plano de ação, treinamentos e resultados alcançados, com isso a empresa pode manter o aculturamento do pensamento Lean e replicar os conceitos da melhoria contínua para os demais setores.</p>
       </body>
       </html>
     `;
@@ -51,7 +68,7 @@ const Index = () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `Relatorio_Lean_${resumo.nomeEmpresa || 'Empresa'}.doc`;
+    link.download = `Relatorio_Tecnico_${resumo.nomeEmpresa || 'Indicadores'}.doc`;
     link.click();
     URL.revokeObjectURL(url);
   };
@@ -105,5 +122,6 @@ const Index = () => {
       
     </div>
   );
-  };
+};
+
 export default Index;
