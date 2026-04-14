@@ -15,6 +15,7 @@ export interface ProdutividadeData {
   volumeT1: number; volumeT3: number;
   horasT1: number; horasT3: number;
   operadoresT1: number; operadoresT3: number;
+  unidade: string;
 }
 
 export interface PaybackData {
@@ -115,7 +116,7 @@ export interface AppState {
 }
 
 const defaultState: AppState = {
-  produtividade: { volumeT1: 0, volumeT3: 0, horasT1: 8, horasT3: 8, operadoresT1: 1, operadoresT3: 1 },
+  produtividade: { volumeT1: 0, volumeT3: 0, horasT1: 8, horasT3: 8, operadoresT1: 1, operadoresT3: 1, unidade: "peças" },
   payback: { tipoSalario: "bruto", salarioBaseInicial: 0, encargosInicial: 1.9, colaboradoresInicial: 1, dedicacaoInicial: 100, salarioBaseFinal: 0, encargosFinal: 1.9, colaboradoresFinal: 1, dedicacaoFinal: 100, valorConsultoria: 0, investimentoExtra: 0 },
   movimentacao: { distanciaT1: 0, distanciaT3: 0, tempoT1: 0, tempoT3: 0, unidadeTempo: "minutos" },
   qualidade: { quantidadeT1: 0, quantidadeT3: 0, perdasT1: 0, perdasT3: 0 },
