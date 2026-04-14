@@ -103,7 +103,8 @@ export function ResumoModule({ data, state, onChange }: Props) {
           </button>
           <h4 className="text-[10px] font-bold text-blue-700 uppercase tracking-widest mb-4 border-b border-blue-200/50 pb-2">Conclusão do Projeto</h4>
           <div className="text-[13px] text-slate-700 leading-relaxed text-justify space-y-6">
-            <p className="italic">{conclusaoTexto}</p>
+            {/* REMOVIDO O ITÁLICO AQUI */}
+            <p>{conclusaoTexto}</p> 
             <div className="bg-white border-l-4 border-blue-500 p-5 space-y-3 rounded-r-xl shadow-sm">
               <p className="font-bold text-slate-800 text-sm tracking-tight">• Aumento de {prod.ganho.toFixed(2)}% em produtividade.</p>
               <p className="font-bold text-slate-800 text-sm tracking-tight">• Payback de {pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2) : "0.00"} meses.</p>
