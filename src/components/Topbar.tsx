@@ -6,15 +6,14 @@ interface Props {
 
 export function Topbar({ onExportWord }: Props) {
   return (
-    /* Container externo apenas para centralizar e dar margem no topo */
-    <div className="w-full pt-6 px-4 mb-4 flex justify-center print:hidden">
+    /* Container centralizado com a mesma largura do quadro principal */
+    <div className="w-full pt-6 px-4 md:px-8 mb-2 flex justify-center print:hidden relative z-[100]">
       
-      {/* A Pílula Fluída */}
-      <header className="w-full max-w-[1400px] h-16 bg-white/90 backdrop-blur-md border border-slate-200/60 shadow-xl shadow-slate-200/40 rounded-full px-8 flex items-center justify-between transition-all duration-500 hover:shadow-2xl hover:border-blue-200/50">
+      <header className="w-full max-w-[1600px] h-16 bg-white/95 backdrop-blur-md border border-slate-200/60 shadow-xl shadow-slate-200/30 rounded-full px-8 flex items-center justify-between transition-all duration-500 hover:shadow-2xl">
         
-        {/* LOGO E TÍTULO */}
+        {/* LOGO */}
         <div className="flex items-center gap-3">
-          <div className="bg-blue-600 p-1.5 rounded-lg shadow-sm rotate-3 group-hover:rotate-0 transition-transform">
+          <div className="bg-blue-600 p-1.5 rounded-lg shadow-sm">
             <TrendingUp className="h-4 w-4 text-white" />
           </div>
           <div className="flex flex-col">
@@ -27,28 +26,25 @@ export function Topbar({ onExportWord }: Props) {
           </div>
         </div>
 
-        {/* BOTÕES DE AÇÃO */}
+        {/* BOTÕES */}
         <div className="flex items-center gap-4">
           
-          {/* LGPD (Visual Clean) */}
           <div className="relative group inline-block">
             <div className="flex items-center gap-2 px-3 py-1.5 text-[9px] font-bold uppercase tracking-widest text-slate-400 hover:text-blue-600 cursor-help transition-colors rounded-full">
               <ShieldAlert className="w-3.5 h-3.5" />
               Privacidade
             </div>
             
-            {/* Tooltip do LGPD */}
-            <div className="absolute top-full right-0 mt-4 w-[320px] p-6 bg-slate-900 text-slate-300 text-[11px] rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 border border-slate-800 z-[60]">
+            {/* Tooltip corrigido para ficar SEMPRE na frente (z-index altíssimo) */}
+            <div className="absolute top-full right-0 mt-4 w-[340px] p-6 bg-slate-900 text-slate-300 text-[11px] rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 border border-slate-800 z-[110] pointer-events-none group-hover:pointer-events-auto">
               <h4 className="font-bold text-white mb-3 uppercase tracking-widest text-[10px] border-b border-white/10 pb-2">Segurança de Dados</h4>
-              <p className="leading-relaxed mb-3">Processamento <b>100% local</b>. Seus dados não saem deste computador.</p>
-              <p className="text-blue-300 font-bold">Nenhum dado é enviado a servidores externos.</p>
+              <p className="leading-relaxed mb-3 font-medium">Processamento <b>100% local</b>. Seus dados não saem deste computador.</p>
+              <p className="text-blue-400 font-bold">Nenhum dado pessoal ou empresarial é enviado a servidores externos.</p>
             </div>
           </div>
 
-          {/* DIVISOR */}
           <div className="h-4 w-px bg-slate-200" />
 
-          {/* BOTÃO EXPORTAR (Pílula dentro da pílula) */}
           <button 
             onClick={onExportWord} 
             className="flex items-center gap-2 px-6 py-2 text-[10px] font-bold bg-slate-900 text-white hover:bg-blue-600 rounded-full transition-all shadow-md active:scale-95 uppercase tracking-widest"
