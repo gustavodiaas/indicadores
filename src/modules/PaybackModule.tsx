@@ -1,7 +1,7 @@
 import { type PaybackData, type ProdutividadeData, type ResumoData, calcPayback } from "@/store/useAppStore";
 import { KpiCard } from "@/components/KpiCard";
 import { ComparisonChart } from "@/components/ComparisonChart";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, Info } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -25,15 +25,13 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
   const chartData = [{ name: "Custo Unitário (R$)", T1: Number(r.custoI.toFixed(2)), T3: Number(r.custoF.toFixed(2)) }];
   const formatBRL = (v: number) => `R$ ${v.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-  // VALORES PUXADOS AUTOMATICAMENTE DA PRODUTIVIDADE
   const op1 = prodData.operadoresT1 || 0;
   const op3 = prodData.operadoresT3 || 0;
-  const u = prodData.unidade || "peças"; // Unidade dinâmica
+  const u = prodData.unidade || "peças";
 
   const colabTxt1 = op1 === 1 ? "colaborador" : "colaboradores";
   const colabTxt3 = op3 === 1 ? "colaborador" : "colaboradores";
   
-  // LAUDO ATUALIZADO COM UNIDADE DINÂMICA E INTELIGÊNCIA DE PLURAL
   const laudo = `No estágio inicial, havia ${op1} ${colabTxt1}, com custo total por mês de ${formatBRL(r.salI)}, ${data.dedicacaoInicial || 100}% utilizados na operação. Produziam-se ${r.prodMensalI.toLocaleString("pt-BR")} ${u}/mês, a custo de mão de obra de ${formatBRL(r.custoI)}. Após intervenção, permaneceram ${op3} ${colabTxt3}, com custo total por mês de ${formatBRL(r.salF)}, ${data.dedicacaoFinal || 100}% utilizado no processo. Passaram a produzir ${r.prodMensalF.toLocaleString("pt-BR")} ${u}/mês, a custo de mão de obra de ${formatBRL(r.custoF)}. Reduziu-se então ${formatBRL(Math.max(0, r.custoI - r.custoF))} no custo de mão de obra por ${u}, que gerou o retorno mensal de ${formatBRL(r.reducaoMensal)}. Portanto, um payback de ${r.paybackMeses > 0 ? r.paybackMeses.toFixed(1) : "0.0"} ${r.paybackMeses === 1 ? "mês" : "meses"}.`;
 
   const parseDecimal = (val: string) => {
@@ -48,7 +46,18 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
 
         <div className="p-5 bg-[#F8FAFC] text-slate-800 rounded-xl flex items-center justify-between shadow-sm mb-2 border border-slate-200">
           <div className="flex flex-col">
-            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Configuração</span>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Configuração</span>
+              
+              {/* INFORMAÇÃO DOS DIAS ÚTEIS (ESTILO PRIVACIDADE) */}
+              <div className="relative group inline-block">
+                <Info className="w-3.5 h-3.5 text-slate-400 cursor-help hover:text-blue-600 transition-colors" />
+                <div className="absolute bottom-full left-0 mb-2 w-56 p-4 bg-slate-900 text-slate-300 text-[11px] rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 border border-slate-800 z-50 font-normal normal-case leading-relaxed">
+                  <p>O cálculo de payback e a projeção de produção mensal utilizam o padrão de <b>21 dias úteis</b> por mês.</p>
+                  <div className="absolute top-full left-4 w-2 h-2 bg-slate-900 rotate-45 -mt-1" />
+                </div>
+              </div>
+            </div>
             <span className="text-sm font-semibold tracking-wide">Modelo de Cálculo</span>
           </div>
           <select 
