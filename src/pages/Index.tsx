@@ -31,6 +31,10 @@ const Index = () => {
     const lt = calcLeadTime(leadtime);
     const ar = calcArea(area);
     
+    // Inteligência de Plural para o Laudo
+    const opTxt1 = produtividade.operadoresT1 === 1 ? "operador" : "operadores";
+    const opTxt3 = produtividade.operadoresT3 === 1 ? "operador" : "operadores";
+
     const acoesStr = resumo.acoes.length > 0 ? resumo.acoes.map(a => a.what).join(", ") : "ações de melhoria contínua";
 
     const content = `
@@ -41,34 +45,34 @@ const Index = () => {
         <hr>
         
         <h3 style="text-transform: uppercase;">1. Descrição do Processo</h3>
-        <p style="text-align: justify;">A Empresa ${resumo.nomeEmpresa || "—"}, da cidade de ${resumo.cidade || "—"} no Estado do Rio Grande do Sul, atua no ramo de ${resumo.ramo || "—"}, especialista em ${resumo.especialista || "—"}, conta com ${resumo.totalColaboradores || "0"} colaboradores atuando em ${resumo.turnos} Turno(s). O produto mapeado segue o seguinte processo produtivo: ${resumo.processos || "—"}, com método de produção ${resumo.metodo || "—"}, onde a demanda é originada por ${resumo.origem || "—"}. Ao longo do mapeamento foi identificado oportunidades no setor de ${resumo.oportunidades || "—"}, por problemas de ${resumo.problemas || "—"}. Nesta consultoria, a área de atuação/intervenção foi ${resumo.atuacao || "—"}.</p>
+        <p style="text-align: justify;">A Empresa <b>${resumo.nomeEmpresa || "—"}</b>, da cidade de <b>${resumo.cidade || "—"}</b> no Estado do Rio Grande do Sul, atua no ramo de <b>${resumo.ramo || "—"}</b>, especialista em <b>${resumo.especialista || "—"}</b>, conta com <b>${resumo.totalColaboradores || "0"}</b> colaboradores atuando em <b>${resumo.turnos}</b> Turno(s). O produto mapeado segue o seguinte processo produtivo: <b>${resumo.processos || "—"}</b>, com método de produção <b>${resumo.metodo || "—"}</b>, onde a demanda é originada por <b>${resumo.origem || "—"}</b>. Ao longo do mapeamento foi identificado oportunidades no setor de <b>${resumo.oportunidades || "—"}</b>, por problemas de <b>${resumo.problemas || "—"}</b>. Nesta consultoria, a área de atuação/intervenção foi <b>${resumo.atuacao || "—"}</b>.</p>
         
         <h3 style="text-transform: uppercase;">2. Laudo de Produtividade</h3>
-        <p style="text-align: justify;">Após definição do ponto de intervenção, monitoramento e validação das melhorias, obteve-se um aumento de ${prod.ganho.toFixed(2)}% em produtividade. O indicador operacional evoluiu de ${prod.pphT1.toFixed(2)} para ${prod.pphT3.toFixed(2)} PPH (Peças por Hora).</p>
+        <p style="text-align: justify;">No estágio inicial, a produtividade era de <b>${prod.pphT1.toFixed(2)} pçs/h/op</b>, produzindo <b>${produtividade.volumeT1 || 0}</b> peças com <b>${produtividade.operadoresT1 || 0} ${opTxt1}</b> em <b>${produtividade.horasT1 || 0}h</b>. Após as melhorias, a produtividade subiu para <b>${prod.pphT3.toFixed(2)} pçs/h/op</b>, produzindo <b>${produtividade.volumeT3 || 0}</b> peças com <b>${produtividade.operadoresT3 || 0} ${opTxt3}</b> em <b>${produtividade.horasT3 || 0}h</b>. Isso representa um ganho direto de <b>${prod.ganho.toFixed(2)}%</b> na eficiência operacional da célula.</p>
 
         <h3 style="text-transform: uppercase;">3. Laudo de Payback</h3>
-        <p style="text-align: justify;">Com as ações aplicadas, projeta-se um Retorno sobre o Investimento (Payback) de ${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2) : "0.00"} meses. O projeto resultou em uma redução de custos mensais equivalente a R$ ${pb.reducaoMensal.toFixed(2)}, frente a um investimento total de R$ ${pb.investTotal.toFixed(2)}.</p>
+        <p style="text-align: justify;">Com as ações aplicadas, projeta-se um Retorno sobre o Investimento (Payback) de <b>${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2) : "0.00"} meses</b>. O projeto resultou em uma redução de custos mensais equivalente a <b>R$ ${pb.reducaoMensal.toFixed(2)}</b>, frente a um investimento total de <b>R$ ${pb.investTotal.toFixed(2)}</b>.</p>
 
         <h3 style="text-transform: uppercase;">4. Laudo de Qualidade</h3>
-        <p style="text-align: justify;">As intervenções de melhoria contínua refletiram diretamente nos índices de conformidade do produto. O índice de assertividade (peças boas) evoluiu de ${qual.indiceT1.toFixed(2)}% para ${qual.indiceT3.toFixed(2)}%, garantindo maior confiabilidade ao processo.</p>
+        <p style="text-align: justify;">As intervenções de melhoria contínua refletiram diretamente nos índices de conformidade do produto. O índice de assertividade (peças boas) evoluiu de <b>${qual.indiceT1.toFixed(2)}%</b> para <b>${qual.indiceT3.toFixed(2)}%</b>, garantindo maior confiabilidade ao processo.</p>
 
         <h3 style="text-transform: uppercase;">5. Laudo de Disponibilidade</h3>
-        <p style="text-align: justify;">Com a mitigação de paradas não planejadas e melhor gestão do tempo operacional, observou-se um aumento de ${disp.aumento.toFixed(2)}% no índice de disponibilidade da máquina/linha.</p>
+        <p style="text-align: justify;">Com a mitigação de paradas não planejadas e melhor gestão do tempo operacional, observou-se um aumento de <b>${disp.aumento.toFixed(2)}%</b> no índice de disponibilidade da máquina/linha.</p>
 
         <h3 style="text-transform: uppercase;">6. Laudo de Movimentação Logística</h3>
-        <p style="text-align: justify;">O reordenamento do arranjo físico e dos fluxos proporcionou uma redução de ${mov.reducaoDist.toFixed(2)}% na distância percorrida pelas peças/operadores, além de otimizar em ${mov.reducaoTempo.toFixed(2)}% o tempo gasto com movimentações.</p>
+        <p style="text-align: justify;">O reordenamento do arranjo físico e dos fluxos proporcionou uma redução de <b>${mov.reducaoDist.toFixed(2)}%</b> na distância percorrida pelas peças/operadores, além de otimizar em <b>${mov.reducaoTempo.toFixed(2)}%</b> o tempo gasto com movimentações.</p>
 
         <h3 style="text-transform: uppercase;">7. Laudo de Lead Time</h3>
-        <p style="text-align: justify;">As ações de balanceamento e eliminação de gargalos sistêmicos proporcionaram uma redução de ${lt.reducao.toFixed(2)}% no tempo total de atravessamento (Lead Time) do processo, conferindo maior velocidade de entrega.</p>
+        <p style="text-align: justify;">As ações de balanceamento e eliminação de gargalos sistêmicos proporcionaram uma redução de <b>${lt.reducao.toFixed(2)}%</b> no tempo total de atravessamento (Lead Time) do processo, conferindo maior velocidade de entrega.</p>
 
         <h3 style="text-transform: uppercase;">8. Laudo de Área Ocupada</h3>
-        <p style="text-align: justify;">A otimização do layout produtivo permitiu uma redução de ${ar.reducaoPercent.toFixed(2)}% do espaço físico utilizado. Foram liberados ${ar.economiaM2.toFixed(2)} m² de área fabril, o que representa um impacto financeiro indireto estimado em R$ ${ar.economiaMensal.toFixed(2)} mensais.</p>
+        <p style="text-align: justify;">A otimização do layout produtivo permitiu uma redução de <b>${ar.reducaoPercent.toFixed(2)}%</b> do espaço físico utilizado. Foram liberados <b>${ar.economiaM2.toFixed(2)} m²</b> de área fabril, o que representa um impacto financeiro indireto estimado em <b>R$ ${ar.economiaMensal.toFixed(2)}</b> mensais.</p>
 
         <h3 style="text-transform: uppercase;">9. Plano de Ação</h3>
-        <p style="text-align: justify;">A partir do diagnóstico das causas raiz, foi elaborada uma matriz de ações utilizando a metodologia 5W2H. As principais definições do plano de ação contemplaram: ${acoesStr}.</p>
+        <p style="text-align: justify;">A partir do diagnóstico das causas raiz, foi elaborada uma matriz de ações utilizando a metodologia 5W2H. As principais definições do plano de ação contemplaram: <b>${acoesStr}</b>.</p>
         
         <h3 style="text-transform: uppercase;">10. Conclusão do Projeto</h3>
-        <p style="text-align: justify;">O presente programa de fomento ao setor industrial brasileiro Brasil Mais Produtivo, proporcionou a realização de consultoria em Manufatura Enxuta na Empresa ${resumo.nomeEmpresa || "—"}, na cidade de ${resumo.cidade || "—"} no Estado do Rio Grande do Sul. A escolha do produto a ser mapeado foi motivada ${resumo.motivacao || "—"}. As ferramentas aplicadas foram ${resumo.ferramentas || "—"}.</p>
+        <p style="text-align: justify;">O presente programa de fomento ao setor industrial brasileiro Brasil Mais Produtivo, proporcionou a realização de consultoria em Manufatura Enxuta na Empresa <b>${resumo.nomeEmpresa || "—"}</b>, na cidade de <b>${resumo.cidade || "—"}</b> no Estado do Rio Grande do Sul. A escolha do produto a ser mapeado foi motivada <b>${resumo.motivacao || "—"}</b>. As ferramentas aplicadas foram <b>${resumo.ferramentas || "—"}</b>.</p>
         
         <p style="text-align: justify;">O resultado geral do projeto foi agregador e positivo para a empresa pois o envolvimento da equipe foi primordial para garantir o conhecimento necessário através do plano de ação, treinamentos, trabalho realizado e resultados alcançados, com isso a empresa pode manter o aculturamento do pensamento Lean e replicar os conceitos da melhoria contínua para os demais setores e linhas de trabalho da produção.</p>
       </body>
