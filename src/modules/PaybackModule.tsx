@@ -22,17 +22,19 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
   const [copied, setCopied] = useState(false);
   const r = calcPayback(data, prodData, resumoData);
 
-  const chartData = [{ name: "Custo/Peça (R$)", T1: Number(r.custoI.toFixed(2)), T3: Number(r.custoF.toFixed(2)) }];
+  const chartData = [{ name: "Custo Unitário (R$)", T1: Number(r.custoI.toFixed(2)), T3: Number(r.custoF.toFixed(2)) }];
   const formatBRL = (v: number) => `R$ ${v.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
   // VALORES PUXADOS AUTOMATICAMENTE DA PRODUTIVIDADE
   const op1 = prodData.operadoresT1 || 0;
   const op3 = prodData.operadoresT3 || 0;
+  const u = prodData.unidade || "peças"; // Unidade dinâmica
 
   const colabTxt1 = op1 === 1 ? "colaborador" : "colaboradores";
   const colabTxt3 = op3 === 1 ? "colaborador" : "colaboradores";
   
-  const laudo = `No estágio inicial, havia ${op1} ${colabTxt1}, com custo total por mês de ${formatBRL(r.salI)}, ${data.dedicacaoInicial || 100}% utilizados na operação. Produziam-se ${r.prodMensalI.toLocaleString("pt-BR")} pçs/mês, a custo de mão de obra de ${formatBRL(r.custoI)}. Após intervenção, permaneceram ${op3} ${colabTxt3}, com custo total por mês de ${formatBRL(r.salF)}, ${data.dedicacaoFinal || 100}% utilizado no processo. Passaram a produzir ${r.prodMensalF.toLocaleString("pt-BR")} pçs/mês, a custo de mão de obra de ${formatBRL(r.custoF)}. Reduziu-se então ${formatBRL(Math.max(0, r.custoI - r.custoF))} no custo de mão de obra por peça, que gerou o retorno mensal de ${formatBRL(r.reducaoMensal)}. Portanto, um payback de ${r.paybackMeses > 0 ? r.paybackMeses.toFixed(1) : "0.0"} meses.`;
+  // LAUDO ATUALIZADO COM UNIDADE DINÂMICA E INTELIGÊNCIA DE PLURAL
+  const laudo = `No estágio inicial, havia ${op1} ${colabTxt1}, com custo total por mês de ${formatBRL(r.salI)}, ${data.dedicacaoInicial || 100}% utilizados na operação. Produziam-se ${r.prodMensalI.toLocaleString("pt-BR")} ${u}/mês, a custo de mão de obra de ${formatBRL(r.custoI)}. Após intervenção, permaneceram ${op3} ${colabTxt3}, com custo total por mês de ${formatBRL(r.salF)}, ${data.dedicacaoFinal || 100}% utilizado no processo. Passaram a produzir ${r.prodMensalF.toLocaleString("pt-BR")} ${u}/mês, a custo de mão de obra de ${formatBRL(r.custoF)}. Reduziu-se então ${formatBRL(Math.max(0, r.custoI - r.custoF))} no custo de mão de obra por ${u}, que gerou o retorno mensal de ${formatBRL(r.reducaoMensal)}. Portanto, um payback de ${r.paybackMeses > 0 ? r.paybackMeses.toFixed(1) : "0.0"} ${r.paybackMeses === 1 ? "mês" : "meses"}.`;
 
   const parseDecimal = (val: string) => {
     const cleaned = val.replace(/[^\d,.-]/g, '');
@@ -161,7 +163,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
           <KpiCard label="Custo Inicial" value={formatBRL(r.custoI)} />
           <KpiCard label="Custo Final" value={formatBRL(r.custoF)} />
           <KpiCard label="Redução Mensal" value={formatBRL(r.reducaoMensal)} />
-          <KpiCard label="Payback" value={r.paybackMeses > 0 ? r.paybackMeses.toFixed(2) : "0.00"} suffix="meses" />
+          <KpiCard label="Payback" value={r.paybackMeses > 0 ? r.paybackMeses.toFixed(2) : "0.00"} suffix={r.paybackMeses === 1 ? "mês" : "meses"} />
         </div>
         
         <div className="relative bg-white p-5 border border-slate-200 rounded-2xl shadow-sm">
@@ -173,7 +175,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
         </div>
         
         <div className="mt-auto pt-4 min-h-[250px]">
-          <ComparisonChart data={chartData} title="Evolução do Custo por Peça" />
+          <ComparisonChart data={chartData} title={`Evolução do Custo por ${u.slice(0, -1)}`} />
         </div>
       </div>
 
