@@ -15,7 +15,11 @@ export function ProdutividadeModule({ data, onChange }: Props) {
   const r = calcProdutividade(data);
   const chartData = [{ name: "Peças/h/op", T1: Number(r.pphT1.toFixed(2)), T3: Number(r.pphT3.toFixed(2)) }];
 
-  const laudo = `No estágio inicial, a produtividade era de ${r.pphT1.toFixed(2)} pçs/h/op, produzindo ${data.volumeT1} peças com ${data.operadoresT1} operadores em ${data.horasT1}h. Após as melhorias, a produtividade subiu para ${r.pphT3.toFixed(2)} pçs/h/op. Isso representa um ganho direto de ${r.ganho.toFixed(2)}% na eficiência operacional da célula.`;
+  // INTELIGÊNCIA DE PLURAL/SINGULAR
+  const opTxt1 = data.operadoresT1 === 1 ? "operador" : "operadores";
+  const opTxt3 = data.operadoresT3 === 1 ? "operador" : "operadores";
+
+  const laudo = `No estágio inicial, a produtividade era de ${r.pphT1.toFixed(2)} pçs/h/op, produzindo ${data.volumeT1 || 0} peças com ${data.operadoresT1 || 0} ${opTxt1} em ${data.horasT1 || 0}h. Após as melhorias, a produtividade subiu para ${r.pphT3.toFixed(2)} pçs/h/op, produzindo ${data.volumeT3 || 0} peças com ${data.operadoresT3 || 0} ${opTxt3} em ${data.horasT3 || 0}h. Isso representa um ganho direto de ${r.ganho.toFixed(2)}% na eficiência operacional da célula.`;
 
   return (
     <div className="flex gap-8 h-full">
