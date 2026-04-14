@@ -43,23 +43,21 @@ const Index = () => {
         <h3 style="text-transform: uppercase;">1. Descrição do Processo</h3>
         <p style="text-align: justify;">A Empresa ${resumo.nomeEmpresa || "—"}, da cidade de ${resumo.cidade || "—"} no Estado do Rio Grande do Sul, atua no ramo de ${resumo.ramo || "—"}, especialista em ${resumo.especialista || "—"}, conta com ${resumo.totalColaboradores || "0"} colaboradores atuando em ${resumo.turnos} Turno(s). O produto mapeado segue o seguinte processo produtivo: ${resumo.processos || "—"}, com método de produção ${resumo.metodo || "—"}, onde a demanda é originada por ${resumo.origem || "—"}. Ao longo do mapeamento foi identificado oportunidades no setor de ${resumo.oportunidades || "—"}, por problemas de ${resumo.problemas || "—"}. Nesta consultoria, a área de atuação/intervenção foi ${resumo.atuacao || "—"}.</p>
         
-        <h3 style="text-transform: uppercase;">2. Laudo Operacional e Resultados</h3>
-        <p style="text-align: justify;">Após definição do ponto de intervenção, monitoramento e validação das melhorias nas operações, obtiveram-se os seguintes indicadores técnicos:</p>
+        <h3 style="text-transform: uppercase;">2. Resultados dos Indicadores</h3>
+        <div style="background-color: #f8fafc; padding: 15px; border-left: 4px solid #2563eb; margin-bottom: 20px;">
+          <p style="margin: 5px 0;"><strong>• Produtividade:</strong> Aumento de ${prod.ganho.toFixed(2)}% (de ${prod.pphT1.toFixed(2)} para ${prod.pphT3.toFixed(2)} PPH).</p>
+          <p style="margin: 5px 0;"><strong>• Payback:</strong> ${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2) : "0.00"} meses para o retorno do investimento.</p>
+          <p style="margin: 5px 0;"><strong>• Qualidade:</strong> Evolução de ${qual.indiceT1.toFixed(2)}% para ${qual.indiceT3.toFixed(2)}% de eficiência.</p>
+          <p style="margin: 5px 0;"><strong>• Disponibilidade:</strong> Aumento de ${disp.aumento.toFixed(2)}% no índice de máquina/linha.</p>
+          <p style="margin: 5px 0;"><strong>• Movimentação:</strong> Redução de ${mov.reducaoDist.toFixed(2)}% na distância e ${mov.reducaoTempo.toFixed(2)}% no tempo.</p>
+          <p style="margin: 5px 0;"><strong>• Lead Time:</strong> Redução de ${lt.reducao.toFixed(2)}% no tempo de atravessamento.</p>
+          <p style="margin: 5px 0;"><strong>• Área Ocupada:</strong> Otimização de ${ar.reducaoPercent.toFixed(2)}% (${ar.economiaM2.toFixed(2)} m² liberados), gerando impacto de R$ ${ar.economiaMensal.toFixed(2)}/mês.</p>
+        </div>
         
-        <ul style="font-weight: bold; line-height: 1.8;">
-          <li>Produtividade: Aumento de ${prod.ganho.toFixed(2)}% (de ${prod.pphT1.toFixed(2)} para ${prod.pphT3.toFixed(2)} PPH).</li>
-          <li>Qualidade: Evolução de ${qual.indiceT1.toFixed(2)}% para ${qual.indiceT3.toFixed(2)}% de eficiência.</li>
-          <li>Disponibilidade: Aumento de ${disp.aumento.toFixed(2)}% no índice de disponibilidade.</li>
-          <li>Movimentação Logística: Redução de ${mov.reducaoDist.toFixed(2)}% na distância percorrida e ${mov.reducaoTempo.toFixed(2)}% no tempo.</li>
-          <li>Lead Time: Redução de ${lt.reducao.toFixed(2)}% no tempo total de atravessamento.</li>
-          <li>Área Ocupada: Otimização de ${ar.reducaoPercent.toFixed(2)}% (${ar.economiaM2.toFixed(2)} m² liberados), gerando impacto de R$ ${ar.economiaMensal.toFixed(2)}/mês.</li>
-          <li style="color: #2563eb; margin-top: 8px;">Retorno do Investimento (Payback): ${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2) : "0.00"} meses.</li>
-        </ul>
+        <h3 style="text-transform: uppercase;">3. Conclusão do Projeto</h3>
+        <p style="text-align: justify;">O presente programa de fomento ao setor industrial brasileiro Brasil Mais Produtivo, proporcionou a realização de consultoria em Manufatura Enxuta na Empresa ${resumo.nomeEmpresa || "—"}, na cidade de ${resumo.cidade || "—"} no Estado do Rio Grande do Sul. A escolha do produto a ser mapeado foi motivada ${resumo.motivacao || "—"}. As ferramentas aplicadas foram ${resumo.ferramentas || "—"}. Foram elaborados um conjunto de ações através da ferramenta 5W2H, onde definiu-se diversas ações para as oportunidades elencadas, tais como: ${acoesStr}.</p>
         
-        <h3 style="text-transform: uppercase;">3. Plano de Ação</h3>
-        <p style="text-align: justify;">Foram elaboradas diversas ações utilizando a ferramenta 5W2H para atacar as causas raiz identificadas. Principais intervenções: ${acoesStr}.</p>
-        
-        <p style="text-align: justify; font-style: italic; margin-top: 20px;">O resultado geral do projeto foi agregador e positivo para a empresa. O envolvimento da equipe foi primordial para garantir o conhecimento necessário através do plano de ação, treinamentos e resultados alcançados, com isso a empresa pode manter o aculturamento do pensamento Lean e replicar os conceitos da melhoria contínua para os demais setores.</p>
+        <p style="text-align: justify; font-style: italic; margin-top: 20px;">O resultado geral do projeto foi agregador e positivo para a empresa pois o envolvimento da equipe foi primordial para garantir o conhecimento necessário através do plano de ação, treinamentos, trabalho realizado e resultados alcançados, com isso a empresa pode manter o aculturamento do pensamento Lean e replicar os conceitos da melhoria contínua para os demais setores e linhas de trabalho da produção.</p>
       </body>
       </html>
     `;
