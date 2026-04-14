@@ -119,29 +119,42 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
           </div>
         </div>
 
-        {/* INVESTIMENTOS */}
+       {/* INVESTIMENTOS */}
         <div className="space-y-4 bg-slate-50 p-5 rounded-xl border border-slate-200">
           <h3 className="font-bold text-slate-800 border-b border-slate-200 pb-2">Investimentos</h3>
           <div className="grid grid-cols-2 gap-6">
-            <div>
-              <label className="block text-xs font-bold text-slate-500 mb-1">Porte da Empresa (Consultoria)</label>
-              <select 
-                className="w-full h-10 px-3 rounded-lg border border-slate-200 bg-white text-sm outline-none"
-                onChange={e => onChange({ valorConsultoria: Number(e.target.value) })}
-                value={data.valorConsultoria}
-              >
-                <option value="0">Selecione o porte</option>
-                <option value={VALORES_CONSULTORIA.micro}>Micro Empresa</option>
-                <option value={VALORES_CONSULTORIA.pequena}>Pequena Empresa</option>
-                <option value={VALORES_CONSULTORIA.media}>Média Empresa</option>
-              </select>
+            
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs font-bold text-slate-500 mb-1">Porte da Empresa (Consultoria)</label>
+                <select 
+                  className="w-full h-10 px-3 rounded-lg border border-slate-200 bg-white text-sm outline-none"
+                  onChange={e => onChange({ valorConsultoria: Number(e.target.value) })}
+                  value={data.valorConsultoria}
+                >
+                  <option value="0">Selecione o porte</option>
+                  <option value={VALORES_CONSULTORIA.micro}>Micro Empresa</option>
+                  <option value={VALORES_CONSULTORIA.pequena}>Pequena Empresa</option>
+                  <option value={VALORES_CONSULTORIA.media}>Média Empresa</option>
+                </select>
+              </div>
+              
+              {/* DISPLAY COM O VALOR DA CONSULTORIA */}
+              <div>
+                <label className="block text-xs font-bold text-slate-500 mb-1">Valor do porte (R$)</label>
+                <div className="w-full h-10 px-3 rounded-lg border border-slate-200 bg-slate-200/50 flex items-center text-slate-700 text-sm font-semibold">
+                  {formatBRL(data.valorConsultoria || 0)}
+                </div>
+              </div>
             </div>
+
             <div>
               <label className="block text-xs font-bold text-slate-500 mb-1">Investimento Extra (R$)</label>
               <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
                 defaultValue={data.investimentoExtra ? data.investimentoExtra.toString().replace(".", ",") : ""} 
                 onBlur={e => onChange({ investimentoExtra: parseDecimal(e.target.value) })} placeholder="Ex: 5000,00" />
             </div>
+
           </div>
         </div>
 
