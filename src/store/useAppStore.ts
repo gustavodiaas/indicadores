@@ -21,11 +21,11 @@ export interface PaybackData {
   tipoSalario: "bruto" | "encargos";
   salarioBaseInicial: number;
   encargosInicial: number;
-  colaboradoresInicial: number;
+  colaboradoresInicial: number; // Agora mantido apenas por compatibilidade de tipo
   dedicacaoInicial: number;
   salarioBaseFinal: number;
   encargosFinal: number;
-  colaboradoresFinal: number;
+  colaboradoresFinal: number; // Agora mantido apenas por compatibilidade de tipo
   dedicacaoFinal: number;
   valorConsultoria: number;
   investimentoExtra: number;
@@ -177,7 +177,7 @@ export function calcPayback(d: PaybackData, prod: ProdutividadeData, res?: Resum
   const prodMensalI = prod.volumeT1 * 21;
   const prodMensalF = prod.volumeT3 * 21;
 
-  // Encargos (se for salário bruto, ignora o multiplicador e usa 1)
+  // Encargos
   const encI = d.tipoSalario === "bruto" ? 1 : (d.encargosInicial || 1);
   const encF = d.tipoSalario === "bruto" ? 1 : (d.encargosFinal || 1);
 
@@ -185,20 +185,18 @@ export function calcPayback(d: PaybackData, prod: ProdutividadeData, res?: Resum
   const dedI = (d.dedicacaoInicial || 100) / 100;
   const dedF = (d.dedicacaoFinal || 100) / 100;
 
-  // Salário Total = Salário Informado * Encargos * Dedicação
-  // (Atenção: removida a multiplicação pelos colaboradores, pois o valor já é o pool total)
+  // Salário Total (Pool total informado no Payback ajustado por encargos e dedicação)
   const salI = d.salarioBaseInicial * encI * dedI;
   const salF = d.salarioBaseFinal * encF * dedF;
 
-  // Custo por peça sem arredondamento
+  // Custo por peça
   const rawCustoI = safeDiv(salI, prodMensalI);
   const rawCustoF = safeDiv(salF, prodMensalF);
 
-  // O SEGREDO DO EXCEL: Arredondar para 2 casas decimais ANTES de multiplicar o ganho
   const custoI = Math.round(rawCustoI * 100) / 100;
   const custoF = Math.round(rawCustoF * 100) / 100;
 
-  // Ganho Mensal = (CustoI - CustoF) * Produção Final
+  // Ganho Mensal
   const reducaoMOD = Math.round((custoI - custoF) * 100) / 100;
   const reducaoMensal = Math.max(0, reducaoMOD * prodMensalF);
 
