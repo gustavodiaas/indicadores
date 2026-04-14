@@ -56,8 +56,9 @@ const Index = () => {
         <h3 style="text-transform: uppercase;">3. Laudo de Payback</h3>
         <p style="text-align: justify;">
           No estágio inicial, havia <b>${produtividade.operadoresT1 || 0} ${produtividade.operadoresT1 === 1 ? "colaborador" : "colaboradores"}</b>, com custo total por mês de <b>R$ ${pb.salI.toFixed(2)}</b>. 
-          Produziam-se <b>${pb.prodMensalI.toLocaleString("pt-BR")} pçs/mês</b>, a custo de mão de obra de <b>R$ ${pb.custoI.toFixed(2)}</b>. 
-          Após intervenção, permaneceram <b>${produtividade.operadoresT3 || 0} ${produtividade.operadoresT3 === 1 ? "colaborador" : "colaboradores"}</b>, com retorno mensal de <b>R$ ${pb.reducaoMensal.toFixed(2)}</b>. 
+          Produziam-se <b>${pb.prodMensalI.toLocaleString("pt-BR")} ${produtividade.unidade || "peças"}/mês</b>, a custo de mão de obra de <b>R$ ${pb.custoI.toFixed(2)}</b>. 
+          Após intervenção, permaneceram <b>${produtividade.operadoresT3 || 0} ${produtividade.operadoresT3 === 1 ? "colaborador" : "colaboradores"}</b>, com custo total por mês de <b>R$ ${pb.salF.toFixed(2)}</b>. 
+          Passaram a produzir <b>${pb.prodMensalF.toLocaleString("pt-BR")} ${produtividade.unidade || "peças"}/mês</b>, a custo de mão de obra de <b>R$ ${pb.custoF.toFixed(2)}</b>. 
           Portanto, um payback de <b>${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(1) : "0.0"} ${pb.paybackMeses === 1 ? "mês" : "meses"}</b>.
         </p>
 
