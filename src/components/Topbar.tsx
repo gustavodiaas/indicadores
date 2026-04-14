@@ -1,4 +1,5 @@
 import { FileText, TrendingUp } from "lucide-react";
+import { ShieldAlert } from "lucide-react";
 
 interface Props {
   onExportWord: () => void;
