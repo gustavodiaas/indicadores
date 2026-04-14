@@ -41,15 +41,18 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
       <div className="w-[60%] flex flex-col gap-6 overflow-y-auto pr-2 pb-10">
 
         {/* CONTROLE DE SALÁRIO GERAL */}
-        <div className="p-4 bg-slate-800 text-white rounded-xl flex items-center justify-between shadow-md">
-          <span className="text-xs font-bold uppercase tracking-widest">Modelo de Cálculo</span>
+        <div className="p-5 bg-slate-900 text-white rounded-xl flex items-center justify-between shadow-lg mb-2 border border-slate-800">
+          <div className="flex flex-col">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Configuração</span>
+            <span className="text-sm font-semibold tracking-wide">Modelo de Cálculo</span>
+          </div>
           <select 
-            className="h-9 bg-slate-700 border border-slate-600 text-xs rounded-md px-3 outline-none focus:ring-2 focus:ring-blue-500" 
-            value={data.tipoSalario || "encargos"} 
+            className="h-10 bg-slate-800 border border-slate-700 text-slate-200 text-sm font-medium rounded-lg px-4 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer hover:bg-slate-700 transition-colors" 
+            value={data.tipoSalario || "bruto"} 
             onChange={e => onChange({ tipoSalario: e.target.value as any })}
           >
-            <option value="encargos">Salário + Encargos</option>
             <option value="bruto">Salário Bruto</option>
+            <option value="encargos">Salário + Encargos</option>
           </select>
         </div>
 
