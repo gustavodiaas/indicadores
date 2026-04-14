@@ -1,11 +1,12 @@
 import { 
   BarChart3, Calculator, ArrowRightLeft, ShieldCheck, 
-  Clock, Timer, Square, FileText 
+  Clock, Timer, Square, FileText, LayoutDashboard
 } from "lucide-react";
 import { type ModuleKey } from "@/store/useAppStore";
 
 const modules: { key: ModuleKey; label: string; icon: React.ElementType }[] = [
   { key: "resumo", label: "Resumo", icon: FileText },
+  { key: "gbo", label: "GBO", icon: LayoutDashboard },
   { key: "produtividade", label: "Produção", icon: BarChart3 },
   { key: "payback", label: "Payback", icon: Calculator },
   { key: "movimentacao", label: "Logística", icon: ArrowRightLeft },
