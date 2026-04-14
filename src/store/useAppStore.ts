@@ -174,18 +174,34 @@ export function calcProdutividade(d: ProdutividadeData) {
 }
 
 export function calcPayback(d: PaybackData, prod: ProdutividadeData, res?: ResumoData) {
-  // LÓGICA IDÊNTICA AO HTML (Volume * 21)
   const prodMensalI = prod.volumeT1 * 21;
   const prodMensalF = prod.volumeT3 * 21;
 
-  // LÓGICA IDÊNTICA AO HTML (Salário * Encargos * Colaboradores)
-  const salI = d.salarioBaseInicial * d.encargosInicial * d.colaboradoresInicial;
-  const salF = d.salarioBaseFinal * d.encargosFinal * d.colaboradoresFinal;
+  // Encargos (se for salário bruto, ignora o multiplicador e usa 1)
+  const encI = d.tipoSalario === "bruto" ? 1 : (d.encargosInicial || 1);
+  const encF = d.tipoSalario === "bruto" ? 1 : (d.encargosFinal || 1);
 
-  const custoI = safeDiv(salI, prodMensalI);
-  const custoF = safeDiv(salF, prodMensalF);
+  // Dedicação (%)
+  const dedI = (d.dedicacaoInicial || 100) / 100;
+  const dedF = (d.dedicacaoFinal || 100) / 100;
 
-  const reducaoMensal = (custoI - custoF) * prodMensalF;
+  // Salário Total = Salário Informado * Encargos * Dedicação
+  // (Atenção: removida a multiplicação pelos colaboradores, pois o valor já é o pool total)
+  const salI = d.salarioBaseInicial * encI * dedI;
+  const salF = d.salarioBaseFinal * encF * dedF;
+
+  // Custo por peça sem arredondamento
+  const rawCustoI = safeDiv(salI, prodMensalI);
+  const rawCustoF = safeDiv(salF, prodMensalF);
+
+  // O SEGREDO DO EXCEL: Arredondar para 2 casas decimais ANTES de multiplicar o ganho
+  const custoI = Math.round(rawCustoI * 100) / 100;
+  const custoF = Math.round(rawCustoF * 100) / 100;
+
+  // Ganho Mensal = (CustoI - CustoF) * Produção Final
+  const reducaoMOD = Math.round((custoI - custoF) * 100) / 100;
+  const reducaoMensal = Math.max(0, reducaoMOD * prodMensalF);
+
   const investTotal = d.valorConsultoria + d.investimentoExtra;
   const paybackMeses = safeDiv(investTotal, reducaoMensal);
 
