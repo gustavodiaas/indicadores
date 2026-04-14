@@ -40,14 +40,14 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
       {/* LADO ESQUERDO: FORMULÁRIO */}
       <div className="w-[60%] flex flex-col gap-6 overflow-y-auto pr-2 pb-10">
 
-        {/* CONTROLE DE SALÁRIO GERAL */}
-        <div className="p-5 bg-slate-900 text-white rounded-xl flex items-center justify-between shadow-lg mb-2 border border-slate-800">
+       {/* CONTROLE DE SALÁRIO GERAL */}
+        <div className="p-5 bg-[#F8FAFC] text-slate-800 rounded-xl flex items-center justify-between shadow-sm mb-2 border border-slate-200">
           <div className="flex flex-col">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Configuração</span>
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Configuração</span>
             <span className="text-sm font-semibold tracking-wide">Modelo de Cálculo</span>
           </div>
           <select 
-            className="h-10 bg-slate-800 border border-slate-700 text-slate-200 text-sm font-medium rounded-lg px-4 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer hover:bg-slate-700 transition-colors" 
+            className="h-10 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg px-4 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer hover:bg-slate-50 transition-colors shadow-sm" 
             value={data.tipoSalario || "bruto"} 
             onChange={e => onChange({ tipoSalario: e.target.value as any })}
           >
