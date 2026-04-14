@@ -96,6 +96,7 @@ export interface AppState {
   leadtime: LeadTimeData;
   area: AreaData;
   resumo: ResumoData;
+  gbo: GboData;
 }
 
 export interface GboOperation {
