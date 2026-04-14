@@ -51,7 +51,14 @@ const Index = () => {
         <p style="text-align: justify;">No estágio inicial, a produtividade era de <b>${prod.pphT1.toFixed(2)} pçs/h/op</b>, produzindo <b>${produtividade.volumeT1 || 0}</b> peças com <b>${produtividade.operadoresT1 || 0} ${opTxt1}</b> em <b>${produtividade.horasT1 || 0}h</b>. Após as melhorias, a produtividade subiu para <b>${prod.pphT3.toFixed(2)} pçs/h/op</b>, produzindo <b>${produtividade.volumeT3 || 0}</b> peças com <b>${produtividade.operadoresT3 || 0} ${opTxt3}</b> em <b>${produtividade.horasT3 || 0}h</b>. Isso representa um ganho direto de <b>${prod.ganho.toFixed(2)}%</b> na eficiência operacional da célula.</p>
 
         <h3 style="text-transform: uppercase;">3. Laudo de Payback</h3>
-        <p style="text-align: justify;">Com as ações aplicadas, projeta-se um Retorno sobre o Investimento (Payback) de <b>${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2) : "0.00"} meses</b>. O projeto resultou em uma redução de custos mensais equivalente a <b>R$ ${pb.reducaoMensal.toFixed(2)}</b>, frente a um investimento total de <b>R$ ${pb.investTotal.toFixed(2)}</b>.</p>
+        <p style="text-align: justify;">
+          No estágio inicial, havia <b>${payback.colaboradoresInicial || 0} ${payback.colaboradoresInicial === 1 ? "colaborador" : "colaboradores"}</b>, com custo total por mês de <b>R$ ${pb.salI.toFixed(2)}</b>, <b>${payback.dedicacaoInicial || 100}%</b> utilizados na operação. 
+          Produziam-se <b>${pb.prodMensalI.toLocaleString("pt-BR")} pçs/mês</b>, a custo de mão de obra de <b>R$ ${pb.custoI.toFixed(2)}</b>. 
+          Após intervenção, permaneceram <b>${payback.colaboradoresFinal || 0} ${payback.colaboradoresFinal === 1 ? "colaborador" : "colaboradores"}</b>, com custo total por mês de <b>R$ ${pb.salF.toFixed(2)}</b>, <b>${payback.dedicacaoFinal || 100}%</b> utilizado no processo. 
+          Passaram a produzir <b>${pb.prodMensalF.toLocaleString("pt-BR")} pçs/mês</b>, a custo de mão de obra de <b>R$ ${pb.custoF.toFixed(2)}</b>. 
+          Reduziu-se então <b>R$ ${Math.max(0, pb.custoI - pb.custoF).toFixed(2)}</b> no custo de mão de obra por peça, que gerou o retorno mensal de <b>R$ ${pb.reducaoMensal.toFixed(2)}</b>. 
+          Portanto, um payback de <b>${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(1) : "0.0"} meses</b>.
+        </p>
 
         <h3 style="text-transform: uppercase;">4. Laudo de Qualidade</h3>
         <p style="text-align: justify;">As intervenções de melhoria contínua refletiram diretamente nos índices de conformidade do produto. O índice de assertividade (peças boas) evoluiu de <b>${qual.indiceT1.toFixed(2)}%</b> para <b>${qual.indiceT3.toFixed(2)}%</b>, garantindo maior confiabilidade ao processo.</p>
