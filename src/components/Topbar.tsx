@@ -18,11 +18,7 @@ export function Topbar({ onExportWord }: Props) {
           </div>
           <div className="flex flex-col">
             <h1 className="text-xs font-black text-slate-800 uppercase tracking-tighter leading-none">
-              Consultoria Lean
-            </h1>
-            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-0.5">
               Análise de Indicadores
-            </span>
           </div>
         </div>
 
