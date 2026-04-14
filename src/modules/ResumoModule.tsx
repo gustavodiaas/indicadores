@@ -20,15 +20,20 @@ export function ResumoModule({ data, state, onChange }: Props) {
   const prod = useMemo(() => calcProdutividade(state.produtividade), [state.produtividade]);
   const pb = useMemo(() => calcPayback(state.payback, state.produtividade, state.resumo), [state.payback, state.produtividade, state.resumo]);
 
-  // --- PADRÃO INTEGRAL: DESCRIÇÃO DO PROCESSO ---
+  // --- PADRÃO INTEGRAL: DESCRIÇÃO DO PROCESSO (INTELIGENTE) ---
   const descTexto = useMemo(() => {
-    return `A Empresa ${data.nomeEmpresa || "—"}, da cidade de ${data.cidade || "—"} no Estado do Rio Grande do Sul, atua no ramo de ${data.ramo || "—"}, especialista em ${data.especialista || "—"}, conta com ${data.totalColaboradores || "0"} colaboradores atuando em ${data.turnos} Turno(s). O produto mapeado segue o seguinte processo produtivo: ${data.processos || "—"}, com método de produção ${data.metodo || "—"}, onde a demanda é originada por ${data.origem || "—"}. Ao longo do mapeamento foi identificado oportunidades no setor de ${data.oportunidades || "—"}, por problemas de ${data.problemas || "—"}. Nesta consultoria, a área de atuação/intervenção foi ${data.atuacao || "—"}.`;
+    const colabTxt = data.totalColaboradores === 1 ? "colaborador" : "colaboradores";
+    const turnoTxt = data.turnos === 1 ? "Turno" : "Turnos";
+
+    return `A Empresa ${data.nomeEmpresa || "—"}, da cidade de ${data.cidade || "—"} no Estado do Rio Grande do Sul, atua no ramo de ${data.ramo || "—"}, especialista em ${data.especialista || "—"}, conta com ${data.totalColaboradores || "0"} ${colabTxt} atuando em ${data.turnos} ${turnoTxt}. O produto mapeado segue o seguinte processo produtivo: ${data.processos || "—"}, com método de produção ${data.metodo || "—"}, onde a demanda é originada por ${data.origem || "—"}. Ao longo do mapeamento foi identificado oportunidades no setor de ${data.oportunidades || "—"}, por problemas de ${data.problemas || "—"}. Nesta consultoria, a área de atuação/intervenção foi ${data.atuacao || "—"}.`;
   }, [data]);
 
-  // --- PADRÃO INTEGRAL: CONCLUSÃO DO PROJETO ---
+  // --- PADRÃO INTEGRAL: CONCLUSÃO DO PROJETO (INTELIGENTE) ---
   const conclusaoTexto = useMemo(() => {
     const listaAcoes = data.acoes.length > 0 ? data.acoes.map(a => a.what).join(", ") : "—";
-    return `O presente programa de fomento ao setor industrial brasileiro Brasil Mais Produtivo, proporcionou a realização de consultoria em Manufatura Enxuta na Empresa ${data.nomeEmpresa || "—"}, na cidade de ${data.cidade || "—"} no Estado do Rio Grande do Sul. A escolha do produto a ser mapeado foi motivada ${data.motivacao || "—"}. As ferramentas aplicadas foram ${data.ferramentas || "—"}. Foram elaborados um conjunto de ações através da ferramenta 5W2H, onde definiu-se diversas ações para as oportunidades elencadas, tais como: ${listaAcoes}. Após definição do ponto de intervenção, monitoramento e validação das melhorias, obteve-se: Aumento de ${prod.ganho.toFixed(2)}% em produtividade. Payback: Com as ações aplicadas obtém-se um Payback de ${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2) : "0.00"} meses. O resultado geral do projeto foi agregador e positivo para a empresa pois o envolvimento da equipe foi primordial para garantir o conhecimento necessário através do plano de ação, treinamentos, trabalho realizado e resultados alcançados, com isso a empresa pode manter o aculturamento do pensamento Lean e replicar os conceitos da melhoria contínua para os demais setores e linhas de trabalho da produção.`;
+    const pbMesTxt = pb.paybackMeses === 1 ? "mês" : "meses";
+
+    return `O presente programa de fomento ao setor industrial brasileiro Brasil Mais Produtivo, proporcionou a realização de consultoria em Manufatura Enxuta na Empresa ${data.nomeEmpresa || "—"}, na cidade de ${data.cidade || "—"} no Estado do Rio Grande do Sul. A escolha do produto a ser mapeado foi motivada ${data.motivacao || "—"}. As ferramentas aplicadas foram ${data.ferramentas || "—"}. Foram elaborados um conjunto de ações através da ferramenta 5W2H, onde definiu-se diversas ações para as oportunidades elencadas, tais como: ${listaAcoes}. Após definição do ponto de intervenção, monitoramento e validação das melhorias, obteve-se: Aumento de ${prod.ganho.toFixed(2)}% em produtividade. Payback: Com as ações aplicadas obtém-se um Payback de ${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2) : "0.00"} ${pbMesTxt}. O resultado geral do projeto foi agregador e positivo para a empresa pois o envolvimento da equipe foi primordial para garantir o conhecimento necessário através do plano de ação, treinamentos, trabalho realizado e resultados alcançados, com isso a empresa pode manter o aculturamento do pensamento Lean e replicar os conceitos da melhoria contínua para os demais setores e lines de trabalho da produção.`;
   }, [data, prod, pb]);
 
   const handleCopy = (text: string, id: string) => {
@@ -40,7 +45,6 @@ export function ResumoModule({ data, state, onChange }: Props) {
 
   return (
     <div className="flex gap-8 h-full">
-      {/* FORMULÁRIO COMPLETO (60%) */}
       <div className="w-[55%] flex flex-col gap-6 overflow-y-auto pr-4 pb-12">
         <h3 className="font-bold text-slate-800 border-b pb-2 text-lg uppercase tracking-tight">Entrada de Dados</h3>
         
@@ -84,10 +88,7 @@ export function ResumoModule({ data, state, onChange }: Props) {
         </div>
       </div>
 
-      {/* PREVIEWS INTEGRAIS (45%) */}
       <div className="w-[45%] flex flex-col gap-6 overflow-y-auto pb-12">
-        
-        {/* Card 1: Descrição Completa */}
         <div className="relative bg-white p-6 rounded-2xl border border-slate-200 shadow-sm transition-all hover:border-blue-200">
           <button onClick={() => handleCopy(descTexto, "desc")} className="absolute top-4 right-4 p-2 rounded-lg bg-slate-50 text-slate-400 hover:bg-blue-600 hover:text-white transition-all shadow-sm">
             {copiedId === "desc" ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
@@ -96,22 +97,19 @@ export function ResumoModule({ data, state, onChange }: Props) {
           <p className="text-[13px] text-slate-600 leading-relaxed text-justify">{descTexto}</p>
         </div>
 
-        {/* Card 2: Conclusão Completa (Brasil Mais Produtivo) */}
         <div className="relative bg-blue-50/50 p-6 rounded-2xl border border-blue-100 shadow-sm">
           <button onClick={() => handleCopy(conclusaoTexto, "conc")} className="absolute top-4 right-4 p-2 rounded-lg bg-white text-slate-400 hover:text-blue-600 transition-all shadow-sm border border-slate-100">
             {copiedId === "conc" ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
           </button>
           <h4 className="text-[10px] font-bold text-blue-700 uppercase tracking-widest mb-4 border-b border-blue-200/50 pb-2">Conclusão do Projeto</h4>
           <div className="text-[13px] text-slate-700 leading-relaxed text-justify space-y-6">
-            {/* REMOVIDO O ITÁLICO AQUI */}
             <p>{conclusaoTexto}</p> 
             <div className="bg-white border-l-4 border-blue-500 p-5 space-y-3 rounded-r-xl shadow-sm">
               <p className="font-bold text-slate-800 text-sm tracking-tight">• Aumento de {prod.ganho.toFixed(2)}% em produtividade.</p>
-              <p className="font-bold text-slate-800 text-sm tracking-tight">• Payback de {pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2) : "0.00"} meses.</p>
+              <p className="font-bold text-slate-800 text-sm tracking-tight">• Payback de {pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2) : "0.00"} {pb.paybackMeses === 1 ? "mês" : "meses"}.</p>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );
