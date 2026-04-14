@@ -8,28 +8,28 @@ export function Topbar({ onExportWord }: Props) {
   return (
     <div className="w-full pt-6 px-4 md:px-8 mb-2 flex justify-center print:hidden relative z-[100]">
       
-      <header className="w-full max-w-[1600px] h-16 bg-white/95 backdrop-blur-md border border-slate-200/60 shadow-xl shadow-slate-200/30 rounded-full px-8 flex items-center justify-between transition-all duration-500 hover:shadow-2xl">
+      {/* Ajustado de h-16 para h-20 para ficar mais "gorda" */}
+      <header className="w-full max-w-[1600px] h-20 bg-white/95 backdrop-blur-md border border-slate-200/60 shadow-xl shadow-slate-200/30 rounded-full px-10 flex items-center justify-between transition-all duration-500 hover:shadow-2xl">
         
         {/* LOGO E TÍTULO UNIFICADO */}
-        <div className="flex items-center gap-3">
-          <div className="bg-blue-600 p-1.5 rounded-lg shadow-sm">
-            <TrendingUp className="h-4 w-4 text-white" />
+        <div className="flex items-center gap-4">
+          <div className="bg-blue-600 p-2 rounded-xl shadow-sm">
+            <TrendingUp className="h-5 w-5 text-white" />
           </div>
-          <h1 className="text-[10px] font-black text-slate-800 uppercase tracking-[0.2em] leading-none">
+          <h1 className="text-[11px] font-black text-slate-800 uppercase tracking-[0.25em] leading-none">
             Análise de Indicadores
           </h1>
         </div>
 
         {/* BOTÕES */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-6">
           
           <div className="relative group inline-block">
-            <div className="flex items-center gap-2 px-3 py-1.5 text-[9px] font-bold uppercase tracking-widest text-slate-400 hover:text-blue-600 cursor-help transition-colors rounded-full">
-              <ShieldAlert className="w-3.5 h-3.5" />
+            <div className="flex items-center gap-2 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-blue-600 cursor-help transition-colors rounded-full">
+              <ShieldAlert className="w-4 h-4" />
               Privacidade
             </div>
             
-            {/* Tooltip com o texto padrão restaurado */}
             <div className="absolute top-full right-0 mt-4 w-[340px] p-6 bg-slate-900 text-slate-300 text-[11px] rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 border border-slate-800 z-[110] pointer-events-none group-hover:pointer-events-auto">
               <h4 className="font-bold text-white mb-3 uppercase tracking-widest text-[10px] border-b border-white/10 pb-2 text-left">Aviso de Privacidade</h4>
               
@@ -41,13 +41,13 @@ export function Topbar({ onExportWord }: Props) {
             </div>
           </div>
 
-          <div className="h-4 w-px bg-slate-200" />
+          <div className="h-6 w-px bg-slate-200" />
 
           <button 
             onClick={onExportWord} 
-            className="flex items-center gap-2 px-6 py-2 text-[10px] font-bold bg-slate-900 text-white hover:bg-blue-600 rounded-full transition-all shadow-md active:scale-95 uppercase tracking-widest"
+            className="flex items-center gap-2 px-8 py-3 text-[10px] font-bold bg-slate-900 text-white hover:bg-blue-600 rounded-full transition-all shadow-md active:scale-95 uppercase tracking-widest"
           >
-            <FileText className="h-3.5 w-3.5" /> 
+            <FileText className="h-4 w-4" /> 
             Exportar Word
           </button>
 
