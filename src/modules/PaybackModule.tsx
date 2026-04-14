@@ -49,12 +49,14 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
             <div className="flex items-center gap-2">
               <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Configuração</span>
               
-              {/* INFORMAÇÃO DOS DIAS ÚTEIS (ESTILO PRIVACIDADE) */}
               <div className="relative group inline-block">
                 <Info className="w-3.5 h-3.5 text-slate-400 cursor-help hover:text-blue-600 transition-colors" />
-                <div className="absolute bottom-full left-0 mb-2 w-56 p-4 bg-slate-900 text-slate-300 text-[11px] rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 border border-slate-800 z-50 font-normal normal-case leading-relaxed">
+                
+                {/* AJUSTE: top-full mt-2 para abrir para baixo */}
+                <div className="absolute top-full left-0 mt-2 w-56 p-4 bg-slate-900 text-slate-300 text-[11px] rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 border border-slate-800 z-[120] font-normal normal-case leading-relaxed">
                   <p>O cálculo de payback e a projeção de produção mensal utilizam o padrão de <b>21 dias úteis</b> por mês.</p>
-                  <div className="absolute top-full left-4 w-2 h-2 bg-slate-900 rotate-45 -mt-1" />
+                  {/* Seta no topo do informativo */}
+                  <div className="absolute bottom-full left-4 w-2 h-2 bg-slate-900 rotate-45 -mb-1" />
                 </div>
               </div>
             </div>
