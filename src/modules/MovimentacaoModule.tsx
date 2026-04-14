@@ -1,7 +1,9 @@
 import { type MovimentacaoData, calcMovimentacao } from "@/store/useAppStore";
-import { InputField } from "@/components/InputField";
 import { KpiCard } from "@/components/KpiCard";
 import { ComparisonChart } from "@/components/ComparisonChart";
+import { Copy, Check } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 interface Props {
   data: MovimentacaoData;
@@ -9,53 +11,120 @@ interface Props {
 }
 
 export function MovimentacaoModule({ data, onChange }: Props) {
+  const [copied, setCopied] = useState(false);
   const r = calcMovimentacao(data);
 
   const chartData = [
-    { name: "Distância (m)", T1: data.distanciaT1, T3: data.distanciaT3 },
-    { name: "Tempo", T1: data.tempoT1, T3: data.tempoT3 },
+    { name: "Distância (m)", T1: data.distanciaT1 || 0, T3: data.distanciaT3 || 0 },
+    { name: "Tempo", T1: data.tempoT1 || 0, T3: data.tempoT3 || 0 },
   ];
 
+  // Variáveis para o laudo
+  const dI = data.distanciaT1 || 0;
+  const dF = data.distanciaT3 || 0;
+  const tI = data.tempoT1 || 0;
+  const tF = data.tempoT3 || 0;
+  const redD = r.reducaoDist.toFixed(2);
+  const redT = r.reducaoTempo.toFixed(2);
+  const u = data.unidadeTempo || "minutos";
+
+  // TEXTO PADRÃO
+  const laudo = `Por intermédio da ferramenta xx foi realizado (descreva ações e ou melhorias efetuadas).\n\nDistância: A medição inicial de movimentação/transporte era de ${dI}m (ida e volta), onde foi reduzido para ${dF}m (ida e volta), representando redução de ${redD}% em distância.\nCálculo Distância: (${dI} - ${dF}) / ${dI > 0 ? dI : 1} × 100 = ${redD}%\n\nTempo: O tempo de movimentação era de ${tI} ${u}, onde foi reduzido para ${tF} ${u}, representando redução de ${redT}% em tempo por intermédio (descrever melhorias e ou ações).\nCálculo Tempo: (${tI} - ${tF}) / ${tI > 0 ? tI : 1} × 100 = ${redT}%`;
+
+  // Previne quebra de vírgula na digitação
+  const parseDecimal = (val: string) => {
+    const cleaned = val.replace(/[^\d,.-]/g, '');
+    return Number(cleaned.replace(",", "."));
+  };
+
   return (
-    <div className="flex gap-8 h-full">
-      <div className="w-[60%] grid grid-cols-2 gap-x-8 gap-y-6 content-start">
-        
-        <div className="space-y-4">
-          <h3 className="font-semibold text-slate-800 border-b pb-2">Estado Inicial (T1)</h3>
-          <InputField label="Distância (Ida e Volta)" value={data.distanciaT1} onChange={v => onChange({ distanciaT1: Number(v) || 0 })} suffix="metros" />
-          <InputField label="Tempo Gasto" value={data.tempoT1} onChange={v => onChange({ tempoT1: Number(v) || 0 })} />
+    <div className="flex gap-8 h-full animate-in fade-in duration-500">
+      
+      {/* LADO ESQUERDO: FORMULÁRIO */}
+      <div className="w-[60%] flex flex-col gap-6 overflow-y-auto pr-2 pb-10">
+
+        {/* CONTROLE DE TEMPO GERAL */}
+        <div className="p-5 bg-[#F8FAFC] text-slate-800 rounded-xl flex items-center justify-between shadow-sm mb-2 border border-slate-200">
+          <div className="flex flex-col">
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Configuração</span>
+            <span className="text-sm font-semibold tracking-wide">Unidade de Tempo</span>
+          </div>
+          <select 
+            className="h-10 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg px-4 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer hover:bg-slate-50 transition-colors shadow-sm" 
+            value={data.unidadeTempo || "minutos"} 
+            onChange={e => onChange({ unidadeTempo: e.target.value as any })}
+          >
+            <option value="segundos">Segundos</option>
+            <option value="minutos">Minutos</option>
+            <option value="horas">Horas</option>
+          </select>
         </div>
 
-        <div className="space-y-4">
-          <h3 className="font-semibold text-slate-800 border-b pb-2">Estado Final (T3)</h3>
-          <InputField label="Distância (Ida e Volta)" value={data.distanciaT3} onChange={v => onChange({ distanciaT3: Number(v) || 0 })} suffix="metros" />
-          <InputField label="Tempo Gasto" value={data.tempoT3} onChange={v => onChange({ tempoT3: Number(v) || 0 })} />
+        {/* T1 - INICIAL */}
+        <div className="space-y-4 bg-slate-100/50 p-5 rounded-xl border border-slate-200">
+          <h3 className="font-bold text-slate-800 border-b border-slate-200 pb-2">Estado Inicial (T1)</h3>
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <label className="block text-xs font-bold text-slate-500 mb-1">Distância Inicial (m)</label>
+              <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
+                defaultValue={data.distanciaT1 ? data.distanciaT1.toString().replace(".", ",") : ""} 
+                onBlur={e => onChange({ distanciaT1: parseDecimal(e.target.value) })} placeholder="Ex: 78" />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-500 mb-1">Tempo Inicial ({u})</label>
+              <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
+                defaultValue={data.tempoT1 ? data.tempoT1.toString().replace(".", ",") : ""} 
+                onBlur={e => onChange({ tempoT1: parseDecimal(e.target.value) })} placeholder="Ex: 15" />
+            </div>
+          </div>
         </div>
 
-        <div className="col-span-2 pt-2">
-           <label className="block text-sm font-medium text-slate-700 mb-1">Unidade de Tempo Utilizada</label>
-           <select 
-             className="w-[50%] flex h-10 w-full rounded-md border border-slate-300 bg-transparent px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent"
-             value={data.unidadeTempo || "minutos"} 
-             onChange={e => onChange({ unidadeTempo: e.target.value as any })}
-           >
-             <option value="segundos">Segundos</option>
-             <option value="minutos">Minutos</option>
-             <option value="horas">Horas</option>
-           </select>
+        {/* T3 - FINAL */}
+        <div className="space-y-4 bg-indigo-50/50 p-5 rounded-xl border border-indigo-100">
+          <h3 className="font-bold text-slate-800 border-b border-indigo-200 pb-2">Estado Final (T3)</h3>
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <label className="block text-xs font-bold text-slate-500 mb-1">Distância Final (m)</label>
+              <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
+                defaultValue={data.distanciaT3 ? data.distanciaT3.toString().replace(".", ",") : ""} 
+                onBlur={e => onChange({ distanciaT3: parseDecimal(e.target.value) })} placeholder="Ex: 30" />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-500 mb-1">Tempo Final ({u})</label>
+              <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
+                defaultValue={data.tempoT3 ? data.tempoT3.toString().replace(".", ",") : ""} 
+                onBlur={e => onChange({ tempoT3: parseDecimal(e.target.value) })} placeholder="Ex: 5" />
+            </div>
+          </div>
         </div>
+
       </div>
 
-      <div className="w-[40%] flex flex-col gap-4 bg-slate-50 p-6 rounded-xl border border-slate-200 shadow-sm">
-        <h3 className="font-semibold text-slate-800 mb-2">Redução de Desperdícios</h3>
+      {/* LADO DIREITO: DASHBOARD E LAUDO */}
+      <div className="w-[40%] flex flex-col gap-4 overflow-y-auto pb-10">
         
-        <KpiCard label="Redução de Distância" value={r.reducaoDist.toFixed(1)} suffix="%" trend={r.reducaoDist} />
-        <KpiCard label={`Redução de Tempo (${data.unidadeTempo || "minutos"})`} value={r.reducaoTempo.toFixed(1)} suffix="%" trend={r.reducaoTempo} />
+        {/* KPIs ORIGINAIS PRESERVADOS */}
+        <div className="grid grid-cols-2 gap-3">
+          <KpiCard label="Redução de Distância" value={r.reducaoDist.toFixed(1)} suffix="%" trend={r.reducaoDist} />
+          <KpiCard label={`Redução de Tempo (${u})`} value={r.reducaoTempo.toFixed(1)} suffix="%" trend={r.reducaoTempo} />
+        </div>
+
+        {/* NOVO LAUDO DE MOVIMENTAÇÃO */}
+        <div className="relative bg-blue-50/50 p-5 border border-blue-100 rounded-2xl shadow-sm">
+          <button onClick={() => { navigator.clipboard.writeText(laudo); setCopied(true); toast.success("Copiado!"); setTimeout(() => setCopied(false), 2000); }} className="absolute top-3 right-3 p-2 rounded-md bg-white text-slate-400 hover:text-blue-600 transition-all shadow-sm border border-slate-100">
+            {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+          </button>
+          <h4 className="text-[10px] font-bold text-blue-700 uppercase mb-3 tracking-widest">Laudo de Movimentação</h4>
+          <p className="text-[13px] text-slate-700 leading-relaxed text-justify whitespace-pre-wrap">{laudo}</p>
+        </div>
         
-        <div className="flex-1 mt-4 min-h-[200px]">
+        {/* GRÁFICO ORIGINAL PRESERVADO */}
+        <div className="flex-1 mt-2 min-h-[200px]">
           <ComparisonChart data={chartData} title="Comparativo T1 vs T3" />
         </div>
+
       </div>
+
     </div>
   );
 }
