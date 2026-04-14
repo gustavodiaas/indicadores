@@ -71,16 +71,23 @@ const Index = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen w-full bg-[#F8FAFC] overflow-hidden font-inter">
-      <Topbar onExportWord={handleExportWord} />
+    <div className="flex flex-col h-screen w-full bg-[#F8FAFC] overflow-hidden font-inter print:bg-white print:h-auto print:overflow-visible">
       
-      <main className="flex-1 overflow-y-auto p-4 md:p-8 pb-32">
-        <div className="mx-auto max-w-[1600px] bg-white rounded-[2rem] shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-200/50 p-10 transition-all duration-500 min-h-full relative">
+      {/* Esconde a Topbar na impressão */}
+      <div className="print:hidden">
+        <Topbar onExportWord={handleExportWord} />
+      </div>
+      
+      {/* Limpa as margens e paddings na impressão */}
+      <main className="flex-1 overflow-y-auto p-4 md:p-8 pb-32 print:p-0 print:overflow-visible">
+        
+        {/* Remove bordas, sombras e arredondamentos na impressão */}
+        <div className="mx-auto max-w-[1600px] bg-white rounded-[2rem] shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-200/50 p-10 transition-all duration-500 min-h-full relative print:shadow-none print:border-none print:rounded-none print:p-0">
           
-          {/* Módulos Globais (Renderizam normalmente) */}
+          {/* Módulos Globais */}
           {activeModule !== "gbo" && renderPanelModules()}
 
-          {/* Módulo GBO (Renderiza escondido para não perder o state local ao trocar de aba) */}
+          {/* Módulo GBO */}
           <div className={activeModule === "gbo" ? "block w-full h-full" : "hidden"}>
             <GBOAnalysis />
           </div>
@@ -88,9 +95,10 @@ const Index = () => {
         </div>
       </main>
 
-      <FloatingNav active={activeModule} onSelect={setActiveModule} />
+      {/* Esconde a Ilha Dinâmica na impressão */}
+      <div className="print:hidden">
+        <FloatingNav active={activeModule} onSelect={setActiveModule} />
+      </div>
+      
     </div>
   );
-};
-
-export default Index;
