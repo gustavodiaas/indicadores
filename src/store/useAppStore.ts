@@ -98,6 +98,20 @@ export interface AppState {
   resumo: ResumoData;
 }
 
+export interface GboOperation {
+  id: string;
+  name: string;
+  time: number;
+}
+
+export interface GboData {
+  turnoTempo: number; // Em horas ou minutos
+  turnoUnidade: "minutes" | "hours";
+  demanda: number;
+  demandaUnidade: string;
+  tempoUnidade: "minutes" | "seconds";
+  operacoes: GboOperation[];
+}
 const defaultState: AppState = {
   produtividade: { volumeT1: 0, volumeT3: 0, horasT1: 8, horasT3: 8, operadoresT1: 1, operadoresT3: 1 },
   payback: { tipoSalario: "encargos", salarioBaseInicial: 0, encargosInicial: 1.9, colaboradoresInicial: 1, dedicacaoInicial: 100, salarioBaseFinal: 0, encargosFinal: 1.9, colaboradoresFinal: 1, dedicacaoFinal: 100, valorConsultoria: 0, investimentoExtra: 0 },
