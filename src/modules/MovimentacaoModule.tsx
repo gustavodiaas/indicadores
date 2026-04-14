@@ -14,15 +14,23 @@ export function MovimentacaoModule({ data, onChange }: Props) {
   const [copied, setCopied] = useState(false);
   const r = calcMovimentacao(data);
 
+  const chartData = [
+    { name: "Distância (m)", T1: data.distanciaT1 || 0, T3: data.distanciaT3 || 0 },
+    { name: "Tempo", T1: data.tempoT1 || 0, T3: data.tempoT3 || 0 },
+  ];
+
+  // Variáveis para o laudo
   const dI = data.distanciaT1 || 0;
   const dF = data.distanciaT3 || 0;
   const tI = data.tempoT1 || 0;
   const tF = data.tempoT3 || 0;
   const redD = r.reducaoDist.toFixed(2);
   const redT = r.reducaoTempo.toFixed(2);
+  
+  // CORREÇÃO AQUI: Definindo 'u' para os labels não quebrarem
   const uBase = data.unidadeTempo || "minutos";
+  const u = uBase; 
 
-  // Inteligência de Unidade
   const getUnit = (val: number, unit: string) => {
     if (unit === "segundos") return val === 1 ? "segundo" : "segundos";
     if (unit === "minutos") return val === 1 ? "minuto" : "minutos";
@@ -32,7 +40,6 @@ export function MovimentacaoModule({ data, onChange }: Props) {
 
   const laudo = `Por intermédio da ferramenta xx foi realizado (descreva ações e ou melhorias efetuadas).\n\nDistância: A medição inicial de movimentação/transporte era de ${dI}m (ida e volta), onde foi reduzido para ${dF}m (ida e volta), representando redução de ${redD}% em distância.\nCálculo Distância: (${dI} - ${dF}) / ${dI > 0 ? dI : 1} × 100 = ${redD}%\n\nTempo: O tempo de movimentação era de ${tI} ${getUnit(tI, uBase)}, onde foi reduzido para ${tF} ${getUnit(tF, uBase)}, representando redução de ${redT}% em tempo por intermédio (descrever melhorias e ou ações).\nCálculo Tempo: (${tI} - ${tF}) / ${tI > 0 ? tI : 1} × 100 = ${redT}%`;
 
-  // Previne quebra de vírgula na digitação
   const parseDecimal = (val: string) => {
     const cleaned = val.replace(/[^\d,.-]/g, '');
     return Number(cleaned.replace(",", "."));
@@ -40,11 +47,7 @@ export function MovimentacaoModule({ data, onChange }: Props) {
 
   return (
     <div className="flex gap-8 h-full animate-in fade-in duration-500">
-      
-      {/* LADO ESQUERDO: FORMULÁRIO */}
       <div className="w-[60%] flex flex-col gap-6 overflow-y-auto pr-2 pb-10">
-
-        {/* CONTROLE DE TEMPO GERAL */}
         <div className="p-5 bg-[#F8FAFC] text-slate-800 rounded-xl flex items-center justify-between shadow-sm mb-2 border border-slate-200">
           <div className="flex flex-col">
             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Configuração</span>
@@ -52,7 +55,7 @@ export function MovimentacaoModule({ data, onChange }: Props) {
           </div>
           <select 
             className="h-10 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg px-4 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer hover:bg-slate-50 transition-colors shadow-sm" 
-            value={data.unidadeTempo || "minutos"} 
+            value={uBase} 
             onChange={e => onChange({ unidadeTempo: e.target.value as any })}
           >
             <option value="segundos">Segundos</option>
@@ -61,7 +64,6 @@ export function MovimentacaoModule({ data, onChange }: Props) {
           </select>
         </div>
 
-        {/* T1 - INICIAL */}
         <div className="space-y-4 bg-slate-100/50 p-5 rounded-xl border border-slate-200">
           <h3 className="font-bold text-slate-800 border-b border-slate-200 pb-2">Estado Inicial (T1)</h3>
           <div className="grid grid-cols-2 gap-6">
@@ -69,18 +71,17 @@ export function MovimentacaoModule({ data, onChange }: Props) {
               <label className="block text-xs font-bold text-slate-500 mb-1">Distância Inicial (m)</label>
               <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
                 defaultValue={data.distanciaT1 ? data.distanciaT1.toString().replace(".", ",") : ""} 
-                onBlur={e => onChange({ distanciaT1: parseDecimal(e.target.value) })} placeholder="Ex: 78" />
+                onBlur={e => onChange({ distanciaT1: parseDecimal(e.target.value) })} />
             </div>
             <div>
               <label className="block text-xs font-bold text-slate-500 mb-1">Tempo Inicial ({u})</label>
               <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
                 defaultValue={data.tempoT1 ? data.tempoT1.toString().replace(".", ",") : ""} 
-                onBlur={e => onChange({ tempoT1: parseDecimal(e.target.value) })} placeholder="Ex: 15" />
+                onBlur={e => onChange({ tempoT1: parseDecimal(e.target.value) })} />
             </div>
           </div>
         </div>
 
-        {/* T3 - FINAL */}
         <div className="space-y-4 bg-indigo-50/50 p-5 rounded-xl border border-indigo-100">
           <h3 className="font-bold text-slate-800 border-b border-indigo-200 pb-2">Estado Final (T3)</h3>
           <div className="grid grid-cols-2 gap-6">
@@ -88,29 +89,24 @@ export function MovimentacaoModule({ data, onChange }: Props) {
               <label className="block text-xs font-bold text-slate-500 mb-1">Distância Final (m)</label>
               <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
                 defaultValue={data.distanciaT3 ? data.distanciaT3.toString().replace(".", ",") : ""} 
-                onBlur={e => onChange({ distanciaT3: parseDecimal(e.target.value) })} placeholder="Ex: 30" />
+                onBlur={e => onChange({ distanciaT3: parseDecimal(e.target.value) })} />
             </div>
             <div>
               <label className="block text-xs font-bold text-slate-500 mb-1">Tempo Final ({u})</label>
               <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
                 defaultValue={data.tempoT3 ? data.tempoT3.toString().replace(".", ",") : ""} 
-                onBlur={e => onChange({ tempoT3: parseDecimal(e.target.value) })} placeholder="Ex: 5" />
+                onBlur={e => onChange({ tempoT3: parseDecimal(e.target.value) })} />
             </div>
           </div>
         </div>
-
       </div>
 
-      {/* LADO DIREITO: DASHBOARD E LAUDO */}
       <div className="w-[40%] flex flex-col gap-4 overflow-y-auto pb-10">
-        
-        {/* KPIs ORIGINAIS PRESERVADOS */}
         <div className="grid grid-cols-2 gap-3">
           <KpiCard label="Redução de Distância" value={r.reducaoDist.toFixed(1)} suffix="%" trend={r.reducaoDist} />
           <KpiCard label={`Redução de Tempo (${u})`} value={r.reducaoTempo.toFixed(1)} suffix="%" trend={r.reducaoTempo} />
         </div>
 
-        {/* NOVO LAUDO DE MOVIMENTAÇÃO */}
         <div className="relative bg-blue-50/50 p-5 border border-blue-100 rounded-2xl shadow-sm">
           <button onClick={() => { navigator.clipboard.writeText(laudo); setCopied(true); toast.success("Copiado!"); setTimeout(() => setCopied(false), 2000); }} className="absolute top-3 right-3 p-2 rounded-md bg-white text-slate-400 hover:text-blue-600 transition-all shadow-sm border border-slate-100">
             {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
@@ -119,13 +115,10 @@ export function MovimentacaoModule({ data, onChange }: Props) {
           <p className="text-[13px] text-slate-700 leading-relaxed text-justify whitespace-pre-wrap">{laudo}</p>
         </div>
         
-        {/* GRÁFICO ORIGINAL PRESERVADO */}
         <div className="flex-1 mt-2 min-h-[200px]">
           <ComparisonChart data={chartData} title="Comparativo T1 vs T3" />
         </div>
-
       </div>
-
     </div>
   );
 }
