@@ -269,7 +269,6 @@ export default function GBOAnalysis() {
             </div>
             
             <div className="flex items-center gap-4">
-              <ThemeToggle />
               <Dialog>
                 <DialogTrigger asChild>
                   <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors">
