@@ -25,13 +25,15 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
   const chartData = [{ name: "Custo/Peça (R$)", T1: Number(r.custoI.toFixed(2)), T3: Number(r.custoF.toFixed(2)) }];
   const formatBRL = (v: number) => `R$ ${v.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-  // TEXTO ORIGINAL RESTAURADO
-  const colabTxt1 = data.colaboradoresInicial === 1 ? "colaborador" : "colaboradores";
-  const colabTxt3 = data.colaboradoresFinal === 1 ? "colaborador" : "colaboradores";
-  
-  const laudo = `No estágio inicial, havia ${data.colaboradoresInicial || 0} ${colabTxt1}, com custo total por mês de ${formatBRL(r.salI)}, ${data.dedicacaoInicial || 100}% utilizados na operação. Produziam-se ${r.prodMensalI.toLocaleString("pt-BR")} pçs/mês, a custo de mão de obra de ${formatBRL(r.custoI)}. Após intervenção, permaneceram ${data.colaboradoresFinal || 0} ${colabTxt3}, com custo total por mês de ${formatBRL(r.salF)}, ${data.dedicacaoFinal || 100}% utilizado no processo. Passaram a produzir ${r.prodMensalF.toLocaleString("pt-BR")} pçs/mês, a custo de mão de obra de ${formatBRL(r.custoF)}. Reduziu-se então ${formatBRL(Math.max(0, r.custoI - r.custoF))} no custo de mão de obra por peça, que gerou o retorno mensal de ${formatBRL(r.reducaoMensal)}. Portanto, um payback de ${r.paybackMeses > 0 ? r.paybackMeses.toFixed(1) : "0.0"} meses.`;
+  // VALORES PUXADOS AUTOMATICAMENTE DA PRODUTIVIDADE
+  const op1 = prodData.operadoresT1 || 0;
+  const op3 = prodData.operadoresT3 || 0;
 
-  // Função blindada para aceitar vírgula sem quebrar
+  const colabTxt1 = op1 === 1 ? "colaborador" : "colaboradores";
+  const colabTxt3 = op3 === 1 ? "colaborador" : "colaboradores";
+  
+  const laudo = `No estágio inicial, havia ${op1} ${colabTxt1}, com custo total por mês de ${formatBRL(r.salI)}, ${data.dedicacaoInicial || 100}% utilizados na operação. Produziam-se ${r.prodMensalI.toLocaleString("pt-BR")} pçs/mês, a custo de mão de obra de ${formatBRL(r.custoI)}. Após intervenção, permaneceram ${op3} ${colabTxt3}, com custo total por mês de ${formatBRL(r.salF)}, ${data.dedicacaoFinal || 100}% utilizado no processo. Passaram a produzir ${r.prodMensalF.toLocaleString("pt-BR")} pçs/mês, a custo de mão de obra de ${formatBRL(r.custoF)}. Reduziu-se então ${formatBRL(Math.max(0, r.custoI - r.custoF))} no custo de mão de obra por peça, que gerou o retorno mensal de ${formatBRL(r.reducaoMensal)}. Portanto, um payback de ${r.paybackMeses > 0 ? r.paybackMeses.toFixed(1) : "0.0"} meses.`;
+
   const parseDecimal = (val: string) => {
     const cleaned = val.replace(/[^\d,.-]/g, '');
     return Number(cleaned.replace(",", "."));
@@ -40,10 +42,8 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
   return (
     <div className="flex gap-8 h-full animate-in fade-in duration-500">
       
-      {/* LADO ESQUERDO: FORMULÁRIO */}
       <div className="w-[60%] flex flex-col gap-6 overflow-y-auto pr-2 pb-10">
 
-       {/* CONTROLE DE SALÁRIO GERAL */}
         <div className="p-5 bg-[#F8FAFC] text-slate-800 rounded-xl flex items-center justify-between shadow-sm mb-2 border border-slate-200">
           <div className="flex flex-col">
             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Configuração</span>
@@ -59,7 +59,6 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
           </select>
         </div>
 
-       {/* T1 - INICIAL */}
         <div className="space-y-4 bg-slate-100/50 p-5 rounded-xl border border-slate-200">
           <h3 className="font-bold text-slate-800 border-b border-slate-200 pb-2">Estado Inicial (T1)</h3>
           <div className="grid grid-cols-2 gap-4">
@@ -79,9 +78,8 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
             )}
             <div>
               <label className="block text-xs font-bold text-slate-500 mb-1">Colaboradores</label>
-              <input type="number" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
-                value={data.colaboradoresInicial || ""} 
-                onChange={e => onChange({ colaboradoresInicial: Number(e.target.value) })} placeholder="Ex: 18" />
+              <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 bg-slate-100 text-slate-500 cursor-not-allowed font-medium text-sm" 
+                value={op1} disabled />
             </div>
             <div>
               <label className="block text-xs font-bold text-slate-500 mb-1">Dedicação (%)</label>
@@ -92,7 +90,6 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
           </div>
         </div>
 
-       {/* T3 - FINAL */}
         <div className="space-y-4 bg-indigo-50/50 p-5 rounded-xl border border-indigo-100">
           <h3 className="font-bold text-slate-800 border-b border-indigo-200 pb-2">Estado Final (T3)</h3>
           <div className="grid grid-cols-2 gap-4">
@@ -112,9 +109,8 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
             )}
             <div>
               <label className="block text-xs font-bold text-slate-500 mb-1">Colaboradores</label>
-              <input type="number" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
-                value={data.colaboradoresFinal || ""} 
-                onChange={e => onChange({ colaboradoresFinal: Number(e.target.value) })} placeholder="Ex: 18" />
+              <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 bg-slate-100 text-slate-500 cursor-not-allowed font-medium text-sm" 
+                value={op3} disabled />
             </div>
             <div>
               <label className="block text-xs font-bold text-slate-500 mb-1">Dedicação (%)</label>
@@ -125,11 +121,9 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
           </div>
         </div>
 
-       {/* INVESTIMENTOS */}
         <div className="space-y-4 bg-slate-50 p-5 rounded-xl border border-slate-200">
           <h3 className="font-bold text-slate-800 border-b border-slate-200 pb-2">Investimentos</h3>
           <div className="grid grid-cols-2 gap-6">
-            
             <div className="space-y-3">
               <div>
                 <label className="block text-xs font-bold text-slate-500 mb-1">Porte da Empresa (Consultoria)</label>
@@ -144,8 +138,6 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
                   <option value={VALORES_CONSULTORIA.media}>Média Empresa</option>
                 </select>
               </div>
-              
-              {/* DISPLAY COM O VALOR DA CONSULTORIA */}
               <div>
                 <label className="block text-xs font-bold text-slate-500 mb-1">Valor do porte (R$)</label>
                 <div className="w-full h-10 px-3 rounded-lg border border-slate-200 bg-slate-200/50 flex items-center text-slate-700 text-sm font-semibold">
@@ -153,20 +145,17 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
                 </div>
               </div>
             </div>
-
             <div>
               <label className="block text-xs font-bold text-slate-500 mb-1">Investimento Extra (R$)</label>
               <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
                 defaultValue={data.investimentoExtra ? data.investimentoExtra.toString().replace(".", ",") : ""} 
                 onBlur={e => onChange({ investimentoExtra: parseDecimal(e.target.value) })} placeholder="Ex: 5000,00" />
             </div>
-
           </div>
         </div>
 
       </div>
 
-      {/* LADO DIREITO: DASHBOARD E LAUDO */}
       <div className="w-[40%] flex flex-col gap-4 overflow-y-auto pb-10">
         <div className="grid grid-cols-2 gap-3">
           <KpiCard label="Custo Inicial" value={formatBRL(r.custoI)} />
