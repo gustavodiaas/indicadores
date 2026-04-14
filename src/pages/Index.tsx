@@ -73,6 +73,9 @@ const Index = () => {
   return (
     <div className="flex flex-col h-screen w-full bg-[#F8FAFC] overflow-hidden font-inter print:bg-white print:h-auto print:overflow-visible">
       
+      {/* Trava de Impressão: Força o modo Paisagem (Landscape) */}
+      <style dangerouslySetInnerHTML={{ __html: `@media print { @page { size: landscape; margin: 10mm; } }` }} />
+
       {/* Esconde a Topbar na impressão */}
       <div className="print:hidden">
         <Topbar onExportWord={handleExportWord} />
