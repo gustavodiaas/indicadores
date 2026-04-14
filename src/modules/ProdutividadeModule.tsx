@@ -1,7 +1,7 @@
 import { type ProdutividadeData, calcProdutividade } from "@/store/useAppStore";
 import { KpiCard } from "@/components/KpiCard";
 import { ComparisonChart } from "@/components/ComparisonChart";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, Info } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -19,7 +19,6 @@ export function ProdutividadeModule({ data, onChange }: Props) {
   const opTxt1 = data.operadoresT1 === 1 ? "operador" : "operadores";
   const opTxt3 = data.operadoresT3 === 1 ? "operador" : "operadores";
 
-  // TRATAMENTO DE NaN E VÍRGULA
   const parseDecimal = (val: string) => {
     const cleaned = val.replace(/\./g, '').replace(",", ".");
     return Number(cleaned) || 0;
@@ -31,10 +30,21 @@ export function ProdutividadeModule({ data, onChange }: Props) {
     <div className="flex gap-8 h-full animate-in fade-in duration-500">
       <div className="w-[60%] flex flex-col gap-6 overflow-y-auto pr-2 pb-10">
         
-        {/* DEFINIÇÃO DA UNIDADE */}
+        {/* DEFINIÇÃO DA UNIDADE COM BOTÃO DE INFORMAÇÃO */}
         <div className="p-5 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between shadow-sm">
           <div className="flex flex-col">
-            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Configuração</span>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Configuração</span>
+              
+              {/* INFORMAÇÃO DOS DIAS ÚTEIS */}
+              <div className="relative group inline-block">
+                <Info className="w-3.5 h-3.5 text-slate-400 cursor-help hover:text-blue-600 transition-colors" />
+                <div className="absolute top-full left-0 mt-2 w-56 p-4 bg-slate-900 text-slate-300 text-[11px] rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 border border-slate-800 z-[120] font-normal normal-case leading-relaxed">
+                  <p>A projeção de produção mensal (utilizada no Payback) utiliza o padrão de <b>21 dias úteis</b> por mês.</p>
+                  <div className="absolute bottom-full left-4 w-2 h-2 bg-slate-900 rotate-45 -mb-1" />
+                </div>
+              </div>
+            </div>
             <span className="text-sm font-semibold tracking-wide">Unidade de Medida</span>
           </div>
           <input 
