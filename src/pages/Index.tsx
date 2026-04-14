@@ -61,6 +61,7 @@ const Index = () => {
       case "disponibilidade": return <DisponibilidadeModule data={state.disponibilidade} onChange={d => updateModule("disponibilidade", d)} />;
       case "leadtime": return <LeadTimeModule data={state.leadtime} onChange={d => updateModule("leadtime", d)} />;
       case "area": return <AreaModule data={state.area} onChange={d => updateModule("area", d)} />;
+      case "gbo": return <GboModule data={state.gbo} onChange={d => updateModule("gbo", d)} />;
       default: return null;
     }
   };
