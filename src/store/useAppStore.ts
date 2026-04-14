@@ -22,11 +22,9 @@ export interface PaybackData {
   tipoSalario: "bruto" | "encargos";
   salarioBaseInicial: number;
   encargosInicial: number;
-  colaboradoresInicial: number; // Agora mantido apenas por compatibilidade de tipo
   dedicacaoInicial: number;
   salarioBaseFinal: number;
   encargosFinal: number;
-  colaboradoresFinal: number; // Agora mantido apenas por compatibilidade de tipo
   dedicacaoFinal: number;
   valorConsultoria: number;
   investimentoExtra: number;
@@ -52,6 +50,9 @@ export interface DisponibilidadeData {
 
 export interface LeadTimeData {
   leadTimeT1: number; leadTimeT3: number;
+  unidadeTempo?: "segundos" | "minutos" | "horas" | "dias";
+  tempoT1?: number;
+  tempoT3?: number;
 }
 
 export interface AreaData {
@@ -117,11 +118,11 @@ export interface AppState {
 
 const defaultState: AppState = {
   produtividade: { volumeT1: 0, volumeT3: 0, horasT1: 8, horasT3: 8, operadoresT1: 1, operadoresT3: 1, unidade: "peças" },
-  payback: { tipoSalario: "bruto", salarioBaseInicial: 0, encargosInicial: 1.9, colaboradoresInicial: 1, dedicacaoInicial: 100, salarioBaseFinal: 0, encargosFinal: 1.9, colaboradoresFinal: 1, dedicacaoFinal: 100, valorConsultoria: 0, investimentoExtra: 0 },
+  payback: { tipoSalario: "bruto", salarioBaseInicial: 0, encargosInicial: 1.9, dedicacaoInicial: 100, salarioBaseFinal: 0, encargosFinal: 1.9, dedicacaoFinal: 100, valorConsultoria: 0, investimentoExtra: 0 },
   movimentacao: { distanciaT1: 0, distanciaT3: 0, tempoT1: 0, tempoT3: 0, unidadeTempo: "minutos" },
   qualidade: { quantidadeT1: 0, quantidadeT3: 0, perdasT1: 0, perdasT3: 0 },
   disponibilidade: { tempoTotalT1: 480, tempoTotalT3: 480, paradasPlanT1: 0, paradasPlanT3: 0, paradasNaoPlanT1: 0, paradasNaoPlanT3: 0, unidadeTempo: "minutos" },
-  leadtime: { leadTimeT1: 0, leadTimeT3: 0 },
+  leadtime: { leadTimeT1: 0, leadTimeT3: 0, unidadeTempo: "dias" },
   area: { areaT1: 0, areaT3: 0, valorAluguel: 0 },
   resumo: { nomeEmpresa: "", cidade: "", ramo: "", especialista: "", totalColaboradores: 0, turnos: 1, processos: "", metodo: "", origem: "", oportunidades: "", problemas: "", atuacao: "", motivacao: "", ferramentas: "", acoes: [] },
   gbo: { turnoTempo: 0, turnoUnidade: "hours", demanda: 0, demandaUnidade: "peças", tempoUnidade: "seconds", operacoes: [] },
@@ -137,34 +138,11 @@ export function useAppStore() {
     setState(prev => ({ ...prev, [key]: { ...prev[key], ...data } as any }));
   }, []);
 
-  const exportJSON = useCallback(() => {
-    const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "consultoria-lean-backup.json";
-    a.click();
-    URL.revokeObjectURL(url);
-  }, [state]);
-
-  const importJSON = useCallback((file: File) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const data = JSON.parse(e.target?.result as string);
-        setState({ ...defaultState, ...data });
-      } catch {
-        alert("Erro ao importar arquivo JSON. Formato inválido.");
-      }
-    };
-    reader.readAsText(file);
-  }, []);
-
   const loadState = useCallback((data: AppState) => {
     setState({ ...defaultState, ...data });
   }, []);
 
-  return { state, activeModule, setActiveModule, updateModule, exportJSON, importJSON, loadState };
+  return { state, activeModule, setActiveModule, updateModule, loadState };
 }
 
 export function calcProdutividade(d: ProdutividadeData) {
@@ -243,7 +221,9 @@ export function calcDisponibilidade(d: DisponibilidadeData) {
 }
 
 export function calcLeadTime(d: LeadTimeData) {
-  const reducao = d.leadTimeT1 > 0 ? ((d.leadTimeT1 - d.leadTimeT3) / d.leadTimeT1) * 100 : 0;
+  const tI = d.leadTimeT1 || d.tempoT1 || 0;
+  const tF = d.leadTimeT3 || d.tempoT3 || 0;
+  const reducao = tI > 0 ? ((tI - tF) / tI) * 100 : 0;
   return { reducao };
 }
 
