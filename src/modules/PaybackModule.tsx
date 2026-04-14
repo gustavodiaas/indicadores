@@ -1,5 +1,4 @@
 import { type PaybackData, type ProdutividadeData, type ResumoData, calcPayback } from "@/store/useAppStore";
-import { InputField } from "@/components/InputField";
 import { KpiCard } from "@/components/KpiCard";
 import { ComparisonChart } from "@/components/ComparisonChart";
 import { Copy, Check } from "lucide-react";
@@ -13,64 +12,128 @@ interface Props {
   onChange: (d: Partial<PaybackData>) => void;
 }
 
+const VALORES_CONSULTORIA = {
+  micro: 15834.40,
+  pequena: 21772.30,
+  media: 22800.00,
+};
+
 export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
   const [copied, setCopied] = useState(false);
   const r = calcPayback(data, prodData, resumoData);
 
   const chartData = [{ name: "Custo/Peça (R$)", T1: Number(r.custoI.toFixed(2)), T3: Number(r.custoF.toFixed(2)) }];
-  const formatBRL = (v: number) => `R$ ${v.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`;
+  const formatBRL = (v: number) => `R$ ${v.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-  const laudo = `No estágio inicial, havia ${data.colaboradoresInicial} funcionários, com custo total por mês de ${formatBRL(data.salarioBaseInicial * (data.encargosInicial > 10 ? 1 + data.encargosInicial/100 : data.encargosInicial) * data.colaboradoresInicial)}, ${data.dedicacaoInicial}% utilizados na operação. Produziam-se ${r.prodMensalI.toLocaleString()} pçs/mês, a custo de mão de obra de ${formatBRL(r.custoI)}. Após intervenção, permaneceram ${data.colaboradoresFinal} funcionários, com custo total por mês de ${formatBRL(data.salarioBaseFinal * (data.encargosFinal > 10 ? 1 + data.encargosFinal/100 : data.encargosFinal) * data.colaboradoresFinal)}, ${data.dedicacaoFinal}% utilizado no processo. Passaram a produzir ${r.prodMensalF.toLocaleString()} pçs/mês, a custo de mão de obra de ${formatBRL(r.custoF)}. Reduziu-se então ${formatBRL(Math.max(0, r.custoI - r.custoF))} no custo de mão de obra, que gerou o retorno mensal de ${formatBRL(r.reducaoMensal)}. Portanto, um payback de ${r.paybackMeses.toFixed(1)} meses.`;
+  const laudo = `O retorno do programa foi calculado considerando a redução de custo da mão de obra por peça produzida.\n\nEstado Inicial (T1):\nCom remuneração total (Salário + Encargos) de ${formatBRL(r.salI)} e produção de ${r.prodMensalI.toLocaleString("pt-BR")} peças/mês, o custo inicial era de ${formatBRL(r.custoI)} por peça.\n\nEstado Final (T3):\nCom remuneração total de ${formatBRL(r.salF)} e produção de ${r.prodMensalF.toLocaleString("pt-BR")} peças/mês, o custo final passou para ${formatBRL(r.custoF)} por peça.\n\nResultados:\nA redução de custo gerou uma economia mensal de ${formatBRL(r.reducaoMensal)}. Considerando o investimento total de ${formatBRL(r.investTotal)}, o Retorno sobre o Investimento (Payback) estimado é de ${r.paybackMeses > 0 ? r.paybackMeses.toFixed(2) : "0.00"} meses.`;
+
+  // Função blindada para aceitar vírgula (Lê o valor, troca a vírgula por ponto e salva no sistema)
+  const parseDecimal = (val: string) => {
+    const cleaned = val.replace(/[^\d,.-]/g, '');
+    return Number(cleaned.replace(",", "."));
+  };
 
   return (
-    <div className="flex gap-8 h-full">
-      <div className="w-[60%] grid grid-cols-2 gap-x-8 gap-y-6 overflow-y-auto pr-2 pb-10">
-        <div className="col-span-2 p-4 bg-blue-50 border border-blue-100 rounded-xl flex items-center justify-between">
-          <span className="text-xs font-bold text-blue-900 uppercase">Modelo de Cálculo</span>
-          <select className="h-9 bg-white border border-blue-200 text-xs rounded-md px-2 outline-none" value={data.tipoSalario} onChange={e => onChange({ tipoSalario: e.target.value as any })}>
-            <option value="encargos">Salário + Encargos</option>
-            <option value="bruto">Salário Bruto</option>
-          </select>
-        </div>
-        <div className="space-y-4">
-          <h3 className="font-bold text-slate-800 border-b pb-2">Estado Inicial (T1)</h3>
-          <InputField label="Salário Base" value={data.salarioBaseInicial} onChange={v => onChange({ salarioBaseInicial: Number(v) })} />
-          {data.tipoSalario !== "bruto" && <InputField label="Encargos" value={data.encargosInicial} onChange={v => onChange({ encargosInicial: Number(v) })} />}
-          <InputField label="Colaboradores" value={data.colaboradoresInicial} onChange={v => onChange({ colaboradoresInicial: Number(v) })} />
-          <InputField label="Dedicação" value={data.dedicacaoInicial} onChange={v => onChange({ dedicacaoInicial: Number(v) })} suffix="%" />
-        </div>
-        <div className="space-y-4">
-          <h3 className="font-bold text-slate-800 border-b pb-2">Estado Final (T3)</h3>
-          <InputField label="Salário Base" value={data.salarioBaseFinal} onChange={v => onChange({ salarioBaseFinal: Number(v) })} />
-          {data.tipoSalario !== "bruto" && <InputField label="Encargos" value={data.encargosFinal} onChange={v => onChange({ encargosFinal: Number(v) })} />}
-          <InputField label="Colaboradores" value={data.colaboradoresFinal} onChange={v => onChange({ colaboradoresFinal: Number(v) })} />
-          <InputField label="Dedicação" value={data.dedicacaoFinal} onChange={v => onChange({ dedicacaoFinal: Number(v) })} suffix="%" />
-        </div>
-        <div className="col-span-2 space-y-4 pt-4">
-          <h3 className="font-bold text-slate-800 border-b pb-2">Investimentos</h3>
-          <div className="grid grid-cols-2 gap-6">
-            <InputField label="Consultoria" value={data.valorConsultoria} onChange={v => onChange({ valorConsultoria: Number(v) })} suffix="R$" />
-            <InputField label="Extra" value={data.investimentoExtra} onChange={v => onChange({ investimentoExtra: Number(v) })} suffix="R$" />
+    <div className="flex gap-8 h-full animate-in fade-in duration-500">
+      
+      {/* LADO ESQUERDO: FORMULÁRIO (60%) */}
+      <div className="w-[60%] flex flex-col gap-6 overflow-y-auto pr-2 pb-10">
+
+        <div className="space-y-4 bg-blue-50/50 p-5 rounded-xl border border-blue-100">
+          <h3 className="font-bold text-slate-800 border-b border-blue-200 pb-2">Estado Inicial (T1)</h3>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-xs font-bold text-slate-500 mb-1">Salário Base (R$)</label>
+              <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
+                defaultValue={data.salarioBaseInicial ? data.salarioBaseInicial.toString().replace(".", ",") : ""} 
+                onBlur={e => onChange({ salarioBaseInicial: parseDecimal(e.target.value) })} placeholder="Ex: 2500,00" />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-500 mb-1">Encargos (Multiplicador)</label>
+              <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
+                defaultValue={data.encargosInicial ? data.encargosInicial.toString().replace(".", ",") : "1,9"} 
+                onBlur={e => onChange({ encargosInicial: parseDecimal(e.target.value) || 1 })} placeholder="Ex: 1,9" />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-500 mb-1">Colaboradores</label>
+              <input type="number" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
+                value={data.colaboradoresInicial || ""} 
+                onChange={e => onChange({ colaboradoresInicial: Number(e.target.value) })} />
+            </div>
           </div>
         </div>
+
+        <div className="space-y-4 bg-emerald-50/50 p-5 rounded-xl border border-emerald-100">
+          <h3 className="font-bold text-slate-800 border-b border-emerald-200 pb-2">Estado Final (T3)</h3>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-xs font-bold text-slate-500 mb-1">Salário Base (R$)</label>
+              <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
+                defaultValue={data.salarioBaseFinal ? data.salarioBaseFinal.toString().replace(".", ",") : ""} 
+                onBlur={e => onChange({ salarioBaseFinal: parseDecimal(e.target.value) })} placeholder="Ex: 2500,00" />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-500 mb-1">Encargos (Multiplicador)</label>
+              <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
+                defaultValue={data.encargosFinal ? data.encargosFinal.toString().replace(".", ",") : "1,9"} 
+                onBlur={e => onChange({ encargosFinal: parseDecimal(e.target.value) || 1 })} placeholder="Ex: 1,9" />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-500 mb-1">Colaboradores</label>
+              <input type="number" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
+                value={data.colaboradoresFinal || ""} 
+                onChange={e => onChange({ colaboradoresFinal: Number(e.target.value) })} />
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-4 bg-slate-50 p-5 rounded-xl border border-slate-200">
+          <h3 className="font-bold text-slate-800 border-b border-slate-200 pb-2">Investimentos</h3>
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <label className="block text-xs font-bold text-slate-500 mb-1">Porte da Empresa (Consultoria)</label>
+              <select 
+                className="w-full h-10 px-3 rounded-lg border border-slate-200 bg-white text-sm outline-none"
+                onChange={e => onChange({ valorConsultoria: Number(e.target.value) })}
+                value={data.valorConsultoria}
+              >
+                <option value="0">Selecione o porte</option>
+                <option value={VALORES_CONSULTORIA.micro}>Micro Empresa (R$ 15.834,40)</option>
+                <option value={VALORES_CONSULTORIA.pequena}>Pequena Empresa (R$ 21.772,30)</option>
+                <option value={VALORES_CONSULTORIA.media}>Média Empresa (R$ 22.800,00)</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-500 mb-1">Investimento Extra (R$)</label>
+              <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
+                defaultValue={data.investimentoExtra ? data.investimentoExtra.toString().replace(".", ",") : ""} 
+                onBlur={e => onChange({ investimentoExtra: parseDecimal(e.target.value) })} placeholder="Ex: 5000,00" />
+            </div>
+          </div>
+        </div>
+
       </div>
 
-      <div className="w-[40%] flex flex-col gap-4 overflow-y-auto">
+      {/* LADO DIREITO: DASHBOARD E LAUDO (40%) */}
+      <div className="w-[40%] flex flex-col gap-4 overflow-y-auto pb-10">
         <div className="grid grid-cols-2 gap-3">
-          <KpiCard label="Custo T1" value={formatBRL(r.custoI)} />
-          <KpiCard label="Payback" value={r.paybackMeses.toFixed(1)} suffix="meses" />
+          <KpiCard label="Redução Mensal" value={formatBRL(r.reducaoMensal)} />
+          <KpiCard label="Payback" value={r.paybackMeses > 0 ? r.paybackMeses.toFixed(2) : "0.00"} suffix="meses" />
         </div>
+        
         <div className="relative bg-white p-5 border border-slate-200 rounded-2xl shadow-sm">
           <button onClick={() => { navigator.clipboard.writeText(laudo); setCopied(true); toast.success("Copiado!"); setTimeout(() => setCopied(false), 2000); }} className="absolute top-3 right-3 p-2 rounded-md bg-slate-50 text-slate-400 hover:text-blue-600 transition-all">
             {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
           </button>
           <h4 className="text-[10px] font-bold text-blue-600 uppercase mb-3 tracking-widest">Laudo de Payback</h4>
-          <p className="text-xs text-slate-600 leading-relaxed text-justify">{laudo}</p>
+          <p className="text-xs text-slate-600 leading-relaxed text-justify whitespace-pre-wrap">{laudo}</p>
         </div>
-        <div className="mt-auto pt-6 min-h-[250px]">
-          <ComparisonChart data={chartData} title="Evolução de Custos" />
+        
+        <div className="mt-auto pt-4 min-h-[250px]">
+          <ComparisonChart data={chartData} title="Evolução do Custo por Peça" />
         </div>
       </div>
+
     </div>
   );
 }
