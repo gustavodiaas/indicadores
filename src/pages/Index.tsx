@@ -1,6 +1,8 @@
 import { useAppStore, calcProdutividade, calcPayback } from "@/store/useAppStore";
 import { FloatingNav } from "@/components/FloatingNav";
 import { Topbar } from "@/components/Topbar";
+
+// Seus módulos do painel
 import { ResumoModule } from "@/modules/ResumoModule";
 import { PaybackModule } from "@/modules/PaybackModule";
 import { ProdutividadeModule } from "@/modules/ProdutividadeModule";
@@ -9,6 +11,9 @@ import { QualidadeModule } from "@/modules/QualidadeModule";
 import { DisponibilidadeModule } from "@/modules/DisponibilidadeModule";
 import { LeadTimeModule } from "@/modules/LeadTimeModule";
 import { AreaModule } from "@/modules/AreaModule";
+
+// O SEU GBO ORIGINAL (Plug and Play)
+import GBOAnalysis from "@/modules/GboModule"; 
 
 const Index = () => {
   const { state, activeModule, setActiveModule, updateModule } = useAppStore();
@@ -51,7 +56,7 @@ const Index = () => {
     URL.revokeObjectURL(url);
   };
 
-  const renderModule = () => {
+  const renderPanelModules = () => {
     switch (activeModule) {
       case "resumo": return <ResumoModule data={state.resumo} state={state} onChange={d => updateModule("resumo", d)} />;
       case "payback": return <PaybackModule data={state.payback} prodData={state.produtividade} resumoData={state.resumo} onChange={d => updateModule("payback", d)} />;
@@ -61,7 +66,6 @@ const Index = () => {
       case "disponibilidade": return <DisponibilidadeModule data={state.disponibilidade} onChange={d => updateModule("disponibilidade", d)} />;
       case "leadtime": return <LeadTimeModule data={state.leadtime} onChange={d => updateModule("leadtime", d)} />;
       case "area": return <AreaModule data={state.area} onChange={d => updateModule("area", d)} />;
-      case "gbo": return <GboModule data={state.gbo} onChange={d => updateModule("gbo", d)} />;
       default: return null;
     }
   };
@@ -71,8 +75,16 @@ const Index = () => {
       <Topbar onExportWord={handleExportWord} />
       
       <main className="flex-1 overflow-y-auto p-4 md:p-8 pb-32">
-        <div className="mx-auto max-w-[1600px] bg-white rounded-[2rem] shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-200/50 p-10 transition-all duration-500 min-h-full">
-          {renderModule()}
+        <div className="mx-auto max-w-[1600px] bg-white rounded-[2rem] shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-200/50 p-10 transition-all duration-500 min-h-full relative">
+          
+          {/* Módulos Globais (Renderizam normalmente) */}
+          {activeModule !== "gbo" && renderPanelModules()}
+
+          {/* Módulo GBO (Renderiza escondido para não perder o state local ao trocar de aba) */}
+          <div className={activeModule === "gbo" ? "block w-full h-full" : "hidden"}>
+            <GBOAnalysis />
+          </div>
+
         </div>
       </main>
 
