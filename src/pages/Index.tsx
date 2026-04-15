@@ -37,7 +37,7 @@ const Index = () => {
       return u;
     };
 
-    const acoesStr = resumo.acoes.length > 0 ? resumo.acoes.map(a => a.what).join(", ") : "ações de melhoria contínua";
+    const acoesStr = resumo.acoes.length > 0 ? resumo.acoes.map(a => a.what).join(", ") : "—";
 
     // --- FUNÇÕES AUXILIARES PARA O WORD ---
     const tr = (text: string, bold = false) => new TextRun({ text, bold, font: "Arial", size: 22 }); // size 22 = 11pt
@@ -157,17 +157,25 @@ const Index = () => {
 
           createHeading("8. Conclusão do Projeto"),
           createJustified([
-            tr("O presente programa proporcionou a realização de consultoria na Empresa "),
+            tr("O presente programa de fomento ao setor industrial brasileiro Brasil Mais Produtivo, proporcionou a realização de consultoria em Manufatura Enxuta na Empresa "),
             tr(resumo.nomeEmpresa || "—", true),
-            tr(". Obteve-se um aumento de "),
+            tr(", na cidade de "),
+            tr(resumo.cidade || "—", true),
+            tr(" no Estado do Rio Grande do Sul. A escolha do produto a ser mapeado foi motivada "),
+            tr(resumo.motivacao || "—", true),
+            tr(". As ferramentas aplicadas foram "),
+            tr(resumo.ferramentas || "—", true),
+            tr(". Foram elaborados um conjunto de ações através da ferramenta 5W2H, onde definiu-se diversas ações para as oportunidades elencadas, tais como: "),
+            tr(acoesStr, true),
+            tr(". Após definição do ponto de intervenção, monitoramento e validação das melhorias, obteve-se: Aumento de "),
             tr(`${prod.ganho.toFixed(2)}%`, true),
-            tr(" em produtividade e um Payback de "),
-            tr(`${pb.paybackMeses.toFixed(2)} ${pb.paybackMeses === 1 ? "mês" : "meses"}`, true),
+            tr(" em produtividade. Payback: Com as ações aplicadas obtém-se um Payback de "),
+            tr(`${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2) : "0.00"} ${pb.paybackMeses === 1 ? "mês" : "meses"}`, true),
             tr(".")
           ]),
-          new Paragraph({ text: "", spacing: { after: 200 } }), // Quebra de linha
+          new Paragraph({ text: "", spacing: { after: 200 } }),
           createJustified([
-            tr("O resultado geral do projeto foi agregador e positivo para a empresa pois o envolvimento da equipe foi primordial para garantir os resultados alcançados e manter a melhoria contínua.")
+            tr("O resultado geral do projeto foi agregador e positivo para a empresa pois o envolvimento da equipe foi primordial para garantir o conhecimento necessário através do plano de ação, treinamentos, trabalho realizado e resultados alcançados, com isso a empresa pode manter o aculturamento do pensamento Lean e replicar os conceitos da melhoria contínua para os demais setores e lines de trabalho da produção.")
           ])
         ]
       }]
