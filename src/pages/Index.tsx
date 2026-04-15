@@ -12,11 +12,11 @@ import { DisponibilidadeModule } from "@/modules/DisponibilidadeModule";
 import { LeadTimeModule } from "@/modules/LeadTimeModule";
 import { AreaModule } from "@/modules/AreaModule";
 
-// GBO ORIGINAL
 import GBOAnalysis from "@/modules/GboModule"; 
 
 const Index = () => {
-  const { state, activeModule, setActiveModule, updateModule } = useAppStore();
+  // Puxando a nova função clearData
+  const { state, activeModule, setActiveModule, updateModule, clearData } = useAppStore();
 
   const handleExportWord = () => {
     const { resumo, produtividade, payback, movimentacao, qualidade, disponibilidade, leadtime, area } = state;
@@ -77,7 +77,8 @@ const Index = () => {
 
   const renderPanelModules = () => {
     switch (activeModule) {
-      case "resumo": return <ResumoModule data={state.resumo} state={state} onChange={d => updateModule("resumo", d)} />;
+      // Passando a função onClearData para o módulo de Resumo
+      case "resumo": return <ResumoModule data={state.resumo} state={state} onChange={d => updateModule("resumo", d)} onClearData={clearData} />;
       case "payback": return <PaybackModule data={state.payback} prodData={state.produtividade} resumoData={state.resumo} onChange={d => updateModule("payback", d)} />;
       case "produtividade": return <ProdutividadeModule data={state.produtividade} onChange={d => updateModule("produtividade", d)} />;
       case "movimentacao": return <MovimentacaoModule data={state.movimentacao} onChange={d => updateModule("movimentacao", d)} />;
@@ -102,14 +103,12 @@ const Index = () => {
 
         <div className="mx-auto max-w-[1600px] bg-white rounded-[2rem] shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-200/50 p-10 transition-all min-h-full relative print:shadow-none print:border-none print:rounded-none print:p-0">
           
-          {/* ANIMAÇÃO DOS MÓDULOS GLOBAIS (Recria o componente de forma suave a cada troca de aba) */}
           {activeModule !== "gbo" && (
             <div key={activeModule} className="animate-in fade-in slide-in-from-bottom-2 duration-500 w-full h-full">
               {renderPanelModules()}
             </div>
           )}
 
-          {/* ANIMAÇÃO DO GBO (Apenas mostra/esconde com animação, para não perder os dados já digitados nele) */}
           <div className={activeModule === "gbo" ? "animate-in fade-in slide-in-from-bottom-2 duration-500 block w-full h-full" : "hidden"}>
             <GBOAnalysis />
           </div>
