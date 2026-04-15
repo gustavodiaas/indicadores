@@ -56,35 +56,6 @@ export function ProdutividadeModule({ data, onChange }: Props) {
           />
         </div>
 
-        {/* NOVO BLOCO: CONTEXTO DO LAUDO (Igual ao do Lead Time) */}
-        <div className="p-5 bg-amber-50/60 rounded-xl border border-amber-200 space-y-4">
-          <h3 className="font-bold text-slate-800 border-b border-amber-200 pb-2 text-sm">Contexto do Laudo</h3>
-          <div>
-            <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wide">
-              Ferramenta Utilizada
-            </label>
-            <input
-              type="text"
-              className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm bg-white outline-none focus:ring-2 focus:ring-amber-500 transition-colors"
-              placeholder="Ex: da ferramenta 5S, do Kaizen, do layout celular..."
-              value={data.ferramentaUtilizada || ""}
-              onChange={e => onChange({ ferramentaUtilizada: e.target.value })}
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wide">
-              Ação / Melhoria Realizada
-            </label>
-            <input
-              type="text"
-              className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm bg-white outline-none focus:ring-2 focus:ring-amber-500 transition-colors"
-              placeholder="Ex: a reorganização do layout da célula produtiva..."
-              value={data.acaoMelhoria || ""}
-              onChange={e => onChange({ acaoMelhoria: e.target.value })}
-            />
-          </div>
-        </div>
-
         <div className="grid grid-cols-2 gap-6">
           <div className="space-y-4 bg-slate-100/50 p-5 rounded-xl border border-slate-200">
             <h3 className="font-bold text-slate-800 border-b pb-2">T1 - Inicial</h3>
