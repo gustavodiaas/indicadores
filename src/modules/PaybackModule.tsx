@@ -103,13 +103,14 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
 
             {/* LINHA 2 */}
             <div>
+              <label className="block text-xs font-bold text-slate-500 mb-1">Modo de Inserção</label>
               <select 
                 className="w-full h-10 bg-white border border-slate-200 text-slate-700 text-xs font-bold uppercase tracking-wide rounded-lg px-3 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer hover:bg-slate-50 transition-colors shadow-sm" 
                 value={data.modoInsercaoSalario || "total"} 
                 onChange={e => onChange({ modoInsercaoSalario: e.target.value as any })}
               >
                 <option value="total">Modo: Total da Equipe</option>
-                <option value="unitario">Modo: Por Operador (Autôm.)</option>
+                <option value="unitario">Modo: Por Operador</option>
               </select>
             </div>
 
@@ -164,13 +165,14 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
 
             {/* LINHA 2 */}
             <div>
+              <label className="block text-xs font-bold text-slate-500 mb-1">Modo de Inserção</label>
               <select 
                 className="w-full h-10 bg-white border border-slate-200 text-slate-700 text-xs font-bold uppercase tracking-wide rounded-lg px-3 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer hover:bg-slate-50 transition-colors shadow-sm" 
                 value={data.modoInsercaoSalario || "total"} 
                 onChange={e => onChange({ modoInsercaoSalario: e.target.value as any })}
               >
                 <option value="total">Modo: Total da Equipe</option>
-                <option value="unitario">Modo: Por Operador (Autôm.)</option>
+                <option value="unitario">Modo: Por Operador</option>
               </select>
             </div>
 
