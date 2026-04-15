@@ -39,10 +39,12 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
     return Number(cleaned.replace(",", "."));
   };
 
+  const isUnitario = data.modoInsercaoSalario === "unitario";
+
   return (
     <div className="flex gap-8 h-full animate-in fade-in duration-500">
       
-      <div className="w-[60%] flex flex-col gap-6 overflow-y-auto pr-2 pb-10">
+      <div className="w-[60%] flex flex-col gap-6 overflow-y-auto pr-2 pb-36">
 
         <div className="p-5 bg-[#F8FAFC] text-slate-800 rounded-xl flex items-center justify-between shadow-sm mb-2 border border-slate-200">
           <div className="flex flex-col">
@@ -59,25 +61,43 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
             </div>
             <span className="text-sm font-semibold tracking-wide">Modelo de Cálculo</span>
           </div>
-          <select 
-            className="h-10 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg px-4 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer hover:bg-slate-50 transition-colors shadow-sm" 
-            value={data.tipoSalario || "bruto"} 
-            onChange={e => onChange({ tipoSalario: e.target.value as any })}
-          >
-            <option value="bruto">Salário Bruto</option>
-            <option value="encargos">Salário + Encargos</option>
-          </select>
+          
+          <div className="flex gap-3">
+            <select 
+              className="h-10 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg px-4 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer hover:bg-slate-50 transition-colors shadow-sm" 
+              value={data.modoInsercaoSalario || "total"} 
+              onChange={e => onChange({ modoInsercaoSalario: e.target.value as any })}
+            >
+              <option value="total">Inserção: Total da Equipe</option>
+              <option value="unitario">Inserção: Por Operador</option>
+            </select>
+
+            <select 
+              className="h-10 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg px-4 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer hover:bg-slate-50 transition-colors shadow-sm" 
+              value={data.tipoSalario || "bruto"} 
+              onChange={e => onChange({ tipoSalario: e.target.value as any })}
+            >
+              <option value="bruto">Salário Bruto</option>
+              <option value="encargos">Salário + Encargos</option>
+            </select>
+          </div>
         </div>
 
         <div className="space-y-4 bg-slate-100/50 p-5 rounded-xl border border-slate-200">
           <h3 className="font-bold text-slate-800 border-b border-slate-200 pb-2">Estado Inicial (T1)</h3>
           <div className="grid grid-cols-2 gap-4">
             <div className="relative">
-              <label className="block text-xs font-bold text-slate-500 mb-1">Salário Base (Total R$)</label>
+              <label className="block text-xs font-bold text-slate-500 mb-1">
+                {isUnitario ? "Salário Base (Por Operador R$)" : "Salário Base (Total R$)"}
+              </label>
               <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
                 defaultValue={data.salarioBaseInicial ? data.salarioBaseInicial.toString().replace(".", ",") : ""} 
-                onBlur={e => onChange({ salarioBaseInicial: parseDecimal(e.target.value) })} placeholder="Ex: 87000,00" />
-              <span className="absolute -bottom-4 left-0 text-[9px] text-slate-500 italic">*Insira a soma do salário de TODOS os operadores</span>
+                onBlur={e => onChange({ salarioBaseInicial: parseDecimal(e.target.value) })} placeholder="Ex: 2500,00" />
+              <span className="absolute -bottom-4 left-0 text-[9px] text-slate-500 italic">
+                {isUnitario 
+                  ? `*Multiplicado automaticamente por ${op1} ${colabTxt1}` 
+                  : "*Insira a soma do salário de TODOS os operadores"}
+              </span>
             </div>
             {data.tipoSalario !== "bruto" && (
               <div>
@@ -88,7 +108,6 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
               </div>
             )}
             
-            {/* AVISO VISUAL - COLABORADORES T1 */}
             <div>
               <label className="block text-xs font-bold text-slate-500 mb-1">Colaboradores</label>
               <input type="text" 
@@ -117,11 +136,17 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
           <h3 className="font-bold text-slate-800 border-b border-indigo-200 pb-2">Estado Final (T3)</h3>
           <div className="grid grid-cols-2 gap-4">
             <div className="relative">
-              <label className="block text-xs font-bold text-slate-500 mb-1">Salário Base (Total R$)</label>
+              <label className="block text-xs font-bold text-slate-500 mb-1">
+                {isUnitario ? "Salário Base (Por Operador R$)" : "Salário Base (Total R$)"}
+              </label>
               <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
                 defaultValue={data.salarioBaseFinal ? data.salarioBaseFinal.toString().replace(".", ",") : ""} 
-                onBlur={e => onChange({ salarioBaseFinal: parseDecimal(e.target.value) })} placeholder="Ex: 87000,00" />
-              <span className="absolute -bottom-4 left-0 text-[9px] text-slate-500 italic">*Insira a soma do salário de TODOS os operadores</span>
+                onBlur={e => onChange({ salarioBaseFinal: parseDecimal(e.target.value) })} placeholder="Ex: 2500,00" />
+              <span className="absolute -bottom-4 left-0 text-[9px] text-slate-500 italic">
+                {isUnitario 
+                  ? `*Multiplicado automaticamente por ${op3} ${colabTxt3}` 
+                  : "*Insira a soma do salário de TODOS os operadores"}
+              </span>
             </div>
             {data.tipoSalario !== "bruto" && (
               <div>
@@ -132,7 +157,6 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
               </div>
             )}
             
-            {/* AVISO VISUAL - COLABORADORES T3 */}
             <div>
               <label className="block text-xs font-bold text-slate-500 mb-1">Colaboradores</label>
               <input type="text" 
@@ -192,7 +216,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
 
       </div>
 
-      <div className="w-[40%] flex flex-col gap-4 overflow-y-auto pb-10">
+      <div className="w-[40%] flex flex-col gap-4 overflow-y-auto pb-36">
         <div className="grid grid-cols-2 gap-3">
           <KpiCard label="Custo Inicial" value={formatBRL(r.custoI)} />
           <KpiCard label="Custo Final" value={formatBRL(r.custoF)} />
