@@ -96,7 +96,7 @@ const Index = () => {
 
       {/* A TOPBAR SAI DAQUI PARA PODER SCROLLAR */}
 
-      <main className="flex-1 overflow-y-auto p-4 md:p-8 pb-32 print:p-0 print:overflow-visible">
+      <main className="flex-1 overflow-y-auto p-4 md:p-8 md:pl-40 pb-32 print:p-0 print:overflow-visible">
         
         {/* A TOPBAR AGORA DENTRO DO MAIN (O CONTAINER QUE FAZ SCROLL) */}
         <div className="print:hidden relative z-[100] mb-2">
