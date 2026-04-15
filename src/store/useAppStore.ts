@@ -75,7 +75,12 @@ export function useAppStore() {
   }, []);
 
   const loadState = useCallback((data: AppState) => { setState({ ...defaultState, ...data }); }, []);
-  const clearData = useCallback(() => { if (window.confirm("Tem certeza que deseja apagar todos os dados de TODAS as abas? Isso não pode ser desfeito.")) { setState(defaultState); } }, []);
+  const clearData = useCallback(() => { 
+  if (window.confirm("Tem certeza que deseja apagar todos os dados de TODAS as abas? Isso não pode ser desfeito.")) { 
+    localStorage.removeItem("consultoria-lean-state"); 
+    window.location.reload(); 
+  } 
+}, []);
 
   return { state, activeModule, setActiveModule, updateModule, loadState, clearData };
 }
