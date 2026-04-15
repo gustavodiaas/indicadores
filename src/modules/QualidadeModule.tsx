@@ -4,6 +4,7 @@ import { KpiCard } from "@/components/KpiCard";
 import { ComparisonChart } from "@/components/ComparisonChart";
 import { Copy, Check } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 interface Props {
   data: QualidadeData;
@@ -38,7 +39,15 @@ export function QualidadeModule({ data, onChange }: Props) {
       <div className="w-[40%] flex flex-col gap-4">
         <KpiCard label="Aumento de Qualidade" value={r.aumento.toFixed(1)} suffix="%" trend={r.aumento} />
         <div className="relative bg-white p-5 border border-slate-200 rounded-2xl shadow-sm">
-          <button onClick={() => { navigator.clipboard.writeText(laudo); setCopied(true); setTimeout(() => setCopied(false), 2000); }} className="absolute top-3 right-3 p-2 rounded-md bg-slate-50 text-slate-400 hover:text-blue-600 transition-all">
+          <button
+            onClick={() => {
+              navigator.clipboard.writeText(laudo);
+              setCopied(true);
+              toast.success("Copiado!");
+              setTimeout(() => setCopied(false), 2000);
+            }}
+            className="absolute top-3 right-3 p-2 rounded-md bg-slate-50 text-slate-400 hover:text-blue-600 transition-all"
+          >
             {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
           </button>
           <h4 className="text-[10px] font-bold text-blue-600 uppercase mb-3 tracking-widest">Laudo de Qualidade</h4>
