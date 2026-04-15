@@ -1,8 +1,7 @@
-import { useState } from "react";
 import { ModuleKey } from "@/store/useAppStore";
 import { 
   FileText, GanttChartSquare, BarChart2, Calculator, 
-  ArrowRightLeft, ShieldCheck, Clock, Timer, Square, Pin, PinOff
+  ArrowRightLeft, ShieldCheck, Clock, Timer, Square
 } from "lucide-react";
 
 interface Props {
@@ -11,8 +10,6 @@ interface Props {
 }
 
 export function FloatingNav({ active, onSelect }: Props) {
-  const [isFixed, setIsFixed] = useState(false);
-
   const navItems: { key: ModuleKey; icon: any; label: string; color: string }[] = [
     { key: "resumo", icon: FileText, label: "Resumo", color: "bg-blue-600" },
     { key: "gbo", icon: GanttChartSquare, label: "GBO", color: "bg-indigo-600" },
@@ -26,32 +23,9 @@ export function FloatingNav({ active, onSelect }: Props) {
   ];
 
   return (
-    <div className={`
-      fixed z-[100] transition-all duration-500 print:hidden
-      left-1/2 -translate-x-1/2 
-      ${isFixed ? "bottom-0 w-full" : "bottom-6 w-[95%] md:w-max"}
-    `}>
-      <div className={`
-        flex flex-row items-center bg-white border border-slate-200 shadow-2xl transition-all duration-500
-        overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]
-        ${isFixed ? "px-6 py-3 rounded-none border-x-0 border-b-0 justify-center gap-2" : "px-3 py-3 rounded-[3rem] gap-1.5 md:gap-2"}
-      `}>
+    <div className="fixed z-[100] transition-all duration-500 print:hidden left-1/2 -translate-x-1/2 bottom-6 w-[95%] md:w-max">
+      <div className="flex flex-row items-center bg-white border border-slate-200 shadow-2xl transition-all duration-500 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] px-3 py-3 rounded-[3rem] gap-1.5 md:gap-2">
         
-        {/* BOTÃO FIXAR */}
-        <button 
-          onClick={() => setIsFixed(!isFixed)}
-          className={`
-            p-2 rounded-full transition-colors flex-shrink-0
-            ${isFixed ? "text-blue-600 bg-blue-50" : "text-slate-300 hover:text-slate-500"}
-          `}
-        >
-          {isFixed ? <Pin className="w-4 h-4 rotate-45" /> : <PinOff className="w-4 h-4" />}
-        </button>
-
-        {/* DIVISOR */}
-        <div className="w-px h-8 bg-slate-200 mx-1 flex-shrink-0"></div>
-
-        {/* BOTÕES DE NAVEGAÇÃO */}
         {navItems.map((item) => {
           const isActive = active === item.key;
           const Icon = item.icon;
