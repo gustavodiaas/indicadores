@@ -18,6 +18,7 @@ export function ResumoModule({ data, state, onChange, onClearData }: Props) {
   const [newAcao, setNewAcao] = useState<Partial<Acao5W2H>>({});
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const prod = useMemo(() => calcProdutividade(state.produtividade), [state.produtividade]);
   const pb = useMemo(() => calcPayback(state.payback, state.produtividade, state.resumo), [state.payback, state.produtividade, state.resumo]);
@@ -49,137 +50,171 @@ export function ResumoModule({ data, state, onChange, onClearData }: Props) {
   };
 
   return (
-    <div className="flex gap-8 h-full">
-      <div className="w-[55%] flex flex-col gap-6 overflow-y-auto pr-4 pb-12">
-        
-        {/* BOTÃO E TÍTULO LADO A LADO */}
-        <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-          <h3 className="font-bold text-slate-800 text-lg uppercase tracking-tight">Entrada de Dados</h3>
-          <button 
-            onClick={onClearData}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 text-rose-600 hover:bg-rose-100 hover:text-rose-700 rounded-lg font-bold text-[10px] uppercase tracking-wider transition-colors border border-rose-100 shadow-sm"
-          >
-            <Trash2 className="w-3.5 h-3.5" /> Limpar Dados Atuais
-          </button>
-        </div>
-        
-        <div className="grid grid-cols-2 gap-4">
-          <InputField label="Empresa" value={data.nomeEmpresa} onChange={v => onChange({ nomeEmpresa: v })} />
-          <InputField label="Cidade" value={data.cidade} onChange={v => onChange({ cidade: v })} />
-          <InputField label="Ramo de Atuação" value={data.ramo} onChange={v => onChange({ ramo: v })} />
-          <InputField label="Especialista em" value={data.especialista} onChange={v => onChange({ especialista: v })} />
-          <InputField label="Total de Colaboradores" value={data.totalColaboradores} onChange={v => onChange({ totalColaboradores: Number(v) || 0 })} type="number" />
-          <InputField label="Turno(s)" value={data.turnos} onChange={v => onChange({ turnos: Number(v) || 1 })} type="number" />
-        </div>
-
-        <div className="grid grid-cols-1 gap-4 pt-4 border-t">
-          <InputField label="Processo Produtivo Mapeado" value={data.processos} onChange={v => onChange({ processos: v })} />
-          <div className="grid grid-cols-2 gap-4">
-            <InputField label="Método (Puxada/Empurrada)" value={data.metodo} onChange={v => onChange({ metodo: v as any })} />
-            <InputField label="Demanda originada por" value={data.origem} onChange={v => onChange({ origem: v })} />
-          </div>
+    <>
+      <div className="flex gap-8 h-full">
+        <div className="w-[55%] flex flex-col gap-6 overflow-y-auto pr-4 pb-36">
           
-          <InputField label="Oportunidades no setor de" value={data.oportunidades} onChange={v => onChange({ oportunidades: v })} />
-          
-          {/* AQUI ESTÁ A MUDANÇA: Caixas lado a lado e aviso adicionado */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wide">
-                Problemas de <span className="lowercase font-normal italic text-slate-400">(Adicione a ferramenta utilizada)</span>
-              </label>
-              <input
-                type="text"
-                className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm bg-white outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
-                value={data.problemas || ""}
-                onChange={e => onChange({ problemas: e.target.value })}
-              />
-            </div>
-            <InputField label="Ferramentas Lean Aplicadas" value={data.ferramentas} onChange={v => onChange({ ferramentas: v })} />
-          </div>
-
-          <InputField label="Área de Atuação/Intervenção" value={data.atuacao} onChange={v => onChange({ atuacao: v })} />
-          <InputField label="Motivação da Escolha" value={data.motivacao} onChange={v => onChange({ motivacao: v })} />
-        </div>
-
-        <div className="pt-4 border-t space-y-4">
-          <h4 className="text-sm font-bold text-slate-700 uppercase">Plano de Ação (5W2H)</h4>
-          
-          <div className="flex gap-2 items-end">
-            <div className="flex-1"><InputField label="O que será feito? (What)" value={newAcao.what || ""} onChange={v => setNewAcao({ what: v })} /></div>
+          <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+            <h3 className="font-bold text-slate-800 text-lg uppercase tracking-tight">Entrada de Dados</h3>
             <button 
-              onClick={() => { 
-                if(newAcao.what) { 
-                  onChange({ acoes: [...data.acoes, { id: Date.now().toString(), what: newAcao.what, why: "", where: "", when: "", who: "", how: "", howMuch: "" }] }); 
-                  setNewAcao({}); 
-                } 
-              }} 
-              className="h-10 px-6 bg-blue-600 text-white rounded-lg font-bold text-xs uppercase shadow-md hover:bg-blue-700 transition-colors"
+              onClick={() => setShowConfirmModal(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 text-rose-600 hover:bg-rose-100 hover:text-rose-700 rounded-lg font-bold text-[10px] uppercase tracking-wider transition-colors border border-rose-100 shadow-sm"
             >
-              Adicionar
+              <Trash2 className="w-3.5 h-3.5" /> Limpar Dados Atuais
             </button>
           </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <InputField label="Empresa" value={data.nomeEmpresa} onChange={v => onChange({ nomeEmpresa: v })} />
+            <InputField label="Cidade" value={data.cidade} onChange={v => onChange({ cidade: v })} />
+            <InputField label="Ramo de Atuação" value={data.ramo} onChange={v => onChange({ ramo: v })} />
+            <InputField label="Especialista em" value={data.especialista} onChange={v => onChange({ especialista: v })} />
+            <InputField label="Total de Colaboradores" value={data.totalColaboradores} onChange={v => onChange({ totalColaboradores: Number(v) || 0 })} type="number" />
+            <InputField label="Turno(s)" value={data.turnos} onChange={v => onChange({ turnos: Number(v) || 1 })} type="number" />
+          </div>
 
-          <div className="flex flex-col gap-3">
-            {data.acoes.map(a => (
-              <div key={a.id} className="border border-slate-200 rounded-xl bg-white shadow-sm overflow-hidden transition-all duration-300">
-                <div 
-                  className="flex items-center justify-between p-3.5 bg-slate-50 hover:bg-slate-100 cursor-pointer select-none transition-colors"
-                  onClick={() => setExpandedId(expandedId === a.id ? null : a.id)}
-                >
-                  <span className="text-xs font-bold text-slate-700 truncate pr-4 flex-1">{a.what}</span>
-                  <div className="flex items-center gap-3">
-                    {expandedId === a.id ? <ChevronUp className="h-4 w-4 text-slate-400" /> : <ChevronDown className="h-4 w-4 text-slate-400" />}
-                    <button 
-                      onClick={(e) => { 
-                        e.stopPropagation(); 
-                        onChange({ acoes: data.acoes.filter(x => x.id !== a.id) });
-                      }}
-                      className="p-1 hover:bg-rose-100 rounded-md transition-colors"
-                    >
-                      <Trash2 className="h-3.5 w-3.5 text-rose-500" />
-                    </button>
-                  </div>
-                </div>
-
-                {expandedId === a.id && (
-                  <div className="p-4 grid grid-cols-2 gap-4 border-t border-slate-100 bg-white animate-in fade-in slide-in-from-top-2 duration-300">
-                    <InputField label="Por que? (Why)" value={a.why} onChange={v => updateAcao(a.id, "why", v)} />
-                    <InputField label="Onde? (Where)" value={a.where} onChange={v => updateAcao(a.id, "where", v)} />
-                    <InputField label="Quando? (When)" value={a.when} onChange={v => updateAcao(a.id, "when", v)} />
-                    <InputField label="Quem? (Who)" value={a.who} onChange={v => updateAcao(a.id, "who", v)} />
-                    <InputField label="Como? (How)" value={a.how} onChange={v => updateAcao(a.id, "how", v)} />
-                    <InputField label="Quanto Custa? (How Much)" value={a.howMuch} onChange={v => updateAcao(a.id, "howMuch", v)} />
-                  </div>
-                )}
+          <div className="grid grid-cols-1 gap-4 pt-4 border-t">
+            <InputField label="Processo Produtivo Mapeado" value={data.processos} onChange={v => onChange({ processos: v })} />
+            <div className="grid grid-cols-2 gap-4">
+              <InputField label="Método (Puxada/Empurrada)" value={data.metodo} onChange={v => onChange({ metodo: v as any })} />
+              <InputField label="Demanda originada por" value={data.origem} onChange={v => onChange({ origem: v })} />
+            </div>
+            
+            <InputField label="Oportunidades no setor de" value={data.oportunidades} onChange={v => onChange({ oportunidades: v })} />
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wide">
+                  Problemas de <span className="lowercase font-normal italic text-slate-400">(Adicione a ferramenta utilizada)</span>
+                </label>
+                <input
+                  type="text"
+                  className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm bg-white outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                  value={data.problemas || ""}
+                  onChange={e => onChange({ problemas: e.target.value })}
+                />
               </div>
-            ))}
+              <InputField label="Ferramentas Lean Aplicadas" value={data.ferramentas} onChange={v => onChange({ ferramentas: v })} />
+            </div>
+
+            <InputField label="Área de Atuação/Intervenção" value={data.atuacao} onChange={v => onChange({ atuacao: v })} />
+            <InputField label="Motivação da Escolha" value={data.motivacao} onChange={v => onChange({ motivacao: v })} />
+          </div>
+
+          <div className="pt-4 border-t space-y-4">
+            <h4 className="text-sm font-bold text-slate-700 uppercase">Plano de Ação (5W2H)</h4>
+            
+            <div className="flex gap-2 items-end">
+              <div className="flex-1"><InputField label="O que será feito? (What)" value={newAcao.what || ""} onChange={v => setNewAcao({ what: v })} /></div>
+              <button 
+                onClick={() => { 
+                  if(newAcao.what) { 
+                    onChange({ acoes: [...data.acoes, { id: Date.now().toString(), what: newAcao.what, why: "", where: "", when: "", who: "", how: "", howMuch: "" }] }); 
+                    setNewAcao({}); 
+                  } 
+                }} 
+                className="h-10 px-6 bg-blue-600 text-white rounded-lg font-bold text-xs uppercase shadow-md hover:bg-blue-700 transition-colors"
+              >
+                Adicionar
+              </button>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              {data.acoes.map(a => (
+                <div key={a.id} className="border border-slate-200 rounded-xl bg-white shadow-sm overflow-hidden transition-all duration-300">
+                  <div 
+                    className="flex items-center justify-between p-3.5 bg-slate-50 hover:bg-slate-100 cursor-pointer select-none transition-colors"
+                    onClick={() => setExpandedId(expandedId === a.id ? null : a.id)}
+                  >
+                    <span className="text-xs font-bold text-slate-700 truncate pr-4 flex-1">{a.what}</span>
+                    <div className="flex items-center gap-3">
+                      {expandedId === a.id ? <ChevronUp className="h-4 w-4 text-slate-400" /> : <ChevronDown className="h-4 w-4 text-slate-400" />}
+                      <button 
+                        onClick={(e) => { 
+                          e.stopPropagation(); 
+                          onChange({ acoes: data.acoes.filter(x => x.id !== a.id) });
+                        }}
+                        className="p-1 hover:bg-rose-100 rounded-md transition-colors"
+                      >
+                        <Trash2 className="h-3.5 w-3.5 text-rose-500" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {expandedId === a.id && (
+                    <div className="p-4 grid grid-cols-2 gap-4 border-t border-slate-100 bg-white animate-in fade-in slide-in-from-top-2 duration-300">
+                      <InputField label="Por que? (Why)" value={a.why} onChange={v => updateAcao(a.id, "why", v)} />
+                      <InputField label="Onde? (Where)" value={a.where} onChange={v => updateAcao(a.id, "where", v)} />
+                      <InputField label="Quando? (When)" value={a.when} onChange={v => updateAcao(a.id, "when", v)} />
+                      <InputField label="Quem? (Who)" value={a.who} onChange={v => updateAcao(a.id, "who", v)} />
+                      <InputField label="Como? (How)" value={a.how} onChange={v => updateAcao(a.id, "how", v)} />
+                      <InputField label="Quanto Custa? (How Much)" value={a.howMuch} onChange={v => updateAcao(a.id, "howMuch", v)} />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="w-[45%] flex flex-col gap-6 overflow-y-auto pb-12">
-        <div className="relative bg-white p-6 rounded-2xl border border-slate-200 shadow-sm transition-all hover:border-blue-200">
-          <button onClick={() => handleCopy(descTexto, "desc")} className="absolute top-4 right-4 p-2 rounded-lg bg-slate-50 text-slate-400 hover:bg-blue-600 hover:text-white transition-all shadow-sm">
-            {copiedId === "desc" ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-          </button>
-          <h4 className="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-4">Descrição do Processo</h4>
-          <p className="text-[13px] text-slate-600 leading-relaxed text-justify">{descTexto}</p>
-        </div>
+        <div className="w-[45%] flex flex-col gap-6 overflow-y-auto pb-36">
+          <div className="relative bg-white p-6 rounded-2xl border border-slate-200 shadow-sm transition-all hover:border-blue-200">
+            <button onClick={() => handleCopy(descTexto, "desc")} className="absolute top-4 right-4 p-2 rounded-lg bg-slate-50 text-slate-400 hover:bg-blue-600 hover:text-white transition-all shadow-sm">
+              {copiedId === "desc" ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+            </button>
+            <h4 className="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-4">Descrição do Processo</h4>
+            <p className="text-[13px] text-slate-600 leading-relaxed text-justify">{descTexto}</p>
+          </div>
 
-        <div className="relative bg-blue-50/50 p-6 rounded-2xl border border-blue-100 shadow-sm">
-          <button onClick={() => handleCopy(conclusaoTexto, "conc")} className="absolute top-4 right-4 p-2 rounded-lg bg-white text-slate-400 hover:text-blue-600 transition-all shadow-sm border border-slate-100">
-            {copiedId === "conc" ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-          </button>
-          <h4 className="text-[10px] font-bold text-blue-700 uppercase tracking-widest mb-4 border-b border-blue-200/50 pb-2">Conclusão do Projeto</h4>
-          <div className="text-[13px] text-slate-700 leading-relaxed text-justify space-y-6">
-            <p>{conclusaoTexto}</p> 
-            <div className="bg-white border-l-4 border-blue-500 p-5 space-y-3 rounded-r-xl shadow-sm">
-              <p className="font-bold text-slate-800 text-sm tracking-tight">• Aumento de {prod.ganho.toFixed(2)}% em produtividade.</p>
-              <p className="font-bold text-slate-800 text-sm tracking-tight">• Payback de {pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2) : "0.00"} {pb.paybackMeses === 1 ? "mês" : "meses"}.</p>
+          <div className="relative bg-blue-50/50 p-6 rounded-2xl border border-blue-100 shadow-sm">
+            <button onClick={() => handleCopy(conclusaoTexto, "conc")} className="absolute top-4 right-4 p-2 rounded-lg bg-white text-slate-400 hover:text-blue-600 transition-all shadow-sm border border-slate-100">
+              {copiedId === "conc" ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+            </button>
+            <h4 className="text-[10px] font-bold text-blue-700 uppercase tracking-widest mb-4 border-b border-blue-200/50 pb-2">Conclusão do Projeto</h4>
+            <div className="text-[13px] text-slate-700 leading-relaxed text-justify space-y-6">
+              <p>{conclusaoTexto}</p> 
+              <div className="bg-white border-l-4 border-blue-500 p-5 space-y-3 rounded-r-xl shadow-sm">
+                <p className="font-bold text-slate-800 text-sm tracking-tight">• Aumento de {prod.ganho.toFixed(2)}% em produtividade.</p>
+                <p className="font-bold text-slate-800 text-sm tracking-tight">• Payback de {pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2) : "0.00"} {pb.paybackMeses === 1 ? "mês" : "meses"}.</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+
+      {/* MODAL DE CONFIRMAÇÃO COM EFEITO VIDRO */}
+      {showConfirmModal && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/30 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white/80 backdrop-blur-xl border border-white/50 p-8 rounded-[2rem] shadow-2xl max-w-sm w-full mx-4 animate-in zoom-in-95 duration-300">
+            <div className="flex flex-col items-center text-center space-y-4">
+              <div className="w-14 h-14 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mb-2 shadow-sm border border-rose-200">
+                <Trash2 className="w-7 h-7" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-800 tracking-tight">Limpar tudo?</h3>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                Isso vai apagar os dados de <strong>todas as abas</strong> permanentemente. Tem certeza?
+              </p>
+              <div className="flex gap-3 w-full mt-6">
+                <button
+                  onClick={() => setShowConfirmModal(false)}
+                  className="flex-1 py-3 bg-blue-50 text-blue-600 hover:bg-blue-100 font-bold text-sm rounded-xl transition-colors border border-blue-100"
+                >
+                  Não
+                </button>
+                <button
+                  onClick={() => {
+                    setShowConfirmModal(false);
+                    onClearData();
+                  }}
+                  className="flex-1 py-3 bg-blue-600 text-white hover:bg-blue-700 shadow-md shadow-blue-200 font-bold text-sm rounded-xl transition-colors"
+                >
+                  Sim, apagar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
