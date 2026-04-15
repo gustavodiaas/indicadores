@@ -1,6 +1,7 @@
 import { useAppStore, calcProdutividade, calcPayback, calcMovimentacao, calcQualidade, calcDisponibilidade, calcLeadTime, calcArea } from "@/store/useAppStore";
 import { FloatingNav } from "@/components/FloatingNav";
 import { Topbar } from "@/components/Topbar";
+// AppSidebar removida — componente não utilizado (navegação real é FloatingNav)
 import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } from "docx";
 
 // Seus módulos do painel
@@ -155,7 +156,33 @@ const Index = () => {
             tr(".")
           ]),
 
-          createHeading("8. Conclusão do Projeto"),
+          createHeading("8. Laudo de Lead Time"),
+          createJustified([
+            tr("O tempo de atravessamento (lead time) inicial era de "),
+            tr(`${leadtime.leadTimeT1 || 0} ${leadtime.unidadeTempo || "dias"}`, true),
+            tr(". Após as melhorias implementadas, o lead time foi reduzido para "),
+            tr(`${leadtime.leadTimeT3 || 0} ${leadtime.unidadeTempo || "dias"}`, true),
+            tr(", representando uma redução de "),
+            tr(`${lt.reducao.toFixed(2)}%`, true),
+            tr(" no tempo total de entrega do produto.")
+          ]),
+
+          createHeading("9. Laudo de Área"),
+          createJustified([
+            tr("A área ocupada inicial era de "),
+            tr(`${area.areaT1 || 0}m²`, true),
+            tr(". Com a otimização do layout, reduziu-se para "),
+            tr(`${area.areaT3 || 0}m²`, true),
+            tr(", liberando "),
+            tr(`${ar.economiaM2.toFixed(1)}m²`, true),
+            tr(" de área útil ("),
+            tr(`${ar.reducaoPercent.toFixed(1)}%`, true),
+            tr(" de redução), gerando uma economia imobiliária mensal de "),
+            tr(`R$ ${ar.economiaMensal.toLocaleString("pt-BR")}`, true),
+            tr(".")
+          ]),
+
+          createHeading("10. Conclusão do Projeto"),
           createJustified([
             tr("O presente programa de fomento ao setor industrial brasileiro Brasil Mais Produtivo, proporcionou a realização de consultoria em Manufatura Enxuta na Empresa "),
             tr(resumo.nomeEmpresa || "—", true),
