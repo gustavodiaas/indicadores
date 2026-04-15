@@ -13,10 +13,6 @@ interface Props {
 export function MovimentacaoModule({ data, onChange }: Props) {
   const [copied, setCopied] = useState(false);
 
-  // Campos locais para ferramenta e descrição (não precisam persistir no store global)
-  const [ferramenta, setFerramenta] = useState("");
-  const [descricaoAcao, setDescricaoAcao] = useState("");
-
   const r = calcMovimentacao(data);
 
   const chartData = [
@@ -41,9 +37,9 @@ export function MovimentacaoModule({ data, onChange }: Props) {
     return unit;
   };
 
-  // Texto da ferramenta: usa o que foi preenchido, ou fallback neutro
-  const ferramentaTxt = ferramenta.trim() || "da ferramenta aplicada";
-  const descricaoTxt = descricaoAcao.trim() || "com as melhorias realizadas";
+  // Texto da ferramenta: usa o que foi preenchido no store global, ou fallback neutro
+  const ferramentaTxt = (data.ferramentaUtilizada || "").trim() || "da ferramenta aplicada";
+  const descricaoTxt = (data.acaoMelhoria || "").trim() || "com as melhorias realizadas";
 
   const laudo = `Por intermédio ${ferramentaTxt} foi realizado ${descricaoTxt}.\n\nDistância: A medição inicial de movimentação/transporte era de ${dI}m (ida e volta), onde foi reduzido para ${dF}m (ida e volta), representando redução de ${redD}% em distância.\nCálculo Distância: (${dI} - ${dF}) / ${dI > 0 ? dI : 1} × 100 = ${redD}%\n\nTempo: O tempo de movimentação era de ${tI} ${getUnit(tI, uBase)}, onde foi reduzido para ${tF} ${getUnit(tF, uBase)}, representando redução de ${redT}% em tempo ${descricaoTxt}.\nCálculo Tempo: (${tI} - ${tF}) / ${tI > 0 ? tI : 1} × 100 = ${redT}%`;
 
@@ -73,7 +69,7 @@ export function MovimentacaoModule({ data, onChange }: Props) {
           </select>
         </div>
 
-        {/* Campos do laudo */}
+        {/* Campos do laudo - CONECTADOS AO GLOBAL */}
         <div className="p-5 bg-amber-50/60 rounded-xl border border-amber-200 space-y-4">
           <h3 className="font-bold text-slate-800 border-b border-amber-200 pb-2 text-sm">Contexto do Laudo</h3>
           <div>
@@ -84,8 +80,8 @@ export function MovimentacaoModule({ data, onChange }: Props) {
               type="text"
               className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm bg-white"
               placeholder="Ex: da ferramenta 5S, do Kaizen, do layout celular..."
-              value={ferramenta}
-              onChange={e => setFerramenta(e.target.value)}
+              value={data.ferramentaUtilizada || ""}
+              onChange={e => onChange({ ferramentaUtilizada: e.target.value })}
             />
           </div>
           <div>
@@ -96,8 +92,8 @@ export function MovimentacaoModule({ data, onChange }: Props) {
               type="text"
               className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm bg-white"
               placeholder="Ex: a reorganização do layout da célula produtiva..."
-              value={descricaoAcao}
-              onChange={e => setDescricaoAcao(e.target.value)}
+              value={data.acaoMelhoria || ""}
+              onChange={e => onChange({ acaoMelhoria: e.target.value })}
             />
           </div>
         </div>
