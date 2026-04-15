@@ -1,6 +1,7 @@
 import { useAppStore, calcProdutividade, calcPayback, calcMovimentacao, calcQualidade, calcDisponibilidade, calcLeadTime, calcArea } from "@/store/useAppStore";
 import { FloatingNav } from "@/components/FloatingNav";
 import { Topbar } from "@/components/Topbar";
+import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } from "docx";
 
 // Seus módulos do painel
 import { ResumoModule } from "@/modules/ResumoModule";
@@ -15,10 +16,9 @@ import { AreaModule } from "@/modules/AreaModule";
 import GBOAnalysis from "@/modules/GboModule"; 
 
 const Index = () => {
-  // Puxando a nova função clearData
   const { state, activeModule, setActiveModule, updateModule, clearData } = useAppStore();
 
-  const handleExportWord = () => {
+  const handleExportWord = async () => {
     const { resumo, produtividade, payback, movimentacao, qualidade, disponibilidade, leadtime, area } = state;
     
     const prod = calcProdutividade(produtividade);
@@ -39,45 +39,153 @@ const Index = () => {
 
     const acoesStr = resumo.acoes.length > 0 ? resumo.acoes.map(a => a.what).join(", ") : "ações de melhoria contínua";
 
-    const content = `
-      <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-      <head><meta charset='utf-8'></head>
-      <body style="font-family: Arial, sans-serif; line-height: 1.6;">
-        <h1 style="color: #2563eb; text-align: center;">RELATÓRIO TÉCNICO DE CONSULTORIA</h1>
-        <hr>
-        <h3 style="text-transform: uppercase;">1. Descrição do Processo</h3>
-        <p style="text-align: justify;">A Empresa <b>${resumo.nomeEmpresa || "—"}</b>, da cidade de <b>${resumo.cidade || "—"}</b> no Estado do Rio Grande do Sul, atua no ramo de <b>${resumo.ramo || "—"}</b>, especialista em <b>${resumo.especialista || "—"}</b>, conta com <b>${resumo.totalColaboradores || "0"}</b> ${resumo.totalColaboradores === 1 ? "colaborador" : "colaboradores"} atuando em <b>${resumo.turnos}</b> ${resumo.turnos === 1 ? "Turno" : "Turnos"}. O produto mapeado segue o seguinte processo produtivo: <b>${resumo.processos || "—"}</b>, com método de produção <b>${resumo.metodo || "—"}</b>, onde a demanda é originada por <b>${resumo.origem || "—"}</b>. Ao longo do mapeamento foi identificado oportunidades no setor de <b>${resumo.oportunidades || "—"}</b>, por problemas de <b>${resumo.problemas || "—"}</b>. Nesta consultoria, a área de atuação/intervenção foi <b>${resumo.atuacao || "—"}</b>.</p>
-        <h3 style="text-transform: uppercase;">2. Laudo de Produtividade</h3>
-        <p style="text-align: justify;">No estágio inicial, a produtividade era de <b>${prod.pphT1.toFixed(2)} pçs/h/op</b>, produzindo <b>${produtividade.volumeT1 || 0}</b> peças com <b>${produtividade.operadoresT1 || 0} ${produtividade.operadoresT1 === 1 ? "operador" : "operadores"}</b> em <b>${produtividade.horasT1 || 0}h</b>. Após as melhorias, a produtividade subiu para <b>${prod.pphT3.toFixed(2)} pçs/h/op</b>, produzindo <b>${produtividade.volumeT3 || 0}</b> peças com <b>${produtividade.operadoresT3 || 0} ${produtividade.operadoresT3 === 1 ? "operador" : "operadores"}</b> em <b>${produtividade.horasT3 || 0}h</b>. Isso representa um ganho direto de <b>${prod.ganho.toFixed(2)}%</b> na eficiência operacional da célula.</p>
-        <h3 style="text-transform: uppercase;">3. Laudo de Payback</h3>
-        <p style="text-align: justify;">No estágio inicial, havia <b>${produtividade.operadoresT1 || 0} ${produtividade.operadoresT1 === 1 ? "colaborador" : "colaboradores"}</b>, com custo total por mês de <b>R$ ${pb.salI.toFixed(2)}</b>. Produziam-se <b>${pb.prodMensalI.toLocaleString("pt-BR")} ${produtividade.unidade || "peças"}/mês</b>, a custo de mão de obra de <b>R$ ${pb.custoI.toFixed(2)}</b>. Após intervenção, permaneceram <b>${produtividade.operadoresT3 || 0} ${produtividade.operadoresT3 === 1 ? "colaborador" : "colaboradores"}</b>, com custo total por mês de <b>R$ ${pb.salF.toFixed(2)}</b>. Passaram a produzir <b>${pb.prodMensalF.toLocaleString("pt-BR")} ${produtividade.unidade || "peças"}/mês</b>, a custo de mão de obra de <b>R$ ${pb.custoF.toFixed(2)}</b>. Portanto, um payback de <b>${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(1) : "0.0"} ${pb.paybackMeses === 1 ? "mês" : "meses"}</b>.</p>
-        <h3 style="text-transform: uppercase;">4. Laudo de Qualidade</h3>
-        <p style="text-align: justify;">No estágio inicial, de um total de ${qualidade.quantidadeT1} peças, identificou-se ${qualidade.perdasT1} <b>${qualidade.perdasT1 === 1 ? "peça não conforme" : "peças não conformes"}</b>. Após as melhorias, o índice de assertividade evoluiu para <b>${qual.indiceT3.toFixed(2)}%</b>, garantindo maior confiabilidade ao processo.</p>
-        <h3 style="text-transform: uppercase;">5. Laudo de Disponibilidade</h3>
-        <p style="text-align: justify;">O tempo real de operação evoluiu de <b>${disp.realT1} ${getUnit(disp.realT1, disponibilidade.unidadeTempo)}</b> para <b>${disp.realT3} ${getUnit(disp.realT3, disponibilidade.unidadeTempo)}</b>, representando um aumento de <b>${disp.aumento.toFixed(2)}%</b> na utilização do recurso.</p>
-        <h3 style="text-transform: uppercase;">6. Laudo de Movimentação Logística</h3>
-        <p style="text-align: justify;">O tempo de movimentação foi reduzido de <b>${movimentacao.tempoT1} ${getUnit(movimentacao.tempoT1, movimentacao.unidadeTempo)}</b> para <b>${movimentacao.tempoT3} ${getUnit(movimentacao.tempoT3, movimentacao.unidadeTempo)}</b>, reduzindo desperdícios em <b>${mov.reducaoTempo.toFixed(2)}%</b>.</p>
-        <h3 style="text-transform: uppercase;">7. Plano de Ação (5W2H)</h3>
-        <p style="text-align: justify;">As principais definições do plano de ação contemplaram: <b>${acoesStr}</b>.</p>
-        <h3 style="text-transform: uppercase;">8. Conclusão do Projeto</h3>
-        <p style="text-align: justify;">O presente programa proporcionou a realização de consultoria na Empresa <b>${resumo.nomeEmpresa || "—"}</b>. Obteve-se um aumento de <b>${prod.ganho.toFixed(2)}%</b> em produtividade e um Payback de <b>${pb.paybackMeses.toFixed(2)} ${pb.paybackMeses === 1 ? "mês" : "meses"}</b>.</p>
-        <p style="text-align: justify;">O resultado geral do projeto foi agregador e positivo para a empresa pois o envolvimento da equipe foi primordial para garantir os resultados alcançados e manter a melhoria contínua.</p>
-      </body>
-      </html>
-    `;
+    // --- FUNÇÕES AUXILIARES PARA O WORD ---
+    const tr = (text: string, bold = false) => new TextRun({ text, bold, font: "Arial", size: 22 }); // size 22 = 11pt
+    
+    const createHeading = (text: string) => new Paragraph({
+      text: text.toUpperCase(),
+      heading: HeadingLevel.HEADING_3,
+      spacing: { before: 300, after: 120 },
+    });
 
-    const blob = new Blob(['\ufeff', content], { type: 'application/msword' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `Relatorio_Lean_${resumo.nomeEmpresa || 'Empresa'}.doc`;
-    link.click();
-    URL.revokeObjectURL(url);
+    const createJustified = (runs: TextRun[]) => new Paragraph({
+      alignment: AlignmentType.JUSTIFIED,
+      children: runs,
+      spacing: { line: 360 }, // Espaçamento 1.5
+    });
+
+    // --- CONSTRUÇÃO DO DOCUMENTO OFICIAL ---
+    const doc = new Document({
+      sections: [{
+        properties: {},
+        children: [
+          new Paragraph({
+            text: "RELATÓRIO TÉCNICO DE CONSULTORIA",
+            heading: HeadingLevel.HEADING_1,
+            alignment: AlignmentType.CENTER,
+            spacing: { after: 400 },
+          }),
+
+          createHeading("1. Descrição do Processo"),
+          createJustified([
+            tr("A Empresa "), tr(resumo.nomeEmpresa || "—", true),
+            tr(", da cidade de "), tr(resumo.cidade || "—", true),
+            tr(" no Estado do Rio Grande do Sul, atua no ramo de "), tr(resumo.ramo || "—", true),
+            tr(", especialista em "), tr(resumo.especialista || "—", true),
+            tr(", conta com "), tr(String(resumo.totalColaboradores || 0), true),
+            tr(resumo.totalColaboradores === 1 ? " colaborador" : " colaboradores"),
+            tr(" atuando em "), tr(String(resumo.turnos), true),
+            tr(resumo.turnos === 1 ? " Turno. " : " Turnos. "),
+            tr("O produto mapeado segue o seguinte processo produtivo: "), tr(resumo.processos || "—", true),
+            tr(", com método de produção "), tr(resumo.metodo || "—", true),
+            tr(", onde a demanda é originada por "), tr(resumo.origem || "—", true),
+            tr(". Ao longo do mapeamento foi identificado oportunidades no setor de "), tr(resumo.oportunidades || "—", true),
+            tr(", por problemas de "), tr(resumo.problemas || "—", true),
+            tr(". Nesta consultoria, a área de atuação/intervenção foi "), tr(resumo.atuacao || "—", true),
+            tr(".")
+          ]),
+
+          createHeading("2. Laudo de Produtividade"),
+          createJustified([
+            tr("No estágio inicial, a produtividade era de "), tr(`${prod.pphT1.toFixed(2)} pçs/h/op`, true),
+            tr(", produzindo "), tr(String(produtividade.volumeT1 || 0), true),
+            tr(" peças com "), tr(String(produtividade.operadoresT1 || 0), true),
+            tr(produtividade.operadoresT1 === 1 ? " operador" : " operadores"),
+            tr(" em "), tr(`${produtividade.horasT1 || 0}h`, true),
+            tr(". Após as melhorias, a produtividade subiu para "), tr(`${prod.pphT3.toFixed(2)} pçs/h/op`, true),
+            tr(", produzindo "), tr(String(produtividade.volumeT3 || 0), true),
+            tr(" peças com "), tr(String(produtividade.operadoresT3 || 0), true),
+            tr(produtividade.operadoresT3 === 1 ? " operador" : " operadores"),
+            tr(" em "), tr(`${produtividade.horasT3 || 0}h`, true),
+            tr(". Isso representa um ganho direto de "), tr(`${prod.ganho.toFixed(2)}%`, true),
+            tr(" na eficiência operacional da célula.")
+          ]),
+
+          createHeading("3. Laudo de Payback"),
+          createJustified([
+            tr("No estágio inicial, havia "), tr(String(produtividade.operadoresT1 || 0), true),
+            tr(produtividade.operadoresT1 === 1 ? " colaborador" : " colaboradores"),
+            tr(", com custo total por mês de "), tr(`R$ ${pb.salI.toFixed(2)}`, true),
+            tr(". Produziam-se "), tr(`${pb.prodMensalI.toLocaleString("pt-BR")} ${produtividade.unidade || "peças"}/mês`, true),
+            tr(", a custo de mão de obra de "), tr(`R$ ${pb.custoI.toFixed(2)}`, true),
+            tr(". Após intervenção, permaneceram "), tr(String(produtividade.operadoresT3 || 0), true),
+            tr(produtividade.operadoresT3 === 1 ? " colaborador" : " colaboradores"),
+            tr(", com custo total por mês de "), tr(`R$ ${pb.salF.toFixed(2)}`, true),
+            tr(". Passaram a produzir "), tr(`${pb.prodMensalF.toLocaleString("pt-BR")} ${produtividade.unidade || "peças"}/mês`, true),
+            tr(", a custo de mão de obra de "), tr(`R$ ${pb.custoF.toFixed(2)}`, true),
+            tr(". Portanto, um payback de "), tr(`${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(1) : "0.0"} ${pb.paybackMeses === 1 ? "mês" : "meses"}`, true),
+            tr(".")
+          ]),
+
+          createHeading("4. Laudo de Qualidade"),
+          createJustified([
+            tr(`No estágio inicial, de um total de ${qualidade.quantidadeT1} peças, identificou-se ${qualidade.perdasT1} `),
+            tr(qualidade.perdasT1 === 1 ? "peça não conforme" : "peças não conformes", true),
+            tr(". Após as melhorias, o índice de assertividade evoluiu para "),
+            tr(`${qual.indiceT3.toFixed(2)}%`, true),
+            tr(", garantindo maior confiabilidade ao processo.")
+          ]),
+
+          createHeading("5. Laudo de Disponibilidade"),
+          createJustified([
+            tr("O tempo real de operação evoluiu de "),
+            tr(`${disp.realT1} ${getUnit(disp.realT1, disponibilidade.unidadeTempo)}`, true),
+            tr(" para "),
+            tr(`${disp.realT3} ${getUnit(disp.realT3, disponibilidade.unidadeTempo)}`, true),
+            tr(", representando um aumento de "),
+            tr(`${disp.aumento.toFixed(2)}%`, true),
+            tr(" na utilização do recurso.")
+          ]),
+
+          createHeading("6. Laudo de Movimentação Logística"),
+          createJustified([
+            tr("O tempo de movimentação foi reduzido de "),
+            tr(`${movimentacao.tempoT1} ${getUnit(movimentacao.tempoT1, movimentacao.unidadeTempo)}`, true),
+            tr(" para "),
+            tr(`${movimentacao.tempoT3} ${getUnit(movimentacao.tempoT3, movimentacao.unidadeTempo)}`, true),
+            tr(", reduzindo desperdícios em "),
+            tr(`${mov.reducaoTempo.toFixed(2)}%`, true),
+            tr(".")
+          ]),
+
+          createHeading("7. Plano de Ação (5W2H)"),
+          createJustified([
+            tr("As principais definições do plano de ação contemplaram: "),
+            tr(acoesStr, true),
+            tr(".")
+          ]),
+
+          createHeading("8. Conclusão do Projeto"),
+          createJustified([
+            tr("O presente programa proporcionou a realização de consultoria na Empresa "),
+            tr(resumo.nomeEmpresa || "—", true),
+            tr(". Obteve-se um aumento de "),
+            tr(`${prod.ganho.toFixed(2)}%`, true),
+            tr(" em produtividade e um Payback de "),
+            tr(`${pb.paybackMeses.toFixed(2)} ${pb.paybackMeses === 1 ? "mês" : "meses"}`, true),
+            tr(".")
+          ]),
+          new Paragraph({ text: "", spacing: { after: 200 } }), // Quebra de linha
+          createJustified([
+            tr("O resultado geral do projeto foi agregador e positivo para a empresa pois o envolvimento da equipe foi primordial para garantir os resultados alcançados e manter a melhoria contínua.")
+          ])
+        ]
+      }]
+    });
+
+    // --- GERA O ARQUIVO .DOCX ---
+    Packer.toBlob(doc).then(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `Relatorio_Lean_${resumo.nomeEmpresa || 'Empresa'}.docx`;
+      link.click();
+      window.URL.revokeObjectURL(url);
+    });
   };
 
   const renderPanelModules = () => {
     switch (activeModule) {
-      // Passando a função onClearData para o módulo de Resumo
       case "resumo": return <ResumoModule data={state.resumo} state={state} onChange={d => updateModule("resumo", d)} onClearData={clearData} />;
       case "payback": return <PaybackModule data={state.payback} prodData={state.produtividade} resumoData={state.resumo} onChange={d => updateModule("payback", d)} />;
       case "produtividade": return <ProdutividadeModule data={state.produtividade} onChange={d => updateModule("produtividade", d)} />;
