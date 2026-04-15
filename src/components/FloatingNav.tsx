@@ -1,17 +1,8 @@
 import { useState } from "react";
 import { ModuleKey } from "@/store/useAppStore";
 import { 
-  FileText, 
-  GanttChartSquare, 
-  BarChart2, 
-  Calculator, 
-  ArrowRightLeft, 
-  ShieldCheck, 
-  Clock, 
-  Timer, 
-  Square,
-  Pin,
-  PinOff
+  FileText, GanttChartSquare, BarChart2, Calculator, 
+  ArrowRightLeft, ShieldCheck, Clock, Timer, Square, Pin, PinOff
 } from "lucide-react";
 
 interface Props {
@@ -37,28 +28,32 @@ export function FloatingNav({ active, onSelect }: Props) {
   return (
     <div className={`
       fixed z-[100] transition-all duration-500 print:hidden
-      ${isFixed 
-        ? "left-0 top-0 h-full w-28" 
-        : "left-6 top-1/2 -translate-y-1/2 w-28"
-      }
+      /* MOBILE: Barra horizontal no rodapé */
+      bottom-4 left-1/2 -translate-x-1/2 w-[95%]
+      /* DESKTOP/NOTEBOOK: Pílula vertical na esquerda */
+      md:bottom-auto md:top-1/2 md:-translate-y-1/2 md:left-6 md:-translate-x-0 md:w-24
+      ${isFixed ? "md:left-0 md:top-0 md:h-full md:w-24" : ""}
     `}>
       <div className={`
-        flex flex-col items-center gap-1 py-6 bg-white border border-slate-200 shadow-2xl transition-all duration-500
-        ${isFixed ? "h-full rounded-none border-y-0 border-l-0" : "rounded-[3.5rem]"}
+        flex bg-white border border-slate-200 shadow-2xl transition-all duration-500
+        /* MOBILE: Scroll horizontal escondido */
+        flex-row items-center p-2 rounded-full overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]
+        /* DESKTOP/NOTEBOOK: Organização vertical */
+        md:flex-col md:py-4 md:gap-1 md:overflow-visible
+        ${isFixed ? "md:rounded-none md:border-y-0 md:border-l-0" : "md:rounded-[2.5rem]"}
       `}>
         
-        {/* BOTÃO PARA FIXAR / FLUTUAR */}
-        <button 
-          onClick={() => setIsFixed(!isFixed)}
-          className={`
-            p-2 mb-2 rounded-full transition-colors
-            ${isFixed ? "text-blue-600 bg-blue-50" : "text-slate-300 hover:text-slate-500"}
-          `}
-        >
-          {isFixed ? <Pin className="w-4 h-4 rotate-45" /> : <PinOff className="w-4 h-4" />}
-        </button>
+        {/* BOTÃO FIXAR (Aparece apenas no Desktop) */}
+        <div className="hidden md:flex justify-center w-full mb-1">
+          <button 
+            onClick={() => setIsFixed(!isFixed)}
+            className={`p-1.5 rounded-full transition-colors ${isFixed ? "text-blue-600 bg-blue-50" : "text-slate-300 hover:text-slate-500"}`}
+          >
+            {isFixed ? <Pin className="w-3.5 h-3.5 rotate-45" /> : <PinOff className="w-3.5 h-3.5" />}
+          </button>
+        </div>
 
-        <div className="flex-1 flex flex-col gap-1 w-full px-2 justify-center">
+        <div className="flex flex-row md:flex-col flex-1 gap-1 w-full px-1 md:px-2">
           {navItems.map((item) => {
             const isActive = active === item.key;
             const Icon = item.icon;
@@ -68,15 +63,19 @@ export function FloatingNav({ active, onSelect }: Props) {
                 key={item.key}
                 onClick={() => onSelect(item.key)}
                 className={`
-                  group relative w-full h-[72px] rounded-2xl transition-all duration-300 flex flex-col items-center justify-center flex-shrink-0 gap-1
+                  group relative rounded-xl transition-all duration-300 flex flex-col items-center justify-center flex-shrink-0 gap-1
+                  /* MOBILE: Botão menor e mais quadrado */
+                  h-12 w-[60px]
+                  /* DESKTOP/NOTEBOOK: Botão normal */
+                  md:w-full md:h-14
                   ${isActive 
                     ? `${item.color} text-white scale-105 shadow-md` 
                     : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"
                   }
                 `}
               >
-                <Icon className={`w-5 h-5 transition-transform duration-300 ${isActive ? "scale-100" : "group-hover:scale-110"}`} />
-                <span className={`text-[9px] font-bold text-center leading-tight px-1 ${isActive ? "text-white" : "text-slate-500"}`}>
+                <Icon className={`w-4 h-4 transition-transform duration-300 ${isActive ? "scale-100" : "group-hover:scale-110"}`} />
+                <span className={`text-[8px] md:text-[8.5px] font-bold text-center leading-none px-1 ${isActive ? "text-white" : "text-slate-500"}`}>
                   {item.label}
                 </span>
               </button>
