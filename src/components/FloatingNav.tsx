@@ -24,7 +24,12 @@ export function FloatingNav({ active, onSelect }: Props) {
 
   return (
     <div className="fixed z-[100] transition-all duration-500 print:hidden left-1/2 -translate-x-1/2 bottom-6 w-[95%] md:w-max">
-      <div className="flex flex-row items-center bg-white border border-slate-200 shadow-2xl transition-all duration-500 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] px-3 py-3 rounded-[3rem] gap-1.5 md:gap-2">
+      {/* EFEITO VIDRO (GLASSMORPHISM): 
+          - bg-white/60: Fundo semi-transparente
+          - backdrop-blur-md: Desfoque do fundo
+          - border-white/20: Borda sutil e reflexiva
+      */}
+      <div className="flex flex-row items-center bg-white/60 backdrop-blur-md border border-white/20 shadow-2xl transition-all duration-500 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] px-3 py-3 rounded-[3rem] gap-1.5 md:gap-2">
         
         {navItems.map((item) => {
           const isActive = active === item.key;
@@ -36,15 +41,22 @@ export function FloatingNav({ active, onSelect }: Props) {
               onClick={() => onSelect(item.key)}
               className={`
                 group relative transition-all duration-300 flex flex-col items-center justify-center flex-shrink-0 gap-1.5
-                h-16 w-[72px] rounded-2xl
+                /* Ajuste para Círculo Perfeito:
+                   Mudei de h-16 w-[72px] para h-16 w-16 (quadrado perfeito)
+                   Assim, rounded-full cria um círculo perfeito e não um oval.
+                */
+                h-16 w-16
                 ${isActive 
-                  ? `${item.color} text-white scale-105 shadow-md` 
-                  : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"
+                  /* PREENCHIMENTO CIRCULAR PERFEITO */
+                  ? `${item.color} text-white scale-105 shadow-md rounded-full` 
+                  /* Itens não ativos com borda arredondada e hover de vidro */
+                  : "text-slate-500/70 hover:text-slate-700 hover:bg-white/30 rounded-2xl"
                 }
               `}
             >
               <Icon className={`w-5 h-5 transition-transform duration-300 ${isActive ? "scale-100" : "group-hover:scale-110"}`} />
-              <span className={`text-[9px] font-bold text-center leading-none px-1 ${isActive ? "text-white" : "text-slate-500"}`}>
+              {/* Texto não ativo em text-slate-600 para contraste contra o vidro jateado */}
+              <span className={`text-[9px] font-bold text-center leading-none px-0.5 ${isActive ? "text-white" : "text-slate-600"}`}>
                 {item.label}
               </span>
             </button>
