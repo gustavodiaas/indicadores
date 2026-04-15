@@ -78,13 +78,27 @@ export function ResumoModule({ data, state, onChange, onClearData }: Props) {
             <InputField label="Método (Puxada/Empurrada)" value={data.metodo} onChange={v => onChange({ metodo: v as any })} />
             <InputField label="Demanda originada por" value={data.origem} onChange={v => onChange({ origem: v })} />
           </div>
+          
+          <InputField label="Oportunidades no setor de" value={data.oportunidades} onChange={v => onChange({ oportunidades: v })} />
+          
+          {/* AQUI ESTÁ A MUDANÇA: Caixas lado a lado e aviso adicionado */}
           <div className="grid grid-cols-2 gap-4">
-            <InputField label="Oportunidades no setor de" value={data.oportunidades} onChange={v => onChange({ oportunidades: v })} />
-            <InputField label="Problemas de" value={data.problemas} onChange={v => onChange({ problemas: v })} />
+            <div>
+              <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wide">
+                Problemas de <span className="lowercase font-normal italic text-slate-400">(Adicione a ferramenta utilizada)</span>
+              </label>
+              <input
+                type="text"
+                className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm bg-white outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                value={data.problemas || ""}
+                onChange={e => onChange({ problemas: e.target.value })}
+              />
+            </div>
+            <InputField label="Ferramentas Lean Aplicadas" value={data.ferramentas} onChange={v => onChange({ ferramentas: v })} />
           </div>
+
           <InputField label="Área de Atuação/Intervenção" value={data.atuacao} onChange={v => onChange({ atuacao: v })} />
           <InputField label="Motivação da Escolha" value={data.motivacao} onChange={v => onChange({ motivacao: v })} />
-          <InputField label="Ferramentas Lean Aplicadas" value={data.ferramentas} onChange={v => onChange({ ferramentas: v })} />
         </div>
 
         <div className="pt-4 border-t space-y-4">
