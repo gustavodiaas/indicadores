@@ -131,7 +131,6 @@ const defaultState: AppState = {
 const safeDiv = (num: number, den: number) => (den > 0 ? num / den : 0);
 
 export function useAppStore() {
-  // 1. Ao iniciar, tenta puxar do backup invisível. Se não achar, usa o padrão zerado.
   const [state, setState] = useState<AppState>(() => {
     try {
       const saved = localStorage.getItem("consultoria-lean-state");
@@ -143,7 +142,6 @@ export function useAppStore() {
   
   const [activeModule, setActiveModule] = useState<ModuleKey>("resumo");
 
-  // 2. Sempre que houver uma alteração de dado na tela, salva no backup invisível.
   useEffect(() => {
     localStorage.setItem("consultoria-lean-state", JSON.stringify(state));
   }, [state]);
@@ -156,7 +154,14 @@ export function useAppStore() {
     setState({ ...defaultState, ...data });
   }, []);
 
-  return { state, activeModule, setActiveModule, updateModule, loadState };
+  // FUNÇÃO NOVA: Zera tudo
+  const clearData = useCallback(() => {
+    if (window.confirm("Tem certeza que deseja apagar todos os dados de TODAS as abas? Isso não pode ser desfeito.")) {
+      setState(defaultState);
+    }
+  }, []);
+
+  return { state, activeModule, setActiveModule, updateModule, loadState, clearData };
 }
 
 export function calcProdutividade(d: ProdutividadeData) {
@@ -169,39 +174,22 @@ export function calcProdutividade(d: ProdutividadeData) {
 export function calcPayback(d: PaybackData, prod: ProdutividadeData, res?: ResumoData) {
   const prodMensalI = prod.volumeT1 * 21;
   const prodMensalF = prod.volumeT3 * 21;
-
-  // Encargos
   const encI = d.tipoSalario === "bruto" ? 1 : (d.encargosInicial || 1);
   const encF = d.tipoSalario === "bruto" ? 1 : (d.encargosFinal || 1);
-
-  // Dedicação (%)
   const dedI = (d.dedicacaoInicial || 100) / 100;
   const dedF = (d.dedicacaoFinal || 100) / 100;
-
-  // Salário Total (Pool total informado no Payback ajustado por encargos e dedicação)
   const salI = d.salarioBaseInicial * encI * dedI;
   const salF = d.salarioBaseFinal * encF * dedF;
-
-  // Custo por peça
   const rawCustoI = safeDiv(salI, prodMensalI);
   const rawCustoF = safeDiv(salF, prodMensalF);
-
   const custoI = Math.round(rawCustoI * 100) / 100;
   const custoF = Math.round(rawCustoF * 100) / 100;
-
-  // Ganho Mensal
   const reducaoMOD = Math.round((custoI - custoF) * 100) / 100;
   const reducaoMensal = Math.max(0, reducaoMOD * prodMensalF);
-
   const investTotal = d.valorConsultoria + d.investimentoExtra;
   const paybackMeses = safeDiv(investTotal, reducaoMensal);
 
-  return { 
-    prodMensalI, prodMensalF, 
-    salI, salF, 
-    custoI, custoF, 
-    reducaoMensal, investTotal, paybackMeses 
-  };
+  return { prodMensalI, prodMensalF, salI, salF, custoI, custoF, reducaoMensal, investTotal, paybackMeses };
 }
 
 export function calcMovimentacao(d: MovimentacaoData) {
@@ -213,10 +201,8 @@ export function calcMovimentacao(d: MovimentacaoData) {
 export function calcQualidade(d: QualidadeData) {
   const boasT1 = Math.max(0, d.quantidadeT1 - d.perdasT1);
   const boasT3 = Math.max(0, d.quantidadeT3 - d.perdasT3);
-  
   const indiceT1 = safeDiv(boasT1, d.quantidadeT1) * 100;
   const indiceT3 = safeDiv(boasT3, d.quantidadeT3) * 100;
-  
   const aumento = indiceT1 > 0 ? ((indiceT3 - indiceT1) / indiceT1) * 100 : 0;
   return { boasT1, boasT3, indiceT1, indiceT3, aumento };
 }
@@ -225,11 +211,9 @@ export function calcDisponibilidade(d: DisponibilidadeData) {
   const dispT1 = d.tempoTotalT1 - d.paradasPlanT1;
   const realT1 = dispT1 - d.paradasNaoPlanT1;
   const indT1 = safeDiv(realT1, dispT1) * 100;
-
   const dispT3 = d.tempoTotalT3 - d.paradasPlanT3;
   const realT3 = dispT3 - d.paradasNaoPlanT3;
   const indT3 = safeDiv(realT3, dispT3) * 100;
-
   const aumento = indT1 > 0 ? ((indT3 - indT1) / indT1) * 100 : 0;
   return { dispT1, realT1, indT1, dispT3, realT3, indT3, aumento };
 }
