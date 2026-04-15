@@ -25,6 +25,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { useAppStore } from "@/store/useAppStore"
 
 interface Operation {
   id: string
@@ -48,15 +49,19 @@ const validateText = (value: string): { isValid: boolean; error?: string } => {
 }
 
 export default function GBOAnalysis() {
-  const [operations, setOperations] = useState<Operation[]>([])
-  const [timeUnit, setTimeUnit] = useState<"minutes" | "seconds">("minutes")
+  const { state, updateModule } = useAppStore()
+  const gboData = state.gbo
+
+  const operations = gboData.operacoes as Operation[]
+  const timeUnit = gboData.tempoUnidade as "minutes" | "seconds"
+  const workShiftTime = gboData.turnoTempo > 0 ? gboData.turnoTempo.toString() : ""
+  const timeUnitTakt = gboData.turnoUnidade as "minutes" | "hours" | "seconds"
+  const dailyDemand = gboData.demanda > 0 ? gboData.demanda.toString() : ""
+  const demandUnit = gboData.demandaUnidade || "peças"
+
   const [newOperationName, setNewOperationName] = useState("")
   const [newOperationTime, setNewOperationTime] = useState("")
-  const [workShiftTime, setWorkShiftTime] = useState("")
-  const [dailyDemand, setDailyDemand] = useState("")
-  const [demandUnit, setDemandUnit] = useState("peças")
-  const [timeUnitTakt, setTimeUnitTakt] = useState<"minutes" | "seconds" | "hours">("minutes")
-  const [previousTimeUnitTakt, setPreviousTimeUnitTakt] = useState<"minutes" | "seconds" | "hours">("minutes")
+  const [previousTimeUnitTakt, setPreviousTimeUnitTakt] = useState<"minutes" | "seconds" | "hours">(timeUnitTakt)
   const [errors, setErrors] = useState<{
     operationName?: string
     operationTime?: string
@@ -86,11 +91,11 @@ export default function GBOAnalysis() {
           convertedValue = convertedValue * 60
         }
 
-        setWorkShiftTime(convertedValue.toFixed(2))
+        updateModule("gbo", { turnoTempo: Number(convertedValue.toFixed(2)) })
       }
       setPreviousTimeUnitTakt(timeUnitTakt)
     }
-  }, [timeUnitTakt, workShiftTime, previousTimeUnitTakt])
+  }, [timeUnitTakt, workShiftTime, previousTimeUnitTakt, updateModule])
 
   const calculateTaktTime = (): number | undefined => {
     if (!workShiftTime || !dailyDemand) return undefined
@@ -131,7 +136,7 @@ export default function GBOAnalysis() {
       unit: timeUnit,
     }
 
-    setOperations([...operations, newOperation])
+    updateModule("gbo", { operacoes: [...operations, newOperation] })
     setNewOperationName("")
     setNewOperationTime("")
     setErrors({})
@@ -140,19 +145,19 @@ export default function GBOAnalysis() {
 
   const removeOperation = (id: string) => {
     const operation = operations.find((op) => op.id === id)
-    setOperations(operations.filter((op) => op.id !== id))
+    updateModule("gbo", { operacoes: operations.filter((op) => op.id !== id) })
     if (operation) toast({ title: "Operação removida", description: `"${operation.name}" foi removida.` })
   }
 
   const editOperation = (id: string, newName: string, newTime: number) => {
-    setOperations(
-      operations.map((op) => (op.id === id ? { ...op, name: newName, time: newTime } : op))
-    )
+    updateModule("gbo", {
+      operacoes: operations.map((op) => (op.id === id ? { ...op, name: newName, time: newTime } : op))
+    })
     toast({ title: "✅ Atualizado", description: `Operação "${newName}" atualizada.` })
   }
 
   const reorderOperations = (newOperations: Operation[]) => {
-    setOperations(newOperations)
+    updateModule("gbo", { operacoes: newOperations })
     toast({ title: "✅ Ordem atualizada", description: "A ordem das operações foi reorganizada." })
   }
 
@@ -209,7 +214,7 @@ export default function GBOAnalysis() {
         toast({ title: "Aviso", description: "O arquivo não contém operações válidas.", variant: "destructive" })
         return
       }
-      setOperations(importedOperations)
+      updateModule("gbo", { operacoes: importedOperations })
       toast({ title: "✅ Importação concluída", description: `${importedOperations.length} operações carregadas.` })
     } catch (error) {
       toast({ title: "❌ Erro", description: "Falha na importação.", variant: "destructive" })
@@ -293,13 +298,13 @@ export default function GBOAnalysis() {
                   <div className="space-y-1">
                     <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Tempo do Turno</label>
                     <input type="number" step="0.1" min="0" placeholder="8.0" value={workShiftTime}
-                      onChange={(e) => { setWorkShiftTime(e.target.value); validateTaktFields(); }} onBlur={validateTaktFields}
+                      onChange={(e) => { updateModule("gbo", { turnoTempo: Number(e.target.value) }); validateTaktFields(); }} onBlur={validateTaktFields}
                       className={`w-full h-10 px-3 rounded-lg border text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${errors.workShiftTime ? "border-rose-500" : "border-slate-200"}`}
                     />
                   </div>
                   <div className="space-y-1">
                     <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Unidade</label>
-                    <select value={timeUnitTakt} onChange={(e: any) => setTimeUnitTakt(e.target.value)} className="w-full h-10 px-3 rounded-lg border border-slate-200 bg-white text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+                    <select value={timeUnitTakt} onChange={(e: any) => updateModule("gbo", { turnoUnidade: e.target.value })} className="w-full h-10 px-3 rounded-lg border border-slate-200 bg-white text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
                       <option value="minutes">Minutos</option>
                       <option value="hours">Horas</option>
                       <option value="seconds">Segundos</option>
@@ -311,10 +316,10 @@ export default function GBOAnalysis() {
                   <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Demanda Diária ({demandUnit}/dia)</label>
                   <div className="grid grid-cols-2 gap-4">
                     <input type="number" step="1" min="0" placeholder="100" value={dailyDemand}
-                      onChange={(e) => { setDailyDemand(e.target.value); validateTaktFields(); }} onBlur={validateTaktFields}
+                      onChange={(e) => { updateModule("gbo", { demanda: Number(e.target.value) }); validateTaktFields(); }} onBlur={validateTaktFields}
                       className={`w-full h-10 px-3 rounded-lg border text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${errors.dailyDemand ? "border-rose-500" : "border-slate-200"}`}
                     />
-                    <select value={demandUnit} onChange={(e: any) => setDemandUnit(e.target.value)} className="w-full h-10 px-3 rounded-lg border border-slate-200 bg-white text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+                    <select value={demandUnit} onChange={(e: any) => updateModule("gbo", { demandaUnidade: e.target.value })} className="w-full h-10 px-3 rounded-lg border border-slate-200 bg-white text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
                       <option value="peças">Peças</option>
                       <option value="m²">m²</option>
                       <option value="m³">m³</option>
@@ -344,7 +349,7 @@ export default function GBOAnalysis() {
             <div className="space-y-4 bg-indigo-50/50 p-5 rounded-xl border border-indigo-100 shadow-sm">
               <div className="flex items-center justify-between border-b border-indigo-200 pb-2">
                 <h3 className="font-bold text-slate-800">Nova Operação</h3>
-                <select value={timeUnit} onChange={(e: any) => setTimeUnit(e.target.value)} className="h-8 px-2 rounded-md border border-slate-200 bg-white text-xs font-bold text-slate-600 outline-none focus:ring-2 focus:ring-indigo-500">
+                <select value={timeUnit} onChange={(e: any) => updateModule("gbo", { tempoUnidade: e.target.value })} className="h-8 px-2 rounded-md border border-slate-200 bg-white text-xs font-bold text-slate-600 outline-none focus:ring-2 focus:ring-indigo-500">
                   <option value="minutes">Tempo em Minutos</option>
                   <option value="seconds">Tempo em Segundos</option>
                 </select>
