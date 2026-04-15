@@ -13,13 +13,9 @@ interface Props {
 export function LeadTimeModule({ data, onChange }: Props) {
   const [copied, setCopied] = useState(false);
 
-  // Campos locais de contexto — não precisam persistir no store global
-  const [melhorias, setMelhorias] = useState("");
-  const [descricaoReducao, setDescricaoReducao] = useState("");
-
   const r = calcLeadTime(data);
-  const tI = data.leadTimeT1 || 0;
-  const tF = data.leadTimeT3 || 0;
+  const tI = data.leadTimeT1 || data.tempoT1 || 0;
+  const tF = data.leadTimeT3 || data.tempoT3 || 0;
 
   const reducaoAbsoluta = Math.max(0, tI - tF);
   const reducaoPercentual = tI > 0 ? (reducaoAbsoluta / tI) * 100 : 0;
@@ -35,9 +31,9 @@ export function LeadTimeModule({ data, onChange }: Props) {
     return unit;
   };
 
-  // Textos com fallback neutro caso os campos fiquem em branco
-  const melhoriasTxt = melhorias.trim() || "das melhorias implementadas";
-  const reducaoTxt = descricaoReducao.trim() || "com a eliminação de desperdícios no fluxo";
+  // Puxando os dados diretamente do Store Global para não perder na troca de abas
+  const melhoriasTxt = (data.melhorias || "").trim() || "das melhorias implementadas";
+  const reducaoTxt = (data.reducaoObtida || "").trim() || "com a eliminação de desperdícios no fluxo";
 
   const laudo = `O tempo de atravessamento (lead time) inicial era de ${tI} ${getUnit(tI, uBase)}. Com a implementação ${melhoriasTxt}, o lead time foi reduzido para ${tF} ${getUnit(tF, uBase)}, representando uma redução de ${reducaoPercentual.toFixed(2)}% no tempo total de entrega do produto. Essa evolução foi obtida ${reducaoTxt}.\nCálculo: (${tI} - ${tF}) / ${tI > 0 ? tI : 1} × 100 = ${reducaoPercentual.toFixed(2)}%`;
 
@@ -84,8 +80,8 @@ export function LeadTimeModule({ data, onChange }: Props) {
               type="text"
               className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm bg-white"
               placeholder="Ex: do mapeamento do fluxo de valor e redução de esperas..."
-              value={melhorias}
-              onChange={e => setMelhorias(e.target.value)}
+              value={data.melhorias || ""}
+              onChange={e => onChange({ melhorias: e.target.value })}
             />
           </div>
           <div>
@@ -96,8 +92,8 @@ export function LeadTimeModule({ data, onChange }: Props) {
               type="text"
               className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm bg-white"
               placeholder="Ex: com a eliminação de filas entre processos e setup reduzido..."
-              value={descricaoReducao}
-              onChange={e => setDescricaoReducao(e.target.value)}
+              value={data.reducaoObtida || ""}
+              onChange={e => onChange({ reducaoObtida: e.target.value })}
             />
           </div>
         </div>
@@ -110,8 +106,8 @@ export function LeadTimeModule({ data, onChange }: Props) {
             <input
               type="text"
               className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm"
-              defaultValue={data.leadTimeT1 ? data.leadTimeT1.toString().replace(".", ",") : ""}
-              onBlur={e => onChange({ leadTimeT1: parseDecimal(e.target.value) })}
+              defaultValue={tI ? tI.toString().replace(".", ",") : ""}
+              onBlur={e => onChange({ leadTimeT1: parseDecimal(e.target.value), tempoT1: parseDecimal(e.target.value) })}
               placeholder="Ex: 12"
             />
           </div>
@@ -125,8 +121,8 @@ export function LeadTimeModule({ data, onChange }: Props) {
             <input
               type="text"
               className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm"
-              defaultValue={data.leadTimeT3 ? data.leadTimeT3.toString().replace(".", ",") : ""}
-              onBlur={e => onChange({ leadTimeT3: parseDecimal(e.target.value) })}
+              defaultValue={tF ? tF.toString().replace(".", ",") : ""}
+              onBlur={e => onChange({ leadTimeT3: parseDecimal(e.target.value), tempoT3: parseDecimal(e.target.value) })}
               placeholder="Ex: 5"
             />
           </div>
