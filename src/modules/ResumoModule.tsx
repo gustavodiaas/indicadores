@@ -11,17 +11,17 @@ interface Props {
   data: ResumoData;
   state: AppState;
   onChange: (d: Partial<ResumoData>) => void;
+  onClearData: () => void;
 }
 
-export function ResumoModule({ data, state, onChange }: Props) {
+export function ResumoModule({ data, state, onChange, onClearData }: Props) {
   const [newAcao, setNewAcao] = useState<Partial<Acao5W2H>>({});
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [expandedId, setExpandedId] = useState<string | null>(null); // Controle do Accordion
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const prod = useMemo(() => calcProdutividade(state.produtividade), [state.produtividade]);
   const pb = useMemo(() => calcPayback(state.payback, state.produtividade, state.resumo), [state.payback, state.produtividade, state.resumo]);
 
-  // --- PADRÃO INTEGRAL: DESCRIÇÃO DO PROCESSO ---
   const descTexto = useMemo(() => {
     const colabTxt = data.totalColaboradores === 1 ? "colaborador" : "colaboradores";
     const turnoTxt = data.turnos === 1 ? "Turno" : "Turnos";
@@ -29,7 +29,6 @@ export function ResumoModule({ data, state, onChange }: Props) {
     return `A Empresa ${data.nomeEmpresa || "—"}, da cidade de ${data.cidade || "—"} no Estado do Rio Grande do Sul, atua no ramo de ${data.ramo || "—"}, especialista em ${data.especialista || "—"}, conta com ${data.totalColaboradores || "0"} ${colabTxt} atuando em ${data.turnos} ${turnoTxt}. O produto mapeado segue o seguinte processo produtivo: ${data.processos || "—"}, com método de produção ${data.metodo || "—"}, onde a demanda é originada por ${data.origem || "—"}. Ao longo do mapeamento foi identificado oportunidades no setor de ${data.oportunidades || "—"}, por problemas de ${data.problemas || "—"}. Nesta consultoria, a área de atuação/intervenção foi ${data.atuacao || "—"}.`;
   }, [data]);
 
-  // --- PADRÃO INTEGRAL: CONCLUSÃO DO PROJETO ---
   const conclusaoTexto = useMemo(() => {
     const listaAcoes = data.acoes.length > 0 ? data.acoes.map(a => a.what).join(", ") : "—";
     const pbMesTxt = pb.paybackMeses === 1 ? "mês" : "meses";
@@ -44,7 +43,6 @@ export function ResumoModule({ data, state, onChange }: Props) {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  // Função para atualizar um campo específico de uma ação do 5W2H
   const updateAcao = (id: string, field: keyof Acao5W2H, value: string) => {
     const novasAcoes = data.acoes.map(a => a.id === id ? { ...a, [field]: value } : a);
     onChange({ acoes: novasAcoes });
@@ -53,7 +51,17 @@ export function ResumoModule({ data, state, onChange }: Props) {
   return (
     <div className="flex gap-8 h-full">
       <div className="w-[55%] flex flex-col gap-6 overflow-y-auto pr-4 pb-12">
-        <h3 className="font-bold text-slate-800 border-b pb-2 text-lg uppercase tracking-tight">Entrada de Dados</h3>
+        
+        {/* BOTÃO E TÍTULO LADO A LADO */}
+        <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+          <h3 className="font-bold text-slate-800 text-lg uppercase tracking-tight">Entrada de Dados</h3>
+          <button 
+            onClick={onClearData}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 text-rose-600 hover:bg-rose-100 hover:text-rose-700 rounded-lg font-bold text-[10px] uppercase tracking-wider transition-colors border border-rose-100 shadow-sm"
+          >
+            <Trash2 className="w-3.5 h-3.5" /> Limpar Dados Atuais
+          </button>
+        </div>
         
         <div className="grid grid-cols-2 gap-4">
           <InputField label="Empresa" value={data.nomeEmpresa} onChange={v => onChange({ nomeEmpresa: v })} />
@@ -97,12 +105,9 @@ export function ResumoModule({ data, state, onChange }: Props) {
             </button>
           </div>
 
-          {/* LISTA DE AÇÕES COM ACCORDION */}
           <div className="flex flex-col gap-3">
             {data.acoes.map(a => (
               <div key={a.id} className="border border-slate-200 rounded-xl bg-white shadow-sm overflow-hidden transition-all duration-300">
-                
-                {/* HEADER DO CARD */}
                 <div 
                   className="flex items-center justify-between p-3.5 bg-slate-50 hover:bg-slate-100 cursor-pointer select-none transition-colors"
                   onClick={() => setExpandedId(expandedId === a.id ? null : a.id)}
@@ -122,7 +127,6 @@ export function ResumoModule({ data, state, onChange }: Props) {
                   </div>
                 </div>
 
-                {/* CORPO DO CARD (EXPANDE) */}
                 {expandedId === a.id && (
                   <div className="p-4 grid grid-cols-2 gap-4 border-t border-slate-100 bg-white animate-in fade-in slide-in-from-top-2 duration-300">
                     <InputField label="Por que? (Why)" value={a.why} onChange={v => updateAcao(a.id, "why", v)} />
