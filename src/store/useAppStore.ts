@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 export type ModuleKey =
   | "resumo"
@@ -131,8 +131,22 @@ const defaultState: AppState = {
 const safeDiv = (num: number, den: number) => (den > 0 ? num / den : 0);
 
 export function useAppStore() {
-  const [state, setState] = useState<AppState>(defaultState);
+  // 1. Ao iniciar, tenta puxar do backup invisível. Se não achar, usa o padrão zerado.
+  const [state, setState] = useState<AppState>(() => {
+    try {
+      const saved = localStorage.getItem("consultoria-lean-state");
+      return saved ? { ...defaultState, ...JSON.parse(saved) } : defaultState;
+    } catch {
+      return defaultState;
+    }
+  });
+  
   const [activeModule, setActiveModule] = useState<ModuleKey>("resumo");
+
+  // 2. Sempre que houver uma alteração de dado na tela, salva no backup invisível.
+  useEffect(() => {
+    localStorage.setItem("consultoria-lean-state", JSON.stringify(state));
+  }, [state]);
 
   const updateModule = useCallback(<K extends keyof AppState>(key: K, data: Partial<AppState[K]>) => {
     setState(prev => ({ ...prev, [key]: { ...prev[key], ...data } as any }));
