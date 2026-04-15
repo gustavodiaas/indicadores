@@ -62,52 +62,30 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
             <span className="text-sm font-semibold tracking-wide">Modelo de Cálculo</span>
           </div>
           
-          <div className="flex gap-3">
-            <select 
-              className="h-10 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg px-4 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer hover:bg-slate-50 transition-colors shadow-sm" 
-              value={data.modoInsercaoSalario || "total"} 
-              onChange={e => onChange({ modoInsercaoSalario: e.target.value as any })}
-            >
-              <option value="total">Inserção: Total da Equipe</option>
-              <option value="unitario">Inserção: Por Operador</option>
-            </select>
-
-            <select 
-              className="h-10 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg px-4 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer hover:bg-slate-50 transition-colors shadow-sm" 
-              value={data.tipoSalario || "bruto"} 
-              onChange={e => onChange({ tipoSalario: e.target.value as any })}
-            >
-              <option value="bruto">Salário Bruto</option>
-              <option value="encargos">Salário + Encargos</option>
-            </select>
-          </div>
+          <select 
+            className="h-10 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg px-4 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer hover:bg-slate-50 transition-colors shadow-sm" 
+            value={data.tipoSalario || "bruto"} 
+            onChange={e => onChange({ tipoSalario: e.target.value as any })}
+          >
+            <option value="bruto">Salário Bruto</option>
+            <option value="encargos">Salário + Encargos</option>
+          </select>
         </div>
 
         <div className="space-y-4 bg-slate-100/50 p-5 rounded-xl border border-slate-200">
           <h3 className="font-bold text-slate-800 border-b border-slate-200 pb-2">Estado Inicial (T1)</h3>
           <div className="grid grid-cols-2 gap-4">
-            <div className="relative">
+            
+            {/* LINHA 1 */}
+            <div>
               <label className="block text-xs font-bold text-slate-500 mb-1">
                 {isUnitario ? "Salário Base (Por Operador R$)" : "Salário Base (Total R$)"}
               </label>
               <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
                 defaultValue={data.salarioBaseInicial ? data.salarioBaseInicial.toString().replace(".", ",") : ""} 
                 onBlur={e => onChange({ salarioBaseInicial: parseDecimal(e.target.value) })} placeholder="Ex: 2500,00" />
-              <span className="absolute -bottom-4 left-0 text-[9px] text-slate-500 italic">
-                {isUnitario 
-                  ? `*Multiplicado automaticamente por ${op1} ${colabTxt1}` 
-                  : "*Insira a soma do salário de TODOS os operadores"}
-              </span>
             </div>
-            {data.tipoSalario !== "bruto" && (
-              <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1">Encargos (Mult.)</label>
-                <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
-                  defaultValue={data.encargosInicial ? data.encargosInicial.toString().replace(".", ",") : "1"} 
-                  onBlur={e => onChange({ encargosInicial: parseDecimal(e.target.value) || 1 })} placeholder="Ex: 1,9" />
-              </div>
-            )}
-            
+
             <div>
               <label className="block text-xs font-bold text-slate-500 mb-1">Colaboradores</label>
               <input type="text" 
@@ -123,40 +101,52 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
               )}
             </div>
 
+            {/* LINHA 2 */}
+            <div>
+              <select 
+                className="w-full h-10 bg-white border border-slate-200 text-slate-700 text-xs font-bold uppercase tracking-wide rounded-lg px-3 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer hover:bg-slate-50 transition-colors shadow-sm" 
+                value={data.modoInsercaoSalario || "total"} 
+                onChange={e => onChange({ modoInsercaoSalario: e.target.value as any })}
+              >
+                <option value="total">Modo: Total da Equipe</option>
+                <option value="unitario">Modo: Por Operador (Autôm.)</option>
+              </select>
+            </div>
+
             <div>
               <label className="block text-xs font-bold text-slate-500 mb-1">Dedicação (%)</label>
               <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
                 defaultValue={data.dedicacaoInicial ? data.dedicacaoInicial.toString().replace(".", ",") : "100"} 
                 onBlur={e => onChange({ dedicacaoInicial: parseDecimal(e.target.value) || 100 })} placeholder="Ex: 100" />
             </div>
+
+            {/* LINHA 3 (Condicional) */}
+            {data.tipoSalario !== "bruto" && (
+              <div>
+                <label className="block text-xs font-bold text-slate-500 mb-1">Encargos (Mult.)</label>
+                <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
+                  defaultValue={data.encargosInicial ? data.encargosInicial.toString().replace(".", ",") : "1"} 
+                  onBlur={e => onChange({ encargosInicial: parseDecimal(e.target.value) || 1 })} placeholder="Ex: 1,9" />
+              </div>
+            )}
+            
           </div>
         </div>
 
         <div className="space-y-4 bg-indigo-50/50 p-5 rounded-xl border border-indigo-100">
           <h3 className="font-bold text-slate-800 border-b border-indigo-200 pb-2">Estado Final (T3)</h3>
           <div className="grid grid-cols-2 gap-4">
-            <div className="relative">
+            
+            {/* LINHA 1 */}
+            <div>
               <label className="block text-xs font-bold text-slate-500 mb-1">
                 {isUnitario ? "Salário Base (Por Operador R$)" : "Salário Base (Total R$)"}
               </label>
               <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
                 defaultValue={data.salarioBaseFinal ? data.salarioBaseFinal.toString().replace(".", ",") : ""} 
                 onBlur={e => onChange({ salarioBaseFinal: parseDecimal(e.target.value) })} placeholder="Ex: 2500,00" />
-              <span className="absolute -bottom-4 left-0 text-[9px] text-slate-500 italic">
-                {isUnitario 
-                  ? `*Multiplicado automaticamente por ${op3} ${colabTxt3}` 
-                  : "*Insira a soma do salário de TODOS os operadores"}
-              </span>
             </div>
-            {data.tipoSalario !== "bruto" && (
-              <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1">Encargos (Mult.)</label>
-                <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
-                  defaultValue={data.encargosFinal ? data.encargosFinal.toString().replace(".", ",") : "1"} 
-                  onBlur={e => onChange({ encargosFinal: parseDecimal(e.target.value) || 1 })} placeholder="Ex: 1,9" />
-              </div>
-            )}
-            
+
             <div>
               <label className="block text-xs font-bold text-slate-500 mb-1">Colaboradores</label>
               <input type="text" 
@@ -172,12 +162,35 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
               )}
             </div>
 
+            {/* LINHA 2 */}
+            <div>
+              <select 
+                className="w-full h-10 bg-white border border-slate-200 text-slate-700 text-xs font-bold uppercase tracking-wide rounded-lg px-3 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer hover:bg-slate-50 transition-colors shadow-sm" 
+                value={data.modoInsercaoSalario || "total"} 
+                onChange={e => onChange({ modoInsercaoSalario: e.target.value as any })}
+              >
+                <option value="total">Modo: Total da Equipe</option>
+                <option value="unitario">Modo: Por Operador (Autôm.)</option>
+              </select>
+            </div>
+
             <div>
               <label className="block text-xs font-bold text-slate-500 mb-1">Dedicação (%)</label>
               <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
                 defaultValue={data.dedicacaoFinal ? data.dedicacaoFinal.toString().replace(".", ",") : "100"} 
                 onBlur={e => onChange({ dedicacaoFinal: parseDecimal(e.target.value) || 100 })} placeholder="Ex: 100" />
             </div>
+
+            {/* LINHA 3 (Condicional) */}
+            {data.tipoSalario !== "bruto" && (
+              <div>
+                <label className="block text-xs font-bold text-slate-500 mb-1">Encargos (Mult.)</label>
+                <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
+                  defaultValue={data.encargosFinal ? data.encargosFinal.toString().replace(".", ",") : "1"} 
+                  onBlur={e => onChange({ encargosFinal: parseDecimal(e.target.value) || 1 })} placeholder="Ex: 1,9" />
+              </div>
+            )}
+            
           </div>
         </div>
 
