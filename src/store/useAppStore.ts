@@ -8,7 +8,18 @@ export interface ProdutividadeData {
   operadoresT1: number; operadoresT3: number; 
   unidade: string; 
 }
-export interface PaybackData { tipoSalario: "bruto" | "encargos"; salarioBaseInicial: number; encargosInicial: number; dedicacaoInicial: number; salarioBaseFinal: number; encargosFinal: number; dedicacaoFinal: number; valorConsultoria: number; investimentoExtra: number; }
+export interface PaybackData { 
+  tipoSalario: "bruto" | "encargos"; 
+  modoInsercaoSalario?: "total" | "unitario";
+  salarioBaseInicial: number; 
+  encargosInicial: number; 
+  dedicacaoInicial: number; 
+  salarioBaseFinal: number; 
+  encargosFinal: number; 
+  dedicacaoFinal: number; 
+  valorConsultoria: number; 
+  investimentoExtra: number; 
+}
 
 export interface MovimentacaoData { 
   distanciaT1: number; distanciaT3: number; 
@@ -38,7 +49,7 @@ export interface AppState { produtividade: ProdutividadeData; payback: PaybackDa
 
 const defaultState: AppState = {
   produtividade: { volumeT1: 0, volumeT3: 0, horasT1: 8, horasT3: 8, operadoresT1: 1, operadoresT3: 1, unidade: "peças" },
-  payback: { tipoSalario: "bruto", salarioBaseInicial: 0, encargosInicial: 1.9, dedicacaoInicial: 100, salarioBaseFinal: 0, encargosFinal: 1.9, dedicacaoFinal: 100, valorConsultoria: 0, investimentoExtra: 0 },
+  payback: { tipoSalario: "bruto", modoInsercaoSalario: "total", salarioBaseInicial: 0, encargosInicial: 1.9, dedicacaoInicial: 100, salarioBaseFinal: 0, encargosFinal: 1.9, dedicacaoFinal: 100, valorConsultoria: 0, investimentoExtra: 0 },
   movimentacao: { distanciaT1: 0, distanciaT3: 0, tempoT1: 0, tempoT3: 0, unidadeTempo: "minutos", ferramentaUtilizada: "", acaoMelhoria: "" },
   qualidade: { quantidadeT1: 0, quantidadeT3: 0, perdasT1: 0, perdasT3: 0 },
   disponibilidade: { tempoTotalT1: 480, tempoTotalT3: 480, paradasPlanT1: 0, paradasPlanT3: 0, paradasNaoPlanT1: 0, paradasNaoPlanT3: 0, unidadeTempo: "minutos" },
@@ -70,7 +81,33 @@ export function useAppStore() {
 }
 
 export function calcProdutividade(d: ProdutividadeData) { const pphT1 = safeDiv(d.volumeT1, (d.horasT1 * d.operadoresT1)); const pphT3 = safeDiv(d.volumeT3, (d.horasT3 * d.operadoresT3)); const ganho = pphT1 > 0 ? ((pphT3 - pphT1) / pphT1) * 100 : 0; return { pphT1, pphT3, ganho }; }
-export function calcPayback(d: PaybackData, prod: ProdutividadeData, res?: ResumoData) { const prodMensalI = prod.volumeT1 * 21; const prodMensalF = prod.volumeT3 * 21; const encI = d.tipoSalario === "bruto" ? 1 : (d.encargosInicial || 1); const encF = d.tipoSalario === "bruto" ? 1 : (d.encargosFinal || 1); const dedI = (d.dedicacaoInicial || 100) / 100; const dedF = (d.dedicacaoFinal || 100) / 100; const salI = d.salarioBaseInicial * encI * dedI; const salF = d.salarioBaseFinal * encF * dedF; const rawCustoI = safeDiv(salI, prodMensalI); const rawCustoF = safeDiv(salF, prodMensalF); const custoI = Math.round(rawCustoI * 100) / 100; const custoF = Math.round(rawCustoF * 100) / 100; const reducaoMOD = Math.round((custoI - custoF) * 100) / 100; const reducaoMensal = Math.max(0, reducaoMOD * prodMensalF); const investTotal = d.valorConsultoria + d.investimentoExtra; const paybackMeses = safeDiv(investTotal, reducaoMensal); return { prodMensalI, prodMensalF, salI, salF, custoI, custoF, reducaoMensal, investTotal, paybackMeses }; }
+
+export function calcPayback(d: PaybackData, prod: ProdutividadeData, res?: ResumoData) { 
+  const prodMensalI = prod.volumeT1 * 21; 
+  const prodMensalF = prod.volumeT3 * 21; 
+  const encI = d.tipoSalario === "bruto" ? 1 : (d.encargosInicial || 1); 
+  const encF = d.tipoSalario === "bruto" ? 1 : (d.encargosFinal || 1); 
+  const dedI = (d.dedicacaoInicial || 100) / 100; 
+  const dedF = (d.dedicacaoFinal || 100) / 100; 
+
+  const baseI = d.modoInsercaoSalario === "unitario" ? d.salarioBaseInicial * (prod.operadoresT1 || 1) : d.salarioBaseInicial;
+  const baseF = d.modoInsercaoSalario === "unitario" ? d.salarioBaseFinal * (prod.operadoresT3 || 1) : d.salarioBaseFinal;
+
+  const salI = baseI * encI * dedI; 
+  const salF = baseF * encF * dedF; 
+  
+  const rawCustoI = safeDiv(salI, prodMensalI); 
+  const rawCustoF = safeDiv(salF, prodMensalF); 
+  const custoI = Math.round(rawCustoI * 100) / 100; 
+  const custoF = Math.round(rawCustoF * 100) / 100; 
+  const reducaoMOD = Math.round((custoI - custoF) * 100) / 100; 
+  const reducaoMensal = Math.max(0, reducaoMOD * prodMensalF); 
+  const investTotal = d.valorConsultoria + d.investimentoExtra; 
+  const paybackMeses = safeDiv(investTotal, reducaoMensal); 
+  
+  return { prodMensalI, prodMensalF, salI, salF, custoI, custoF, reducaoMensal, investTotal, paybackMeses }; 
+}
+
 export function calcMovimentacao(d: MovimentacaoData) { const reducaoDist = d.distanciaT1 > 0 ? ((d.distanciaT1 - d.distanciaT3) / d.distanciaT1) * 100 : 0; const reducaoTempo = d.tempoT1 > 0 ? ((d.tempoT1 - d.tempoT3) / d.tempoT1) * 100 : 0; return { reducaoDist, reducaoTempo }; }
 export function calcQualidade(d: QualidadeData) { const boasT1 = Math.max(0, d.quantidadeT1 - d.perdasT1); const boasT3 = Math.max(0, d.quantidadeT3 - d.perdasT3); const indiceT1 = safeDiv(boasT1, d.quantidadeT1) * 100; const indiceT3 = safeDiv(boasT3, d.quantidadeT3) * 100; const aumento = indiceT1 > 0 ? ((indiceT3 - indiceT1) / indiceT1) * 100 : 0; return { boasT1, boasT3, indiceT1, indiceT3, aumento }; }
 export function calcDisponibilidade(d: DisponibilidadeData) { const dispT1 = d.tempoTotalT1 - d.paradasPlanT1; const realT1 = dispT1 - d.paradasNaoPlanT1; const indT1 = safeDiv(realT1, dispT1) * 100; const dispT3 = d.tempoTotalT3 - d.paradasPlanT3; const realT3 = dispT3 - d.paradasNaoPlanT3; const indT3 = safeDiv(realT3, dispT3) * 100; const aumento = indT1 > 0 ? ((indT3 - indT1) / indT1) * 100 : 0; return { dispT1, realT1, indT1, dispT3, realT3, indT3, aumento }; }
