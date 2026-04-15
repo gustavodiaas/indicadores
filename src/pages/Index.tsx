@@ -1,7 +1,6 @@
 import { useAppStore, calcProdutividade, calcPayback, calcMovimentacao, calcQualidade, calcDisponibilidade, calcLeadTime, calcArea } from "@/store/useAppStore";
 import { FloatingNav } from "@/components/FloatingNav";
 import { Topbar } from "@/components/Topbar";
-// AppSidebar removida — componente não utilizado (navegação real é FloatingNav)
 import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } from "docx";
 
 // Seus módulos do painel
@@ -41,7 +40,7 @@ const Index = () => {
     const acoesStr = resumo.acoes.length > 0 ? resumo.acoes.map(a => a.what).join(", ") : "—";
 
     // --- FUNÇÕES AUXILIARES PARA O WORD ---
-    const tr = (text: string, bold = false) => new TextRun({ text, bold, font: "Arial", size: 22 }); // size 22 = 11pt
+    const tr = (text: string, bold = false) => new TextRun({ text, bold, font: "Arial", size: 22 }); 
     
     const createHeading = (text: string) => new Paragraph({
       text: text.toUpperCase(),
@@ -52,7 +51,7 @@ const Index = () => {
     const createJustified = (runs: TextRun[]) => new Paragraph({
       alignment: AlignmentType.JUSTIFIED,
       children: runs,
-      spacing: { line: 360 }, // Espaçamento 1.5
+      spacing: { line: 360 }, 
     });
 
     // --- CONSTRUÇÃO DO DOCUMENTO OFICIAL ---
@@ -238,13 +237,13 @@ const Index = () => {
       
       <style dangerouslySetInnerHTML={{ __html: `@media print { @page { size: landscape; margin: 10mm; } }` }} />
 
-      <main className="flex-1 overflow-y-auto p-4 md:p-8 pb-36 print:p-0 print:overflow-visible">
+      <main className="flex-1 overflow-y-auto p-2 md:p-4 pb-32 print:p-0 print:overflow-visible">
         
         <div className="print:hidden relative z-[100] mb-2">
           <Topbar onExportWord={handleExportWord} />
         </div>
 
-        <div className="mx-auto max-w-[1600px] bg-white rounded-[2rem] shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-200/50 p-10 transition-all min-h-full relative print:shadow-none print:border-none print:rounded-none print:p-0">
+        <div className="w-full bg-white rounded-2xl shadow-sm border border-slate-200/50 p-4 md:p-6 transition-all min-h-full relative print:shadow-none print:border-none print:rounded-none print:p-0">
           
           {activeModule !== "gbo" && (
             <div key={activeModule} className="animate-in fade-in slide-in-from-bottom-2 duration-500 w-full h-full">
