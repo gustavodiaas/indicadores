@@ -379,28 +379,30 @@ export default function GBOAnalysis() {
               </div>
             </div>
 
-            <div className="flex gap-3">
-              <button onClick={handleImportExcel} disabled={isLoading} className="flex-1 h-10 flex items-center justify-center bg-white border border-slate-200 text-slate-600 font-bold text-xs rounded-lg hover:bg-slate-50 transition-colors shadow-sm">
-                <Upload className="h-4 w-4 mr-2" /> Importar
+            <div className="flex flex-col gap-3">
+              <div className="flex gap-3">
+                <button onClick={handleImportExcel} disabled={isLoading} className="flex-1 h-10 flex items-center justify-center bg-white border border-slate-200 text-slate-600 font-bold text-xs rounded-lg hover:bg-slate-50 transition-colors shadow-sm">
+                  <Upload className="h-4 w-4 mr-2" /> Importar
+                </button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button disabled={isLoading} className="flex-1 h-10 flex items-center justify-center bg-white border border-slate-200 text-slate-600 font-bold text-xs rounded-lg hover:bg-slate-50 transition-colors shadow-sm">
+                      <Download className="h-4 w-4 mr-2" /> Exportar
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56 bg-white rounded-xl shadow-xl border border-slate-200 p-2">
+                    <DropdownMenuItem onClick={handleExportChartPDF} disabled={operations.length === 0} className="cursor-pointer text-sm font-medium py-2 rounded-md hover:bg-slate-50 text-slate-700">
+                      <FileImage className="h-4 w-4 mr-2 text-rose-500" /> Exportar Gráfico (PDF)
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleExportExcel} disabled={operations.length === 0} className="cursor-pointer text-sm font-medium py-2 rounded-md hover:bg-slate-50 text-slate-700">
+                      <FileSpreadsheet className="h-4 w-4 mr-2 text-emerald-600" /> Exportar Dados (Excel)
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              <button onClick={downloadTemplate} disabled={isLoading} className="w-full h-10 flex items-center justify-center bg-white border border-slate-200 text-slate-600 font-bold text-xs rounded-lg hover:bg-slate-50 transition-colors shadow-sm">
+                <FileSpreadsheet className="h-4 w-4 mr-2 text-emerald-600" /> Baixar Modelo Padrão (Excel)
               </button>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button disabled={isLoading} className="flex-1 h-10 flex items-center justify-center bg-white border border-slate-200 text-slate-600 font-bold text-xs rounded-lg hover:bg-slate-50 transition-colors shadow-sm">
-                    <Download className="h-4 w-4 mr-2" /> Exportar
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56 bg-white rounded-xl shadow-xl border border-slate-200 p-2">
-                  <DropdownMenuItem onClick={downloadTemplate} className="cursor-pointer text-sm font-medium py-2 rounded-md hover:bg-slate-50 text-slate-700">
-                    <FileSpreadsheet className="h-4 w-4 mr-2 text-emerald-600" /> Baixar Modelo (Excel)
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleExportChartPDF} disabled={operations.length === 0} className="cursor-pointer text-sm font-medium py-2 rounded-md hover:bg-slate-50 text-slate-700">
-                    <FileImage className="h-4 w-4 mr-2 text-rose-500" /> Exportar Gráfico (PDF)
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleExportExcel} disabled={operations.length === 0} className="cursor-pointer text-sm font-medium py-2 rounded-md hover:bg-slate-50 text-slate-700">
-                    <FileSpreadsheet className="h-4 w-4 mr-2 text-emerald-600" /> Exportar Dados (Excel)
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
             </div>
 
             <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-4">
