@@ -17,77 +17,86 @@ export function A3Module({ data, onChange }: Props) {
 
   const handleExportExcel = async () => {
     try {
-      const response = await fetch('/template_a3.xlsx');
-      
-      if (!response.ok) {
-        const workbook = new ExcelJS.Workbook();
-        const ws = workbook.addWorksheet("Relatório A3");
-        ws.getColumn(1).width = 40; ws.getColumn(2).width = 40;
-
-        ws.addRow(["TÍTULO / TEMA:", data.titulo]);
-        ws.addRow(["Responsável:", data.responsavel, "Data:", data.data]);
-        ws.addRow(["Início:", data.inicio, "Fim:", data.fim]);
-        ws.addRow(["Aprovações:", data.aprovacoes]);
-        ws.addRow([]);
-        ws.addRow(["1. CONSIDERAÇÕES INICIAIS (BACKGROUND)", "5. ESTADO FUTURO / RECOMENDAÇÕES"]);
-        ws.addRow([data.background, data.estadoFuturo]);
-        ws.addRow([]);
-        ws.addRow(["2. METAS, OBJETIVOS, BENEFÍCIOS", "6. PLANO DE AÇÃO (O QUÊ? QUEM? QUANDO?)"]);
-        ws.addRow([data.objetivos, data.planoAcao]);
-        ws.addRow([]);
-        ws.addRow(["3. ESTADO ATUAL", "7. ACOMPANHAMENTO / INDICADORES"]);
-        ws.addRow([data.estadoAtual, data.indicadores]);
-        ws.addRow([]);
-        ws.addRow(["4. ANÁLISE", ""]);
-        ws.addRow([data.analise, ""]);
-
-        const buffer = await workbook.xlsx.writeBuffer();
-        const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `Relatorio_A3_Lean.xlsx`;
-        link.click();
-        window.URL.revokeObjectURL(url);
-        toast.success("Excel gerado com sucesso!");
-        return;
-      }
-
-      // Se existir o template_a3.xlsx na pasta public, ele preenche
-      const arrayBuffer = await response.arrayBuffer();
       const workbook = new ExcelJS.Workbook();
-      await workbook.xlsx.load(arrayBuffer);
-      const ws = workbook.worksheets[0];
+      const ws = workbook.addWorksheet("Relatório A3");
 
-      ws.getCell('B2').value = data.titulo;
-      ws.getCell('B3').value = data.responsavel;
-      ws.getCell('D3').value = data.data;
-      ws.getCell('F3').value = data.inicio;
-      ws.getCell('H3').value = data.fim;
-      ws.getCell('B4').value = data.aprovacoes;
+      // 1. Configuração de Colunas (8 colunas para dar flexibilidade de layout)
+      ws.columns = [
+        { width: 20 }, { width: 20 }, { width: 20 }, { width: 20 },
+        { width: 5 },  // Espaçador central
+        { width: 20 }, { width: 20 }, { width: 20 }, { width: 20 }
+      ];
 
-      ws.getCell('A6').value = data.background;
-      ws.getCell('A12').value = data.objetivos;
-      ws.getCell('A18').value = data.estadoAtual;
-      ws.getCell('A24').value = data.analise;
+      // Estilos de formatação
+      const headerStyle: Partial<ExcelJS.Style> = {
+        font: { bold: true, color: { argb: 'FFFFFF' }, size: 10 },
+        fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: '333333' } },
+        alignment: { vertical: 'middle', horizontal: 'left' },
+        border: { bottom: { style: 'thin' }, top: { style: 'thin' }, left: { style: 'thin' }, right: { style: 'thin' } }
+      };
 
-      ws.getCell('G6').value = data.estadoFuturo;
-      ws.getCell('G12').value = data.planoAcao;
-      ws.getCell('G18').value = data.indicadores;
+      const contentStyle: Partial<ExcelJS.Style> = {
+        alignment: { vertical: 'top', horizontal: 'left', wrapText: true },
+        border: { bottom: { style: 'thin' }, top: { style: 'thin' }, left: { style: 'thin' }, right: { style: 'thin' } }
+      };
 
+      // 2. Título do Relatório
+      ws.mergeCells('A1:I1');
+      const titleCell = ws.getCell('A1');
+      titleCell.value = `TÍTULO / TEMA: ${data.titulo || 'Sem Título'}`;
+      titleCell.font = { bold: true, size: 14 };
+      titleCell.alignment = { horizontal: 'center' };
+
+      // 3. Cabeçalho de Informações
+      ws.getCell('A2').value = "Responsável:"; ws.getCell('B2').value = data.responsavel;
+      ws.getCell('D2').value = "Data:"; ws.getCell('E2').value = data.data;
+      ws.getCell('G2').value = "Início:"; ws.getCell('H2').value = data.inicio;
+      ws.getCell('I2').value = "Fim:"; ws.getCell('I2').value = data.fim;
+      
+      ws.mergeCells('A3:I3');
+      ws.getCell('A3').value = `Aprovações: ${data.aprovacoes || ''}`;
+
+      // 4. LADO ESQUERDO (Blocos 1 a 4)
+      const renderBlock = (rowStart: number, rowEnd: number, colStart: string, colEnd: string, title: string, value: string) => {
+        const range = `${colStart}${rowStart}:${colEnd}${rowStart}`;
+        ws.mergeCells(range);
+        const hCell = ws.getCell(`${colStart}${rowStart}`);
+        hCell.value = title;
+        hCell.style = headerStyle;
+
+        const contentRange = `${colStart}${rowStart + 1}:${colEnd}${rowEnd}`;
+        ws.mergeCells(contentRange);
+        const cCell = ws.getCell(`${colStart}${rowStart + 1}`);
+        cCell.value = value;
+        cCell.style = contentStyle;
+      };
+
+      // Esquerda
+      renderBlock(5, 9, 'A', 'D', "1. CONSIDERAÇÕES INICIAIS (BACKGROUND)", data.background);
+      renderBlock(11, 15, 'A', 'D', "2. METAS, OBJETIVOS E BENEFÍCIOS", data.objetivos);
+      renderBlock(17, 21, 'A', 'D', "3. ESTADO ATUAL", data.estadoAtual);
+      renderBlock(23, 27, 'A', 'D', "4. ANÁLISE", data.analise);
+
+      // Direita (Coluna F em diante)
+      renderBlock(5, 9, 'F', 'I', "5. ESTADO FUTURO / RECOMENDAÇÕES", data.estadoFuturo);
+      renderBlock(11, 19, 'F', 'I', "6. PLANO DE AÇÃO (O QUÊ? QUEM? QUANDO?)", data.planoAcao);
+      renderBlock(21, 27, 'F', 'I', "7. ACOMPANHAMENTO / INDICADORES", data.indicadores);
+
+      // 5. Finalização e Download
       const buffer = await workbook.xlsx.writeBuffer();
       const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `A3_${data.titulo || 'Lean'}.xlsx`;
+      link.download = `A3_${data.titulo || 'Relatorio'}.xlsx`;
       link.click();
       window.URL.revokeObjectURL(url);
-      toast.success("Excel exportado usando seu template!");
+      
+      toast.success("Excel gerado com sucesso!");
 
     } catch (error) {
       console.error(error);
-      toast.error("Erro ao gerar a planilha.");
+      toast.error("Erro ao gerar o Excel.");
     }
   };
 
@@ -146,7 +155,6 @@ export function A3Module({ data, onChange }: Props) {
 
         <div className="print-panel flex flex-col gap-4 bg-slate-50 p-6 rounded-2xl border border-slate-200 shadow-inner">
           
-          {/* Cabeçalho do A3 */}
           <div className="grid grid-cols-1 md:grid-cols-6 gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
             <div className="md:col-span-2">
               <InputField label="Título / Tema" value={data.titulo} onChange={v => onChange({ titulo: v })} />
@@ -160,10 +168,7 @@ export function A3Module({ data, onChange }: Props) {
             </div>
           </div>
 
-          {/* Corpo do A3 - Divisão Lean */}
           <div className="print-grid grid grid-cols-1 md:grid-cols-2 gap-6">
-            
-            {/* Lado Esquerdo: Identificação e Análise */}
             <div className="flex flex-col gap-4">
               <TextAreaBlock title="1. Considerações Iniciais (Background)" value={data.background} onChangeField={v => onChange({ background: v })} />
               <TextAreaBlock title="2. Metas, Objetivos e Benefícios" value={data.objetivos} onChangeField={v => onChange({ objetivos: v })} />
@@ -171,18 +176,15 @@ export function A3Module({ data, onChange }: Props) {
               <TextAreaBlock title="4. Análise de Causa Raiz" value={data.analise} onChangeField={v => onChange({ analise: v })} />
             </div>
 
-            {/* Lado Direito: Ação e Evolução */}
             <div className="flex flex-col gap-4">
               <TextAreaBlock title="5. Estado Futuro / Recomendações" value={data.estadoFuturo} onChangeField={v => onChange({ estadoFuturo: v })} />
               <TextAreaBlock title="6. Plano de Ação (O quê? Quem? Quando?)" value={data.planoAcao} onChangeField={v => onChange({ planoAcao: v })} />
               <TextAreaBlock title="7. Acompanhamento / Indicadores" value={data.indicadores} onChangeField={v => onChange({ indicadores: v })} />
               
-              {/* Espaço extra para manter simetria visual */}
               <div className="hidden md:flex flex-1 items-center justify-center p-8 opacity-10 grayscale pointer-events-none select-none">
                  <LayoutTemplate className="w-32 h-32 text-slate-400" />
               </div>
             </div>
-
           </div>
         </div>
 
