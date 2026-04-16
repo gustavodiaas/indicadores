@@ -1,10 +1,21 @@
+"use client"
+
 import { type A3Data, type A3PlanoAcao, type A3Indicador } from "@/store/useAppStore";
 import { InputField } from "@/components/InputField";
-import { Download, LayoutTemplate, Plus, Trash2, AlertTriangle } from "lucide-react";
+import { Download, LayoutTemplate, Plus, Trash2, AlertTriangle, Pencil } from "lucide-react";
 import { toast } from "sonner";
 import ExcelJS from "exceljs";
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
-// O bloco de texto agora recebe o limite exato de caracteres como parâmetro
 const TextAreaBlock = ({ title, value, maxChars, onChangeField }: { title: string, value: string, maxChars: number, onChangeField: (v: string) => void }) => {
   const currentChars = (value || "").length;
   const isOverLimit = currentChars > maxChars;
@@ -40,6 +51,11 @@ interface Props {
 }
 
 export function A3Module({ data, onChange }: Props) {
+  const [deleteConfirm, setDeleteConfirm] = useState<{ open: boolean; type: 'acao' | 'indicador'; id: string | null }>({
+    open: false,
+    type: 'acao',
+    id: null
+  });
 
   const listaPlanoAcao = Array.isArray(data.planoAcao) ? data.planoAcao : [];
   const listaIndicadores = Array.isArray(data.indicadores) ? data.indicadores : [];
@@ -48,12 +64,10 @@ export function A3Module({ data, onChange }: Props) {
     try {
       const response = await fetch('/template_a3.xlsx');
       const contentType = response.headers.get("content-type");
-      
       if (!response.ok || (contentType && contentType.includes("text/html"))) {
-        toast.error("O molde não foi encontrado! Verifique se o nome está exatamente como 'template_a3.xlsx' na pasta public.");
+        toast.error("O molde não foi encontrado!");
         return;
       }
-
       const arrayBuffer = await response.arrayBuffer();
       const workbook = new ExcelJS.Workbook();
       await workbook.xlsx.load(arrayBuffer);
@@ -62,12 +76,10 @@ export function A3Module({ data, onChange }: Props) {
       if (data.titulo) ws.getCell('I2').value = data.titulo;       
       if (data.data) ws.getCell('BD2').value = formatBRDate(data.data);          
       if (data.aprovacoes) ws.getCell('CB2').value = data.aprovacoes; 
-
       if (data.background) ws.getCell('A5').value = data.background;
       if (data.objetivos) ws.getCell('A16').value = data.objetivos;
       if (data.estadoAtual) ws.getCell('A24').value = data.estadoAtual;
       if (data.analise) ws.getCell('A37').value = data.analise;
-
       if (data.estadoFuturo) ws.getCell('AO5').value = data.estadoFuturo;
       
       let rowAcao = 18; 
@@ -96,73 +108,75 @@ export function A3Module({ data, onChange }: Props) {
       link.download = `A3_${data.titulo || 'Toyota'}.xlsx`;
       link.click();
       window.URL.revokeObjectURL(url);
-      toast.success("Excel gerado a partir do seu template original!");
-
+      toast.success("Excel gerado!");
     } catch (error) {
-      console.error(error);
-      toast.error("Falha técnica ao tentar montar o Excel.");
+      toast.error("Falha ao montar o Excel.");
     }
   };
 
   const generateId = () => Date.now().toString() + Math.random().toString(36).substring(2, 9);
 
-  const addPlanoAcao = () => {
-    if (listaPlanoAcao.length >= 13) {
-      toast.warning("Limite de 13 ações atingido para encaixar perfeitamente na sua planilha.");
-      return;
+  const confirmDelete = () => {
+    if (!deleteConfirm.id) return;
+    if (deleteConfirm.type === 'acao') {
+      onChange({ planoAcao: listaPlanoAcao.filter(a => a.id !== deleteConfirm.id) });
+    } else {
+      onChange({ indicadores: listaIndicadores.filter(i => i.id !== deleteConfirm.id) });
     }
-    onChange({ planoAcao: [...listaPlanoAcao, { id: generateId(), oque: "", quem: "", prazo: "" }] });
+    setDeleteConfirm({ open: false, type: 'acao', id: null });
+    toast.success("Item removido com sucesso.");
   };
-  const removePlanoAcao = (id: string) => {
-    onChange({ planoAcao: listaPlanoAcao.filter(a => a.id !== id) });
-  };
+
   const updatePlanoAcao = (id: string, field: keyof A3PlanoAcao, value: string) => {
     onChange({ planoAcao: listaPlanoAcao.map(a => a.id === id ? { ...a, [field]: value } : a) });
   };
 
-  const addIndicador = () => {
-    if (listaIndicadores.length >= 13) {
-      toast.warning("Limite de 13 indicadores atingido para não desconfigurar a folha de impressão.");
-      return;
-    }
-    onChange({ indicadores: [...listaIndicadores, { id: generateId(), indicador: "", meta: "", status: "" }] });
-  };
-  const removeIndicador = (id: string) => {
-    onChange({ indicadores: listaIndicadores.filter(i => i.id !== id) });
-  };
   const updateIndicador = (id: string, field: keyof A3Indicador, value: string) => {
     onChange({ indicadores: listaIndicadores.map(i => i.id === id ? { ...i, [field]: value } : i) });
   };
 
   return (
     <div className="flex flex-col gap-4 h-full pb-36 animate-in fade-in duration-500 overflow-y-auto pr-2">
-      
+      {/* MODAL DE CONFIRMAÇÃO (ESTILO RESUMO) */}
+      <Dialog open={deleteConfirm.open} onOpenChange={(o) => setDeleteConfirm(prev => ({ ...prev, open: o }))}>
+        <DialogContent className="bg-white rounded-2xl border-none shadow-2xl p-8 max-w-sm mx-auto">
+          <div className="flex flex-col items-center text-center">
+            <div className="w-16 h-16 bg-rose-50 rounded-full flex items-center justify-center mb-4">
+              <Trash2 className="h-8 w-8 text-rose-500" />
+            </div>
+            <DialogHeader>
+              <DialogTitle className="text-xl font-bold text-slate-800">Confirmar Exclusão</DialogTitle>
+              <DialogDescription className="text-slate-500 mt-2">
+                Esta ação não pode ser desfeita. Deseja realmente remover este item da tabela?
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="flex gap-3 w-full mt-8">
+              <Button variant="outline" className="flex-1 rounded-xl h-12 font-bold text-slate-500" onClick={() => setDeleteConfirm({ open: false, type: 'acao', id: null })}>
+                Cancelar
+              </Button>
+              <Button className="flex-1 bg-rose-500 hover:bg-rose-600 text-white rounded-xl h-12 font-bold shadow-lg shadow-rose-100" onClick={confirmDelete}>
+                Excluir
+              </Button>
+            </DialogFooter>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <div className="flex items-center justify-between border-b border-slate-200 pb-4">
-        <div>
-          <h2 className="text-xl font-black text-slate-800 tracking-tight flex items-center gap-2">
-            <LayoutTemplate className="h-6 w-6 text-blue-600" /> RELATÓRIO A3 (TOYOTA)
-          </h2>
-          <p className="text-sm text-slate-500 mt-1">Preencha o formulário espelhado para exportação 100% exata.</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <button 
-            onClick={handleExportExcel}
-            className="flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white rounded-lg font-bold text-xs uppercase tracking-widest shadow-md hover:bg-emerald-700 transition-all"
-          >
-            <Download className="h-4 w-4" /> Baixar Excel
-          </button>
-        </div>
+        <h2 className="text-xl font-black text-slate-800 tracking-tight flex items-center gap-2">
+          <LayoutTemplate className="h-6 w-6 text-blue-600" /> RELATÓRIO A3 (TOYOTA)
+        </h2>
+        <button onClick={handleExportExcel} className="flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white rounded-lg font-bold text-xs uppercase shadow-md hover:bg-emerald-700 transition-all">
+          <Download className="h-4 w-4" /> Baixar Excel
+        </button>
       </div>
 
-      <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-center gap-3 shadow-sm shrink-0">
+      <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-center gap-3 shrink-0">
         <AlertTriangle className="h-5 w-5 text-amber-500" />
-        <p className="text-xs text-amber-800 font-medium">
-          <strong>Poder de Síntese:</strong> O layout do Excel possui áreas cravadas. Respeite os limites de caracteres e o máximo de 13 linhas nas tabelas para evitar que o texto seja cortado na impressão.
-        </p>
+        <p className="text-xs text-amber-800 font-medium"><strong>Poder de Síntese:</strong> O layout do Excel possui áreas cravadas (máximo 13 linhas).</p>
       </div>
 
       <div className="flex flex-col gap-4 bg-slate-50 p-6 rounded-2xl border border-slate-200 shadow-inner">
-        
         <div className="grid grid-cols-1 md:grid-cols-6 gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm shrink-0">
           <div className="md:col-span-3"><InputField label="Título / Tema" value={data.titulo || ""} onChange={v => onChange({ titulo: v })} /></div>
           <InputField label="Data" value={data.data || ""} onChange={v => onChange({ data: v })} type="date" />
@@ -170,9 +184,7 @@ export function A3Module({ data, onChange }: Props) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-          
           <div className="flex flex-col gap-4">
-            {/* Limites calibrados com o espaço físico do Excel */}
             <TextAreaBlock title="1. Considerações Iniciais (Background)" maxChars={550} value={data.background} onChangeField={v => onChange({ background: v })} />
             <TextAreaBlock title="2. Metas, Objetivos, Benefícios" maxChars={350} value={data.objetivos} onChangeField={v => onChange({ objetivos: v })} />
             <TextAreaBlock title="3. Estado Atual" maxChars={650} value={data.estadoAtual} onChangeField={v => onChange({ estadoAtual: v })} />
@@ -183,60 +195,49 @@ export function A3Module({ data, onChange }: Props) {
             <TextAreaBlock title="5. Estado Futuro / Recomendações" maxChars={600} value={data.estadoFuturo} onChangeField={v => onChange({ estadoFuturo: v })} />
             
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col shrink-0">
-              <div className="bg-blue-600 border-b border-blue-700 px-3 py-1.5 flex justify-between items-center">
-                <h4 className="text-[10px] font-bold text-white uppercase tracking-widest flex items-center gap-2">
-                  6. Plano de Ação <span className="bg-white/20 px-1.5 py-0.5 rounded text-[9px]">{listaPlanoAcao.length}/13</span>
-                </h4>
-                <button onClick={addPlanoAcao} className="text-white bg-white/20 hover:bg-white/30 rounded p-1 transition-colors"><Plus className="w-3 h-3" /></button>
+              <div className="bg-blue-600 border-b border-blue-700 px-3 py-1.5 flex justify-between items-center text-white font-bold text-[10px] uppercase">
+                <div className="flex items-center gap-2">6. Plano de Ação <span>{listaPlanoAcao.length}/13</span></div>
+                <button onClick={() => onChange({ planoAcao: [...listaPlanoAcao, { id: generateId(), oque: "", quem: "", prazo: "" }] })} className="bg-white/20 hover:bg-white/30 rounded p-1"><Plus className="w-3 h-3" /></button>
               </div>
               <div className="p-3 flex flex-col gap-2 bg-slate-50/50">
-                <div className="grid grid-cols-12 gap-2 text-[10px] font-bold text-slate-500 uppercase px-1">
-                  <div className="col-span-6">Ação / O quê?</div><div className="col-span-3">Responsável</div><div className="col-span-2">Prazo</div>
-                </div>
-                {listaPlanoAcao.map((a, index) => (
-                  <div key={a.id || index} className="grid grid-cols-12 gap-2 items-center shrink-0">
-                    <div className="col-span-6"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 outline-none focus:border-blue-400 transition-colors" value={a.oque || ""} onChange={e => updatePlanoAcao(a.id, "oque", e.target.value)} /></div>
-                    <div className="col-span-3"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 outline-none focus:border-blue-400 transition-colors" value={a.quem || ""} onChange={e => updatePlanoAcao(a.id, "quem", e.target.value)} /></div>
-                    <div className="col-span-2"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 outline-none focus:border-blue-400 transition-colors" value={a.prazo || ""} onChange={e => updatePlanoAcao(a.id, "prazo", e.target.value)} /></div>
-                    <div className="col-span-1 text-center"><button onClick={() => removePlanoAcao(a.id)} className="text-rose-500 hover:bg-rose-100 p-1.5 rounded transition-colors"><Trash2 className="w-3.5 h-3.5" /></button></div>
+                {listaPlanoAcao.map((a) => (
+                  <div key={a.id} className="grid grid-cols-12 gap-2 items-center">
+                    <div className="col-span-1 flex justify-center"><Pencil className="w-3 h-3 text-slate-300" /></div>
+                    <div className="col-span-5"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 outline-none focus:border-blue-400" value={a.oque} onChange={e => updatePlanoAcao(a.id, "oque", e.target.value)} /></div>
+                    <div className="col-span-3"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 outline-none focus:border-blue-400" value={a.quem} onChange={e => updatePlanoAcao(a.id, "quem", e.target.value)} /></div>
+                    <div className="col-span-2"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 outline-none focus:border-blue-400" value={a.prazo} onChange={e => updatePlanoAcao(a.id, "prazo", e.target.value)} /></div>
+                    <div className="col-span-1 text-center"><button onClick={() => setDeleteConfirm({ open: true, type: 'acao', id: a.id })} className="text-rose-500 hover:bg-rose-100 p-1.5 rounded"><Trash2 className="w-3.5 h-3.5" /></button></div>
                   </div>
                 ))}
               </div>
             </div>
 
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col shrink-0">
-              <div className="bg-blue-600 border-b border-blue-700 px-3 py-1.5 flex justify-between items-center">
-                <h4 className="text-[10px] font-bold text-white uppercase tracking-widest flex items-center gap-2">
-                  7. Acompanhamento / Indicadores <span className="bg-white/20 px-1.5 py-0.5 rounded text-[9px]">{listaIndicadores.length}/13</span>
-                </h4>
-                <button onClick={addIndicador} className="text-white bg-white/20 hover:bg-white/30 rounded p-1 transition-colors"><Plus className="w-3 h-3" /></button>
+              <div className="bg-blue-600 border-b border-blue-700 px-3 py-1.5 flex justify-between items-center text-white font-bold text-[10px] uppercase">
+                <div className="flex items-center gap-2">7. Acompanhamento <span>{listaIndicadores.length}/13</span></div>
+                <button onClick={() => onChange({ indicadores: [...listaIndicadores, { id: generateId(), indicador: "", meta: "", status: "" }] })} className="bg-white/20 hover:bg-white/30 rounded p-1"><Plus className="w-3 h-3" /></button>
               </div>
               <div className="p-3 flex flex-col gap-2 bg-slate-50/50">
-                <div className="grid grid-cols-12 gap-2 text-[10px] font-bold text-slate-500 uppercase px-1">
-                  <div className="col-span-5">Indicador</div><div className="col-span-3">Meta</div><div className="col-span-3">Status</div>
-                </div>
-                {listaIndicadores.map((i, index) => (
-                  <div key={i.id || index} className="grid grid-cols-12 gap-2 items-center shrink-0">
-                    <div className="col-span-5"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 outline-none focus:border-blue-400 transition-colors" value={i.indicador || ""} onChange={e => updateIndicador(i.id, "indicador", e.target.value)} /></div>
-                    <div className="col-span-3"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 outline-none focus:border-blue-400 transition-colors" value={i.meta || ""} onChange={e => updateIndicador(i.id, "meta", e.target.value)} /></div>
-                    <div className="col-span-3">
-                      <select className="w-full text-xs p-2 rounded-md border border-slate-200 outline-none focus:border-blue-400 bg-white transition-colors" value={i.status || ""} onChange={e => updateIndicador(i.id, "status", e.target.value)}>
-                        <option value="">Selecione</option><option value="No Prazo">No Prazo</option><option value="Atrasado">Atrasado</option><option value="Concluído">Concluído</option>
+                {listaIndicadores.map((i) => (
+                  <div key={i.id} className="grid grid-cols-12 gap-2 items-center">
+                    <div className="col-span-1 flex justify-center"><Pencil className="w-3 h-3 text-slate-300" /></div>
+                    <div className="col-span-5"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 outline-none focus:border-blue-400" value={i.indicador} onChange={e => updateIndicador(i.id, "indicador", e.target.value)} /></div>
+                    <div className="col-span-3"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 outline-none focus:border-blue-400" value={i.meta} onChange={e => updateIndicador(i.id, "meta", e.target.value)} /></div>
+                    <div className="col-span-2">
+                      <select className="w-full text-[10px] p-2 rounded-md border border-slate-200 bg-white" value={i.status} onChange={e => updateIndicador(i.id, "status", e.target.value)}>
+                        <option value="">Status</option><option value="No Prazo">No Prazo</option><option value="Atrasado">Atrasado</option><option value="Concluído">Concluído</option>
                       </select>
                     </div>
-                    <div className="col-span-1 text-center"><button onClick={() => removeIndicador(i.id)} className="text-rose-500 hover:bg-rose-100 p-1.5 rounded transition-colors"><Trash2 className="w-3.5 h-3.5" /></button></div>
+                    <div className="col-span-1 text-center"><button onClick={() => setDeleteConfirm({ open: true, type: 'indicador', id: i.id })} className="text-rose-500 hover:bg-rose-100 p-1.5 rounded"><Trash2 className="w-3.5 h-3.5" /></button></div>
                   </div>
                 ))}
               </div>
             </div>
-
           </div>
         </div>
-        
         <div className="mt-2 shrink-0">
            <TextAreaBlock title="Descrição / Observações Adicionais" maxChars={800} value={data.observacoes || ""} onChangeField={v => onChange({ observacoes: v })} />
         </div>
-
       </div>
     </div>
   );
