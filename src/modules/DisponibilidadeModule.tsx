@@ -1,5 +1,4 @@
 import { type DisponibilidadeData, calcDisponibilidade } from "@/store/useAppStore";
-import { InputField } from "@/components/InputField";
 import { KpiCard } from "@/components/KpiCard";
 import { ComparisonChart } from "@/components/ComparisonChart";
 import { Copy, Check } from "lucide-react";
@@ -26,32 +25,71 @@ export function DisponibilidadeModule({ data, onChange }: Props) {
 
   const laudo = `A análise de disponibilidade demonstrou que, no estágio inicial, o tempo real de operação era de ${r.realT1} ${getUnit(r.realT1, u)} frente a um tempo disponível de ${r.dispT1} ${getUnit(r.dispT1, u)}. Com a redução das paradas não planejadas, o tempo real subiu para ${r.realT3} ${getUnit(r.realT3, u)}, representando um aumento de ${r.aumento.toFixed(2)}% na utilização efetiva do recurso.`;
 
+  const parseDecimal = (val: string) => {
+    const cleaned = val.replace(/[^\d,.-]/g, '');
+    return Number(cleaned.replace(",", "."));
+  };
+
   return (
-    <div className="flex gap-8 h-full">
-      <div className="w-[60%] grid grid-cols-2 gap-x-8 gap-y-6 content-start overflow-y-auto pr-2 pb-10">
+    <div className="flex gap-8 h-full animate-in fade-in duration-500">
+      <div className="w-[60%] grid grid-cols-2 gap-x-8 gap-y-6 content-start overflow-y-auto pr-2 pb-36">
+        
         <div className="space-y-4">
           <h3 className="font-bold text-slate-800 border-b pb-2">T1 - Inicial</h3>
-          <InputField label="Tempo Total" value={data.tempoTotalT1} onChange={v => onChange({ tempoTotalT1: Number(v) || 0 })} />
-          <InputField label="Paradas Planejadas" value={data.paradasPlanT1} onChange={v => onChange({ paradasPlanT1: Number(v) || 0 })} />
-          <InputField label="Paradas Não Planejadas" value={data.paradasNaoPlanT1} onChange={v => onChange({ paradasNaoPlanT1: Number(v) || 0 })} />
+          <div>
+            <label className="block text-xs font-bold text-slate-500 mb-1">Tempo Total</label>
+            <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+              defaultValue={data.tempoTotalT1 !== undefined ? data.tempoTotalT1.toString().replace(".", ",") : "0"}
+              onBlur={e => onChange({ tempoTotalT1: parseDecimal(e.target.value) || 0 })} />
+          </div>
+          <div>
+            <label className="block text-xs font-bold text-slate-500 mb-1">Paradas Planejadas</label>
+            <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+              defaultValue={data.paradasPlanT1 !== undefined ? data.paradasPlanT1.toString().replace(".", ",") : "0"}
+              onBlur={e => onChange({ paradasPlanT1: parseDecimal(e.target.value) || 0 })} />
+          </div>
+          <div>
+            <label className="block text-xs font-bold text-slate-500 mb-1">Paradas Não Planejadas</label>
+            <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+              defaultValue={data.paradasNaoPlanT1 !== undefined ? data.paradasNaoPlanT1.toString().replace(".", ",") : "0"}
+              onBlur={e => onChange({ paradasNaoPlanT1: parseDecimal(e.target.value) || 0 })} />
+          </div>
         </div>
+
         <div className="space-y-4">
           <h3 className="font-bold text-slate-800 border-b pb-2">T3 - Final</h3>
-          <InputField label="Tempo Total" value={data.tempoTotalT3} onChange={v => onChange({ tempoTotalT3: Number(v) || 0 })} />
-          <InputField label="Paradas Planejadas" value={data.paradasPlanT3} onChange={v => onChange({ paradasPlanT3: Number(v) || 0 })} />
-          <InputField label="Paradas Não Planejadas" value={data.paradasNaoPlanT3} onChange={v => onChange({ paradasNaoPlanT3: Number(v) || 0 })} />
+          <div>
+            <label className="block text-xs font-bold text-slate-500 mb-1">Tempo Total</label>
+            <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+              defaultValue={data.tempoTotalT3 !== undefined ? data.tempoTotalT3.toString().replace(".", ",") : "0"}
+              onBlur={e => onChange({ tempoTotalT3: parseDecimal(e.target.value) || 0 })} />
+          </div>
+          <div>
+            <label className="block text-xs font-bold text-slate-500 mb-1">Paradas Planejadas</label>
+            <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+              defaultValue={data.paradasPlanT3 !== undefined ? data.paradasPlanT3.toString().replace(".", ",") : "0"}
+              onBlur={e => onChange({ paradasPlanT3: parseDecimal(e.target.value) || 0 })} />
+          </div>
+          <div>
+            <label className="block text-xs font-bold text-slate-500 mb-1">Paradas Não Planejadas</label>
+            <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+              defaultValue={data.paradasNaoPlanT3 !== undefined ? data.paradasNaoPlanT3.toString().replace(".", ",") : "0"}
+              onBlur={e => onChange({ paradasNaoPlanT3: parseDecimal(e.target.value) || 0 })} />
+          </div>
         </div>
+
         <div className="col-span-2 p-5 bg-[#F8FAFC] rounded-xl border border-slate-200">
            <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Unidade de Tempo</label>
-           <select className="w-full h-10 rounded-lg border border-slate-200 bg-white text-sm outline-none px-3" value={u} onChange={e => onChange({ unidadeTempo: e.target.value as any })}>
+           <select className="w-full h-10 rounded-lg border border-slate-200 bg-white text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-colors px-3 cursor-pointer" value={u} onChange={e => onChange({ unidadeTempo: e.target.value as any })}>
              <option value="segundos">Segundos</option>
              <option value="minutos">Minutos</option>
              <option value="horas">Horas</option>
            </select>
         </div>
+
       </div>
 
-      <div className="w-[40%] flex flex-col gap-4">
+      <div className="w-[40%] flex flex-col gap-4 overflow-y-auto pb-36">
         <KpiCard label="Aumento de Disponibilidade" value={r.aumento.toFixed(1)} suffix="%" trend={r.aumento} />
         
         <div className="relative bg-blue-50/50 p-5 border border-blue-100 rounded-2xl shadow-sm">
