@@ -1,6 +1,6 @@
 import { type PlanoAcaoData, type PlanoAcaoItem } from "@/store/useAppStore";
 import { InputField } from "@/components/InputField";
-import { Trash2, Download, CheckCircle, ChevronDown, ChevronUp } from "lucide-react";
+import { Trash2, Download, CheckCircle, ChevronDown, ChevronUp, Plus } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import ExcelJS from "exceljs";
@@ -12,9 +12,22 @@ interface Props {
 
 export function PlanoAcaoModule({ data, onChange }: Props) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [newAcaoWhat, setNewAcaoWhat] = useState("");
 
   const updateMeta = (field: keyof typeof data.metadata, value: string) => {
     onChange({ metadata: { ...data.metadata, [field]: value } });
+  };
+
+  const handleAddAcao = () => {
+    if (newAcaoWhat.trim()) {
+      const nova: PlanoAcaoItem = {
+        id: Date.now().toString(),
+        what: newAcaoWhat.trim(),
+        why: "", where: "", start: "", end: "", who: "", how: "", howMuch: "", percent: 0, obs: "", status: "NÃO INICIADO"
+      };
+      onChange({ acoes: [...data.acoes, nova] });
+      setNewAcaoWhat("");
+    }
   };
 
   const updateAcao = (id: string, field: keyof PlanoAcaoItem, value: any) => {
@@ -124,16 +137,30 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
       </div>
 
       <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 shadow-sm flex-1">
-        <h3 className="font-bold text-slate-800 uppercase text-[11px] tracking-widest mb-4 flex items-center gap-2">
-          Execução de Tarefas 
-          <span className="bg-sky-200 text-sky-700 px-2 py-0.5 rounded-full text-[10px]">{data.acoes.length}</span>
-        </h3>
+        <div className="flex flex-col gap-4 mb-6">
+          <h3 className="font-bold text-slate-800 uppercase text-[11px] tracking-widest flex items-center gap-2">
+            Execução de Tarefas 
+            <span className="bg-sky-200 text-sky-700 px-2 py-0.5 rounded-full text-[10px]">{data.acoes.length}</span>
+          </h3>
+          
+          <div className="flex gap-2 items-end">
+            <div className="flex-1">
+              <InputField label="Nova Ação (What)" value={newAcaoWhat} onChange={setNewAcaoWhat} />
+            </div>
+            <button 
+              onClick={handleAddAcao} 
+              className="h-10 px-6 bg-sky-600 text-white rounded-lg font-bold text-xs uppercase shadow-md hover:bg-sky-700 transition-colors flex items-center gap-2"
+            >
+              <Plus className="h-4 w-4" /> Adicionar
+            </button>
+          </div>
+        </div>
 
         {data.acoes.length === 0 ? (
            <div className="flex flex-col items-center justify-center p-12 text-slate-400 border-2 border-dashed border-slate-300 rounded-xl bg-white">
              <CheckCircle className="h-12 w-12 mb-4 opacity-50" />
              <p className="text-sm font-bold">Nenhuma ação vinculada.</p>
-             <p className="text-xs mt-1">Adicione as macros através da aba "Resumo".</p>
+             <p className="text-xs mt-1">Crie tarefas no campo acima ou importe macros da aba "Resumo".</p>
            </div>
         ) : (
           <div className="flex flex-col gap-3">
