@@ -54,6 +54,11 @@ export function DisponibilidadeModule({ data, onChange }: Props) {
               defaultValue={data.paradasNaoPlanT1 !== undefined ? data.paradasNaoPlanT1.toString().replace(".", ",") : "0"}
               onBlur={e => onChange({ paradasNaoPlanT1: parseDecimal(e.target.value) || 0 })} />
           </div>
+          
+          <div className="pt-2">
+            <span className="block text-xs font-bold text-slate-500 mb-1">Disponibilidade T1</span>
+            <span className="text-lg font-black text-slate-800">{r.indT1.toFixed(2).replace(".", ",")} %</span>
+          </div>
         </div>
 
         <div className="space-y-4">
@@ -75,6 +80,11 @@ export function DisponibilidadeModule({ data, onChange }: Props) {
             <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
               defaultValue={data.paradasNaoPlanT3 !== undefined ? data.paradasNaoPlanT3.toString().replace(".", ",") : "0"}
               onBlur={e => onChange({ paradasNaoPlanT3: parseDecimal(e.target.value) || 0 })} />
+          </div>
+
+          <div className="pt-2">
+            <span className="block text-xs font-bold text-slate-500 mb-1">Disponibilidade T3</span>
+            <span className="text-lg font-black text-slate-800">{r.indT3.toFixed(2).replace(".", ",")} %</span>
           </div>
         </div>
 
