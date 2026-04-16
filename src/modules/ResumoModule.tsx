@@ -1,26 +1,25 @@
 import { useState, useMemo } from "react";
 import { 
-  type ResumoData, type AppState, type Acao5W2H,
+  type ResumoData, type AppState,
   calcProdutividade, calcPayback, calcMovimentacao, calcQualidade, calcDisponibilidade, calcLeadTime, calcArea 
 } from "@/store/useAppStore";
 import { InputField } from "@/components/InputField";
-import { Trash2, Copy, Check, ChevronDown, ChevronUp } from "lucide-react";
+import { Trash2, Copy, Check } from "lucide-react";
 import { toast } from "sonner";
 
 interface Props {
   data: ResumoData;
   state: AppState;
   onChange: (d: Partial<ResumoData>) => void;
+  onUpdatePlanoAcao: (acoes: any[]) => void;
   onClearData: () => void;
 }
 
-export function ResumoModule({ data, state, onChange, onClearData }: Props) {
-  const [newAcao, setNewAcao] = useState<Partial<Acao5W2H>>({});
+export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClearData }: Props) {
+  const [newAcao, setNewAcao] = useState("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [expandedId, setExpandedId] = useState<string | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-  // Produtividade e Payback travados obrigatoriamente
   const lockedIndicadores = ["produtividade", "payback"];
   const selectedIndicadores = Array.from(new Set([...(data.indicadoresConclusao || []), ...lockedIndicadores]));
 
@@ -40,7 +39,7 @@ export function ResumoModule({ data, state, onChange, onClearData }: Props) {
   }, [data]);
 
   const { textoDinamico, bulletPoints } = useMemo(() => {
-    const listaAcoes = data.acoes.length > 0 ? data.acoes.map(a => a.what).join(", ") : "—";
+    const listaAcoes = state.planoAcao.acoes.length > 0 ? state.planoAcao.acoes.map(a => a.what).join(", ") : "—";
     const u = state.produtividade.unidade || "peças";
     
     let resultadosTexto: string[] = [];
@@ -84,11 +83,10 @@ export function ResumoModule({ data, state, onChange, onClearData }: Props) {
 
     const fechamento = `O resultado geral do projeto foi agregador e positivo para a empresa, pois o envolvimento da equipe foi primordial para garantir o conhecimento necessário através do plano de ação, treinamentos, trabalho realizado e resultados alcançados. Com isso, a empresa pode manter o aculturamento do pensamento Lean e replicar os conceitos da melhoria contínua para os demais setores e linhas de produção.`;
 
-    // Junta os blocos com quebras de linha reais
     const textoCompleto = [intro, desenvolvimento, ...resultadosTexto, fechamento].join("\n\n");
 
     return { textoDinamico: textoCompleto, bulletPoints: bullets };
-  }, [data, prod, pb, mov, qual, disp, lt, ar, selectedIndicadores, state.produtividade.unidade, state.leadtime]);
+  }, [data, prod, pb, mov, qual, disp, lt, ar, selectedIndicadores, state.produtividade.unidade, state.leadtime, state.planoAcao.acoes]);
 
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
@@ -97,14 +95,20 @@ export function ResumoModule({ data, state, onChange, onClearData }: Props) {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const updateAcao = (id: string, field: keyof Acao5W2H, value: string) => {
-    const novasAcoes = data.acoes.map(a => a.id === id ? { ...a, [field]: value } : a);
-    onChange({ acoes: novasAcoes });
+  const handleAddAcao = () => {
+    if (newAcao.trim()) {
+      const nova = { id: Date.now().toString(), what: newAcao.trim(), why: "", where: "", start: "", end: "", who: "", how: "", howMuch: "", percent: 0, obs: "", status: "NÃO INICIADO" };
+      onUpdatePlanoAcao([...state.planoAcao.acoes, nova]);
+      setNewAcao("");
+    }
+  };
+
+  const handleRemoveAcao = (id: string) => {
+    onUpdatePlanoAcao(state.planoAcao.acoes.filter(a => a.id !== id));
   };
 
   const toggleIndicador = (id: string) => {
-    if (lockedIndicadores.includes(id)) return; // Impede desmarcar os travados
-    
+    if (lockedIndicadores.includes(id)) return; 
     if (selectedIndicadores.includes(id)) {
       onChange({ indicadoresConclusao: selectedIndicadores.filter(i => i !== id) });
     } else {
@@ -175,55 +179,25 @@ export function ResumoModule({ data, state, onChange, onClearData }: Props) {
           </div>
 
           <div className="pt-4 border-t space-y-4">
-            <h4 className="text-sm font-bold text-slate-700 uppercase">Plano de Ação (5W2H)</h4>
-            
+            <h4 className="text-sm font-bold text-slate-700 uppercase">Resumo das Ações</h4>
+            <p className="text-xs text-slate-500 mb-2">Adicione aqui o resumo das macro ações. O detalhamento completo ocorre na aba 5W2H.</p>
             <div className="flex gap-2 items-end">
-              <div className="flex-1"><InputField label="O que será feito? (What)" value={newAcao.what || ""} onChange={v => setNewAcao({ what: v })} /></div>
+              <div className="flex-1"><InputField label="O que será feito? (What)" value={newAcao} onChange={setNewAcao} /></div>
               <button 
-                onClick={() => { 
-                  if(newAcao.what) { 
-                    onChange({ acoes: [...data.acoes, { id: Date.now().toString(), what: newAcao.what, why: "", where: "", when: "", who: "", how: "", howMuch: "" }] }); 
-                    setNewAcao({}); 
-                  } 
-                }} 
+                onClick={handleAddAcao} 
                 className="h-10 px-6 bg-blue-600 text-white rounded-lg font-bold text-xs uppercase shadow-md hover:bg-blue-700 transition-colors"
               >
                 Adicionar
               </button>
             </div>
 
-            <div className="flex flex-col gap-3">
-              {data.acoes.map(a => (
-                <div key={a.id} className="border border-slate-200 rounded-xl bg-white shadow-sm overflow-hidden transition-all duration-300">
-                  <div 
-                    className="flex items-center justify-between p-3.5 bg-slate-50 hover:bg-slate-100 cursor-pointer select-none transition-colors"
-                    onClick={() => setExpandedId(expandedId === a.id ? null : a.id)}
-                  >
-                    <span className="text-xs font-bold text-slate-700 truncate pr-4 flex-1">{a.what}</span>
-                    <div className="flex items-center gap-3">
-                      {expandedId === a.id ? <ChevronUp className="h-4 w-4 text-slate-400" /> : <ChevronDown className="h-4 w-4 text-slate-400" />}
-                      <button 
-                        onClick={(e) => { 
-                          e.stopPropagation(); 
-                          onChange({ acoes: data.acoes.filter(x => x.id !== a.id) });
-                        }}
-                        className="p-1 hover:bg-rose-100 rounded-md transition-colors"
-                      >
-                        <Trash2 className="h-3.5 w-3.5 text-rose-500" />
-                      </button>
-                    </div>
-                  </div>
-
-                  {expandedId === a.id && (
-                    <div className="p-4 grid grid-cols-2 gap-4 border-t border-slate-100 bg-white animate-in fade-in slide-in-from-top-2 duration-300">
-                      <InputField label="Por que? (Why)" value={a.why} onChange={v => updateAcao(a.id, "why", v)} />
-                      <InputField label="Onde? (Where)" value={a.where} onChange={v => updateAcao(a.id, "where", v)} />
-                      <InputField label="Quando? (When)" value={a.when} onChange={v => updateAcao(a.id, "when", v)} />
-                      <InputField label="Quem? (Who)" value={a.who} onChange={v => updateAcao(a.id, "who", v)} />
-                      <InputField label="Como? (How)" value={a.how} onChange={v => updateAcao(a.id, "how", v)} />
-                      <InputField label="Quanto Custa? (How Much)" value={a.howMuch} onChange={v => updateAcao(a.id, "howMuch", v)} />
-                    </div>
-                  )}
+            <div className="flex flex-col gap-2 mt-4">
+              {state.planoAcao.acoes.map(a => (
+                <div key={a.id} className="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-lg shadow-sm">
+                  <span className="text-xs font-bold text-slate-700 truncate pr-4 flex-1">{a.what}</span>
+                  <button onClick={() => handleRemoveAcao(a.id)} className="p-1.5 hover:bg-rose-100 rounded-md transition-colors text-rose-500">
+                    <Trash2 className="h-4 w-4" />
+                  </button>
                 </div>
               ))}
             </div>
@@ -246,7 +220,6 @@ export function ResumoModule({ data, state, onChange, onClearData }: Props) {
             <h4 className="text-[10px] font-bold text-blue-700 uppercase tracking-widest mb-4 border-b border-blue-200/50 pb-2">Conclusão do Projeto</h4>
             
             <div className="text-[13px] text-slate-700 leading-relaxed text-justify space-y-6 flex-1">
-              {/* O whitespace-pre-wrap respeita o \n\n gerando os parágrafos corretos */}
               <div className="whitespace-pre-wrap">{textoDinamico}</div> 
               
               {bulletPoints.length > 0 && (
@@ -258,7 +231,6 @@ export function ResumoModule({ data, state, onChange, onClearData }: Props) {
               )}
             </div>
 
-            {/* SELETOR DE INDICADORES P/ CONCLUSÃO */}
             <div className="mt-8 pt-4 border-t border-blue-200/50">
               <h4 className="text-[10px] font-bold text-blue-700 uppercase tracking-widest mb-3">Indicadores na Conclusão</h4>
               <div className="flex flex-wrap gap-2">
@@ -286,7 +258,6 @@ export function ResumoModule({ data, state, onChange, onClearData }: Props) {
         </div>
       </div>
 
-      {/* MODAL DE CONFIRMAÇÃO COM EFEITO VIDRO */}
       {showConfirmModal && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/30 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-white/80 backdrop-blur-xl border border-white/50 p-8 rounded-[2rem] shadow-2xl max-w-sm w-full mx-4 animate-in zoom-in-95 duration-300">
