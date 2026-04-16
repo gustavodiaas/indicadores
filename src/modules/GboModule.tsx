@@ -226,18 +226,24 @@ export default function GBOAnalysis() {
 
   return (
     <>
+      {/* BLINDAGEM DE IMPRESSÃO (MATADOR DE TOOLTIPS E MENUS ABERTOS) */}
       <style dangerouslySetInnerHTML={{__html: `
         @media print {
-          @page { size: landscape; margin: 0; }
+          @page { size: landscape; margin: 10mm; }
           body { 
             background: white !important; 
             -webkit-print-color-adjust: exact !important; 
             print-color-adjust: exact !important; 
           }
+          /* Remove caixas flutuantes, cursores e menus do Radix UI / Recharts */
           [data-radix-toast-provider], 
           [role="region"][aria-label="Notifications"], 
           .toaster,
-          [data-radix-popper-content-wrapper] {
+          [data-radix-popper-content-wrapper],
+          [role="dialog"],
+          .recharts-tooltip-wrapper,
+          .recharts-tooltip-cursor,
+          #radix-portal {
             display: none !important;
             opacity: 0 !important;
             visibility: hidden !important;
@@ -282,7 +288,7 @@ export default function GBOAnalysis() {
         </div>
 
         {/* CONTEÚDO PRINCIPAL DIVIDIDO EM DUAS COLUNAS PADRÃO */}
-        <div className="flex flex-col xl:flex-row gap-8 pb-12 print:p-12 print:max-w-none print:w-[100vw] print:break-inside-avoid">
+        <div className="flex flex-col xl:flex-row gap-8 pb-12 print:p-0 print:max-w-none print:w-[100vw] print:break-inside-avoid">
           
           {/* LADO ESQUERDO: CONTROLES */}
           <div className="xl:w-[40%] flex flex-col gap-6 print:hidden">
