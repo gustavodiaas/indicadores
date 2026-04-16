@@ -226,24 +226,34 @@ export default function GBOAnalysis() {
 
   return (
     <>
-      {/* BLINDAGEM DE IMPRESSÃO (MATADOR DE TOOLTIPS E MENUS ABERTOS) */}
+      {/* BLINDAGEM DE IMPRESSÃO (MATADOR DE TOOLTIPS, NOTIFICAÇÕES E CABEÇALHOS DO NAVEGADOR) */}
       <style dangerouslySetInnerHTML={{__html: `
         @media print {
-          @page { size: landscape; margin: 10mm; }
+          @page { 
+            size: landscape; 
+            margin: 0mm !important; /* Arranca a data, hora e link automático do navegador */
+          }
           body { 
             background: white !important; 
             -webkit-print-color-adjust: exact !important; 
             print-color-adjust: exact !important; 
+            padding: 10mm !important; /* Devolve um respiro para não colar na beirada da folha */
           }
-          /* Remove caixas flutuantes, cursores e menus do Radix UI / Recharts */
+          /* Exterminador de Notificações, Toasts e Tooltips */
           [data-radix-toast-provider], 
-          [role="region"][aria-label="Notifications"], 
+          [data-sonner-toaster],
+          [role="region"],
+          [role="status"],
+          [role="alert"],
           .toaster,
+          .toast-viewport,
+          ol,
           [data-radix-popper-content-wrapper],
           [role="dialog"],
           .recharts-tooltip-wrapper,
           .recharts-tooltip-cursor,
-          #radix-portal {
+          #radix-portal,
+          div[style*="position: fixed"] {
             display: none !important;
             opacity: 0 !important;
             visibility: hidden !important;
