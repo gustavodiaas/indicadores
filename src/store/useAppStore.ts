@@ -56,16 +56,19 @@ export interface LeadTimeData {
 }
 
 export interface A3Data {
-  tema: string;
+  titulo: string;
   responsavel: string;
   data: string;
-  contexto: string;
-  condicaoAtual: string;
-  metas: string;
-  analiseCausa: string;
-  contramedidas: string;
+  inicio: string;
+  fim: string;
+  aprovacoes: string;
+  background: string;
+  objetivos: string;
+  estadoAtual: string;
+  analise: string;
+  estadoFuturo: string;
   planoAcao: string;
-  acompanhamento: string;
+  indicadores: string;
 }
 
 export interface AppState { 
@@ -85,7 +88,7 @@ const defaultState: AppState = {
   resumo: { nomeEmpresa: "", cidade: "", ramo: "", especialista: "", totalColaboradores: 0, turnos: 1, processos: "", metodo: "", origem: "", oportunidades: "", problemas: "", atuacao: "", motivacao: "", ferramentas: "", indicadoresConclusao: ["produtividade", "payback"] }, 
   gbo: { turnoTempo: 0, turnoUnidade: "hours", demanda: 0, demandaUnidade: "peças", tempoUnidade: "seconds", operacoes: [], tituloGrafico: "Gráfico de Balanceamento de Operações (GBO)" },
   planoAcao: { metadata: { dataCriacao: "", respCriacao: "", objetivo: "", meta: "", dataRevisao: "", respRevisao: "", indicador: "" }, acoes: [] },
-  a3: { tema: "", responsavel: "", data: "", contexto: "", condicaoAtual: "", metas: "", analiseCausa: "", contramedidas: "", planoAcao: "", acompanhamento: "" }
+  a3: { titulo: "", responsavel: "", data: "", inicio: "", fim: "", aprovacoes: "", background: "", objetivos: "", estadoAtual: "", analise: "", estadoFuturo: "", planoAcao: "", indicadores: "" }
 };
 
 const safeDiv = (num: number, den: number) => (den > 0 ? num / den : 0);
