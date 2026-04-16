@@ -8,11 +8,17 @@ interface Operation {
 }
 
 export const exportToExcel = async (operations: Operation[], timeUnit: string) => {
+  const getPtUnit = (u: string) => {
+    if (u === "seconds") return "segundos"
+    if (u === "minutes") return "minutos"
+    return u
+  }
+
   const data = operations.map((op, index) => ({
     "Ordem": index + 1,
     "Nome da Operação": op.name,
     "Tempo": op.time,
-    "Unidade": op.unit
+    "Unidade": getPtUnit(op.unit)
   }))
   const ws = XLSX.utils.json_to_sheet(data)
   const wb = XLSX.utils.book_new()
@@ -22,9 +28,9 @@ export const exportToExcel = async (operations: Operation[], timeUnit: string) =
 
 export const downloadTemplate = () => {
   const data = [
-    { "Nome da Operação": "Corte de material", "Tempo": 2.5, "Unidade": "minutes" },
-    { "Nome da Operação": "Dobra e preparo", "Tempo": 45, "Unidade": "seconds" },
-    { "Nome da Operação": "Montagem final", "Tempo": 1.2, "Unidade": "minutes" }
+    { "Nome da Operação": "Corte de material", "Tempo": 2.5, "Unidade": "minutos" },
+    { "Nome da Operação": "Dobra e preparo", "Tempo": 45, "Unidade": "segundos" },
+    { "Nome da Operação": "Montagem final", "Tempo": 1.2, "Unidade": "minutos" }
   ]
   const ws = XLSX.utils.json_to_sheet(data)
   const wb = XLSX.utils.book_new()
@@ -47,7 +53,9 @@ export const importFromExcel = async (file: File): Promise<Operation[]> => {
           // Busca pelas colunas do modelo ou aproximações
           const name = row["Nome da Operação"] || row["Nome"] || row["Operação"] || "Sem Nome"
           const time = Number(row["Tempo"]) || Number(row["Time"]) || 0
-          const rawUnit = String(row["Unidade"] || row["Unit"] || "minutes").toLowerCase()
+          const rawUnit = String(row["Unidade"] || row["Unit"] || "minutos").toLowerCase()
+          
+          // Entende tanto inglês quanto português para não quebrar planilhas antigas
           const unit = rawUnit.includes("sec") || rawUnit.includes("seg") ? "seconds" : "minutes"
 
           return {
