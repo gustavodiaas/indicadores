@@ -4,7 +4,7 @@ import { Topbar } from "@/components/Topbar";
 import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } from "docx";
 import { 
   FileText, GanttChartSquare, BarChart2, Calculator, 
-  ArrowRightLeft, ShieldCheck, Clock, Timer, Square, TrendingUp, ClipboardList
+  ArrowRightLeft, ShieldCheck, Clock, Timer, Square, TrendingUp, ClipboardList, Lock
 } from "lucide-react";
 
 import { ResumoModule } from "@/modules/ResumoModule";
@@ -332,6 +332,12 @@ const Index = () => {
               </button>
             );
           })}
+        </div>
+
+        {/* AVISO DE PRIVACIDADE SUTIL */}
+        <div className="mt-16 flex items-center justify-center gap-2 text-[11px] font-medium text-slate-400 bg-white px-4 py-2 rounded-full border border-slate-200 shadow-sm opacity-80 hover:opacity-100 transition-opacity">
+          <Lock className="w-3 h-3 text-slate-400" />
+          <span>Privacidade: Seus dados são salvos apenas localmente no seu navegador. Nenhuma informação é enviada.</span>
         </div>
       </div>
     );
