@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 
-export type ModuleKey = "home" | "resumo" | "produtividade" | "payback" | "movimentacao" | "qualidade" | "disponibilidade" | "leadtime" | "area" | "gbo";
+export type ModuleKey = "home" | "resumo" | "produtividade" | "payback" | "movimentacao" | "qualidade" | "disponibilidade" | "leadtime" | "area" | "gbo" | "planoAcao";
 
 export interface ProdutividadeData { 
   volumeT1: number; volumeT3: number; 
@@ -32,14 +32,17 @@ export interface MovimentacaoData {
 export interface QualidadeData { quantidadeT1: number; quantidadeT3: number; perdasT1: number; perdasT3: number; }
 export interface DisponibilidadeData { tempoTotalT1: number; tempoTotalT3: number; paradasPlanT1: number; paradasPlanT3: number; paradasNaoPlanT1: number; paradasNaoPlanT3: number; unidadeTempo: "segundos" | "minutos" | "horas"; }
 export interface AreaData { areaT1: number; areaT3: number; valorAluguel: number; }
-export interface Acao5W2H { id: string; what: string; why: string; where: string; when: string; who: string; how: string; howMuch: string; }
+
+export interface PlanoAcaoItem { id: string; what: string; why: string; where: string; start: string; end: string; who: string; how: string; howMuch: string; percent: number; obs: string; status: string; }
+export interface PlanoAcaoMetadata { dataCriacao: string; respCriacao: string; objetivo: string; meta: string; dataRevisao: string; respRevisao: string; indicador: string; }
+export interface PlanoAcaoData { metadata: PlanoAcaoMetadata; acoes: PlanoAcaoItem[]; }
+
 export interface ResumoData { 
   nomeEmpresa: string; cidade: string; ramo: string; especialista: string; 
   totalColaboradores: number; turnos: number; processos: string; 
   metodo: "empurrada" | "puxada" | ""; origem: string; oportunidades: string; 
   problemas: string; atuacao: string; motivacao: string; ferramentas: string; 
-  acoes: Acao5W2H[];
-  indicadoresConclusao: string[]; // <-- NOVA VARIÁVEL
+  indicadoresConclusao: string[]; 
 }
 export interface GboOperation { id: string; name: string; time: number; }
 export interface GboData { turnoTempo: number; turnoUnidade: "minutes" | "hours"; demanda: number; demandaUnidade: string; tempoUnidade: "minutes" | "seconds"; operacoes: GboOperation[]; tituloGrafico?: string; }
@@ -52,7 +55,7 @@ export interface LeadTimeData {
   reducaoObtida?: string;
 }
 
-export interface AppState { produtividade: ProdutividadeData; payback: PaybackData; movimentacao: MovimentacaoData; qualidade: QualidadeData; disponibilidade: DisponibilidadeData; leadtime: LeadTimeData; area: AreaData; resumo: ResumoData; gbo: GboData; }
+export interface AppState { produtividade: ProdutividadeData; payback: PaybackData; movimentacao: MovimentacaoData; qualidade: QualidadeData; disponibilidade: DisponibilidadeData; leadtime: LeadTimeData; area: AreaData; resumo: ResumoData; gbo: GboData; planoAcao: PlanoAcaoData; }
 
 const defaultState: AppState = {
   produtividade: { volumeT1: 0, volumeT3: 0, horasT1: 8, horasT3: 8, operadoresT1: 1, operadoresT3: 1, unidade: "peças" },
@@ -62,8 +65,9 @@ const defaultState: AppState = {
   disponibilidade: { tempoTotalT1: 480, tempoTotalT3: 480, paradasPlanT1: 0, paradasPlanT3: 0, paradasNaoPlanT1: 0, paradasNaoPlanT3: 0, unidadeTempo: "minutos" },
   leadtime: { leadTimeT1: 0, leadTimeT3: 0, unidadeTempo: "dias", melhorias: "", reducaoObtida: "" },
   area: { areaT1: 0, areaT3: 0, valorAluguel: 0 },
-  resumo: { nomeEmpresa: "", cidade: "", ramo: "", especialista: "", totalColaboradores: 0, turnos: 1, processos: "", metodo: "", origem: "", oportunidades: "", problemas: "", atuacao: "", motivacao: "", ferramentas: "", acoes: [], indicadoresConclusao: ["produtividade", "payback"] }, // <-- PADRÃO INICIAL
+  resumo: { nomeEmpresa: "", cidade: "", ramo: "", especialista: "", totalColaboradores: 0, turnos: 1, processos: "", metodo: "", origem: "", oportunidades: "", problemas: "", atuacao: "", motivacao: "", ferramentas: "", indicadoresConclusao: ["produtividade", "payback"] }, 
   gbo: { turnoTempo: 0, turnoUnidade: "hours", demanda: 0, demandaUnidade: "peças", tempoUnidade: "seconds", operacoes: [], tituloGrafico: "Gráfico de Balanceamento de Operações (GBO)" },
+  planoAcao: { metadata: { dataCriacao: "", respCriacao: "", objetivo: "", meta: "", dataRevisao: "", respRevisao: "", indicador: "" }, acoes: [] }
 };
 
 const safeDiv = (num: number, den: number) => (den > 0 ? num / den : 0);
