@@ -33,7 +33,7 @@ export interface QualidadeData { quantidadeT1: number; quantidadeT3: number; per
 export interface DisponibilidadeData { tempoTotalT1: number; tempoTotalT3: number; paradasPlanT1: number; paradasPlanT3: number; paradasNaoPlanT1: number; paradasNaoPlanT3: number; unidadeTempo: "segundos" | "minutos" | "horas"; }
 export interface AreaData { areaT1: number; areaT3: number; valorAluguel: number; }
 
-export interface PlanoAcaoItem { id: string; what: string; why: string; where: string; start: string; end: string; who: string; how: string; howMuch: string; percent: number; obs: string; status: string; }
+export interface PlanoAcaoItem { id: string; what: string; why: string; where: string; start: string; end: string; who: string; how: string; howMuch: string; percent: number; obs: string; status: string; origin?: "resumo" | "5w2h"; }
 export interface PlanoAcaoMetadata { dataCriacao: string; respCriacao: string; objetivo: string; meta: string; dataRevisao: string; respRevisao: string; indicador: string; }
 export interface PlanoAcaoData { metadata: PlanoAcaoMetadata; acoes: PlanoAcaoItem[]; }
 
