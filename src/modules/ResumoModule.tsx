@@ -20,10 +20,10 @@ export function ResumoModule({ data, state, onChange, onClearData }: Props) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-  // Garantindo que a lista de indicadores exista (fallback)
-  const selectedIndicadores = data.indicadoresConclusao || ["produtividade", "payback"];
+  // Produtividade e Payback travados obrigatoriamente
+  const lockedIndicadores = ["produtividade", "payback"];
+  const selectedIndicadores = Array.from(new Set([...(data.indicadoresConclusao || []), ...lockedIndicadores]));
 
-  // Todos os cálculos
   const prod = useMemo(() => calcProdutividade(state.produtividade), [state.produtividade]);
   const pb = useMemo(() => calcPayback(state.payback, state.produtividade, state.resumo), [state.payback, state.produtividade, state.resumo]);
   const mov = useMemo(() => calcMovimentacao(state.movimentacao), [state.movimentacao]);
@@ -39,55 +39,61 @@ export function ResumoModule({ data, state, onChange, onClearData }: Props) {
     return `A Empresa ${data.nomeEmpresa || "—"}, da cidade de ${data.cidade || "—"} no Estado do Rio Grande do Sul, atua no ramo de ${data.ramo || "—"}, especialista em ${data.especialista || "—"}, conta com ${data.totalColaboradores || "0"} ${colabTxt} atuando em ${data.turnos} ${turnoTxt}. O produto mapeado segue o seguinte processo produtivo: ${data.processos || "—"}, com método de produção ${data.metodo || "—"}, onde a demanda é originada por ${data.origem || "—"}. Ao longo do mapeamento foi identificado oportunidades no setor de ${data.oportunidades || "—"}, por problemas de ${data.problemas || "—"}. Nesta consultoria, a área de atuação/intervenção foi ${data.atuacao || "—"}.`;
   }, [data]);
 
-  // Montagem Dinâmica do Texto de Conclusão
   const { textoDinamico, bulletPoints } = useMemo(() => {
     const listaAcoes = data.acoes.length > 0 ? data.acoes.map(a => a.what).join(", ") : "—";
+    const u = state.produtividade.unidade || "peças";
     
-    let textoIndicadores = "";
+    let resultadosTexto: string[] = [];
     let bullets: string[] = [];
 
     if (selectedIndicadores.includes("produtividade")) {
-      textoIndicadores += `Aumento de ${prod.ganho.toFixed(2)}% em produtividade. `;
+      resultadosTexto.push(`Produtividade: No estágio inicial, a produtividade era de ${prod.pphT1.toFixed(2)} ${u}/h/op. Após as melhorias, a produtividade subiu para ${prod.pphT3.toFixed(2)} ${u}/h/op, representando um ganho direto de ${prod.ganho.toFixed(2)}% na eficiência operacional da célula.`);
       bullets.push(`Aumento de ${prod.ganho.toFixed(2)}% em produtividade.`);
     }
     if (selectedIndicadores.includes("payback")) {
-      textoIndicadores += `Payback: Com as ações aplicadas obtém-se um Payback de ${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2) : "0.00"} ${pb.paybackMeses === 1 ? "mês" : "meses"}. `;
+      resultadosTexto.push(`Payback: Com as ações aplicadas e a redução do custo de mão de obra por ${u}, o projeto apresenta um retorno financeiro com Payback de ${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2) : "0.00"} ${pb.paybackMeses === 1 ? "mês" : "meses"}.`);
       bullets.push(`Payback de ${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2) : "0.00"} ${pb.paybackMeses === 1 ? "mês" : "meses"}.`);
     }
     if (selectedIndicadores.includes("movimentacao")) {
-      textoIndicadores += `Redução de ${mov.reducaoTempo.toFixed(2)}% no tempo de movimentação. `;
-      bullets.push(`Redução de ${mov.reducaoTempo.toFixed(2)}% em movimentação.`);
+      resultadosTexto.push(`Movimentação: A análise de fluxo evidenciou uma redução de ${mov.reducaoDist.toFixed(2)}% na distância percorrida e uma queda de ${mov.reducaoTempo.toFixed(2)}% no tempo gasto com movimentação e transporte logístico.`);
+      bullets.push(`Redução de ${mov.reducaoTempo.toFixed(2)}% no tempo de movimentação.`);
     }
     if (selectedIndicadores.includes("qualidade")) {
-      textoIndicadores += `Índice de qualidade evoluiu para ${qual.indiceT3.toFixed(2)}%. `;
-      bullets.push(`Qualidade evoluiu para ${qual.indiceT3.toFixed(2)}%.`);
+      resultadosTexto.push(`Qualidade: O índice de assertividade e peças conformes evoluiu de ${qual.indiceT1.toFixed(2)}% para ${qual.indiceT3.toFixed(2)}%, garantindo maior confiabilidade ao processo e minimizando perdas.`);
+      bullets.push(`Índice de qualidade evoluiu para ${qual.indiceT3.toFixed(2)}%.`);
     }
     if (selectedIndicadores.includes("disponibilidade")) {
-      textoIndicadores += `Aumento de ${disp.aumento.toFixed(2)}% na utilização do recurso. `;
-      bullets.push(`Aumento de ${disp.aumento.toFixed(2)}% em disponibilidade.`);
+      resultadosTexto.push(`Disponibilidade: Com a redução das paradas não planejadas, o tempo efetivo de operação da máquina aumentou, representando um ganho de ${disp.aumento.toFixed(2)}% na utilização real do recurso.`);
+      bullets.push(`Aumento de ${disp.aumento.toFixed(2)}% na disponibilidade da máquina.`);
     }
     if (selectedIndicadores.includes("leadtime")) {
-      textoIndicadores += `Redução de ${lt.reducao.toFixed(2)}% no tempo de atravessamento. `;
+      const ltU = state.leadtime.unidadeTempo || "dias";
+      const t1 = state.leadtime.leadTimeT1 || state.leadtime.tempoT1 || 0;
+      const t3 = state.leadtime.leadTimeT3 || state.leadtime.tempoT3 || 0;
+      resultadosTexto.push(`Lead Time: O tempo de atravessamento total caiu de ${t1} para ${t3} ${ltU}, caracterizando uma redução de ${lt.reducao.toFixed(2)}% no prazo de entrega do processo.`);
       bullets.push(`Redução de ${lt.reducao.toFixed(2)}% no Lead Time.`);
     }
     if (selectedIndicadores.includes("area")) {
-      textoIndicadores += `Otimização de layout gerando economia de ${ar.reducaoPercent.toFixed(1)}% de área útil. `;
-      bullets.push(`Economia de ${ar.reducaoPercent.toFixed(1)}% de área útil.`);
+      resultadosTexto.push(`Área de Trabalho: A otimização do layout produtivo reduziu a área ocupada em ${ar.reducaoPercent.toFixed(1)}%, liberando ${ar.economiaM2.toFixed(1)}m² de área útil, equivalente a uma economia imobiliária mensal de R$ ${ar.economiaMensal.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}.`);
+      bullets.push(`Economia de ${ar.reducaoPercent.toFixed(1)}% (${ar.economiaM2.toFixed(1)}m²) de área útil.`);
     }
 
-    if (textoIndicadores === "") {
-      textoIndicadores = "Nenhum indicador foi selecionado para exibição. ";
-    }
+    const intro = `O presente programa de fomento ao setor industrial brasileiro Brasil Mais Produtivo, proporcionou a realização de consultoria em Manufatura Enxuta na Empresa ${data.nomeEmpresa || "—"}, na cidade de ${data.cidade || "—"} no Estado do Rio Grande do Sul. A escolha do produto a ser mapeado foi motivada por: ${data.motivacao || "—"}. As ferramentas aplicadas foram: ${data.ferramentas || "—"}.`;
+    
+    const desenvolvimento = `Foram elaborados planos de ação através da ferramenta 5W2H, definindo diversas ações para as oportunidades elencadas, tais como: ${listaAcoes}.\n\nApós a definição do ponto de intervenção, monitoramento e validação das melhorias, obteve-se:`;
 
-    const textoCompleto = `O presente programa de fomento ao setor industrial brasileiro Brasil Mais Produtivo, proporcionou a realização de consultoria em Manufatura Enxuta na Empresa ${data.nomeEmpresa || "—"}, na cidade de ${data.cidade || "—"} no Estado do Rio Grande do Sul. A escolha do produto a ser mapeado foi motivada ${data.motivacao || "—"}. As ferramentas aplicadas foram ${data.ferramentas || "—"}. Foram elaborados um conjunto de ações através da ferramenta 5W2H, onde definiu-se diversas ações para as oportunidades elencadas, tais como: ${listaAcoes}. Após definição do ponto de intervenção, monitoramento e validação das melhorias, obteve-se: ${textoIndicadores}O resultado geral do projeto foi agregador e positivo para a empresa pois o envolvimento da equipe foi primordial para garantir o conhecimento necessário através do plano de ação, treinamentos, trabalho realizado e resultados alcançados, com isso a empresa pode manter o aculturamento do pensamento Lean e replicar os conceitos da melhoria contínua para os demais setores e linhas de trabalho da produção.`;
+    const fechamento = `O resultado geral do projeto foi agregador e positivo para a empresa, pois o envolvimento da equipe foi primordial para garantir o conhecimento necessário através do plano de ação, treinamentos, trabalho realizado e resultados alcançados. Com isso, a empresa pode manter o aculturamento do pensamento Lean e replicar os conceitos da melhoria contínua para os demais setores e linhas de produção.`;
+
+    // Junta os blocos com quebras de linha reais
+    const textoCompleto = [intro, desenvolvimento, ...resultadosTexto, fechamento].join("\n\n");
 
     return { textoDinamico: textoCompleto, bulletPoints: bullets };
-  }, [data, prod, pb, mov, qual, disp, lt, ar, selectedIndicadores]);
+  }, [data, prod, pb, mov, qual, disp, lt, ar, selectedIndicadores, state.produtividade.unidade, state.leadtime]);
 
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
     setCopiedId(id);
-    toast.success("Texto integral copiado!");
+    toast.success("Texto formatado copiado!");
     setTimeout(() => setCopiedId(null), 2000);
   };
 
@@ -97,6 +103,8 @@ export function ResumoModule({ data, state, onChange, onClearData }: Props) {
   };
 
   const toggleIndicador = (id: string) => {
+    if (lockedIndicadores.includes(id)) return; // Impede desmarcar os travados
+    
     if (selectedIndicadores.includes(id)) {
       onChange({ indicadoresConclusao: selectedIndicadores.filter(i => i !== id) });
     } else {
@@ -104,7 +112,6 @@ export function ResumoModule({ data, state, onChange, onClearData }: Props) {
     }
   };
 
-  // Lista para desenhar as caixas seletoras
   const indicadoresList = [
     { id: "produtividade", label: "Produtividade" },
     { id: "payback", label: "Payback" },
@@ -237,11 +244,13 @@ export function ResumoModule({ data, state, onChange, onClearData }: Props) {
               {copiedId === "conc" ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
             </button>
             <h4 className="text-[10px] font-bold text-blue-700 uppercase tracking-widest mb-4 border-b border-blue-200/50 pb-2">Conclusão do Projeto</h4>
+            
             <div className="text-[13px] text-slate-700 leading-relaxed text-justify space-y-6 flex-1">
-              <p>{textoDinamico}</p> 
+              {/* O whitespace-pre-wrap respeita o \n\n gerando os parágrafos corretos */}
+              <div className="whitespace-pre-wrap">{textoDinamico}</div> 
               
               {bulletPoints.length > 0 && (
-                <div className="bg-white border-l-4 border-blue-500 p-5 space-y-3 rounded-r-xl shadow-sm">
+                <div className="bg-white border-l-4 border-blue-500 p-5 space-y-3 rounded-r-xl shadow-sm mt-4">
                   {bulletPoints.map((point, index) => (
                     <p key={index} className="font-bold text-slate-800 text-sm tracking-tight">• {point}</p>
                   ))}
@@ -254,7 +263,9 @@ export function ResumoModule({ data, state, onChange, onClearData }: Props) {
               <h4 className="text-[10px] font-bold text-blue-700 uppercase tracking-widest mb-3">Indicadores na Conclusão</h4>
               <div className="flex flex-wrap gap-2">
                 {indicadoresList.map((ind) => {
+                  const isLocked = lockedIndicadores.includes(ind.id);
                   const isActive = selectedIndicadores.includes(ind.id);
+                  
                   return (
                     <button
                       key={ind.id}
@@ -263,7 +274,7 @@ export function ResumoModule({ data, state, onChange, onClearData }: Props) {
                         isActive 
                           ? "bg-blue-600 text-white border-blue-600 shadow-md" 
                           : "bg-white text-slate-500 border-slate-300 hover:bg-slate-100 hover:text-slate-700"
-                      }`}
+                      } ${isLocked ? "cursor-not-allowed opacity-90" : ""}`}
                     >
                       {ind.label}
                     </button>
