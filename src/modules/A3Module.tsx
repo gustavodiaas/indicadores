@@ -11,16 +11,17 @@ interface Props {
 
 export function A3Module({ data, onChange }: Props) {
 
-  // Armadura contra dados antigos no LocalStorage
   const listaPlanoAcao = Array.isArray(data.planoAcao) ? data.planoAcao : [];
   const listaIndicadores = Array.isArray(data.indicadores) ? data.indicadores : [];
 
   const handleExportExcel = async () => {
     try {
       const response = await fetch('/template_a3.xlsx');
+      const contentType = response.headers.get("content-type");
       
-      if (!response.ok) {
-        toast.error("Arquivo não encontrado! Coloque o 'template_a3.xlsx' na pasta public.");
+      // BLINDAGEM: Verifica se a resposta não deu erro E se o arquivo não é um HTML falso do Vercel
+      if (!response.ok || (contentType && contentType.includes("text/html"))) {
+        toast.error("O molde não foi encontrado! Verifique se o nome está exatamente como 'template_a3.xlsx' (tudo minúsculo) na pasta public do GitHub.");
         return;
       }
 
@@ -30,39 +31,39 @@ export function A3Module({ data, onChange }: Props) {
       const ws = workbook.worksheets[0];
 
       // Cabeçalho
-      ws.getCell('B2').value = data.titulo;       
-      ws.getCell('P2').value = data.data;          
-      ws.getCell('Z2').value = data.aprovacoes; 
+      if (data.titulo) ws.getCell('I2').value = data.titulo;       
+      if (data.data) ws.getCell('BD2').value = data.data;          
+      if (data.aprovacoes) ws.getCell('CB2').value = data.aprovacoes; 
 
       // Lado Esquerdo
-      ws.getCell('A4').value = data.background;
-      ws.getCell('A12').value = data.objetivos;
-      ws.getCell('A20').value = data.estadoAtual;
-      ws.getCell('A28').value = data.analise;
+      if (data.background) ws.getCell('A4').value = data.background;
+      if (data.objetivos) ws.getCell('A16').value = data.objetivos;
+      if (data.estadoAtual) ws.getCell('A25').value = data.estadoAtual;
+      if (data.analise) ws.getCell('A37').value = data.analise;
 
       // Lado Direito - Estado Futuro
-      ws.getCell('T4').value = data.estadoFuturo;
+      if (data.estadoFuturo) ws.getCell('AO4').value = data.estadoFuturo;
       
       // Lado Direito - Plano de Ação
-      let rowAcao = 14; 
+      let rowAcao = 16; 
       listaPlanoAcao.forEach(acao => {
-        ws.getCell(`T${rowAcao}`).value = acao.oque;
-        ws.getCell(`AE${rowAcao}`).value = acao.quem;
-        ws.getCell(`AK${rowAcao}`).value = acao.prazo;
+        ws.getCell(`AO${rowAcao}`).value = acao.oque;
+        ws.getCell(`BD${rowAcao}`).value = acao.quem;
+        ws.getCell(`BK${rowAcao}`).value = acao.prazo;
         rowAcao++;
       });
 
       // Lado Direito - Acompanhamento
-      let rowInd = 24;
+      let rowInd = 25;
       listaIndicadores.forEach(ind => {
-        ws.getCell(`T${rowInd}`).value = ind.indicador;
-        ws.getCell(`AE${rowInd}`).value = ind.meta;   
-        ws.getCell(`AK${rowInd}`).value = ind.status; 
+        ws.getCell(`AO${rowInd}`).value = ind.indicador;
+        ws.getCell(`BD${rowInd}`).value = ind.meta;   
+        ws.getCell(`BK${rowInd}`).value = ind.status; 
         rowInd++;
       });
 
       // Rodapé
-      ws.getCell('A36').value = data.observacoes;
+      if (data.observacoes) ws.getCell('A48').value = data.observacoes; // Usando a linha 48 para a descrição extra
 
       const buffer = await workbook.xlsx.writeBuffer();
       const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
@@ -76,7 +77,7 @@ export function A3Module({ data, onChange }: Props) {
 
     } catch (error) {
       console.error(error);
-      toast.error("Erro ao gerar a planilha. Verifique o console.");
+      toast.error("Falha técnica ao tentar montar o Excel. Verifique se o arquivo public/template_a3.xlsx é um Excel válido.");
     }
   };
 
