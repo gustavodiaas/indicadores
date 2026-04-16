@@ -11,14 +11,11 @@ interface Props {
 
 export function FloatingNav({ active, onSelect }: Props) {
   const navItems: { key: ModuleKey; icon: any; label: string; color: string }[] = [
+    { key: "home", icon: Home, label: "Home", color: "bg-slate-900" },
     { key: "resumo", icon: FileText, label: "Resumo", color: "bg-blue-600" },
     { key: "gbo", icon: GanttChartSquare, label: "GBO", color: "bg-indigo-600" },
     { key: "produtividade", icon: BarChart2, label: "Produtividade", color: "bg-emerald-600" },
     { key: "payback", icon: Calculator, label: "Payback", color: "bg-amber-500" },
-    
-    // AQUI: Home ancorada bem no centro
-    { key: "home", icon: Home, label: "Menu", color: "bg-slate-900" },
-
     { key: "movimentacao", icon: ArrowRightLeft, label: "Movimentação", color: "bg-orange-500" },
     { key: "qualidade", icon: ShieldCheck, label: "Qualidade", color: "bg-rose-600" },
     { key: "disponibilidade", icon: Clock, label: "Disponibilidade", color: "bg-cyan-600" },
