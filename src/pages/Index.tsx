@@ -307,6 +307,13 @@ const Index = () => {
 
     return (
       <div className="flex flex-col items-center justify-center h-full w-full py-12 pb-36 px-4 animate-in fade-in zoom-in-95 duration-500">
+        
+        {/* AVISO DE PRIVACIDADE SUTIL (AGORA NO TOPO) */}
+        <div className="mb-8 flex items-center justify-center gap-2 text-[11px] font-medium text-slate-400 bg-white px-4 py-2 rounded-full border border-slate-200 shadow-sm opacity-80 hover:opacity-100 transition-opacity">
+          <Lock className="w-3 h-3 text-slate-400" />
+          <span>Privacidade: Seus dados são salvos apenas localmente no seu navegador. Nenhuma informação é enviada.</span>
+        </div>
+
         <div className="bg-blue-600 p-4 rounded-2xl shadow-lg mb-6">
           <TrendingUp className="h-8 w-8 text-white" />
         </div>
@@ -332,12 +339,6 @@ const Index = () => {
               </button>
             );
           })}
-        </div>
-
-        {/* AVISO DE PRIVACIDADE SUTIL */}
-        <div className="mt-16 flex items-center justify-center gap-2 text-[11px] font-medium text-slate-400 bg-white px-4 py-2 rounded-full border border-slate-200 shadow-sm opacity-80 hover:opacity-100 transition-opacity">
-          <Lock className="w-3 h-3 text-slate-400" />
-          <span>Privacidade: Seus dados são salvos apenas localmente no seu navegador. Nenhuma informação é enviada.</span>
         </div>
       </div>
     );
