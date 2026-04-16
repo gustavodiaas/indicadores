@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 
-export type ModuleKey = "home" | "resumo" | "produtividade" | "payback" | "movimentacao" | "qualidade" | "disponibilidade" | "leadtime" | "area" | "gbo" | "planoAcao";
+export type ModuleKey = "home" | "resumo" | "produtividade" | "payback" | "movimentacao" | "qualidade" | "disponibilidade" | "leadtime" | "area" | "gbo" | "planoAcao" | "a3";
 
 export interface ProdutividadeData { 
   volumeT1: number; volumeT3: number; 
@@ -55,7 +55,24 @@ export interface LeadTimeData {
   reducaoObtida?: string;
 }
 
-export interface AppState { produtividade: ProdutividadeData; payback: PaybackData; movimentacao: MovimentacaoData; qualidade: QualidadeData; disponibilidade: DisponibilidadeData; leadtime: LeadTimeData; area: AreaData; resumo: ResumoData; gbo: GboData; planoAcao: PlanoAcaoData; }
+export interface A3Data {
+  tema: string;
+  responsavel: string;
+  data: string;
+  contexto: string;
+  condicaoAtual: string;
+  metas: string;
+  analiseCausa: string;
+  contramedidas: string;
+  planoAcao: string;
+  acompanhamento: string;
+}
+
+export interface AppState { 
+  produtividade: ProdutividadeData; payback: PaybackData; movimentacao: MovimentacaoData; 
+  qualidade: QualidadeData; disponibilidade: DisponibilidadeData; leadtime: LeadTimeData; 
+  area: AreaData; resumo: ResumoData; gbo: GboData; planoAcao: PlanoAcaoData; a3: A3Data; 
+}
 
 const defaultState: AppState = {
   produtividade: { volumeT1: 0, volumeT3: 0, horasT1: 8, horasT3: 8, operadoresT1: 1, operadoresT3: 1, unidade: "peças" },
@@ -67,7 +84,8 @@ const defaultState: AppState = {
   area: { areaT1: 0, areaT3: 0, valorAluguel: 0 },
   resumo: { nomeEmpresa: "", cidade: "", ramo: "", especialista: "", totalColaboradores: 0, turnos: 1, processos: "", metodo: "", origem: "", oportunidades: "", problemas: "", atuacao: "", motivacao: "", ferramentas: "", indicadoresConclusao: ["produtividade", "payback"] }, 
   gbo: { turnoTempo: 0, turnoUnidade: "hours", demanda: 0, demandaUnidade: "peças", tempoUnidade: "seconds", operacoes: [], tituloGrafico: "Gráfico de Balanceamento de Operações (GBO)" },
-  planoAcao: { metadata: { dataCriacao: "", respCriacao: "", objetivo: "", meta: "", dataRevisao: "", respRevisao: "", indicador: "" }, acoes: [] }
+  planoAcao: { metadata: { dataCriacao: "", respCriacao: "", objetivo: "", meta: "", dataRevisao: "", respRevisao: "", indicador: "" }, acoes: [] },
+  a3: { tema: "", responsavel: "", data: "", contexto: "", condicaoAtual: "", metas: "", analiseCausa: "", contramedidas: "", planoAcao: "", acompanhamento: "" }
 };
 
 const safeDiv = (num: number, den: number) => (den > 0 ? num / den : 0);
