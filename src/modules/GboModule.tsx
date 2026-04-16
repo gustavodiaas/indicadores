@@ -319,16 +319,13 @@ export default function GBOAnalysis() {
                       onChange={(e) => { updateModule("gbo", { demanda: Number(e.target.value) }); validateTaktFields(); }} onBlur={validateTaktFields}
                       className={`w-full h-10 px-3 rounded-lg border text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${errors.dailyDemand ? "border-rose-500" : "border-slate-200"}`}
                     />
-                    <select value={demandUnit} onChange={(e: any) => updateModule("gbo", { demandaUnidade: e.target.value })} className="w-full h-10 px-3 rounded-lg border border-slate-200 bg-white text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
-                      <option value="peças">Peças</option>
-                      <option value="m²">m²</option>
-                      <option value="m³">m³</option>
-                      <option value="kg">kg</option>
-                      <option value="litros">Litros</option>
-                      <option value="unidades">Unidades</option>
-                      <option value="metros">Metros</option>
-                      <option value="toneladas">Toneladas</option>
-                    </select>
+                    <input 
+                      type="text" 
+                      placeholder="Ex: caixas" 
+                      value={demandUnit} 
+                      onChange={(e) => updateModule("gbo", { demandaUnidade: e.target.value })} 
+                      className="w-full h-10 px-3 rounded-lg border border-slate-200 bg-white text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                    />
                   </div>
                 </div>
 
