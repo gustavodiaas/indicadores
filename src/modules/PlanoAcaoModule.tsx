@@ -3,7 +3,7 @@ import { InputField } from "@/components/InputField";
 import { Trash2, Download, CheckCircle, ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import * as XLSX from "xlsx";
+import ExcelJS from "exceljs";
 
 interface Props {
   data: PlanoAcaoData;
@@ -33,58 +33,65 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
     }
 
     try {
-      // 1. Busca o arquivo original que você colocou na pasta public
+      // 1. Busca o arquivo original (agora usando exceljs para manter o design)
       const response = await fetch('/template_5w2h.xlsx');
       
       if (!response.ok) {
-        toast.error("Arquivo de modelo não encontrado! Coloque o 'template_5w2h.xlsx' na pasta public do projeto.");
+        toast.error("Arquivo não encontrado! Verifique se 'template_5w2h.xlsx' está na pasta public.");
         return;
       }
 
-      // 2. Lê o arquivo como ArrayBuffer (mantendo cores, bordas, etc)
       const arrayBuffer = await response.arrayBuffer();
-      const wb = XLSX.read(arrayBuffer, { type: "array" });
       
-      // Pega a primeira aba da planilha (onde fica o 5W2H)
-      const wsName = wb.SheetNames[0];
-      const ws = wb.Sheets[wsName];
-
+      // 2. Carrega a planilha preservando cores, bordas e estilos
+      const workbook = new ExcelJS.Workbook();
+      await workbook.xlsx.load(arrayBuffer);
+      
+      // Pega a primeira aba
+      const ws = workbook.worksheets[0];
       const m = data.metadata;
 
-      // 3. Injeta os metadados (Cabeçalho) exatamente nas células do seu modelo
-      // Linha 3
-      if (m.dataCriacao) ws['B3'] = { t: 's', v: m.dataCriacao };
-      if (m.respCriacao) ws['D3'] = { t: 's', v: m.respCriacao };
-      if (m.objetivo) ws['G3'] = { t: 's', v: m.objetivo };
-      if (m.meta) ws['I3'] = { t: 's', v: m.meta };
+      // 3. Injeta os metadados exatamente nas células
+      if (m.dataCriacao) ws.getCell('B3').value = m.dataCriacao;
+      if (m.respCriacao) ws.getCell('D3').value = m.respCriacao;
+      if (m.objetivo) ws.getCell('G3').value = m.objetivo;
+      if (m.meta) ws.getCell('I3').value = m.meta;
 
-      // Linha 4
-      if (m.dataRevisao) ws['B4'] = { t: 's', v: m.dataRevisao };
-      if (m.respRevisao) ws['D4'] = { t: 's', v: m.respRevisao };
-      if (m.indicador) ws['G4'] = { t: 's', v: m.indicador };
+      if (m.dataRevisao) ws.getCell('B4').value = m.dataRevisao;
+      if (m.respRevisao) ws.getCell('D4').value = m.respRevisao;
+      if (m.indicador) ws.getCell('G4').value = m.indicador;
 
-      // 4. Prepara as linhas de ação do sistema
-      const rowsData = data.acoes.map(a => [
-        a.what, 
-        a.how || "", 
-        a.who || "", 
-        a.start || "", 
-        a.end || "", 
-        a.where || "", 
-        a.why || "", 
-        a.howMuch ? Number(a.howMuch) : 0, 
-        a.percent ? (Number(a.percent) / 100) : 0, 
-        "", // Hoje em branco
-        a.obs || "", 
-        a.status || "NÃO INICIADO"
-      ]);
+      // 4. Injeta as tarefas a partir da Linha 8
+      let currentRow = 8;
+      data.acoes.forEach((a) => {
+        // O exceljs insere o valor sem destruir o estilo da célula que já está lá no seu molde
+        ws.getCell(`A${currentRow}`).value = a.what;
+        ws.getCell(`B${currentRow}`).value = a.how || "";
+        ws.getCell(`C${currentRow}`).value = a.who || "";
+        ws.getCell(`D${currentRow}`).value = a.start || "";
+        ws.getCell(`E${currentRow}`).value = a.end || "";
+        ws.getCell(`F${currentRow}`).value = a.where || "";
+        ws.getCell(`G${currentRow}`).value = a.why || "";
+        ws.getCell(`H${currentRow}`).value = a.howMuch ? Number(a.howMuch) : 0;
+        ws.getCell(`I${currentRow}`).value = a.percent ? (Number(a.percent) / 100) : 0;
+        // J = Hoje (Mantemos o que estiver na fórmula do seu Excel)
+        ws.getCell(`K${currentRow}`).value = a.obs || "";
+        ws.getCell(`L${currentRow}`).value = a.status || "NÃO INICIADO";
+        
+        currentRow++;
+      });
 
-      // 5. Escreve a tabela de tarefas a partir da Linha 8 (A8)
-      XLSX.utils.sheet_add_aoa(ws, rowsData, { origin: "A8" });
+      // 5. Gera o arquivo final e força o download nativo
+      const buffer = await workbook.xlsx.writeBuffer();
+      const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `Plano_Acao_${m.indicador || 'Exportado'}.xlsx`;
+      link.click();
+      window.URL.revokeObjectURL(url);
 
-      // 6. Tira o arquivo do forno e faz o download com o nome formatado
-      XLSX.writeFile(wb, `Plano_Acao_${m.indicador || 'Exportado'}.xlsx`);
-      toast.success("Excel gerado com sucesso no formato original!");
+      toast.success("Excel gerado com sucesso preservando o design!");
 
     } catch (error) {
       console.error(error);
