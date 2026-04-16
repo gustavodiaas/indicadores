@@ -1,6 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
 
-// AQUI: 'home' adicionado à lista de módulos
 export type ModuleKey = "home" | "resumo" | "produtividade" | "payback" | "movimentacao" | "qualidade" | "disponibilidade" | "leadtime" | "area" | "gbo";
 
 export interface ProdutividadeData { 
@@ -36,7 +35,7 @@ export interface AreaData { areaT1: number; areaT3: number; valorAluguel: number
 export interface Acao5W2H { id: string; what: string; why: string; where: string; when: string; who: string; how: string; howMuch: string; }
 export interface ResumoData { nomeEmpresa: string; cidade: string; ramo: string; especialista: string; totalColaboradores: number; turnos: number; processos: string; metodo: "empurrada" | "puxada" | ""; origem: string; oportunidades: string; problemas: string; atuacao: string; motivacao: string; ferramentas: string; acoes: Acao5W2H[]; }
 export interface GboOperation { id: string; name: string; time: number; }
-export interface GboData { turnoTempo: number; turnoUnidade: "minutes" | "hours"; demanda: number; demandaUnidade: string; tempoUnidade: "minutes" | "seconds"; operacoes: GboOperation[]; }
+export interface GboData { turnoTempo: number; turnoUnidade: "minutes" | "hours"; demanda: number; demandaUnidade: string; tempoUnidade: "minutes" | "seconds"; operacoes: GboOperation[]; tituloGrafico?: string; }
 
 export interface LeadTimeData {
   leadTimeT1: number; leadTimeT3: number;
@@ -57,7 +56,7 @@ const defaultState: AppState = {
   leadtime: { leadTimeT1: 0, leadTimeT3: 0, unidadeTempo: "dias", melhorias: "", reducaoObtida: "" },
   area: { areaT1: 0, areaT3: 0, valorAluguel: 0 },
   resumo: { nomeEmpresa: "", cidade: "", ramo: "", especialista: "", totalColaboradores: 0, turnos: 1, processos: "", metodo: "", origem: "", oportunidades: "", problemas: "", atuacao: "", motivacao: "", ferramentas: "", acoes: [] },
-  gbo: { turnoTempo: 0, turnoUnidade: "hours", demanda: 0, demandaUnidade: "peças", tempoUnidade: "seconds", operacoes: [] },
+  gbo: { turnoTempo: 0, turnoUnidade: "hours", demanda: 0, demandaUnidade: "peças", tempoUnidade: "seconds", operacoes: [], tituloGrafico: "Gráfico de Balanceamento de Operações (GBO)" },
 };
 
 const safeDiv = (num: number, den: number) => (den > 0 ? num / den : 0);
@@ -67,7 +66,6 @@ export function useAppStore() {
     try { const saved = localStorage.getItem("consultoria-lean-state"); return saved ? { ...defaultState, ...JSON.parse(saved) } : defaultState; } catch { return defaultState; }
   });
   
-  // AQUI: Estado inicial alterado de "resumo" para "home"
   const [activeModule, setActiveModule] = useState<ModuleKey>("home");
 
   useEffect(() => { localStorage.setItem("consultoria-lean-state", JSON.stringify(state)); }, [state]);
