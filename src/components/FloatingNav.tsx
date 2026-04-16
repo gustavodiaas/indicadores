@@ -1,7 +1,7 @@
 import { ModuleKey } from "@/store/useAppStore";
 import { 
   FileText, GanttChartSquare, BarChart2, Calculator, 
-  ArrowRightLeft, ShieldCheck, Clock, Timer, Square
+  ArrowRightLeft, ShieldCheck, Clock, Timer, Square, Home
 } from "lucide-react";
 
 interface Props {
@@ -15,6 +15,10 @@ export function FloatingNav({ active, onSelect }: Props) {
     { key: "gbo", icon: GanttChartSquare, label: "GBO", color: "bg-indigo-600" },
     { key: "produtividade", icon: BarChart2, label: "Produtividade", color: "bg-emerald-600" },
     { key: "payback", icon: Calculator, label: "Payback", color: "bg-amber-500" },
+    
+    // AQUI: Home ancorada bem no centro
+    { key: "home", icon: Home, label: "Menu", color: "bg-slate-900" },
+
     { key: "movimentacao", icon: ArrowRightLeft, label: "Movimentação", color: "bg-orange-500" },
     { key: "qualidade", icon: ShieldCheck, label: "Qualidade", color: "bg-rose-600" },
     { key: "disponibilidade", icon: Clock, label: "Disponibilidade", color: "bg-cyan-600" },
@@ -24,11 +28,6 @@ export function FloatingNav({ active, onSelect }: Props) {
 
   return (
     <div className="fixed z-[100] transition-all duration-500 print:hidden left-1/2 -translate-x-1/2 bottom-6 w-[95%] md:w-max">
-      {/* EFEITO VIDRO (GLASSMORPHISM): 
-          - bg-white/60: Fundo semi-transparente
-          - backdrop-blur-md: Desfoque do fundo
-          - border-white/20: Borda sutil e reflexiva
-      */}
       <div className="flex flex-row items-center bg-white/60 backdrop-blur-md border border-white/20 shadow-2xl transition-all duration-500 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] px-3 py-3 rounded-[3rem] gap-1.5 md:gap-2">
         
         {navItems.map((item) => {
@@ -40,22 +39,14 @@ export function FloatingNav({ active, onSelect }: Props) {
               key={item.key}
               onClick={() => onSelect(item.key)}
               className={`
-                group relative transition-all duration-300 flex flex-col items-center justify-center flex-shrink-0 gap-1.5
-                /* Ajuste para Círculo Perfeito:
-                   Mudei de h-16 w-[72px] para h-16 w-16 (quadrado perfeito)
-                   Assim, rounded-full cria um círculo perfeito e não um oval.
-                */
-                h-16 w-16
+                group relative transition-all duration-300 flex flex-col items-center justify-center flex-shrink-0 gap-1.5 h-16 w-16
                 ${isActive 
-                  /* PREENCHIMENTO CIRCULAR PERFEITO */
                   ? `${item.color} text-white scale-105 shadow-md rounded-full` 
-                  /* Itens não ativos com borda arredondada e hover de vidro */
                   : "text-slate-500/70 hover:text-slate-700 hover:bg-white/30 rounded-2xl"
                 }
               `}
             >
               <Icon className={`w-5 h-5 transition-transform duration-300 ${isActive ? "scale-100" : "group-hover:scale-110"}`} />
-              {/* Texto não ativo em text-slate-600 para contraste contra o vidro jateado */}
               <span className={`text-[9px] font-bold text-center leading-none px-0.5 ${isActive ? "text-white" : "text-slate-600"}`}>
                 {item.label}
               </span>
