@@ -1,13 +1,12 @@
 import { type A3Data, type A3PlanoAcao, type A3Indicador } from "@/store/useAppStore";
 import { InputField } from "@/components/InputField";
-import { Download, Printer, LayoutTemplate, Plus, Trash2 } from "lucide-react";
+import { Download, LayoutTemplate, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import ExcelJS from "exceljs";
 
-// Componente isolado para não perder o foco ao digitar
 const TextAreaBlock = ({ title, value, onChangeField }: { title: string, value: string, onChangeField: (v: string) => void }) => (
   <div className="flex flex-col bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm shrink-0 min-h-[140px] flex-1">
-    <div className="bg-slate-800 border-b border-slate-700 px-3 py-1.5">
+    <div className="bg-blue-600 border-b border-blue-700 px-3 py-1.5">
       <h4 className="text-[10px] font-bold text-white uppercase tracking-widest">{title}</h4>
     </div>
     <textarea
@@ -19,7 +18,6 @@ const TextAreaBlock = ({ title, value, onChangeField }: { title: string, value: 
   </div>
 );
 
-// Formatador de data para padrão Brasileiro (DD/MM/YYYY)
 const formatBRDate = (dateStr: string) => {
   if (!dateStr) return "";
   const parts = dateStr.split('-');
@@ -52,21 +50,17 @@ export function A3Module({ data, onChange }: Props) {
       await workbook.xlsx.load(arrayBuffer);
       const ws = workbook.worksheets[0];
 
-      // Cabeçalho (com data corrigida)
       if (data.titulo) ws.getCell('I2').value = data.titulo;       
       if (data.data) ws.getCell('BD2').value = formatBRDate(data.data);          
       if (data.aprovacoes) ws.getCell('CB2').value = data.aprovacoes; 
 
-      // Lado Esquerdo (Injeção na linha certa abaixo dos títulos)
       if (data.background) ws.getCell('A5').value = data.background;
       if (data.objetivos) ws.getCell('A16').value = data.objetivos;
       if (data.estadoAtual) ws.getCell('A24').value = data.estadoAtual;
       if (data.analise) ws.getCell('A37').value = data.analise;
 
-      // Lado Direito - Estado Futuro
       if (data.estadoFuturo) ws.getCell('AO5').value = data.estadoFuturo;
       
-      // Lado Direito - Plano de Ação (Iniciando na linha 18 para pular os cabeçalhos)
       let rowAcao = 18; 
       listaPlanoAcao.forEach(acao => {
         ws.getCell(`AO${rowAcao}`).value = acao.oque;
@@ -75,7 +69,6 @@ export function A3Module({ data, onChange }: Props) {
         rowAcao++;
       });
 
-      // Lado Direito - Acompanhamento (Iniciando na linha 33)
       let rowInd = 33;
       listaIndicadores.forEach(ind => {
         ws.getCell(`AO${rowInd}`).value = ind.indicador;
@@ -84,7 +77,6 @@ export function A3Module({ data, onChange }: Props) {
         rowInd++;
       });
 
-      // Rodapé
       if (data.observacoes) ws.getCell('A47').value = data.observacoes; 
 
       const buffer = await workbook.xlsx.writeBuffer();
@@ -103,12 +95,6 @@ export function A3Module({ data, onChange }: Props) {
     }
   };
 
-  const handlePrintPDF = () => {
-    toast.info("Para garantir a formatação exata do seu A3, o sistema fará o download do arquivo original. Imprima diretamente pelo Excel.");
-    handleExportExcel();
-  };
-
-  // Gerador de ID robusto para garantir estabilidade dos campos
   const generateId = () => Date.now().toString() + Math.random().toString(36).substring(2, 9);
 
   const addPlanoAcao = () => {
@@ -137,17 +123,11 @@ export function A3Module({ data, onChange }: Props) {
       <div className="flex items-center justify-between border-b border-slate-200 pb-4">
         <div>
           <h2 className="text-xl font-black text-slate-800 tracking-tight flex items-center gap-2">
-            <LayoutTemplate className="h-6 w-6 text-indigo-600" /> RELATÓRIO A3 (TOYOTA)
+            <LayoutTemplate className="h-6 w-6 text-blue-600" /> RELATÓRIO A3 (TOYOTA)
           </h2>
           <p className="text-sm text-slate-500 mt-1">Preencha o formulário espelhado para exportação 100% exata.</p>
         </div>
         <div className="flex items-center gap-3">
-          <button 
-            onClick={handlePrintPDF}
-            className="flex items-center gap-2 px-4 py-2.5 bg-slate-800 text-white rounded-lg font-bold text-xs uppercase tracking-widest shadow-md hover:bg-slate-900 transition-all"
-          >
-            <Printer className="h-4 w-4" /> Imprimir Original
-          </button>
           <button 
             onClick={handleExportExcel}
             className="flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white rounded-lg font-bold text-xs uppercase tracking-widest shadow-md hover:bg-emerald-700 transition-all"
@@ -178,7 +158,7 @@ export function A3Module({ data, onChange }: Props) {
             <TextAreaBlock title="5. Estado Futuro / Recomendações" value={data.estadoFuturo} onChangeField={v => onChange({ estadoFuturo: v })} />
             
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col shrink-0">
-              <div className="bg-slate-800 border-b border-slate-700 px-3 py-1.5 flex justify-between items-center">
+              <div className="bg-blue-600 border-b border-blue-700 px-3 py-1.5 flex justify-between items-center">
                 <h4 className="text-[10px] font-bold text-white uppercase tracking-widest">6. Plano de Ação</h4>
                 <button onClick={addPlanoAcao} className="text-white bg-white/20 hover:bg-white/30 rounded p-1 transition-colors"><Plus className="w-3 h-3" /></button>
               </div>
@@ -188,9 +168,9 @@ export function A3Module({ data, onChange }: Props) {
                 </div>
                 {listaPlanoAcao.map((a, index) => (
                   <div key={a.id || index} className="grid grid-cols-12 gap-2 items-center shrink-0">
-                    <div className="col-span-6"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 outline-none focus:border-indigo-400 transition-colors" value={a.oque || ""} onChange={e => updatePlanoAcao(a.id, "oque", e.target.value)} /></div>
-                    <div className="col-span-3"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 outline-none focus:border-indigo-400 transition-colors" value={a.quem || ""} onChange={e => updatePlanoAcao(a.id, "quem", e.target.value)} /></div>
-                    <div className="col-span-2"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 outline-none focus:border-indigo-400 transition-colors" value={a.prazo || ""} onChange={e => updatePlanoAcao(a.id, "prazo", e.target.value)} /></div>
+                    <div className="col-span-6"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 outline-none focus:border-blue-400 transition-colors" value={a.oque || ""} onChange={e => updatePlanoAcao(a.id, "oque", e.target.value)} /></div>
+                    <div className="col-span-3"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 outline-none focus:border-blue-400 transition-colors" value={a.quem || ""} onChange={e => updatePlanoAcao(a.id, "quem", e.target.value)} /></div>
+                    <div className="col-span-2"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 outline-none focus:border-blue-400 transition-colors" value={a.prazo || ""} onChange={e => updatePlanoAcao(a.id, "prazo", e.target.value)} /></div>
                     <div className="col-span-1 text-center"><button onClick={() => removePlanoAcao(a.id)} className="text-rose-500 hover:bg-rose-100 p-1.5 rounded transition-colors"><Trash2 className="w-3.5 h-3.5" /></button></div>
                   </div>
                 ))}
@@ -198,7 +178,7 @@ export function A3Module({ data, onChange }: Props) {
             </div>
 
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col shrink-0">
-              <div className="bg-slate-800 border-b border-slate-700 px-3 py-1.5 flex justify-between items-center">
+              <div className="bg-blue-600 border-b border-blue-700 px-3 py-1.5 flex justify-between items-center">
                 <h4 className="text-[10px] font-bold text-white uppercase tracking-widest">7. Acompanhamento / Indicadores</h4>
                 <button onClick={addIndicador} className="text-white bg-white/20 hover:bg-white/30 rounded p-1 transition-colors"><Plus className="w-3 h-3" /></button>
               </div>
@@ -208,10 +188,10 @@ export function A3Module({ data, onChange }: Props) {
                 </div>
                 {listaIndicadores.map((i, index) => (
                   <div key={i.id || index} className="grid grid-cols-12 gap-2 items-center shrink-0">
-                    <div className="col-span-5"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 outline-none focus:border-indigo-400 transition-colors" value={i.indicador || ""} onChange={e => updateIndicador(i.id, "indicador", e.target.value)} /></div>
-                    <div className="col-span-3"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 outline-none focus:border-indigo-400 transition-colors" value={i.meta || ""} onChange={e => updateIndicador(i.id, "meta", e.target.value)} /></div>
+                    <div className="col-span-5"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 outline-none focus:border-blue-400 transition-colors" value={i.indicador || ""} onChange={e => updateIndicador(i.id, "indicador", e.target.value)} /></div>
+                    <div className="col-span-3"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 outline-none focus:border-blue-400 transition-colors" value={i.meta || ""} onChange={e => updateIndicador(i.id, "meta", e.target.value)} /></div>
                     <div className="col-span-3">
-                      <select className="w-full text-xs p-2 rounded-md border border-slate-200 outline-none focus:border-indigo-400 bg-white transition-colors" value={i.status || ""} onChange={e => updateIndicador(i.id, "status", e.target.value)}>
+                      <select className="w-full text-xs p-2 rounded-md border border-slate-200 outline-none focus:border-blue-400 bg-white transition-colors" value={i.status || ""} onChange={e => updateIndicador(i.id, "status", e.target.value)}>
                         <option value="">Selecione</option><option value="No Prazo">No Prazo</option><option value="Atrasado">Atrasado</option><option value="Concluído">Concluído</option>
                       </select>
                     </div>
