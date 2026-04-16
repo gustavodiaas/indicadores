@@ -26,22 +26,45 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
     onChange({ acoes: data.acoes.filter(a => a.id !== id) });
   };
 
-  const handleExportExcel = () => {
+  const handleExportExcel = async () => {
     if (data.acoes.length === 0) {
       toast.error("Adicione ações antes de exportar.");
       return;
     }
 
-    const m = data.metadata;
-    const wsData = [
-      [],
-      [],
-      ["Data da criação do plano:", m.dataCriacao || "", "", "Responsável:", m.respCriacao || "", "", "Objetivo:", m.objetivo || "", "", "Meta:", m.meta || ""],
-      ["Data da revisão do plano:", m.dataRevisao || "", "", "Responsável:", m.respRevisao || "", "", "Indicador:", m.indicador || ""],
-      [],
-      ["", "", "", "Quando", "", "", "", "", "", "", "", ""],
-      ["O que", "Como", "Quem", "Início", "Fim", "Onde", "Por que", "Quanto", "% Completo", "Hoje", "Observação", "STATUS"],
-      ...data.acoes.map(a => [
+    try {
+      // 1. Busca o arquivo original que você colocou na pasta public
+      const response = await fetch('/template_5w2h.xlsx');
+      
+      if (!response.ok) {
+        toast.error("Arquivo de modelo não encontrado! Coloque o 'template_5w2h.xlsx' na pasta public do projeto.");
+        return;
+      }
+
+      // 2. Lê o arquivo como ArrayBuffer (mantendo cores, bordas, etc)
+      const arrayBuffer = await response.arrayBuffer();
+      const wb = XLSX.read(arrayBuffer, { type: "array" });
+      
+      // Pega a primeira aba da planilha (onde fica o 5W2H)
+      const wsName = wb.SheetNames[0];
+      const ws = wb.Sheets[wsName];
+
+      const m = data.metadata;
+
+      // 3. Injeta os metadados (Cabeçalho) exatamente nas células do seu modelo
+      // Linha 3
+      if (m.dataCriacao) ws['B3'] = { t: 's', v: m.dataCriacao };
+      if (m.respCriacao) ws['D3'] = { t: 's', v: m.respCriacao };
+      if (m.objetivo) ws['G3'] = { t: 's', v: m.objetivo };
+      if (m.meta) ws['I3'] = { t: 's', v: m.meta };
+
+      // Linha 4
+      if (m.dataRevisao) ws['B4'] = { t: 's', v: m.dataRevisao };
+      if (m.respRevisao) ws['D4'] = { t: 's', v: m.respRevisao };
+      if (m.indicador) ws['G4'] = { t: 's', v: m.indicador };
+
+      // 4. Prepara as linhas de ação do sistema
+      const rowsData = data.acoes.map(a => [
         a.what, 
         a.how || "", 
         a.who || "", 
@@ -49,19 +72,24 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
         a.end || "", 
         a.where || "", 
         a.why || "", 
-        a.howMuch || "0", 
-        a.percent ? (a.percent / 100) : 0, 
-        "", // Hoje em branco por padrão
+        a.howMuch ? Number(a.howMuch) : 0, 
+        a.percent ? (Number(a.percent) / 100) : 0, 
+        "", // Hoje em branco
         a.obs || "", 
         a.status || "NÃO INICIADO"
-      ])
-    ];
+      ]);
 
-    const ws = XLSX.utils.aoa_to_sheet(wsData);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "5W2H");
-    XLSX.writeFile(wb, "Plano_de_Acao_5W2H.xlsx");
-    toast.success("Excel exportado com sucesso!");
+      // 5. Escreve a tabela de tarefas a partir da Linha 8 (A8)
+      XLSX.utils.sheet_add_aoa(ws, rowsData, { origin: "A8" });
+
+      // 6. Tira o arquivo do forno e faz o download com o nome formatado
+      XLSX.writeFile(wb, `Plano_Acao_${m.indicador || 'Exportado'}.xlsx`);
+      toast.success("Excel gerado com sucesso no formato original!");
+
+    } catch (error) {
+      console.error(error);
+      toast.error("Erro ao gerar a planilha. Verifique o console.");
+    }
   };
 
   return (
@@ -142,7 +170,7 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
                     <InputField label="Quem? (Who)" value={a.who} onChange={v => updateAcao(a.id, "who", v)} />
                     <InputField label="Início (When)" value={a.start} onChange={v => updateAcao(a.id, "start", v)} type="date" />
                     <InputField label="Fim (When)" value={a.end} onChange={v => updateAcao(a.id, "end", v)} type="date" />
-                    <InputField label="Quanto Custa? (How Much)" value={a.howMuch} onChange={v => updateAcao(a.id, "howMuch", v)} />
+                    <InputField label="Quanto Custa? (How Much)" value={a.howMuch} onChange={v => updateAcao(a.id, "howMuch", v)} type="number" />
                     
                     <InputField label="% Completo" value={a.percent} onChange={v => updateAcao(a.id, "percent", Number(v) || 0)} type="number" />
                     <div className="md:col-span-2"><InputField label="Observação" value={a.obs} onChange={v => updateAcao(a.id, "obs", v)} /></div>
