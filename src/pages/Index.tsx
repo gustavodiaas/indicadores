@@ -40,7 +40,9 @@ const Index = () => {
       return u;
     };
 
-    const acoesStr = planoAcao.acoes.length > 0 ? planoAcao.acoes.map(a => a.what).join(", ") : "—";
+    // FILTRO PARA O WORD: Ignora ações criadas direto no 5W2H
+    const acoesResumo = planoAcao.acoes.filter(a => a.origin !== "5w2h");
+    const acoesStr = acoesResumo.length > 0 ? acoesResumo.map(a => a.what).join(", ") : "—";
 
     const tr = (text: string, bold = false) => new TextRun({ text, bold, font: "Arial", size: 22 }); 
     
