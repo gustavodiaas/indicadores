@@ -1,22 +1,31 @@
 import { type A3Data, type A3PlanoAcao, type A3Indicador } from "@/store/useAppStore";
 import { InputField } from "@/components/InputField";
-import { Download, LayoutTemplate, Plus, Trash2 } from "lucide-react";
+import { Download, LayoutTemplate, Plus, Trash2, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 import ExcelJS from "exceljs";
 
-const TextAreaBlock = ({ title, value, onChangeField }: { title: string, value: string, onChangeField: (v: string) => void }) => (
-  <div className="flex flex-col bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm shrink-0 min-h-[140px] flex-1">
-    <div className="bg-blue-600 border-b border-blue-700 px-3 py-1.5">
-      <h4 className="text-[10px] font-bold text-white uppercase tracking-widest">{title}</h4>
+// O bloco de texto agora recebe o limite exato de caracteres como parâmetro
+const TextAreaBlock = ({ title, value, maxChars, onChangeField }: { title: string, value: string, maxChars: number, onChangeField: (v: string) => void }) => {
+  const currentChars = (value || "").length;
+  const isOverLimit = currentChars > maxChars;
+
+  return (
+    <div className="flex flex-col bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm shrink-0 min-h-[150px] flex-1 relative">
+      <div className="bg-blue-600 border-b border-blue-700 px-3 py-1.5 flex justify-between items-center">
+        <h4 className="text-[10px] font-bold text-white uppercase tracking-widest">{title}</h4>
+      </div>
+      <textarea
+        className="flex-1 w-full p-3 pb-8 text-xs text-slate-600 outline-none resize-none bg-transparent leading-relaxed"
+        placeholder="Descreva de forma resumida e direta..."
+        value={value || ""}
+        onChange={(e) => onChangeField(e.target.value)}
+      />
+      <div className={`absolute bottom-2 right-3 text-[10px] font-bold ${isOverLimit ? 'text-rose-500' : 'text-slate-400'}`}>
+        {currentChars} / {maxChars}
+      </div>
     </div>
-    <textarea
-      className="flex-1 w-full p-3 text-xs text-slate-600 outline-none resize-none bg-transparent leading-relaxed"
-      placeholder="Descreva..."
-      value={value || ""}
-      onChange={(e) => onChangeField(e.target.value)}
-    />
-  </div>
-);
+  );
+};
 
 const formatBRDate = (dateStr: string) => {
   if (!dateStr) return "";
@@ -98,6 +107,10 @@ export function A3Module({ data, onChange }: Props) {
   const generateId = () => Date.now().toString() + Math.random().toString(36).substring(2, 9);
 
   const addPlanoAcao = () => {
+    if (listaPlanoAcao.length >= 13) {
+      toast.warning("Limite de 13 ações atingido para encaixar perfeitamente na sua planilha.");
+      return;
+    }
     onChange({ planoAcao: [...listaPlanoAcao, { id: generateId(), oque: "", quem: "", prazo: "" }] });
   };
   const removePlanoAcao = (id: string) => {
@@ -108,6 +121,10 @@ export function A3Module({ data, onChange }: Props) {
   };
 
   const addIndicador = () => {
+    if (listaIndicadores.length >= 13) {
+      toast.warning("Limite de 13 indicadores atingido para não desconfigurar a folha de impressão.");
+      return;
+    }
     onChange({ indicadores: [...listaIndicadores, { id: generateId(), indicador: "", meta: "", status: "" }] });
   };
   const removeIndicador = (id: string) => {
@@ -137,6 +154,13 @@ export function A3Module({ data, onChange }: Props) {
         </div>
       </div>
 
+      <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-center gap-3 shadow-sm shrink-0">
+        <AlertTriangle className="h-5 w-5 text-amber-500" />
+        <p className="text-xs text-amber-800 font-medium">
+          <strong>Poder de Síntese:</strong> O layout do Excel possui áreas cravadas. Respeite os limites de caracteres e o máximo de 13 linhas nas tabelas para evitar que o texto seja cortado na impressão.
+        </p>
+      </div>
+
       <div className="flex flex-col gap-4 bg-slate-50 p-6 rounded-2xl border border-slate-200 shadow-inner">
         
         <div className="grid grid-cols-1 md:grid-cols-6 gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm shrink-0">
@@ -148,18 +172,21 @@ export function A3Module({ data, onChange }: Props) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
           
           <div className="flex flex-col gap-4">
-            <TextAreaBlock title="1. Considerações Iniciais (Background)" value={data.background} onChangeField={v => onChange({ background: v })} />
-            <TextAreaBlock title="2. Metas, Objetivos, Benefícios" value={data.objetivos} onChangeField={v => onChange({ objetivos: v })} />
-            <TextAreaBlock title="3. Estado Atual" value={data.estadoAtual} onChangeField={v => onChange({ estadoAtual: v })} />
-            <TextAreaBlock title="4. Análise" value={data.analise} onChangeField={v => onChange({ analise: v })} />
+            {/* Limites calibrados com o espaço físico do Excel */}
+            <TextAreaBlock title="1. Considerações Iniciais (Background)" maxChars={550} value={data.background} onChangeField={v => onChange({ background: v })} />
+            <TextAreaBlock title="2. Metas, Objetivos, Benefícios" maxChars={350} value={data.objetivos} onChangeField={v => onChange({ objetivos: v })} />
+            <TextAreaBlock title="3. Estado Atual" maxChars={650} value={data.estadoAtual} onChangeField={v => onChange({ estadoAtual: v })} />
+            <TextAreaBlock title="4. Análise" maxChars={500} value={data.analise} onChangeField={v => onChange({ analise: v })} />
           </div>
 
           <div className="flex flex-col gap-4">
-            <TextAreaBlock title="5. Estado Futuro / Recomendações" value={data.estadoFuturo} onChangeField={v => onChange({ estadoFuturo: v })} />
+            <TextAreaBlock title="5. Estado Futuro / Recomendações" maxChars={600} value={data.estadoFuturo} onChangeField={v => onChange({ estadoFuturo: v })} />
             
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col shrink-0">
               <div className="bg-blue-600 border-b border-blue-700 px-3 py-1.5 flex justify-between items-center">
-                <h4 className="text-[10px] font-bold text-white uppercase tracking-widest">6. Plano de Ação</h4>
+                <h4 className="text-[10px] font-bold text-white uppercase tracking-widest flex items-center gap-2">
+                  6. Plano de Ação <span className="bg-white/20 px-1.5 py-0.5 rounded text-[9px]">{listaPlanoAcao.length}/13</span>
+                </h4>
                 <button onClick={addPlanoAcao} className="text-white bg-white/20 hover:bg-white/30 rounded p-1 transition-colors"><Plus className="w-3 h-3" /></button>
               </div>
               <div className="p-3 flex flex-col gap-2 bg-slate-50/50">
@@ -179,7 +206,9 @@ export function A3Module({ data, onChange }: Props) {
 
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col shrink-0">
               <div className="bg-blue-600 border-b border-blue-700 px-3 py-1.5 flex justify-between items-center">
-                <h4 className="text-[10px] font-bold text-white uppercase tracking-widest">7. Acompanhamento / Indicadores</h4>
+                <h4 className="text-[10px] font-bold text-white uppercase tracking-widest flex items-center gap-2">
+                  7. Acompanhamento / Indicadores <span className="bg-white/20 px-1.5 py-0.5 rounded text-[9px]">{listaIndicadores.length}/13</span>
+                </h4>
                 <button onClick={addIndicador} className="text-white bg-white/20 hover:bg-white/30 rounded p-1 transition-colors"><Plus className="w-3 h-3" /></button>
               </div>
               <div className="p-3 flex flex-col gap-2 bg-slate-50/50">
@@ -205,7 +234,7 @@ export function A3Module({ data, onChange }: Props) {
         </div>
         
         <div className="mt-2 shrink-0">
-           <TextAreaBlock title="Descrição / Observações Adicionais" value={data.observacoes || ""} onChangeField={v => onChange({ observacoes: v })} />
+           <TextAreaBlock title="Descrição / Observações Adicionais" maxChars={800} value={data.observacoes || ""} onChangeField={v => onChange({ observacoes: v })} />
         </div>
 
       </div>
