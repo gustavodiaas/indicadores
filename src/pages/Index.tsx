@@ -286,7 +286,7 @@ const Index = () => {
       { key: "leadtime", title: "Lead Time", desc: "Redução no tempo de atravessamento", icon: Timer, color: "text-purple-600 bg-purple-50" },
       { key: "area", title: "Área de Trabalho", desc: "Otimização de layout e m²", icon: Square, color: "text-slate-600 bg-slate-100" },
       { key: "planoAcao", title: "Plano de Ação 5W2H", desc: "Gestão tática e exportação", icon: ClipboardList, color: "text-sky-600 bg-sky-50" },
-      { key: "a3", title: "Modelo A3", desc: "Análise e Solução de Problemas", icon: LayoutTemplate, color: "text-indigo-500 bg-indigo-50" },
+      { key: "a3", title: "Modelo A3", desc: "Análise e Solução de Problemas", icon: LayoutTemplate, color: "text-blue-600 bg-blue-50" },
     ];
 
     return (
@@ -331,7 +331,8 @@ const Index = () => {
     <div className="flex flex-col h-screen w-full bg-[#F8FAFC] overflow-hidden font-inter print:bg-white print:h-auto print:overflow-visible">
       <style dangerouslySetInnerHTML={{ __html: `@media print { @page { size: landscape; margin: 10mm; } }` }} />
       <main className="flex-1 overflow-y-auto p-2 md:p-4 pb-32 print:p-0 print:overflow-visible">
-        {activeModule !== "home" && (
+        {/* Esconde o Topbar nas abas que têm fluxos ou exportações próprias */}
+        {!["home", "gbo", "planoAcao", "a3"].includes(activeModule) && (
           <div className="print:hidden relative z-[100] mb-2 animate-in slide-in-from-top-2 duration-300">
             <Topbar onExportWord={handleExportWord} />
           </div>
