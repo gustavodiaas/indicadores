@@ -23,7 +23,8 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
       const nova: PlanoAcaoItem = {
         id: Date.now().toString(),
         what: newAcaoWhat.trim(),
-        why: "", where: "", start: "", end: "", who: "", how: "", howMuch: "", percent: 0, obs: "", status: "NÃO INICIADO"
+        why: "", where: "", start: "", end: "", who: "", how: "", howMuch: "", percent: 0, obs: "", status: "NÃO INICIADO",
+        origin: "5w2h" // Etiqueta garantindo que veio da aba tática
       };
       onChange({ acoes: [...data.acoes, nova] });
       setNewAcaoWhat("");
