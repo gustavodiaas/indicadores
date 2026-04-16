@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Cell } from "recharts"
 import { Input } from "@/components/ui/input"
 import { Pencil } from "lucide-react"
+import { useAppStore } from "@/store/useAppStore"
 
 interface Operation {
   id: string
@@ -22,7 +23,8 @@ interface GBOChartProps {
 }
 
 export function GBOChart({ operations, timeUnit, taktTime, taktTimeUnit, demandUnit = "un" }: GBOChartProps) {
-  const [chartTitle, setChartTitle] = useState("Gráfico de Balanceamento de Operações (GBO)")
+  const { state, updateModule } = useAppStore()
+  const chartTitle = state.gbo.tituloGrafico || "Gráfico de Balanceamento de Operações (GBO)"
   const [isEditingTitle, setIsEditingTitle] = useState(false)
 
   const convertToSeconds = (time: number, unit: "minutes" | "seconds"): number => {
@@ -109,7 +111,7 @@ export function GBOChart({ operations, timeUnit, taktTime, taktTimeUnit, demandU
               <Input
                 autoFocus
                 value={chartTitle}
-                onChange={(e) => setChartTitle(e.target.value)}
+                onChange={(e) => updateModule("gbo", { tituloGrafico: e.target.value })}
                 onBlur={() => setIsEditingTitle(false)}
                 onKeyDown={(e) => e.key === 'Enter' && setIsEditingTitle(false)}
                 className="text-xl font-bold h-8 w-full max-w-md bg-transparent border-primary/30 text-primary"
