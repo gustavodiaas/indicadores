@@ -4,7 +4,7 @@ import { Topbar } from "@/components/Topbar";
 import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } from "docx";
 import { 
   FileText, GanttChartSquare, BarChart2, Calculator, 
-  ArrowRightLeft, ShieldCheck, Clock, Timer, Square, TrendingUp, ClipboardList, Lock
+  ArrowRightLeft, ShieldCheck, Clock, Timer, Square, TrendingUp, ClipboardList, Lock, LayoutTemplate
 } from "lucide-react";
 
 import { ResumoModule } from "@/modules/ResumoModule";
@@ -16,6 +16,7 @@ import { DisponibilidadeModule } from "@/modules/DisponibilidadeModule";
 import { LeadTimeModule } from "@/modules/LeadTimeModule";
 import { AreaModule } from "@/modules/AreaModule";
 import { PlanoAcaoModule } from "@/modules/PlanoAcaoModule";
+import { A3Module } from "@/modules/A3Module";
 import GBOAnalysis from "@/modules/GboModule"; 
 
 const Index = () => {
@@ -40,7 +41,6 @@ const Index = () => {
       return u;
     };
 
-    // FILTRO: Puxa apenas as macros do Resumo, ignora o operacional criado no 5W2H
     const acoesResumo = planoAcao.acoes.filter(a => a.origin !== "5w2h");
     const acoesStr = acoesResumo.length > 0 ? acoesResumo.map(a => a.what).join(", ") : "—";
 
@@ -58,7 +58,6 @@ const Index = () => {
       spacing: { line: 360 }, 
     });
 
-    // --- MONTAGEM DINÂMICA DA CONCLUSÃO (Igual a tela do sistema) ---
     const lockedIndicadores = ["produtividade", "payback"];
     const selectedIndicadores = Array.from(new Set([...(resumo.indicadoresConclusao || []), ...lockedIndicadores]));
     const u = produtividade.unidade || "peças";
@@ -133,18 +132,11 @@ const Index = () => {
       tr("O resultado geral do projeto foi agregador e positivo para a empresa, pois o envolvimento da equipe foi primordial para garantir o conhecimento necessário através do plano de ação, treinamentos, trabalho realizado e resultados alcançados. Com isso, a empresa pode manter o aculturamento do pensamento Lean e replicar os conceitos da melhoria contínua para os demais setores e linhas de produção.")
     ]));
 
-    // --- MONTAGEM DO DOCUMENTO ---
     const doc = new Document({
       sections: [{
         properties: {},
         children: [
-          new Paragraph({
-            text: "RELATÓRIO TÉCNICO DE CONSULTORIA",
-            heading: HeadingLevel.HEADING_1,
-            alignment: AlignmentType.CENTER,
-            spacing: { after: 400 },
-          }),
-
+          new Paragraph({ text: "RELATÓRIO TÉCNICO DE CONSULTORIA", heading: HeadingLevel.HEADING_1, alignment: AlignmentType.CENTER, spacing: { after: 400 } }),
           createHeading("1. Descrição do Processo"),
           createJustified([
             tr("A Empresa "), tr(resumo.nomeEmpresa || "—", true),
@@ -163,7 +155,6 @@ const Index = () => {
             tr(". Nesta consultoria, a área de atuação/intervenção foi "), tr(resumo.atuacao || "—", true),
             tr(".")
           ]),
-
           createHeading("2. Laudo de Produtividade"),
           createJustified([
             tr("No estágio inicial, a produtividade era de "), tr(`${prod.pphT1.toFixed(2)} pçs/h/op`, true),
@@ -179,7 +170,6 @@ const Index = () => {
             tr(". Isso representa um ganho direto de "), tr(`${prod.ganho.toFixed(2)}%`, true),
             tr(" na eficiência operacional da célula.")
           ]),
-
           createHeading("3. Laudo de Payback"),
           createJustified([
             tr("No estágio inicial, havia "), tr(String(produtividade.operadoresT1 || 0), true),
@@ -195,7 +185,6 @@ const Index = () => {
             tr(". Portanto, um payback de "), tr(`${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(1) : "0.0"} ${pb.paybackMeses === 1 ? "mês" : "meses"}`, true),
             tr(".")
           ]),
-
           createHeading("4. Laudo de Qualidade"),
           createJustified([
             tr(`No estágio inicial, de um total de ${qualidade.quantidadeT1} peças, identificou-se ${qualidade.perdasT1} `),
@@ -204,7 +193,6 @@ const Index = () => {
             tr(`${qual.indiceT3.toFixed(2)}%`, true),
             tr(", garantindo maior confiabilidade ao processo e minimizando perdas.")
           ]),
-
           createHeading("5. Laudo de Disponibilidade"),
           createJustified([
             tr("O tempo real de operação efetiva da máquina evoluiu de "),
@@ -217,7 +205,6 @@ const Index = () => {
             tr(`${disp.aumento.toFixed(2)}%`, true),
             tr(" na utilização do recurso através da redução de paradas não planejadas.")
           ]),
-
           createHeading("6. Laudo de Movimentação Logística"),
           createJustified([
             tr("A análise de fluxo evidenciou uma redução de "),
@@ -226,14 +213,12 @@ const Index = () => {
             tr(`${mov.reducaoTempo.toFixed(2)}%`, true),
             tr(` no tempo gasto com movimentação e transporte logístico (de ${movimentacao.tempoT1} para ${movimentacao.tempoT3} ${getUnit(movimentacao.tempoT3, movimentacao.unidadeTempo)}).`)
           ]),
-
           createHeading("7. Plano de Ação (5W2H)"),
           createJustified([
             tr("As principais definições macro do plano de ação contemplaram: "),
             tr(acoesStr, true),
             tr(".")
           ]),
-
           createHeading("8. Laudo de Lead Time"),
           createJustified([
             tr("O tempo de atravessamento (lead time) inicial era de "),
@@ -244,7 +229,6 @@ const Index = () => {
             tr(`${lt.reducao.toFixed(2)}%`, true),
             tr(" no tempo total de entrega do processo.")
           ]),
-
           createHeading("9. Laudo de Área"),
           createJustified([
             tr("A área ocupada inicial era de "),
@@ -259,8 +243,6 @@ const Index = () => {
             tr(`R$ ${ar.economiaMensal.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, true),
             tr(".")
           ]),
-
-          // Injeção da Conclusão Dinâmica
           ...conclusaoParagraphs
         ]
       }]
@@ -287,6 +269,7 @@ const Index = () => {
       case "leadtime": return <LeadTimeModule data={state.leadtime} onChange={d => updateModule("leadtime", d)} />;
       case "area": return <AreaModule data={state.area} onChange={d => updateModule("area", d)} />;
       case "planoAcao": return <PlanoAcaoModule data={state.planoAcao} onChange={d => updateModule("planoAcao", d)} />;
+      case "a3": return <A3Module data={state.a3} onChange={d => updateModule("a3", d)} />;
       default: return null;
     }
   };
@@ -303,12 +286,12 @@ const Index = () => {
       { key: "leadtime", title: "Lead Time", desc: "Redução no tempo de atravessamento", icon: Timer, color: "text-purple-600 bg-purple-50" },
       { key: "area", title: "Área de Trabalho", desc: "Otimização de layout e m²", icon: Square, color: "text-slate-600 bg-slate-100" },
       { key: "planoAcao", title: "Plano de Ação 5W2H", desc: "Gestão tática e exportação", icon: ClipboardList, color: "text-sky-600 bg-sky-50" },
+      { key: "a3", title: "Modelo A3", desc: "Análise e Solução de Problemas", icon: LayoutTemplate, color: "text-indigo-500 bg-indigo-50" },
     ];
 
     return (
       <div className="flex flex-col items-center justify-center h-full w-full py-12 pb-36 px-4 animate-in fade-in zoom-in-95 duration-500">
         
-        {/* AVISO DE PRIVACIDADE SUTIL (AGORA NO TOPO) */}
         <div className="mb-8 flex items-center justify-center gap-2 text-[11px] font-medium text-slate-400 bg-white px-4 py-2 rounded-full border border-slate-200 shadow-sm opacity-80 hover:opacity-100 transition-opacity">
           <Lock className="w-3 h-3 text-slate-400" />
           <span>Privacidade: Seus dados são salvos apenas localmente no seu navegador. Nenhuma informação é enviada.</span>
@@ -353,7 +336,7 @@ const Index = () => {
             <Topbar onExportWord={handleExportWord} />
           </div>
         )}
-        <div className={`w-full transition-all min-h-full relative print:shadow-none print:border-none print:rounded-none print:p-0 ${activeModule === "home" ? "bg-transparent p-0" : "bg-white rounded-2xl shadow-sm border border-slate-200/50 p-4 md:p-6"}`}>
+        <div className={`w-full transition-all min-h-full relative print:shadow-none print:border-none print:rounded-none print:p-0 ${activeModule === "home" || activeModule === "a3" ? "bg-transparent p-0" : "bg-white rounded-2xl shadow-sm border border-slate-200/50 p-4 md:p-6"}`}>
           {activeModule === "home" && renderHome()}
           {activeModule !== "home" && activeModule !== "gbo" && (
             <div key={activeModule} className="animate-in fade-in slide-in-from-bottom-2 duration-500 w-full h-full">
