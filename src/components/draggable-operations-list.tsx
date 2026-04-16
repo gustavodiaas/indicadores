@@ -32,6 +32,12 @@ export function DraggableOperationsList({
   const [editName, setEditName] = useState("")
   const [editTime, setEditTime] = useState("")
 
+  const getPtUnit = (u: string) => {
+    if (u === "seconds") return "segundos"
+    if (u === "minutes") return "minutos"
+    return u
+  }
+
   const handleDragStart = (index: number) => setDraggedIndex(index)
 
   const handleDragOver = (e: React.DragEvent, index: number) => {
@@ -82,7 +88,7 @@ export function DraggableOperationsList({
         {operations.map((op, index) => (
           <div
             key={op.id}
-            draggable={editingId !== op.id} // Desativa o drag enquanto edita
+            draggable={editingId !== op.id} 
             onDragStart={() => handleDragStart(index)}
             onDragOver={(e) => handleDragOver(e, index)}
             onDragEnd={handleDragEnd}
@@ -119,7 +125,7 @@ export function DraggableOperationsList({
                 <div className="flex flex-col min-w-0">
                   <span className="text-sm font-medium truncate">{op.name}</span>
                   <span className="text-xs text-muted-foreground">
-                    {op.time.toFixed(1)} {op.unit}
+                    {op.time.toFixed(1)} {getPtUnit(op.unit)}
                   </span>
                 </div>
               )}
