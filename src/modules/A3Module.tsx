@@ -11,6 +11,10 @@ interface Props {
 
 export function A3Module({ data, onChange }: Props) {
 
+  // Armadura contra dados antigos no LocalStorage
+  const listaPlanoAcao = Array.isArray(data.planoAcao) ? data.planoAcao : [];
+  const listaIndicadores = Array.isArray(data.indicadores) ? data.indicadores : [];
+
   const handleExportExcel = async () => {
     try {
       const response = await fetch('/template_a3.xlsx');
@@ -25,8 +29,6 @@ export function A3Module({ data, onChange }: Props) {
       await workbook.xlsx.load(arrayBuffer);
       const ws = workbook.worksheets[0];
 
-      // --- INJEÇÃO DE DADOS (Células Baseadas no seu Layout) ---
-      
       // Cabeçalho
       ws.getCell('B2').value = data.titulo;       
       ws.getCell('P2').value = data.data;          
@@ -39,28 +41,28 @@ export function A3Module({ data, onChange }: Props) {
       ws.getCell('A28').value = data.analise;
 
       // Lado Direito - Estado Futuro
-      ws.getCell('T4').value = data.estadoFuturo; // Coluna de divisão (Ajustar a Letra 'T' conforme seu arquivo real)
+      ws.getCell('T4').value = data.estadoFuturo;
       
-      // Lado Direito - Plano de Ação (A partir da linha 14, por exemplo)
+      // Lado Direito - Plano de Ação
       let rowAcao = 14; 
-      data.planoAcao.forEach(acao => {
+      listaPlanoAcao.forEach(acao => {
         ws.getCell(`T${rowAcao}`).value = acao.oque;
-        ws.getCell(`AE${rowAcao}`).value = acao.quem; // Ajustar letra
-        ws.getCell(`AK${rowAcao}`).value = acao.prazo; // Ajustar letra
+        ws.getCell(`AE${rowAcao}`).value = acao.quem;
+        ws.getCell(`AK${rowAcao}`).value = acao.prazo;
         rowAcao++;
       });
 
-      // Lado Direito - Acompanhamento (A partir da linha 24, por exemplo)
+      // Lado Direito - Acompanhamento
       let rowInd = 24;
-      data.indicadores.forEach(ind => {
+      listaIndicadores.forEach(ind => {
         ws.getCell(`T${rowInd}`).value = ind.indicador;
-        ws.getCell(`AE${rowInd}`).value = ind.meta;   // Ajustar letra
-        ws.getCell(`AK${rowInd}`).value = ind.status; // Ajustar letra
+        ws.getCell(`AE${rowInd}`).value = ind.meta;   
+        ws.getCell(`AK${rowInd}`).value = ind.status; 
         rowInd++;
       });
 
       // Rodapé
-      ws.getCell('A36').value = data.observacoes; // Ajustar linha
+      ws.getCell('A36').value = data.observacoes;
 
       const buffer = await workbook.xlsx.writeBuffer();
       const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
@@ -84,23 +86,23 @@ export function A3Module({ data, onChange }: Props) {
   };
 
   const addPlanoAcao = () => {
-    onChange({ planoAcao: [...data.planoAcao, { id: Date.now().toString(), oque: "", quem: "", prazo: "" }] });
+    onChange({ planoAcao: [...listaPlanoAcao, { id: Date.now().toString(), oque: "", quem: "", prazo: "" }] });
   };
   const removePlanoAcao = (id: string) => {
-    onChange({ planoAcao: data.planoAcao.filter(a => a.id !== id) });
+    onChange({ planoAcao: listaPlanoAcao.filter(a => a.id !== id) });
   };
   const updatePlanoAcao = (id: string, field: keyof A3PlanoAcao, value: string) => {
-    onChange({ planoAcao: data.planoAcao.map(a => a.id === id ? { ...a, [field]: value } : a) });
+    onChange({ planoAcao: listaPlanoAcao.map(a => a.id === id ? { ...a, [field]: value } : a) });
   };
 
   const addIndicador = () => {
-    onChange({ indicadores: [...data.indicadores, { id: Date.now().toString(), indicador: "", meta: "", status: "" }] });
+    onChange({ indicadores: [...listaIndicadores, { id: Date.now().toString(), indicador: "", meta: "", status: "" }] });
   };
   const removeIndicador = (id: string) => {
-    onChange({ indicadores: data.indicadores.filter(i => i.id !== id) });
+    onChange({ indicadores: listaIndicadores.filter(i => i.id !== id) });
   };
   const updateIndicador = (id: string, field: keyof A3Indicador, value: string) => {
-    onChange({ indicadores: data.indicadores.map(i => i.id === id ? { ...i, [field]: value } : i) });
+    onChange({ indicadores: listaIndicadores.map(i => i.id === id ? { ...i, [field]: value } : i) });
   };
 
   const TextAreaBlock = ({ title, value, onChangeField }: { title: string, value: string, onChangeField: (v: string) => void }) => (
@@ -145,17 +147,14 @@ export function A3Module({ data, onChange }: Props) {
 
       <div className="flex flex-col gap-4 bg-slate-50 p-6 rounded-2xl border border-slate-200 shadow-inner">
         
-        {/* CABEÇALHO */}
         <div className="grid grid-cols-1 md:grid-cols-6 gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
           <div className="md:col-span-3"><InputField label="Título / Tema" value={data.titulo} onChange={v => onChange({ titulo: v })} /></div>
           <InputField label="Data" value={data.data} onChange={v => onChange({ data: v })} type="date" />
           <div className="md:col-span-2"><InputField label="Aprovações" value={data.aprovacoes} onChange={v => onChange({ aprovacoes: v })} /></div>
         </div>
 
-        {/* CORPO DIVIDIDO */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           
-          {/* LADO ESQUERDO */}
           <div className="flex flex-col gap-4">
             <TextAreaBlock title="1. Considerações Iniciais (Background)" value={data.background} onChangeField={v => onChange({ background: v })} />
             <TextAreaBlock title="2. Metas, Objetivos, Benefícios" value={data.objetivos} onChangeField={v => onChange({ objetivos: v })} />
@@ -163,11 +162,9 @@ export function A3Module({ data, onChange }: Props) {
             <TextAreaBlock title="4. Análise" value={data.analise} onChangeField={v => onChange({ analise: v })} />
           </div>
 
-          {/* LADO DIREITO */}
           <div className="flex flex-col gap-4">
             <TextAreaBlock title="5. Estado Futuro / Recomendações" value={data.estadoFuturo} onChangeField={v => onChange({ estadoFuturo: v })} />
             
-            {/* 6. PLANO DE AÇÃO (TABELA) */}
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
               <div className="bg-slate-800 border-b border-slate-700 px-3 py-1.5 flex justify-between items-center">
                 <h4 className="text-[10px] font-bold text-white uppercase tracking-widest">6. Plano de Ação</h4>
@@ -177,7 +174,7 @@ export function A3Module({ data, onChange }: Props) {
                 <div className="grid grid-cols-12 gap-2 text-[10px] font-bold text-slate-500 uppercase px-1">
                   <div className="col-span-6">Ação / O quê?</div><div className="col-span-3">Responsável</div><div className="col-span-2">Prazo</div>
                 </div>
-                {data.planoAcao.map((a) => (
+                {listaPlanoAcao.map((a) => (
                   <div key={a.id} className="grid grid-cols-12 gap-2 items-center">
                     <div className="col-span-6"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 outline-none" value={a.oque} onChange={e => updatePlanoAcao(a.id, "oque", e.target.value)} /></div>
                     <div className="col-span-3"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 outline-none" value={a.quem} onChange={e => updatePlanoAcao(a.id, "quem", e.target.value)} /></div>
@@ -188,7 +185,6 @@ export function A3Module({ data, onChange }: Props) {
               </div>
             </div>
 
-            {/* 7. ACOMPANHAMENTO (TABELA) */}
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
               <div className="bg-slate-800 border-b border-slate-700 px-3 py-1.5 flex justify-between items-center">
                 <h4 className="text-[10px] font-bold text-white uppercase tracking-widest">7. Acompanhamento / Indicadores</h4>
@@ -198,7 +194,7 @@ export function A3Module({ data, onChange }: Props) {
                 <div className="grid grid-cols-12 gap-2 text-[10px] font-bold text-slate-500 uppercase px-1">
                   <div className="col-span-5">Indicador</div><div className="col-span-3">Meta</div><div className="col-span-3">Status</div>
                 </div>
-                {data.indicadores.map((i) => (
+                {listaIndicadores.map((i) => (
                   <div key={i.id} className="grid grid-cols-12 gap-2 items-center">
                     <div className="col-span-5"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 outline-none" value={i.indicador} onChange={e => updateIndicador(i.id, "indicador", e.target.value)} /></div>
                     <div className="col-span-3"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 outline-none" value={i.meta} onChange={e => updateIndicador(i.id, "meta", e.target.value)} /></div>
@@ -216,9 +212,8 @@ export function A3Module({ data, onChange }: Props) {
           </div>
         </div>
         
-        {/* OBSERVAÇÕES FINAIS (COMO NO SEU EXCEL) */}
         <div className="mt-2">
-           <TextAreaBlock title="Descrição / Observações Adicionais" value={data.observacoes} onChangeField={v => onChange({ observacoes: v })} />
+           <TextAreaBlock title="Descrição / Observações Adicionais" value={data.observacoes || ""} onChangeField={v => onChange({ observacoes: v })} />
         </div>
 
       </div>
