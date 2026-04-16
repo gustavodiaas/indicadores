@@ -4,10 +4,9 @@ import { Topbar } from "@/components/Topbar";
 import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } from "docx";
 import { 
   FileText, GanttChartSquare, BarChart2, Calculator, 
-  ArrowRightLeft, ShieldCheck, Clock, Timer, Square, TrendingUp
+  ArrowRightLeft, ShieldCheck, Clock, Timer, Square, TrendingUp, ClipboardList
 } from "lucide-react";
 
-// Seus módulos do painel
 import { ResumoModule } from "@/modules/ResumoModule";
 import { PaybackModule } from "@/modules/PaybackModule";
 import { ProdutividadeModule } from "@/modules/ProdutividadeModule";
@@ -16,14 +15,14 @@ import { QualidadeModule } from "@/modules/QualidadeModule";
 import { DisponibilidadeModule } from "@/modules/DisponibilidadeModule";
 import { LeadTimeModule } from "@/modules/LeadTimeModule";
 import { AreaModule } from "@/modules/AreaModule";
-
+import { PlanoAcaoModule } from "@/modules/PlanoAcaoModule";
 import GBOAnalysis from "@/modules/GboModule"; 
 
 const Index = () => {
   const { state, activeModule, setActiveModule, updateModule, clearData } = useAppStore();
 
   const handleExportWord = async () => {
-    const { resumo, produtividade, payback, movimentacao, qualidade, disponibilidade, leadtime, area } = state;
+    const { resumo, produtividade, payback, movimentacao, qualidade, disponibilidade, leadtime, area, planoAcao } = state;
     
     const prod = calcProdutividade(produtividade);
     const pb = calcPayback(payback, produtividade, resumo);
@@ -41,9 +40,8 @@ const Index = () => {
       return u;
     };
 
-    const acoesStr = resumo.acoes.length > 0 ? resumo.acoes.map(a => a.what).join(", ") : "—";
+    const acoesStr = planoAcao.acoes.length > 0 ? planoAcao.acoes.map(a => a.what).join(", ") : "—";
 
-    // --- FUNÇÕES AUXILIARES PARA O WORD ---
     const tr = (text: string, bold = false) => new TextRun({ text, bold, font: "Arial", size: 22 }); 
     
     const createHeading = (text: string) => new Paragraph({
@@ -58,7 +56,6 @@ const Index = () => {
       spacing: { line: 360 }, 
     });
 
-    // --- CONSTRUÇÃO DO DOCUMENTO OFICIAL ---
     const doc = new Document({
       sections: [{
         properties: {},
@@ -211,7 +208,6 @@ const Index = () => {
       }]
     });
 
-    // --- GERA O ARQUIVO .DOCX ---
     Packer.toBlob(doc).then(blob => {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -224,7 +220,7 @@ const Index = () => {
 
   const renderPanelModules = () => {
     switch (activeModule) {
-      case "resumo": return <ResumoModule data={state.resumo} state={state} onChange={d => updateModule("resumo", d)} onClearData={clearData} />;
+      case "resumo": return <ResumoModule data={state.resumo} state={state} onChange={d => updateModule("resumo", d)} onUpdatePlanoAcao={acoes => updateModule("planoAcao", { acoes })} onClearData={clearData} />;
       case "payback": return <PaybackModule data={state.payback} prodData={state.produtividade} resumoData={state.resumo} onChange={d => updateModule("payback", d)} />;
       case "produtividade": return <ProdutividadeModule data={state.produtividade} onChange={d => updateModule("produtividade", d)} />;
       case "movimentacao": return <MovimentacaoModule data={state.movimentacao} onChange={d => updateModule("movimentacao", d)} />;
@@ -232,14 +228,14 @@ const Index = () => {
       case "disponibilidade": return <DisponibilidadeModule data={state.disponibilidade} onChange={d => updateModule("disponibilidade", d)} />;
       case "leadtime": return <LeadTimeModule data={state.leadtime} onChange={d => updateModule("leadtime", d)} />;
       case "area": return <AreaModule data={state.area} onChange={d => updateModule("area", d)} />;
+      case "planoAcao": return <PlanoAcaoModule data={state.planoAcao} onChange={d => updateModule("planoAcao", d)} />;
       default: return null;
     }
   };
 
-  // --- HOME (HUB DE NAVEGAÇÃO) ---
   const renderHome = () => {
     const modules: { key: ModuleKey; title: string; desc: string; icon: any; color: string }[] = [
-      { key: "resumo", title: "Resumo", desc: "Configurações gerais e plano 5W2H", icon: FileText, color: "text-blue-600 bg-blue-50" },
+      { key: "resumo", title: "Resumo", desc: "Configurações gerais e laudo", icon: FileText, color: "text-blue-600 bg-blue-50" },
       { key: "gbo", title: "GBO", desc: "Balanceamento de Operações e Gargalos", icon: GanttChartSquare, color: "text-indigo-600 bg-indigo-50" },
       { key: "produtividade", title: "Produtividade", desc: "Análise de peças por hora e eficiência", icon: BarChart2, color: "text-emerald-600 bg-emerald-50" },
       { key: "payback", title: "Payback", desc: "Retorno de Investimento (ROI)", icon: Calculator, color: "text-amber-600 bg-amber-50" },
@@ -248,6 +244,7 @@ const Index = () => {
       { key: "disponibilidade", title: "Disponibilidade", desc: "Mapeamento de paradas de máquina", icon: Clock, color: "text-cyan-600 bg-cyan-50" },
       { key: "leadtime", title: "Lead Time", desc: "Redução no tempo de atravessamento", icon: Timer, color: "text-purple-600 bg-purple-50" },
       { key: "area", title: "Área de Trabalho", desc: "Otimização de layout e m²", icon: Square, color: "text-slate-600 bg-slate-100" },
+      { key: "planoAcao", title: "Plano de Ação 5W2H", desc: "Gestão tática e exportação", icon: ClipboardList, color: "text-sky-600 bg-sky-50" },
     ];
 
     return (
@@ -284,40 +281,28 @@ const Index = () => {
 
   return (
     <div className="flex flex-col h-screen w-full bg-[#F8FAFC] overflow-hidden font-inter print:bg-white print:h-auto print:overflow-visible">
-      
       <style dangerouslySetInnerHTML={{ __html: `@media print { @page { size: landscape; margin: 10mm; } }` }} />
-
       <main className="flex-1 overflow-y-auto p-2 md:p-4 pb-32 print:p-0 print:overflow-visible">
-        
-        {/* Esconde Topbar apenas quando estiver na tela HOME */}
         {activeModule !== "home" && (
           <div className="print:hidden relative z-[100] mb-2 animate-in slide-in-from-top-2 duration-300">
             <Topbar onExportWord={handleExportWord} />
           </div>
         )}
-
-        {/* Se estiver na Home, esconde o fundo branco padrão para o Grid ficar bonito */}
         <div className={`w-full transition-all min-h-full relative print:shadow-none print:border-none print:rounded-none print:p-0 ${activeModule === "home" ? "bg-transparent p-0" : "bg-white rounded-2xl shadow-sm border border-slate-200/50 p-4 md:p-6"}`}>
-          
           {activeModule === "home" && renderHome()}
-
           {activeModule !== "home" && activeModule !== "gbo" && (
             <div key={activeModule} className="animate-in fade-in slide-in-from-bottom-2 duration-500 w-full h-full">
               {renderPanelModules()}
             </div>
           )}
-
           <div className={activeModule === "gbo" ? "animate-in fade-in slide-in-from-bottom-2 duration-500 block w-full h-full" : "hidden"}>
             <GBOAnalysis />
           </div>
-
         </div>
       </main>
-
       <div className="print:hidden">
         <FloatingNav active={activeModule} onSelect={setActiveModule} />
       </div>
-      
     </div>
   );
 };
