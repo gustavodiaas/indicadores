@@ -55,20 +55,21 @@ export interface LeadTimeData {
   reducaoObtida?: string;
 }
 
+export interface A3PlanoAcao { id: string; oque: string; quem: string; prazo: string; }
+export interface A3Indicador { id: string; indicador: string; meta: string; status: string; }
+
 export interface A3Data {
   titulo: string;
-  responsavel: string;
   data: string;
-  inicio: string;
-  fim: string;
   aprovacoes: string;
   background: string;
   objetivos: string;
   estadoAtual: string;
   analise: string;
   estadoFuturo: string;
-  planoAcao: string;
-  indicadores: string;
+  planoAcao: A3PlanoAcao[];
+  indicadores: A3Indicador[];
+  observacoes: string;
 }
 
 export interface AppState { 
@@ -88,7 +89,7 @@ const defaultState: AppState = {
   resumo: { nomeEmpresa: "", cidade: "", ramo: "", especialista: "", totalColaboradores: 0, turnos: 1, processos: "", metodo: "", origem: "", oportunidades: "", problemas: "", atuacao: "", motivacao: "", ferramentas: "", indicadoresConclusao: ["produtividade", "payback"] }, 
   gbo: { turnoTempo: 0, turnoUnidade: "hours", demanda: 0, demandaUnidade: "peças", tempoUnidade: "seconds", operacoes: [], tituloGrafico: "Gráfico de Balanceamento de Operações (GBO)" },
   planoAcao: { metadata: { dataCriacao: "", respCriacao: "", objetivo: "", meta: "", dataRevisao: "", respRevisao: "", indicador: "" }, acoes: [] },
-  a3: { titulo: "", responsavel: "", data: "", inicio: "", fim: "", aprovacoes: "", background: "", objetivos: "", estadoAtual: "", analise: "", estadoFuturo: "", planoAcao: "", indicadores: "" }
+  a3: { titulo: "", data: "", aprovacoes: "", background: "", objetivos: "", estadoAtual: "", analise: "", estadoFuturo: "", planoAcao: [], indicadores: [], observacoes: "" }
 };
 
 const safeDiv = (num: number, den: number) => (den > 0 ? num / den : 0);
