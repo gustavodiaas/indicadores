@@ -4,7 +4,7 @@ import { Download, Printer, LayoutTemplate, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import ExcelJS from "exceljs";
 
-// BLINDA O FOCO: Componente extraído para fora da função principal para não perder o cursor ao digitar
+// Componente isolado para não perder o foco ao digitar
 const TextAreaBlock = ({ title, value, onChangeField }: { title: string, value: string, onChangeField: (v: string) => void }) => (
   <div className="flex flex-col bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm shrink-0 min-h-[140px] flex-1">
     <div className="bg-slate-800 border-b border-slate-700 px-3 py-1.5">
@@ -18,6 +18,14 @@ const TextAreaBlock = ({ title, value, onChangeField }: { title: string, value: 
     />
   </div>
 );
+
+// Formatador de data para padrão Brasileiro (DD/MM/YYYY)
+const formatBRDate = (dateStr: string) => {
+  if (!dateStr) return "";
+  const parts = dateStr.split('-');
+  if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
+  return dateStr;
+};
 
 interface Props {
   data: A3Data;
@@ -44,22 +52,22 @@ export function A3Module({ data, onChange }: Props) {
       await workbook.xlsx.load(arrayBuffer);
       const ws = workbook.worksheets[0];
 
-      // Cabeçalho
+      // Cabeçalho (com data corrigida)
       if (data.titulo) ws.getCell('I2').value = data.titulo;       
-      if (data.data) ws.getCell('BD2').value = data.data;          
+      if (data.data) ws.getCell('BD2').value = formatBRDate(data.data);          
       if (data.aprovacoes) ws.getCell('CB2').value = data.aprovacoes; 
 
-      // Lado Esquerdo
-      if (data.background) ws.getCell('A4').value = data.background;
+      // Lado Esquerdo (Injeção na linha certa abaixo dos títulos)
+      if (data.background) ws.getCell('A5').value = data.background;
       if (data.objetivos) ws.getCell('A16').value = data.objetivos;
-      if (data.estadoAtual) ws.getCell('A25').value = data.estadoAtual;
+      if (data.estadoAtual) ws.getCell('A24').value = data.estadoAtual;
       if (data.analise) ws.getCell('A37').value = data.analise;
 
       // Lado Direito - Estado Futuro
-      if (data.estadoFuturo) ws.getCell('AO4').value = data.estadoFuturo;
+      if (data.estadoFuturo) ws.getCell('AO5').value = data.estadoFuturo;
       
-      // Lado Direito - Plano de Ação
-      let rowAcao = 16; 
+      // Lado Direito - Plano de Ação (Iniciando na linha 18 para pular os cabeçalhos)
+      let rowAcao = 18; 
       listaPlanoAcao.forEach(acao => {
         ws.getCell(`AO${rowAcao}`).value = acao.oque;
         ws.getCell(`BD${rowAcao}`).value = acao.quem;
@@ -67,8 +75,8 @@ export function A3Module({ data, onChange }: Props) {
         rowAcao++;
       });
 
-      // Lado Direito - Acompanhamento
-      let rowInd = 25;
+      // Lado Direito - Acompanhamento (Iniciando na linha 33)
+      let rowInd = 33;
       listaIndicadores.forEach(ind => {
         ws.getCell(`AO${rowInd}`).value = ind.indicador;
         ws.getCell(`BD${rowInd}`).value = ind.meta;   
@@ -77,7 +85,7 @@ export function A3Module({ data, onChange }: Props) {
       });
 
       // Rodapé
-      if (data.observacoes) ws.getCell('A48').value = data.observacoes; 
+      if (data.observacoes) ws.getCell('A47').value = data.observacoes; 
 
       const buffer = await workbook.xlsx.writeBuffer();
       const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
