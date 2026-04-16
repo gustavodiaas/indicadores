@@ -1,9 +1,23 @@
-import { type PlanoAcaoData, type PlanoAcaoItem } from "@/store/useAppStore";
-import { InputField } from "@/components/InputField";
-import { Trash2, Download, CheckCircle, ChevronDown, ChevronUp, Plus } from "lucide-react";
+"use client"
+
 import { useState } from "react";
+import { type PlanoAcaoData, type PlanoAcaoItem } from "@/store/useAppStore";
+import { 
+  Plus, Trash2, ChevronDown, ChevronUp, 
+  Calendar, User, DollarSign, ClipboardCheck,
+  AlertCircle, Pencil
+} from "lucide-react";
+import { InputField } from "@/components/InputField";
 import { toast } from "sonner";
-import ExcelJS from "exceljs";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   data: PlanoAcaoData;
@@ -12,218 +26,183 @@ interface Props {
 
 export function PlanoAcaoModule({ data, onChange }: Props) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const [newAcaoWhat, setNewAcaoWhat] = useState("");
+  const [newActionWhat, setNewActionWhat] = useState("");
+  
+  // Estado para a trava de exclusão
+  const [deleteConfirm, setDeleteConfirm] = useState<{ open: boolean; id: string | null }>({
+    open: false,
+    id: null
+  });
 
-  const updateMeta = (field: keyof typeof data.metadata, value: string) => {
-    onChange({ metadata: { ...data.metadata, [field]: value } });
+  const addAction = () => {
+    if (!newActionWhat.trim()) return;
+    const newItem: PlanoAcaoItem = {
+      id: Date.now().toString(),
+      what: newActionWhat,
+      why: "",
+      where: "",
+      start: "",
+      end: "",
+      who: "",
+      how: "",
+      howMuch: "",
+      percent: 0,
+      obs: "",
+      status: "Não Iniciado"
+    };
+    onChange({ acoes: [newItem, ...data.acoes] });
+    setNewActionWhat("");
+    setExpandedId(newItem.id);
+    toast.success("Nova ação adicionada!");
   };
 
-  const handleAddAcao = () => {
-    if (newAcaoWhat.trim()) {
-      const nova: PlanoAcaoItem = {
-        id: Date.now().toString(),
-        what: newAcaoWhat.trim(),
-        why: "", where: "", start: "", end: "", who: "", how: "", howMuch: "", percent: 0, obs: "", status: "NÃO INICIADO",
-        origin: "5w2h" // Etiqueta garantindo que veio da aba tática
-      };
-      onChange({ acoes: [...data.acoes, nova] });
-      setNewAcaoWhat("");
-    }
+  const confirmDelete = () => {
+    if (!deleteConfirm.id) return;
+    onChange({ acoes: data.acoes.filter(a => a.id !== deleteConfirm.id) });
+    setDeleteConfirm({ open: false, id: null });
+    toast.success("Ação removida com sucesso.");
   };
 
-  const updateAcao = (id: string, field: keyof PlanoAcaoItem, value: any) => {
-    const novasAcoes = data.acoes.map(a => a.id === id ? { ...a, [field]: value } : a);
-    onChange({ acoes: novasAcoes });
-  };
-
-  const handleRemoveAcao = (id: string) => {
-    onChange({ acoes: data.acoes.filter(a => a.id !== id) });
-  };
-
-  const handleExportExcel = async () => {
-    if (data.acoes.length === 0) {
-      toast.error("Adicione ações antes de exportar.");
-      return;
-    }
-
-    try {
-      const response = await fetch('/template_5w2h.xlsx');
-      
-      if (!response.ok) {
-        toast.error("Arquivo não encontrado! Verifique se 'template_5w2h.xlsx' está na pasta public.");
-        return;
-      }
-
-      const arrayBuffer = await response.arrayBuffer();
-      
-      const workbook = new ExcelJS.Workbook();
-      await workbook.xlsx.load(arrayBuffer);
-      
-      const ws = workbook.worksheets[0];
-      const m = data.metadata;
-
-      if (m.dataCriacao) ws.getCell('B3').value = m.dataCriacao;
-      if (m.respCriacao) ws.getCell('D3').value = m.respCriacao;
-      if (m.objetivo) ws.getCell('G3').value = m.objetivo;
-      if (m.meta) ws.getCell('I3').value = m.meta;
-
-      if (m.dataRevisao) ws.getCell('B4').value = m.dataRevisao;
-      if (m.respRevisao) ws.getCell('D4').value = m.respRevisao;
-      if (m.indicador) ws.getCell('G4').value = m.indicador;
-
-      let currentRow = 8;
-      data.acoes.forEach((a) => {
-        ws.getCell(`A${currentRow}`).value = a.what;
-        ws.getCell(`B${currentRow}`).value = a.how || "";
-        ws.getCell(`C${currentRow}`).value = a.who || "";
-        ws.getCell(`D${currentRow}`).value = a.start || "";
-        ws.getCell(`E${currentRow}`).value = a.end || "";
-        ws.getCell(`F${currentRow}`).value = a.where || "";
-        ws.getCell(`G${currentRow}`).value = a.why || "";
-        ws.getCell(`H${currentRow}`).value = a.howMuch ? Number(a.howMuch) : 0;
-        ws.getCell(`I${currentRow}`).value = a.percent ? (Number(a.percent) / 100) : 0;
-        ws.getCell(`K${currentRow}`).value = a.obs || "";
-        ws.getCell(`L${currentRow}`).value = a.status || "NÃO INICIADO";
-        
-        currentRow++;
-      });
-
-      const buffer = await workbook.xlsx.writeBuffer();
-      const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `Plano_Acao_${m.indicador || 'Exportado'}.xlsx`;
-      link.click();
-      window.URL.revokeObjectURL(url);
-
-      toast.success("Excel gerado com sucesso preservando o design!");
-
-    } catch (error) {
-      console.error(error);
-      toast.error("Erro ao gerar a planilha. Verifique o console.");
-    }
+  const updateAction = (id: string, field: keyof PlanoAcaoItem, value: any) => {
+    onChange({
+      acoes: data.acoes.map(a => a.id === id ? { ...a, [field]: value } : a)
+    });
   };
 
   return (
     <div className="flex flex-col gap-6 h-full pb-36 animate-in fade-in duration-500 overflow-y-auto pr-2">
       
+      {/* MODAL DE CONFIRMAÇÃO (PADRÃO DO SISTEMA) */}
+      <Dialog open={deleteConfirm.open} onOpenChange={(o) => setDeleteConfirm(prev => ({ ...prev, open: o }))}>
+        <DialogContent className="bg-white rounded-2xl border-none shadow-2xl p-8 max-w-sm mx-auto">
+          <div className="flex flex-col items-center text-center">
+            <div className="w-16 h-16 bg-rose-50 rounded-full flex items-center justify-center mb-4">
+              <Trash2 className="h-8 w-8 text-rose-500" />
+            </div>
+            <DialogHeader>
+              <DialogTitle className="text-xl font-bold text-slate-800">Remover Ação?</DialogTitle>
+              <DialogDescription className="text-slate-500 mt-2">
+                Esta ação é irreversível. O item será excluído permanentemente do seu Plano 5W2H.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="flex gap-3 w-full mt-8">
+              <Button variant="outline" className="flex-1 rounded-xl h-12 font-bold text-slate-500" onClick={() => setDeleteConfirm({ open: false, id: null })}>
+                Cancelar
+              </Button>
+              <Button className="flex-1 bg-rose-500 hover:bg-rose-600 text-white rounded-xl h-12 font-bold shadow-lg shadow-rose-100" onClick={confirmDelete}>
+                Excluir
+              </Button>
+            </DialogFooter>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <div className="flex items-center justify-between border-b border-slate-200 pb-4">
         <div>
-          <h2 className="text-xl font-black text-slate-800 tracking-tight flex items-center gap-2">
-            <CheckCircle className="h-6 w-6 text-sky-500" /> PLANO DE AÇÃO 5W2H
+          <h2 className="text-xl font-black text-slate-800 tracking-tight flex items-center gap-2 uppercase">
+            Execução de Tarefas <span className="bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full text-xs ml-2">{data.acoes.length}</span>
           </h2>
-          <p className="text-sm text-slate-500 mt-1">Gerenciamento tático e detalhamento das ações corretivas.</p>
-        </div>
-        <button 
-          onClick={handleExportExcel}
-          className="flex items-center gap-2 px-6 py-2.5 bg-emerald-600 text-white rounded-lg font-bold text-xs uppercase tracking-widest shadow-md hover:bg-emerald-700 transition-all active:scale-95"
-        >
-          <Download className="h-4 w-4" /> Exportar Planilha
-        </button>
-      </div>
-
-      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-        <h3 className="font-bold text-slate-800 uppercase text-[11px] tracking-widest mb-4 border-b pb-2">Metadados do Projeto</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <InputField label="Data de Criação" value={data.metadata.dataCriacao} onChange={v => updateMeta("dataCriacao", v)} type="date" />
-          <InputField label="Responsável (Consultor/Empresário)" value={data.metadata.respCriacao} onChange={v => updateMeta("respCriacao", v)} />
-          <InputField label="Objetivo" value={data.metadata.objetivo} onChange={v => updateMeta("objetivo", v)} />
-          <InputField label="Meta" value={data.metadata.meta} onChange={v => updateMeta("meta", v)} />
-          
-          <InputField label="Data de Revisão" value={data.metadata.dataRevisao} onChange={v => updateMeta("dataRevisao", v)} type="date" />
-          <InputField label="Responsável (Revisão)" value={data.metadata.respRevisao} onChange={v => updateMeta("respRevisao", v)} />
-          <div className="md:col-span-2"><InputField label="Indicador" value={data.metadata.indicador} onChange={v => updateMeta("indicador", v)} /></div>
         </div>
       </div>
 
-      <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 shadow-sm flex-1">
-        <div className="flex flex-col gap-4 mb-6">
-          <h3 className="font-bold text-slate-800 uppercase text-[11px] tracking-widest flex items-center gap-2">
-            Execução de Tarefas 
-            <span className="bg-sky-200 text-sky-700 px-2 py-0.5 rounded-full text-[10px]">{data.acoes.length}</span>
-          </h3>
-          
-          <div className="flex gap-2 items-end">
-            <div className="flex-1">
-              <InputField label="Nova Ação (What)" value={newAcaoWhat} onChange={setNewAcaoWhat} />
-            </div>
-            <button 
-              onClick={handleAddAcao} 
-              className="h-10 px-6 bg-sky-600 text-white rounded-lg font-bold text-xs uppercase shadow-md hover:bg-sky-700 transition-colors flex items-center gap-2"
-            >
-              <Plus className="h-4 w-4" /> Adicionar
-            </button>
-          </div>
+      {/* INPUT DE NOVA AÇÃO */}
+      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Nova Ação (What)</label>
+        <div className="flex gap-3">
+          <input 
+            type="text" 
+            className="flex-1 h-12 px-4 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm"
+            placeholder="O que será feito?"
+            value={newActionWhat}
+            onChange={e => setNewActionWhat(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && addAction()}
+          />
+          <button 
+            onClick={addAction}
+            className="px-6 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-xs uppercase tracking-widest flex items-center gap-2 transition-all shadow-md shadow-blue-100"
+          >
+            <Plus className="w-4 h-4" /> Adicionar
+          </button>
         </div>
+      </div>
 
-        {data.acoes.length === 0 ? (
-           <div className="flex flex-col items-center justify-center p-12 text-slate-400 border-2 border-dashed border-slate-300 rounded-xl bg-white">
-             <CheckCircle className="h-12 w-12 mb-4 opacity-50" />
-             <p className="text-sm font-bold">Nenhuma ação vinculada.</p>
-             <p className="text-xs mt-1">Crie tarefas no campo acima ou importe macros da aba "Resumo".</p>
-           </div>
-        ) : (
-          <div className="flex flex-col gap-3">
-            {data.acoes.map(a => (
-              <div key={a.id} className="border border-slate-300 rounded-xl bg-white shadow-sm overflow-hidden transition-all duration-300">
-                <div 
-                  className="flex items-center justify-between p-4 bg-white hover:bg-slate-50 cursor-pointer select-none transition-colors border-b border-transparent"
-                  onClick={() => setExpandedId(expandedId === a.id ? null : a.id)}
+      {/* LISTA DE AÇÕES */}
+      <div className="flex flex-col gap-4">
+        {data.acoes.map((acao) => (
+          <div key={acao.id} className={`bg-white rounded-2xl border transition-all duration-300 ${expandedId === acao.id ? 'border-blue-400 shadow-lg' : 'border-slate-200 shadow-sm'}`}>
+            
+            {/* HEADER DO CARD */}
+            <div className="p-4 flex items-center justify-between cursor-pointer" onClick={() => setExpandedId(expandedId === acao.id ? null : acao.id)}>
+              <div className="flex flex-col">
+                <span className="font-bold text-slate-800 text-sm">{acao.what || "Sem título"}</span>
+                <div className="flex items-center gap-3 mt-1">
+                  <span className={`text-[10px] font-bold uppercase ${acao.status === 'Concluído' ? 'text-emerald-500' : 'text-blue-500'}`}>
+                    Status: {acao.status}
+                  </span>
+                  <span className="text-[10px] text-slate-400">•</span>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase">Progresso: {acao.percent}%</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Pencil className={`w-4 h-4 ${expandedId === acao.id ? 'text-blue-500' : 'text-slate-300'}`} />
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setDeleteConfirm({ open: true, id: acao.id }); }}
+                  className="p-2 text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
                 >
-                  <div className="flex flex-col flex-1 pr-4">
-                    <span className="text-sm font-black text-slate-800 truncate">{a.what}</span>
-                    <span className="text-xs text-slate-500 font-medium mt-0.5">Status: <span className="text-sky-600">{a.status || "NÃO INICIADO"}</span> • Progresso: {a.percent || 0}%</span>
-                  </div>
-                  
-                  <div className="flex items-center gap-4">
-                    {expandedId === a.id ? <ChevronUp className="h-5 w-5 text-slate-400" /> : <ChevronDown className="h-5 w-5 text-slate-400" />}
-                    <button 
-                      onClick={(e) => { e.stopPropagation(); handleRemoveAcao(a.id); }}
-                      className="p-2 hover:bg-rose-100 rounded-md transition-colors"
-                    >
-                      <Trash2 className="h-4 w-4 text-rose-500" />
-                    </button>
-                  </div>
+                  <Trash2 className="w-4 h-4" />
+                </button>
+                <div className="ml-2 text-slate-300">
+                  {expandedId === acao.id ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                </div>
+              </div>
+            </div>
+
+            {/* CONTEÚDO EXPANSÍVEL */}
+            {expandedId === acao.id && (
+              <div className="p-6 pt-0 border-t border-slate-50 grid grid-cols-1 md:grid-cols-3 gap-6 animate-in slide-in-from-top-2 duration-300">
+                <div className="md:col-span-3">
+                  <InputField label="O que será feito? (What)" value={acao.what} onChange={v => updateAction(acao.id, 'what', v)} />
+                </div>
+                <InputField label="Como? (How)" value={acao.how} onChange={v => updateAction(acao.id, 'how', v)} />
+                <InputField label="Por que? (Why)" value={acao.why} onChange={v => updateAction(acao.id, 'why', v)} />
+                <InputField label="Onde? (Where)" value={acao.where} onChange={v => updateAction(acao.id, 'where', v)} />
+                <InputField label="Quem? (Who)" value={acao.who} onChange={v => updateAction(acao.id, 'who', v)} />
+                <InputField label="Início (When)" type="date" value={acao.start} onChange={v => updateAction(acao.id, 'start', v)} />
+                <InputField label="Fim (When)" type="date" value={acao.end} onChange={v => updateAction(acao.id, 'end', v)} />
+                <InputField label="Quanto custa? (How Much)" value={acao.howMuch} onChange={v => updateAction(acao.id, 'howMuch', v)} />
+                <InputField label="% Completo" type="number" value={acao.percent} onChange={v => updateAction(acao.id, 'percent', Number(v))} />
+                
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Status</label>
+                  <select 
+                    className="w-full h-11 px-3 rounded-xl border border-slate-200 bg-slate-50 text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                    value={acao.status}
+                    onChange={e => updateAction(acao.id, 'status', e.target.value)}
+                  >
+                    <option value="Não Iniciado">Não Iniciado</option>
+                    <option value="Em Andamento">Em Andamento</option>
+                    <option value="Atrasado">Atrasado</option>
+                    <option value="Concluído">Concluído</option>
+                  </select>
                 </div>
 
-                {expandedId === a.id && (
-                  <div className="p-5 grid grid-cols-2 md:grid-cols-4 gap-4 bg-slate-50 border-t border-slate-200 animate-in fade-in slide-in-from-top-2 duration-300">
-                    <div className="md:col-span-4"><InputField label="O que será feito? (What)" value={a.what} onChange={v => updateAcao(a.id, "what", v)} /></div>
-                    <div className="md:col-span-2"><InputField label="Como? (How)" value={a.how} onChange={v => updateAcao(a.id, "how", v)} /></div>
-                    <InputField label="Por que? (Why)" value={a.why} onChange={v => updateAcao(a.id, "why", v)} />
-                    <InputField label="Onde? (Where)" value={a.where} onChange={v => updateAcao(a.id, "where", v)} />
-                    
-                    <InputField label="Quem? (Who)" value={a.who} onChange={v => updateAcao(a.id, "who", v)} />
-                    <InputField label="Início (When)" value={a.start} onChange={v => updateAcao(a.id, "start", v)} type="date" />
-                    <InputField label="Fim (When)" value={a.end} onChange={v => updateAcao(a.id, "end", v)} type="date" />
-                    <InputField label="Quanto Custa? (How Much)" value={a.howMuch} onChange={v => updateAcao(a.id, "howMuch", v)} type="number" />
-                    
-                    <InputField label="% Completo" value={a.percent} onChange={v => updateAcao(a.id, "percent", Number(v) || 0)} type="number" />
-                    <div className="md:col-span-2"><InputField label="Observação" value={a.obs} onChange={v => updateAcao(a.id, "obs", v)} /></div>
-                    
-                    <div>
-                      <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Status</label>
-                      <select 
-                        className="w-full h-10 px-3 rounded-lg border border-slate-200 bg-white text-sm outline-none focus:ring-2 focus:ring-sky-500"
-                        value={a.status || "NÃO INICIADO"}
-                        onChange={(e) => updateAcao(a.id, "status", e.target.value)}
-                      >
-                        <option value="NÃO INICIADO">Não Iniciado</option>
-                        <option value="INICIADO">Iniciado</option>
-                        <option value="EM ANDAMENTO">Em Andamento</option>
-                        <option value="REJEITADO">Rejeitado</option>
-                        <option value="CONCLUIDO">Concluído</option>
-                      </select>
-                    </div>
-                  </div>
-                )}
+                <div className="md:col-span-3">
+                  <InputField label="Observação" value={acao.obs} onChange={v => updateAction(acao.id, 'obs', v)} />
+                </div>
               </div>
-            ))}
+            )}
+          </div>
+        ))}
+
+        {data.acoes.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-20 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200">
+            <div className="p-4 bg-white rounded-full shadow-sm mb-4">
+              <ClipboardCheck className="w-8 h-8 text-slate-300" />
+            </div>
+            <p className="text-slate-400 font-medium">Nenhuma ação planejada ainda.</p>
           </div>
         )}
       </div>
-
     </div>
   );
 }
