@@ -39,7 +39,10 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
   }, [data]);
 
   const { textoDinamico, bulletPoints } = useMemo(() => {
-    const listaAcoes = state.planoAcao.acoes.length > 0 ? state.planoAcao.acoes.map(a => a.what).join(", ") : "—";
+    // FILTRO AQUI: Apenas ações vindas do Resumo
+    const acoesResumo = state.planoAcao.acoes.filter(a => a.origin !== "5w2h");
+    const listaAcoes = acoesResumo.length > 0 ? acoesResumo.map(a => a.what).join(", ") : "—";
+    
     const u = state.produtividade.unidade || "peças";
     
     let resultadosTexto: string[] = [];
@@ -97,7 +100,12 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
 
   const handleAddAcao = () => {
     if (newAcao.trim()) {
-      const nova = { id: Date.now().toString(), what: newAcao.trim(), why: "", where: "", start: "", end: "", who: "", how: "", howMuch: "", percent: 0, obs: "", status: "NÃO INICIADO" };
+      const nova = { 
+        id: Date.now().toString(), 
+        what: newAcao.trim(), 
+        why: "", where: "", start: "", end: "", who: "", how: "", howMuch: "", percent: 0, obs: "", status: "NÃO INICIADO",
+        origin: "resumo" as const // Etiqueta garantindo que veio do resumo
+      };
       onUpdatePlanoAcao([...state.planoAcao.acoes, nova]);
       setNewAcao("");
     }
@@ -125,6 +133,9 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
     { id: "leadtime", label: "Lead Time" },
     { id: "area", label: "Área de Trabalho" },
   ];
+
+  // Apenas as ações criadas aqui aparecem na lista visual do resumo
+  const acoesVisiveis = state.planoAcao.acoes.filter(a => a.origin !== "5w2h");
 
   return (
     <>
@@ -192,7 +203,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
             </div>
 
             <div className="flex flex-col gap-2 mt-4">
-              {state.planoAcao.acoes.map(a => (
+              {acoesVisiveis.map(a => (
                 <div key={a.id} className="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-lg shadow-sm">
                   <span className="text-xs font-bold text-slate-700 truncate pr-4 flex-1">{a.what}</span>
                   <button onClick={() => handleRemoveAcao(a.id)} className="p-1.5 hover:bg-rose-100 rounded-md transition-colors text-rose-500">
