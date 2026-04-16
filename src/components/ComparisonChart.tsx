@@ -1,4 +1,4 @@
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LabelList } from "recharts";
 
 interface ChartItem {
   name: string;
@@ -19,7 +19,7 @@ export function ComparisonChart({ data, title }: Props) {
       <h4 className="text-sm font-bold text-slate-800 mb-6">{title}</h4>
       
       <ResponsiveContainer width="100%" height="100%" minHeight={250}>
-        <BarChart data={data} margin={{ top: 0, right: 0, left: -20, bottom: 0 }} barGap={8}>
+        <BarChart data={data} margin={{ top: 25, right: 0, left: -20, bottom: 0 }} barGap={8}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
           <XAxis 
             dataKey="name" 
@@ -44,8 +44,13 @@ export function ComparisonChart({ data, title }: Props) {
           />
           <Legend wrapperStyle={{ paddingTop: '20px', fontSize: '12px', fontWeight: 500 }} iconType="circle" />
           
-          <Bar dataKey="T1" fill="#94A3B8" radius={[4, 4, 0, 0]} name="T1 (Inicial)" maxBarSize={60} />
-          <Bar dataKey="T3" fill="#2563EB" radius={[4, 4, 0, 0]} name="T3 (Final)" maxBarSize={60} />
+          <Bar dataKey="T1" fill="#94A3B8" radius={[4, 4, 0, 0]} name="T1 (Inicial)" maxBarSize={60}>
+            <LabelList dataKey="T1" position="top" fill="#64748B" fontSize={12} fontWeight="bold" />
+          </Bar>
+          
+          <Bar dataKey="T3" fill="#2563EB" radius={[4, 4, 0, 0]} name="T3 (Final)" maxBarSize={60}>
+            <LabelList dataKey="T3" position="top" fill="#2563EB" fontSize={12} fontWeight="bold" />
+          </Bar>
         </BarChart>
       </ResponsiveContainer>
     </div>
