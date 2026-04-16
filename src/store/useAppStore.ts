@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 
-export type ModuleKey = "resumo" | "produtividade" | "payback" | "movimentacao" | "qualidade" | "disponibilidade" | "leadtime" | "area" | "gbo";
+// AQUI: 'home' adicionado à lista de módulos
+export type ModuleKey = "home" | "resumo" | "produtividade" | "payback" | "movimentacao" | "qualidade" | "disponibilidade" | "leadtime" | "area" | "gbo";
 
 export interface ProdutividadeData { 
   volumeT1: number; volumeT3: number; 
@@ -66,7 +67,8 @@ export function useAppStore() {
     try { const saved = localStorage.getItem("consultoria-lean-state"); return saved ? { ...defaultState, ...JSON.parse(saved) } : defaultState; } catch { return defaultState; }
   });
   
-  const [activeModule, setActiveModule] = useState<ModuleKey>("resumo");
+  // AQUI: Estado inicial alterado de "resumo" para "home"
+  const [activeModule, setActiveModule] = useState<ModuleKey>("home");
 
   useEffect(() => { localStorage.setItem("consultoria-lean-state", JSON.stringify(state)); }, [state]);
 
@@ -75,7 +77,7 @@ export function useAppStore() {
   }, []);
 
   const loadState = useCallback((data: AppState) => { setState({ ...defaultState, ...data }); }, []);
- const clearData = useCallback(() => { 
+  const clearData = useCallback(() => { 
     localStorage.removeItem("consultoria-lean-state"); 
     window.location.reload(); 
   }, []);
