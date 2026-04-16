@@ -40,7 +40,7 @@ const Index = () => {
       return u;
     };
 
-    // FILTRO PARA O WORD: Ignora ações criadas direto no 5W2H
+    // FILTRO: Puxa apenas as macros do Resumo, ignora o operacional criado no 5W2H
     const acoesResumo = planoAcao.acoes.filter(a => a.origin !== "5w2h");
     const acoesStr = acoesResumo.length > 0 ? acoesResumo.map(a => a.what).join(", ") : "—";
 
@@ -58,6 +58,82 @@ const Index = () => {
       spacing: { line: 360 }, 
     });
 
+    // --- MONTAGEM DINÂMICA DA CONCLUSÃO (Igual a tela do sistema) ---
+    const lockedIndicadores = ["produtividade", "payback"];
+    const selectedIndicadores = Array.from(new Set([...(resumo.indicadoresConclusao || []), ...lockedIndicadores]));
+    const u = produtividade.unidade || "peças";
+
+    const conclusaoParagraphs: Paragraph[] = [
+      createHeading("10. Conclusão do Projeto"),
+      createJustified([
+        tr("O presente programa de fomento ao setor industrial brasileiro Brasil Mais Produtivo, proporcionou a realização de consultoria em Manufatura Enxuta na Empresa "),
+        tr(resumo.nomeEmpresa || "—", true),
+        tr(", na cidade de "),
+        tr(resumo.cidade || "—", true),
+        tr(" no Estado do Rio Grande do Sul. A escolha do produto a ser mapeado foi motivada por: "),
+        tr(resumo.motivacao || "—", true),
+        tr(". As ferramentas aplicadas foram: "),
+        tr(resumo.ferramentas || "—", true),
+        tr(".")
+      ]),
+      new Paragraph({ text: "", spacing: { after: 120 } }),
+      createJustified([
+        tr("Foram elaborados planos de ação através da ferramenta 5W2H, definindo diversas ações para as oportunidades elencadas, tais como: "),
+        tr(acoesStr, true),
+        tr(".")
+      ]),
+      new Paragraph({ text: "", spacing: { after: 120 } }),
+      createJustified([
+        tr("Após a definição do ponto de intervenção, monitoramento e validação das melhorias, obteve-se:")
+      ]),
+      new Paragraph({ text: "", spacing: { after: 120 } })
+    ];
+
+    if (selectedIndicadores.includes("produtividade")) {
+      conclusaoParagraphs.push(createJustified([
+        tr("• Produtividade: ", true), tr(`No estágio inicial, a produtividade era de ${prod.pphT1.toFixed(2)} ${u}/h/op. Após as melhorias, a produtividade subiu para ${prod.pphT3.toFixed(2)} ${u}/h/op, representando um ganho direto de ${prod.ganho.toFixed(2)}% na eficiência operacional da célula.`)
+      ]));
+    }
+    if (selectedIndicadores.includes("payback")) {
+      conclusaoParagraphs.push(createJustified([
+        tr("• Payback: ", true), tr(`Com as ações aplicadas e a redução do custo de mão de obra por ${u}, o projeto apresenta um retorno financeiro com Payback de ${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2) : "0.00"} ${pb.paybackMeses === 1 ? "mês" : "meses"}.`)
+      ]));
+    }
+    if (selectedIndicadores.includes("movimentacao")) {
+      conclusaoParagraphs.push(createJustified([
+        tr("• Movimentação: ", true), tr(`A análise de fluxo evidenciou uma redução de ${mov.reducaoDist.toFixed(2)}% na distância percorrida e uma queda de ${mov.reducaoTempo.toFixed(2)}% no tempo gasto com movimentação e transporte logístico.`)
+      ]));
+    }
+    if (selectedIndicadores.includes("qualidade")) {
+      conclusaoParagraphs.push(createJustified([
+        tr("• Qualidade: ", true), tr(`O índice de assertividade e peças conformes evoluiu de ${qual.indiceT1.toFixed(2)}% para ${qual.indiceT3.toFixed(2)}%, garantindo maior confiabilidade ao processo e minimizando perdas.`)
+      ]));
+    }
+    if (selectedIndicadores.includes("disponibilidade")) {
+      conclusaoParagraphs.push(createJustified([
+        tr("• Disponibilidade: ", true), tr(`Com a redução das paradas não planejadas, o tempo efetivo de operação da máquina aumentou, representando um ganho de ${disp.aumento.toFixed(2)}% na utilização real do recurso.`)
+      ]));
+    }
+    if (selectedIndicadores.includes("leadtime")) {
+      const ltU = leadtime.unidadeTempo || "dias";
+      const t1 = leadtime.leadTimeT1 || leadtime.tempoT1 || 0;
+      const t3 = leadtime.leadTimeT3 || leadtime.tempoT3 || 0;
+      conclusaoParagraphs.push(createJustified([
+        tr("• Lead Time: ", true), tr(`O tempo de atravessamento total caiu de ${t1} para ${t3} ${ltU}, caracterizando uma redução de ${lt.reducao.toFixed(2)}% no prazo de entrega do processo.`)
+      ]));
+    }
+    if (selectedIndicadores.includes("area")) {
+      conclusaoParagraphs.push(createJustified([
+        tr("• Área de Trabalho: ", true), tr(`A otimização do layout produtivo reduziu a área ocupada em ${ar.reducaoPercent.toFixed(1)}%, liberando ${ar.economiaM2.toFixed(1)}m² de área útil, equivalente a uma economia imobiliária mensal de R$ ${ar.economiaMensal.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}.`)
+      ]));
+    }
+
+    conclusaoParagraphs.push(new Paragraph({ text: "", spacing: { after: 200 } }));
+    conclusaoParagraphs.push(createJustified([
+      tr("O resultado geral do projeto foi agregador e positivo para a empresa, pois o envolvimento da equipe foi primordial para garantir o conhecimento necessário através do plano de ação, treinamentos, trabalho realizado e resultados alcançados. Com isso, a empresa pode manter o aculturamento do pensamento Lean e replicar os conceitos da melhoria contínua para os demais setores e linhas de produção.")
+    ]));
+
+    // --- MONTAGEM DO DOCUMENTO ---
     const doc = new Document({
       sections: [{
         properties: {},
@@ -123,37 +199,37 @@ const Index = () => {
           createHeading("4. Laudo de Qualidade"),
           createJustified([
             tr(`No estágio inicial, de um total de ${qualidade.quantidadeT1} peças, identificou-se ${qualidade.perdasT1} `),
-            tr(qualidade.perdasT1 === 1 ? "peça não conforme" : "peças não conformes", true),
-            tr(". Após as melhorias, o índice de assertividade evoluiu para "),
+            tr(qualidade.perdasT1 === 1 ? "peça não conforme " : "peças não conformes ", true),
+            tr(`(assertividade de ${qual.indiceT1.toFixed(2)}%). Após as melhorias, para um lote de ${qualidade.quantidadeT3} peças, as perdas caíram para ${qualidade.perdasT3}, evoluindo o índice de assertividade para `),
             tr(`${qual.indiceT3.toFixed(2)}%`, true),
-            tr(", garantindo maior confiabilidade ao processo.")
+            tr(", garantindo maior confiabilidade ao processo e minimizando perdas.")
           ]),
 
           createHeading("5. Laudo de Disponibilidade"),
           createJustified([
-            tr("O tempo real de operação evoluiu de "),
+            tr("O tempo real de operação efetiva da máquina evoluiu de "),
             tr(`${disp.realT1} ${getUnit(disp.realT1, disponibilidade.unidadeTempo)}`, true),
+            tr(` (índice de ${disp.indT1.toFixed(2)}%)`),
             tr(" para "),
             tr(`${disp.realT3} ${getUnit(disp.realT3, disponibilidade.unidadeTempo)}`, true),
-            tr(", representando um aumento de "),
+            tr(` (índice de ${disp.indT3.toFixed(2)}%).`),
+            tr(" Isso representa um ganho direto de "),
             tr(`${disp.aumento.toFixed(2)}%`, true),
-            tr(" na utilização do recurso.")
+            tr(" na utilização do recurso através da redução de paradas não planejadas.")
           ]),
 
           createHeading("6. Laudo de Movimentação Logística"),
           createJustified([
-            tr("O tempo de movimentação foi reduzido de "),
-            tr(`${movimentacao.tempoT1} ${getUnit(movimentacao.tempoT1, movimentacao.unidadeTempo)}`, true),
-            tr(" para "),
-            tr(`${movimentacao.tempoT3} ${getUnit(movimentacao.tempoT3, movimentacao.unidadeTempo)}`, true),
-            tr(", reduzindo desperdícios em "),
+            tr("A análise de fluxo evidenciou uma redução de "),
+            tr(`${mov.reducaoDist.toFixed(2)}%`, true),
+            tr(` na distância percorrida (de ${movimentacao.distanciaT1}m para ${movimentacao.distanciaT3}m) e uma queda de `),
             tr(`${mov.reducaoTempo.toFixed(2)}%`, true),
-            tr(".")
+            tr(` no tempo gasto com movimentação e transporte logístico (de ${movimentacao.tempoT1} para ${movimentacao.tempoT3} ${getUnit(movimentacao.tempoT3, movimentacao.unidadeTempo)}).`)
           ]),
 
           createHeading("7. Plano de Ação (5W2H)"),
           createJustified([
-            tr("As principais definições do plano de ação contemplaram: "),
+            tr("As principais definições macro do plano de ação contemplaram: "),
             tr(acoesStr, true),
             tr(".")
           ]),
@@ -161,12 +237,12 @@ const Index = () => {
           createHeading("8. Laudo de Lead Time"),
           createJustified([
             tr("O tempo de atravessamento (lead time) inicial era de "),
-            tr(`${leadtime.leadTimeT1 || 0} ${leadtime.unidadeTempo || "dias"}`, true),
+            tr(`${leadtime.leadTimeT1 || leadtime.tempoT1 || 0} ${leadtime.unidadeTempo || "dias"}`, true),
             tr(". Após as melhorias implementadas, o lead time foi reduzido para "),
-            tr(`${leadtime.leadTimeT3 || 0} ${leadtime.unidadeTempo || "dias"}`, true),
+            tr(`${leadtime.leadTimeT3 || leadtime.tempoT3 || 0} ${leadtime.unidadeTempo || "dias"}`, true),
             tr(", representando uma redução de "),
             tr(`${lt.reducao.toFixed(2)}%`, true),
-            tr(" no tempo total de entrega do produto.")
+            tr(" no tempo total de entrega do processo.")
           ]),
 
           createHeading("9. Laudo de Área"),
@@ -180,32 +256,12 @@ const Index = () => {
             tr(" de área útil ("),
             tr(`${ar.reducaoPercent.toFixed(1)}%`, true),
             tr(" de redução), gerando uma economia imobiliária mensal de "),
-            tr(`R$ ${ar.economiaMensal.toLocaleString("pt-BR")}`, true),
+            tr(`R$ ${ar.economiaMensal.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, true),
             tr(".")
           ]),
 
-          createHeading("10. Conclusão do Projeto"),
-          createJustified([
-            tr("O presente programa de fomento ao setor industrial brasileiro Brasil Mais Produtivo, proporcionou a realização de consultoria em Manufatura Enxuta na Empresa "),
-            tr(resumo.nomeEmpresa || "—", true),
-            tr(", na cidade de "),
-            tr(resumo.cidade || "—", true),
-            tr(" no Estado do Rio Grande do Sul. A escolha do produto a ser mapeado foi motivada "),
-            tr(resumo.motivacao || "—", true),
-            tr(". As ferramentas aplicadas foram "),
-            tr(resumo.ferramentas || "—", true),
-            tr(". Foram elaborados um conjunto de ações através da ferramenta 5W2H, onde definiu-se diversas ações para as oportunidades elencadas, tais como: "),
-            tr(acoesStr, true),
-            tr(". Após definição do ponto de intervenção, monitoramento e validação das melhorias, obteve-se: Aumento de "),
-            tr(`${prod.ganho.toFixed(2)}%`, true),
-            tr(" em produtividade. Payback: Com as ações aplicadas obtém-se um Payback de "),
-            tr(`${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2) : "0.00"} ${pb.paybackMeses === 1 ? "mês" : "meses"}`, true),
-            tr(".")
-          ]),
-          new Paragraph({ text: "", spacing: { after: 200 } }),
-          createJustified([
-            tr("O resultado geral do projeto foi agregador e positivo para a empresa pois o envolvimento da equipe foi primordial para garantir o conhecimento necessário através do plano de ação, treinamentos, trabalho realizado e resultados alcançados, com isso a empresa pode manter o aculturamento do pensamento Lean e replicar os conceitos da melhoria contínua para os demais setores e linhas de trabalho da produção.")
-          ])
+          // Injeção da Conclusão Dinâmica
+          ...conclusaoParagraphs
         ]
       }]
     });
