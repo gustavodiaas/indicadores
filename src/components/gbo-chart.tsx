@@ -27,6 +27,13 @@ export function GBOChart({ operations, timeUnit, taktTime, taktTimeUnit, demandU
   const chartTitle = state.gbo.tituloGrafico || "Gráfico de Balanceamento de Operações (GBO)"
   const [isEditingTitle, setIsEditingTitle] = useState(false)
 
+  const getPtUnit = (u: string) => {
+    if (u === "seconds") return "segundos"
+    if (u === "minutes") return "minutos"
+    if (u === "hours") return "horas"
+    return u
+  }
+
   const convertToSeconds = (time: number, unit: "minutes" | "seconds"): number => {
     return unit === "minutes" ? time * 60 : time
   }
@@ -87,12 +94,12 @@ export function GBOChart({ operations, timeUnit, taktTime, taktTimeUnit, demandU
           <p className="text-sm">
             <span className="text-muted-foreground">Tempo: </span>
             <span className={data.isBottleneck ? "text-chart-5 font-semibold" : "text-foreground"}>
-              {data.time.toFixed(1)} {timeUnit}
+              {data.time.toFixed(1)} {getPtUnit(timeUnit)}
             </span>
           </p>
           {data.originalUnit !== timeUnit && (
             <p className="text-xs text-muted-foreground">
-              Original: {operations.find((op) => op.name === data.name)?.time.toFixed(1)} {data.originalUnit}
+              Original: {operations.find((op) => op.name === data.name)?.time.toFixed(1)} {getPtUnit(data.originalUnit)}
             </p>
           )}
           {data.isBottleneck && <p className="text-xs text-chart-5 font-medium mt-1">🔴 Operação Gargalo</p>}
@@ -131,14 +138,14 @@ export function GBOChart({ operations, timeUnit, taktTime, taktTimeUnit, demandU
 
       <div className="flex items-center gap-6 mb-6 text-sm bg-muted/20 p-3 rounded-lg border border-border/50">
         <span className="text-muted-foreground">
-          <strong>Média:</strong> <span className="text-foreground">{averageTime.toFixed(1)} {timeUnit}</span>
+          <strong>Média:</strong> <span className="text-foreground">{averageTime.toFixed(1)} {getPtUnit(timeUnit)}</span>
         </span>
         {taktTimeInDisplayUnit && (
           <span className="text-muted-foreground">
-            <strong>Takt:</strong> <span className="text-foreground">{taktTimeInDisplayUnit.toFixed(1)} {timeUnit}</span>
+            <strong>Takt:</strong> <span className="text-foreground">{taktTimeInDisplayUnit.toFixed(1)} {getPtUnit(timeUnit)}</span>
             {taktTimeUnit !== timeUnit && originalTaktValue && (
               <span className="text-xs opacity-60 ml-2">
-                ({originalTaktValue.toFixed(2)} {taktTimeUnit}/{demandUnit})
+                ({originalTaktValue.toFixed(2)} {getPtUnit(taktTimeUnit || "")}/{demandUnit})
               </span>
             )}
           </span>
@@ -163,7 +170,7 @@ export function GBOChart({ operations, timeUnit, taktTime, taktTimeUnit, demandU
               tickLine={false}
             />
             <YAxis
-              label={{ value: `Tempo (${timeUnit})`, angle: -90, position: "insideLeft", offset: 15, fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+              label={{ value: `Tempo (${getPtUnit(timeUnit)})`, angle: -90, position: "insideLeft", offset: 15, fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
               fontSize={11}
               domain={[0, yAxisMax]}
               tickFormatter={(value) => parseFloat(value.toFixed(1))}
