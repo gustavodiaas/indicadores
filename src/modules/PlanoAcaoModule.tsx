@@ -33,7 +33,6 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
     }
 
     try {
-      // 1. Busca o arquivo original (agora usando exceljs para manter o design)
       const response = await fetch('/template_5w2h.xlsx');
       
       if (!response.ok) {
@@ -43,15 +42,12 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
 
       const arrayBuffer = await response.arrayBuffer();
       
-      // 2. Carrega a planilha preservando cores, bordas e estilos
       const workbook = new ExcelJS.Workbook();
       await workbook.xlsx.load(arrayBuffer);
       
-      // Pega a primeira aba
       const ws = workbook.worksheets[0];
       const m = data.metadata;
 
-      // 3. Injeta os metadados exatamente nas células
       if (m.dataCriacao) ws.getCell('B3').value = m.dataCriacao;
       if (m.respCriacao) ws.getCell('D3').value = m.respCriacao;
       if (m.objetivo) ws.getCell('G3').value = m.objetivo;
@@ -61,10 +57,8 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
       if (m.respRevisao) ws.getCell('D4').value = m.respRevisao;
       if (m.indicador) ws.getCell('G4').value = m.indicador;
 
-      // 4. Injeta as tarefas a partir da Linha 8
       let currentRow = 8;
       data.acoes.forEach((a) => {
-        // O exceljs insere o valor sem destruir o estilo da célula que já está lá no seu molde
         ws.getCell(`A${currentRow}`).value = a.what;
         ws.getCell(`B${currentRow}`).value = a.how || "";
         ws.getCell(`C${currentRow}`).value = a.who || "";
@@ -74,14 +68,12 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
         ws.getCell(`G${currentRow}`).value = a.why || "";
         ws.getCell(`H${currentRow}`).value = a.howMuch ? Number(a.howMuch) : 0;
         ws.getCell(`I${currentRow}`).value = a.percent ? (Number(a.percent) / 100) : 0;
-        // J = Hoje (Mantemos o que estiver na fórmula do seu Excel)
         ws.getCell(`K${currentRow}`).value = a.obs || "";
         ws.getCell(`L${currentRow}`).value = a.status || "NÃO INICIADO";
         
         currentRow++;
       });
 
-      // 5. Gera o arquivo final e força o download nativo
       const buffer = await workbook.xlsx.writeBuffer();
       const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
       const url = window.URL.createObjectURL(blob);
@@ -121,7 +113,7 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
         <h3 className="font-bold text-slate-800 uppercase text-[11px] tracking-widest mb-4 border-b pb-2">Metadados do Projeto</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <InputField label="Data de Criação" value={data.metadata.dataCriacao} onChange={v => updateMeta("dataCriacao", v)} type="date" />
-          <InputField label="Responsável" value={data.metadata.respCriacao} onChange={v => updateMeta("respCriacao", v)} />
+          <InputField label="Responsável (Consultor/Empresário)" value={data.metadata.respCriacao} onChange={v => updateMeta("respCriacao", v)} />
           <InputField label="Objetivo" value={data.metadata.objetivo} onChange={v => updateMeta("objetivo", v)} />
           <InputField label="Meta" value={data.metadata.meta} onChange={v => updateMeta("meta", v)} />
           
