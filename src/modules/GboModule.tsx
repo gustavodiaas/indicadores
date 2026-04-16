@@ -336,7 +336,7 @@ export default function GBOAnalysis() {
                       <strong>Takt Time: </strong>
                       {timeUnitTakt === "hours" ? (calculateTaktTime()! / 3600).toFixed(2)
                         : timeUnitTakt === "minutes" ? (calculateTaktTime()! / 60).toFixed(2)
-                        : calculateTaktTime()!.toFixed(2)} {timeUnitTakt}/{demandUnit.toLowerCase()}
+                        : calculateTaktTime()!.toFixed(2)} {timeUnitTakt === "hours" ? "horas" : timeUnitTakt === "minutes" ? "minutos" : "segundos"}/{demandUnit.toLowerCase()}
                     </p>
                   </div>
                 )}
@@ -361,7 +361,7 @@ export default function GBOAnalysis() {
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Tempo ({timeUnit})</label>
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Tempo ({timeUnit === "seconds" ? "segundos" : "minutos"})</label>
                   <input type="number" step="0.1" min="0" placeholder="0.0" value={newOperationTime} onKeyPress={handleKeyPress}
                     onChange={(e) => { setNewOperationTime(e.target.value); if (errors.operationTime) setErrors((prev) => ({ ...prev, operationTime: undefined })); }}
                     className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm outline-none focus:ring-2 focus:ring-indigo-500 transition-colors"
