@@ -16,16 +16,17 @@ export function MovimentacaoModule({ data, onChange }: Props) {
   const r = calcMovimentacao(data);
 
   const chartData = [
-    { name: "Distância (m)", T1: data.distanciaT1 || 0, T3: data.distanciaT3 || 0 },
-    { name: "Tempo", T1: data.tempoT1 || 0, T3: data.tempoT3 || 0 },
+    { name: "Distância (m)", T1: Number((data.distanciaT1 || 0).toFixed(6)), T3: Number((data.distanciaT3 || 0).toFixed(6)) },
+    { name: "Tempo", T1: Number((data.tempoT1 || 0).toFixed(6)), T3: Number((data.tempoT3 || 0).toFixed(6)) },
   ];
 
   const dI = data.distanciaT1 || 0;
   const dF = data.distanciaT3 || 0;
   const tI = data.tempoT1 || 0;
   const tF = data.tempoT3 || 0;
-  const redD = r.reducaoDist.toFixed(2);
-  const redT = r.reducaoTempo.toFixed(2);
+  
+  const redD = r.reducaoDist.toFixed(6).replace(".", ",");
+  const redT = r.reducaoTempo.toFixed(6).replace(".", ",");
 
   const uBase = data.unidadeTempo || "minutos";
   const u = uBase;
@@ -37,11 +38,12 @@ export function MovimentacaoModule({ data, onChange }: Props) {
     return unit;
   };
 
-  // Texto da ferramenta: usa o que foi preenchido no store global, ou fallback neutro
   const ferramentaTxt = (data.ferramentaUtilizada || "").trim() || "da ferramenta aplicada";
   const descricaoTxt = (data.acaoMelhoria || "").trim() || "com as melhorias realizadas";
 
-  const laudo = `Por intermédio ${ferramentaTxt} foi realizado ${descricaoTxt}.\n\nDistância: A medição inicial de movimentação/transporte era de ${dI}m (ida e volta), onde foi reduzido para ${dF}m (ida e volta), representando redução de ${redD}% em distância.\nCálculo Distância: (${dI} - ${dF}) / ${dI > 0 ? dI : 1} × 100 = ${redD}%\n\nTempo: O tempo de movimentação era de ${tI} ${getUnit(tI, uBase)}, onde foi reduzido para ${tF} ${getUnit(tF, uBase)}, representando redução de ${redT}% em tempo ${descricaoTxt}.\nCálculo Tempo: (${tI} - ${tF}) / ${tI > 0 ? tI : 1} × 100 = ${redT}%`;
+  const formatDec = (val: number) => val.toString().replace(".", ",");
+
+  const laudo = `Por intermédio ${ferramentaTxt} foi realizado ${descricaoTxt}.\n\nDistância: A medição inicial de movimentação/transporte era de ${formatDec(dI)}m (ida e volta), onde foi reduzido para ${formatDec(dF)}m (ida e volta), representando redução de ${redD}% em distância.\nCálculo Distância: (${formatDec(dI)} - ${formatDec(dF)}) / ${dI > 0 ? formatDec(dI) : 1} × 100 = ${redD}%\n\nTempo: O tempo de movimentação era de ${formatDec(tI)} ${getUnit(tI, uBase)}, onde foi reduzido para ${formatDec(tF)} ${getUnit(tF, uBase)}, representando redução de ${redT}% em tempo ${descricaoTxt}.\nCálculo Tempo: (${formatDec(tI)} - ${formatDec(tF)}) / ${tI > 0 ? formatDec(tI) : 1} × 100 = ${redT}%`;
 
   const parseDecimal = (val: string) => {
     const cleaned = val.replace(/[^\d,.-]/g, "");
@@ -52,7 +54,6 @@ export function MovimentacaoModule({ data, onChange }: Props) {
     <div className="flex gap-8 h-full animate-in fade-in duration-500">
       <div className="w-[60%] flex flex-col gap-6 overflow-y-auto pr-2 pb-10">
 
-        {/* Configuração: unidade de tempo */}
         <div className="p-5 bg-[#F8FAFC] text-slate-800 rounded-xl flex items-center justify-between shadow-sm mb-2 border border-slate-200">
           <div className="flex flex-col">
             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Configuração</span>
@@ -69,7 +70,6 @@ export function MovimentacaoModule({ data, onChange }: Props) {
           </select>
         </div>
 
-        {/* Campos do laudo - CONECTADOS AO GLOBAL */}
         <div className="p-5 bg-amber-50/60 rounded-xl border border-amber-200 space-y-4">
           <h3 className="font-bold text-slate-800 border-b border-amber-200 pb-2 text-sm">Contexto do Laudo</h3>
           <div>
@@ -98,7 +98,6 @@ export function MovimentacaoModule({ data, onChange }: Props) {
           </div>
         </div>
 
-        {/* Estado Inicial */}
         <div className="space-y-4 bg-slate-100/50 p-5 rounded-xl border border-slate-200">
           <h3 className="font-bold text-slate-800 border-b border-slate-200 pb-2">Estado Inicial (T1)</h3>
           <div className="grid grid-cols-2 gap-6">
@@ -123,7 +122,6 @@ export function MovimentacaoModule({ data, onChange }: Props) {
           </div>
         </div>
 
-        {/* Estado Final */}
         <div className="space-y-4 bg-indigo-50/50 p-5 rounded-xl border border-indigo-100">
           <h3 className="font-bold text-slate-800 border-b border-indigo-200 pb-2">Estado Final (T3)</h3>
           <div className="grid grid-cols-2 gap-6">
@@ -150,11 +148,10 @@ export function MovimentacaoModule({ data, onChange }: Props) {
 
       </div>
 
-      {/* Coluna direita */}
       <div className="w-[40%] flex flex-col gap-4 overflow-y-auto pb-10">
         <div className="grid grid-cols-2 gap-3">
-          <KpiCard label="Redução de Distância" value={r.reducaoDist.toFixed(1)} suffix="%" trend={r.reducaoDist} />
-          <KpiCard label={`Redução de Tempo (${u})`} value={r.reducaoTempo.toFixed(1)} suffix="%" trend={r.reducaoTempo} />
+          <KpiCard label="Redução de Distância" value={redD} suffix="%" trend={r.reducaoDist} />
+          <KpiCard label={`Redução de Tempo (${u})`} value={redT} suffix="%" trend={r.reducaoTempo} />
         </div>
 
         <div className="relative bg-blue-50/50 p-5 border border-blue-100 rounded-2xl shadow-sm">
