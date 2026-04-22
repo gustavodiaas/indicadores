@@ -49,35 +49,35 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
     let bullets: string[] = [];
 
     if (selectedIndicadores.includes("produtividade")) {
-      resultadosTexto.push(`Produtividade: No estágio inicial, a produtividade era de ${prod.pphT1.toFixed(2)} ${u}/h/op. Após as melhorias, a produtividade subiu para ${prod.pphT3.toFixed(2)} ${u}/h/op, representando um ganho direto de ${prod.ganho.toFixed(2)}% na eficiência operacional da célula.`);
-      bullets.push(`Aumento de ${prod.ganho.toFixed(2)}% em produtividade.`);
+      resultadosTexto.push(`Produtividade: No estágio inicial, a produtividade era de ${prod.pphT1.toFixed(6).replace(".", ",")} ${u}/h/op. Após as melhorias, a produtividade subiu para ${prod.pphT3.toFixed(6).replace(".", ",")} ${u}/h/op, representando um ganho direto de ${prod.ganho.toFixed(6).replace(".", ",")}% na eficiência operacional da célula.`);
+      bullets.push(`Aumento de ${prod.ganho.toFixed(6).replace(".", ",")}% em produtividade.`);
     }
     if (selectedIndicadores.includes("payback")) {
-      resultadosTexto.push(`Payback: Com as ações aplicadas e a redução do custo de mão de obra por ${u}, o projeto apresenta um retorno financeiro com Payback de ${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2) : "0.00"} ${pb.paybackMeses === 1 ? "mês" : "meses"}.`);
-      bullets.push(`Payback de ${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2) : "0.00"} ${pb.paybackMeses === 1 ? "mês" : "meses"}.`);
+      resultadosTexto.push(`Payback: Com as ações aplicadas e a redução do custo de mão de obra por ${u}, o projeto apresenta um retorno financeiro com Payback de ${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2).replace(".", ",") : "0,00"} ${pb.paybackMeses === 1 ? "mês" : "meses"}.`);
+      bullets.push(`Payback de ${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2).replace(".", ",") : "0,00"} ${pb.paybackMeses === 1 ? "mês" : "meses"}.`);
     }
     if (selectedIndicadores.includes("movimentacao")) {
-      resultadosTexto.push(`Movimentação: A análise de fluxo evidenciou uma redução de ${mov.reducaoDist.toFixed(2)}% na distância percorrida e uma queda de ${mov.reducaoTempo.toFixed(2)}% no tempo gasto com movimentação e transporte logístico.`);
-      bullets.push(`Redução de ${mov.reducaoTempo.toFixed(2)}% no tempo de movimentação.`);
+      resultadosTexto.push(`Movimentação: A análise de fluxo evidenciou uma redução de ${mov.reducaoDist.toFixed(2).replace(".", ",")}% na distância percorrida e uma queda de ${mov.reducaoTempo.toFixed(2).replace(".", ",")}% no tempo gasto com movimentação e transporte logístico.`);
+      bullets.push(`Redução de ${mov.reducaoTempo.toFixed(2).replace(".", ",")}% no tempo de movimentação.`);
     }
     if (selectedIndicadores.includes("qualidade")) {
-      resultadosTexto.push(`Qualidade: O índice de assertividade e peças conformes evoluiu de ${qual.indiceT1.toFixed(2)}% para ${qual.indiceT3.toFixed(2)}%, garantindo maior confiabilidade ao processo e minimizando perdas.`);
-      bullets.push(`Índice de qualidade evoluiu para ${qual.indiceT3.toFixed(2)}%.`);
+      resultadosTexto.push(`Qualidade: O índice de assertividade e peças conformes evoluiu de ${qual.indiceT1.toFixed(2).replace(".", ",")}% para ${qual.indiceT3.toFixed(2).replace(".", ",")}%, garantindo maior confiabilidade ao processo e minimizando perdas.`);
+      bullets.push(`Índice de qualidade evoluiu para ${qual.indiceT3.toFixed(2).replace(".", ",")}%.`);
     }
     if (selectedIndicadores.includes("disponibilidade")) {
-      resultadosTexto.push(`Disponibilidade: Com a redução das paradas não planejadas, o tempo efetivo de operação da máquina aumentou, representando um ganho de ${disp.aumento.toFixed(2)}% na utilização real do recurso.`);
-      bullets.push(`Aumento de ${disp.aumento.toFixed(2)}% na disponibilidade da máquina.`);
+      resultadosTexto.push(`Disponibilidade: Com a redução das paradas não planejadas, o tempo efetivo de operação da máquina aumentou, representando um ganho de ${disp.aumento.toFixed(2).replace(".", ",")}% na utilização real do recurso.`);
+      bullets.push(`Aumento de ${disp.aumento.toFixed(2).replace(".", ",")}% na disponibilidade da máquina.`);
     }
     if (selectedIndicadores.includes("leadtime")) {
       const ltU = state.leadtime.unidadeTempo || "dias";
       const t1 = state.leadtime.leadTimeT1 || state.leadtime.tempoT1 || 0;
       const t3 = state.leadtime.leadTimeT3 || state.leadtime.tempoT3 || 0;
-      resultadosTexto.push(`Lead Time: O tempo de atravessamento total caiu de ${t1} para ${t3} ${ltU}, caracterizando uma redução de ${lt.reducao.toFixed(2)}% no prazo de entrega do processo.`);
-      bullets.push(`Redução de ${lt.reducao.toFixed(2)}% no Lead Time.`);
+      resultadosTexto.push(`Lead Time: O tempo de atravessamento total caiu de ${t1} para ${t3} ${ltU}, caracterizando uma redução de ${lt.reducao.toFixed(2).replace(".", ",")}% no prazo de entrega do processo.`);
+      bullets.push(`Redução de ${lt.reducao.toFixed(2).replace(".", ",")}% no Lead Time.`);
     }
     if (selectedIndicadores.includes("area")) {
-      resultadosTexto.push(`Área de Trabalho: A otimização do layout produtivo reduziu a área ocupada em ${ar.reducaoPercent.toFixed(1)}%, liberando ${ar.economiaM2.toFixed(1)}m² de área útil, equivalente a uma economia imobiliária mensal de R$ ${ar.economiaMensal.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}.`);
-      bullets.push(`Economia de ${ar.reducaoPercent.toFixed(1)}% (${ar.economiaM2.toFixed(1)}m²) de área útil.`);
+      resultadosTexto.push(`Área de Trabalho: A otimização do layout produtivo reduziu a área ocupada em ${ar.reducaoPercent.toFixed(1).replace(".", ",")}%, liberando ${ar.economiaM2.toFixed(1).replace(".", ",")}m² de área útil, equivalente a uma economia imobiliária mensal de R$ ${ar.economiaMensal.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}.`);
+      bullets.push(`Economia de ${ar.reducaoPercent.toFixed(1).replace(".", ",")}% (${ar.economiaM2.toFixed(1).replace(".", ",")}m²) de área útil.`);
     }
 
     const intro = `O presente programa de fomento ao setor industrial brasileiro Brasil Mais Produtivo, proporcionou a realização de consultoria em Manufatura Enxuta na Empresa ${data.nomeEmpresa || "—"}, na cidade de ${data.cidade || "—"} no Estado do Rio Grande do Sul. A escolha do produto a ser mapeado foi motivada por: ${data.motivacao || "—"}. As ferramentas aplicadas foram: ${data.ferramentas || "—"}.`;
