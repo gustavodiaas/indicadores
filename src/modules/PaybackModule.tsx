@@ -24,6 +24,9 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
 
   const chartData = [{ name: "Custo Unitário (R$)", T1: Number(r.custoI.toFixed(2)), T3: Number(r.custoF.toFixed(2)) }];
   const formatBRL = (v: number) => `R$ ${v.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  
+  // Função que força as duas casas decimais como texto
+  const formatDec = (v: number | undefined) => v !== undefined && !isNaN(v) ? v.toFixed(2).replace(".", ",") : "";
 
   const op1 = prodData.operadoresT1 || 0;
   const op3 = prodData.operadoresT3 || 0;
@@ -32,7 +35,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
   const colabTxt1 = op1 === 1 ? "colaborador" : "colaboradores";
   const colabTxt3 = op3 === 1 ? "colaborador" : "colaboradores";
   
-  const laudo = `No estágio inicial, havia ${op1} ${colabTxt1}, com custo total por mês de ${formatBRL(r.salI)}, ${data.dedicacaoInicial || 100}% utilizados na operação. Produziam-se ${r.prodMensalI.toLocaleString("pt-BR")} ${u}/mês, a custo de mão de obra de ${formatBRL(r.custoI)}. Após intervenção, permaneceram ${op3} ${colabTxt3}, com custo total por mês de ${formatBRL(r.salF)}, ${data.dedicacaoFinal || 100}% utilizado no processo. Passaram a produzir ${r.prodMensalF.toLocaleString("pt-BR")} ${u}/mês, a custo de mão de obra de ${formatBRL(r.custoF)}. Reduziu-se então ${formatBRL(Math.max(0, r.custoI - r.custoF))} no custo de mão de obra por ${u}, que gerou o retorno mensal de ${formatBRL(r.reducaoMensal)}. Portanto, um payback de ${r.paybackMeses > 0 ? r.paybackMeses.toFixed(1) : "0.0"} ${r.paybackMeses === 1 ? "mês" : "meses"}.`;
+  const laudo = `No estágio inicial, havia ${op1} ${colabTxt1}, com custo total por mês de ${formatBRL(r.salI)}, ${data.dedicacaoInicial || 100}% utilizados na operação. Produziam-se ${r.prodMensalI.toLocaleString("pt-BR")} ${u}/mês, a custo de mão de obra de ${formatBRL(r.custoI)}. Após intervenção, permaneceram ${op3} ${colabTxt3}, com custo total por mês de ${formatBRL(r.salF)}, ${data.dedicacaoFinal || 100}% utilizado no processo. Passaram a produzir ${r.prodMensalF.toLocaleString("pt-BR")} ${u}/mês, a custo de mão de obra de ${formatBRL(r.custoF)}. Reduziu-se então ${formatBRL(Math.max(0, r.custoI - r.custoF))} no custo de mão de obra por ${u}, que gerou o retorno mensal de ${formatBRL(r.reducaoMensal)}. Portanto, um payback de ${r.paybackMeses > 0 ? r.paybackMeses.toFixed(2) : "0,00"} ${r.paybackMeses === 1 ? "mês" : "meses"}.`;
 
   const parseDecimal = (val: string) => {
     const cleaned = val.replace(/[^\d,.-]/g, '');
@@ -82,7 +85,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
                 {isUnitario ? "Salário Base (Por Operador R$)" : "Salário Base (Total R$)"}
               </label>
               <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
-                defaultValue={data.salarioBaseInicial ? data.salarioBaseInicial.toString().replace(".", ",") : ""} 
+                defaultValue={formatDec(data.salarioBaseInicial)} 
                 onBlur={e => onChange({ salarioBaseInicial: parseDecimal(e.target.value) })} placeholder="Ex: 2500,00" />
             </div>
 
@@ -117,8 +120,8 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
             <div>
               <label className="block text-xs font-bold text-slate-500 mb-1">Dedicação (%)</label>
               <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
-                defaultValue={data.dedicacaoInicial ? data.dedicacaoInicial.toString().replace(".", ",") : "100"} 
-                onBlur={e => onChange({ dedicacaoInicial: parseDecimal(e.target.value) || 100 })} placeholder="Ex: 100" />
+                defaultValue={formatDec(data.dedicacaoInicial) || "100,00"} 
+                onBlur={e => onChange({ dedicacaoInicial: parseDecimal(e.target.value) || 100 })} placeholder="Ex: 100,00" />
             </div>
 
             {/* LINHA 3 (Condicional) */}
@@ -126,8 +129,8 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
               <div>
                 <label className="block text-xs font-bold text-slate-500 mb-1">Encargos (Mult.)</label>
                 <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
-                  defaultValue={data.encargosInicial ? data.encargosInicial.toString().replace(".", ",") : "1"} 
-                  onBlur={e => onChange({ encargosInicial: parseDecimal(e.target.value) || 1 })} placeholder="Ex: 1,9" />
+                  defaultValue={formatDec(data.encargosInicial) || "1,00"} 
+                  onBlur={e => onChange({ encargosInicial: parseDecimal(e.target.value) || 1 })} placeholder="Ex: 1,90" />
               </div>
             )}
             
@@ -144,7 +147,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
                 {isUnitario ? "Salário Base (Por Operador R$)" : "Salário Base (Total R$)"}
               </label>
               <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
-                defaultValue={data.salarioBaseFinal ? data.salarioBaseFinal.toString().replace(".", ",") : ""} 
+                defaultValue={formatDec(data.salarioBaseFinal)} 
                 onBlur={e => onChange({ salarioBaseFinal: parseDecimal(e.target.value) })} placeholder="Ex: 2500,00" />
             </div>
 
@@ -179,8 +182,8 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
             <div>
               <label className="block text-xs font-bold text-slate-500 mb-1">Dedicação (%)</label>
               <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
-                defaultValue={data.dedicacaoFinal ? data.dedicacaoFinal.toString().replace(".", ",") : "100"} 
-                onBlur={e => onChange({ dedicacaoFinal: parseDecimal(e.target.value) || 100 })} placeholder="Ex: 100" />
+                defaultValue={formatDec(data.dedicacaoFinal) || "100,00"} 
+                onBlur={e => onChange({ dedicacaoFinal: parseDecimal(e.target.value) || 100 })} placeholder="Ex: 100,00" />
             </div>
 
             {/* LINHA 3 (Condicional) */}
@@ -188,8 +191,8 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
               <div>
                 <label className="block text-xs font-bold text-slate-500 mb-1">Encargos (Mult.)</label>
                 <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
-                  defaultValue={data.encargosFinal ? data.encargosFinal.toString().replace(".", ",") : "1"} 
-                  onBlur={e => onChange({ encargosFinal: parseDecimal(e.target.value) || 1 })} placeholder="Ex: 1,9" />
+                  defaultValue={formatDec(data.encargosFinal) || "1,00"} 
+                  onBlur={e => onChange({ encargosFinal: parseDecimal(e.target.value) || 1 })} placeholder="Ex: 1,90" />
               </div>
             )}
             
@@ -223,7 +226,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
             <div>
               <label className="block text-xs font-bold text-slate-500 mb-1">Investimento Extra (R$)</label>
               <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm" 
-                defaultValue={data.investimentoExtra ? data.investimentoExtra.toString().replace(".", ",") : ""} 
+                defaultValue={formatDec(data.investimentoExtra)} 
                 onBlur={e => onChange({ investimentoExtra: parseDecimal(e.target.value) })} placeholder="Ex: 5000,00" />
             </div>
           </div>
@@ -236,7 +239,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
           <KpiCard label="Custo Inicial" value={formatBRL(r.custoI)} />
           <KpiCard label="Custo Final" value={formatBRL(r.custoF)} />
           <KpiCard label="Redução Mensal" value={formatBRL(r.reducaoMensal)} />
-          <KpiCard label="Payback" value={r.paybackMeses > 0 ? r.paybackMeses.toFixed(2) : "0.00"} suffix={r.paybackMeses === 1 ? "mês" : "meses"} />
+          <KpiCard label="Payback" value={r.paybackMeses > 0 ? r.paybackMeses.toFixed(2).replace(".", ",") : "0,00"} suffix={r.paybackMeses === 1 ? "mês" : "meses"} />
         </div>
         
         <div className="relative bg-white p-5 border border-slate-200 rounded-2xl shadow-sm">
