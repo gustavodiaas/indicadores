@@ -13,7 +13,8 @@ interface Props {
 export function ProdutividadeModule({ data, onChange }: Props) {
   const [copied, setCopied] = useState(false);
   const r = calcProdutividade(data);
-  const chartData = [{ name: `Produtividade`, T1: Number(r.pphT1.toFixed(2)), T3: Number(r.pphT3.toFixed(2)) }];
+  // Gráfico agora crava em 6 casas decimais
+  const chartData = [{ name: `Produtividade`, T1: Number(r.pphT1.toFixed(6)), T3: Number(r.pphT3.toFixed(6)) }];
 
   const u = data.unidade || "peças";
   const opTxt1 = data.operadoresT1 === 1 ? "operador" : "operadores";
@@ -24,7 +25,8 @@ export function ProdutividadeModule({ data, onChange }: Props) {
     return Number(cleaned) || 0;
   };
 
-  const laudo = `No estágio inicial, a produtividade era de ${r.pphT1.toFixed(2)} ${u}/h/op, produzindo ${data.volumeT1 || 0} ${u} com ${data.operadoresT1 || 0} ${opTxt1} em ${data.horasT1 || 0}h. Após as melhorias, a produtividade subiu para ${r.pphT3.toFixed(2)} ${u}/h/op, produzindo ${data.volumeT3 || 0} ${u} com ${data.operadoresT3 || 0} ${opTxt3} em ${data.horasT3 || 0}h. Isso representa um ganho direto de ${r.ganho.toFixed(2)}% na eficiência operacional da célula.`;
+  // Laudo formatado com 6 casas decimais e vírgula no lugar do ponto
+  const laudo = `No estágio inicial, a produtividade era de ${r.pphT1.toFixed(6).replace(".", ",")} ${u}/h/op, produzindo ${data.volumeT1 || 0} ${u} com ${data.operadoresT1 || 0} ${opTxt1} em ${data.horasT1 || 0}h. Após as melhorias, a produtividade subiu para ${r.pphT3.toFixed(6).replace(".", ",")} ${u}/h/op, produzindo ${data.volumeT3 || 0} ${u} com ${data.operadoresT3 || 0} ${opTxt3} em ${data.horasT3 || 0}h. Isso representa um ganho direto de ${r.ganho.toFixed(6).replace(".", ",")}% na eficiência operacional da célula.`;
 
   return (
     <div className="flex gap-8 h-full animate-in fade-in duration-500">
@@ -98,7 +100,8 @@ export function ProdutividadeModule({ data, onChange }: Props) {
       </div>
 
       <div className="w-[40%] flex flex-col gap-4">
-        <KpiCard label="Ganho de Produtividade" value={r.ganho.toFixed(2)} suffix="%" trend={r.ganho} />
+        {/* KPI Card cravado em 6 casas e com vírgula */}
+        <KpiCard label="Ganho de Produtividade" value={r.ganho.toFixed(6).replace(".", ",")} suffix="%" trend={r.ganho} />
         <div className="relative bg-white p-5 border border-slate-200 rounded-2xl shadow-sm">
           <button onClick={() => { navigator.clipboard.writeText(laudo); setCopied(true); toast.success("Copiado!"); setTimeout(() => setCopied(false), 2000); }} className="absolute top-3 right-3 p-2 rounded-md bg-slate-50 text-slate-400 hover:text-blue-600 transition-all">
             {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
