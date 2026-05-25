@@ -249,62 +249,56 @@ export default function GBOAnalysis() {
       <div className="h-full relative print:min-h-0 print:bg-transparent flex flex-col gap-8 animate-in fade-in duration-500">
         <input ref={fileInputRef} type="file" accept=".xlsx,.xls" onChange={handleFileChange} className="hidden" />
 
-        {/* HEADER LIMPO PADRÃO */}
-        <div className="pt-2 pb-4 w-full flex justify-between items-center z-50 print:hidden border-b border-slate-200">
-          <div className="flex items-center gap-4">
-            <h1 className="text-xl font-bold tracking-tight text-slate-800">
-              Gráfico de Balanceamento de Operações (GBO)
-            </h1>
-          </div>
+        <div className="pt-2 pb-4 w-full flex justify-between items-center z-50 print:hidden">
+          <h1 className="text-xl font-bold tracking-tight text-[#0F172A]">
+            Gráfico de Balanceamento de Operações (GBO)
+          </h1>
           
           <div className="flex items-center gap-4">
             <Dialog>
               <DialogTrigger asChild>
-                <button className="h-9 w-9 flex items-center justify-center rounded-full text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors">
+                <button className="h-9 w-9 flex items-center justify-center rounded-full text-[#0F172A] hover:text-[#0057FF] hover:bg-[#0057FF]/10 transition-colors">
                   <HelpCircle className="h-5 w-5" />
                 </button>
               </DialogTrigger>
-              <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto bg-white border border-slate-200 rounded-2xl shadow-xl">
+              <DialogContent className="rounded-2xl border border-transparent shadow-xl">
                 <DialogHeader>
-                  <DialogTitle className="text-blue-600 flex items-center gap-2 font-bold text-lg">
+                  <DialogTitle className="text-[#0057FF] flex items-center gap-2 font-bold text-lg">
                     <HelpCircle className="w-5 h-5" />
                     Manual Técnico GBO
                   </DialogTitle>
-                  <DialogDescription className="text-slate-500">Protocolo Analítico de Balanceamento</DialogDescription>
+                  <DialogDescription>Protocolo Analítico de Balanceamento</DialogDescription>
                 </DialogHeader>
-                <div className="space-y-4 text-sm mt-4 text-slate-600 leading-relaxed text-justify">
-                  <p>O <strong>GBO (Gráfico de Balanceamento de Operações)</strong> é uma ferramenta analítica de fluxo. Ele plota os tempos de ciclo individuais de cada operação em relação ao Takt Time estabelecido.</p>
-                  <p><strong>Objetivo:</strong> Identificar restrições sistêmicas (gargalos) e fornecer uma base de dados limpa para o nivelamento da capacidade produtiva, reduzindo ociosidade e superprodução.</p>
+                <div className="space-y-4 text-sm mt-4 text-[#0F172A] leading-relaxed text-justify">
+                  <p>O <strong>GBO</strong> é uma ferramenta analítica de fluxo. Ele plota os tempos de ciclo individuais de cada operação em relação ao Takt Time estabelecido.</p>
                 </div>
               </DialogContent>
             </Dialog>
           </div>
         </div>
 
-        {/* CONTEÚDO PRINCIPAL DIVIDIDO EM DUAS COLUNAS PADRÃO */}
-        <div className="flex flex-col xl:flex-row gap-8 pb-12 print:p-12 print:max-w-none print:w-[100vw] print:break-inside-avoid">
+        <div className="flex flex-col xl:flex-row gap-8 pb-12 print:p-12">
           
-          {/* LADO ESQUERDO: CONTROLES */}
           <div className="xl:w-[40%] flex flex-col gap-6 print:hidden">
             
-            <div className="space-y-4 bg-slate-50 p-5 rounded-xl border border-slate-200 shadow-sm">
-              <h3 className="font-bold text-slate-800 border-b border-slate-200 pb-2 flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></div>
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+              <h3 className="font-bold text-[#0F172A] border-b border-slate-100 pb-2 flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-[#0057FF] animate-pulse"></div>
                 Cálculo do Takt Time
               </h3>
               
               <div className="space-y-3">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Tempo do Turno</label>
+                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-1">Tempo do Turno</label>
                     <input type="number" step="0.1" min="0" placeholder="8.0" value={workShiftTime}
                       onChange={(e) => { updateModule("gbo", { turnoTempo: Number(e.target.value) }); validateTaktFields(); }} onBlur={validateTaktFields}
-                      className={`w-full h-10 px-3 rounded-lg border text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${errors.workShiftTime ? "border-rose-500" : "border-slate-200"}`}
+                      className={`w-full h-12 px-4 rounded-xl border-none bg-slate-50 text-sm outline-none focus:bg-white focus:ring-2 focus:ring-[#0057FF] transition-all ${errors.workShiftTime ? "ring-2 ring-rose-500" : ""}`}
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Unidade</label>
-                    <select value={timeUnitTakt} onChange={(e: any) => updateModule("gbo", { turnoUnidade: e.target.value })} className="w-full h-10 px-3 rounded-lg border border-slate-200 bg-white text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-1">Unidade</label>
+                    <select value={timeUnitTakt} onChange={(e: any) => updateModule("gbo", { turnoUnidade: e.target.value })} className="w-full h-12 px-4 rounded-xl border-none bg-slate-50 text-sm focus:ring-2 focus:ring-[#0057FF] transition-all">
                       <option value="minutes">Minutos</option>
                       <option value="hours">Horas</option>
                       <option value="seconds">Segundos</option>
@@ -313,99 +307,83 @@ export default function GBOAnalysis() {
                 </div>
                 
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Demanda Diária ({demandUnit}/dia)</label>
+                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-1">Demanda Diária</label>
                   <div className="grid grid-cols-2 gap-4">
                     <input type="number" step="1" min="0" placeholder="100" value={dailyDemand}
                       onChange={(e) => { updateModule("gbo", { demanda: Number(e.target.value) }); validateTaktFields(); }} onBlur={validateTaktFields}
-                      className={`w-full h-10 px-3 rounded-lg border text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${errors.dailyDemand ? "border-rose-500" : "border-slate-200"}`}
+                      className={`w-full h-12 px-4 rounded-xl border-none bg-slate-50 text-sm focus:ring-2 focus:ring-[#0057FF] transition-all ${errors.dailyDemand ? "ring-2 ring-rose-500" : ""}`}
                     />
-                    <input 
-                      type="text" 
-                      placeholder="Ex: caixas" 
-                      value={demandUnit} 
-                      onChange={(e) => updateModule("gbo", { demandaUnidade: e.target.value })} 
-                      className="w-full h-10 px-3 rounded-lg border border-slate-200 bg-white text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
-                    />
+                    <input type="text" placeholder="Ex: caixas" value={demandUnit} onChange={(e) => updateModule("gbo", { demandaUnidade: e.target.value })} 
+                      className="w-full h-12 px-4 rounded-xl border-none bg-slate-50 text-sm focus:ring-2 focus:ring-[#0057FF] transition-all" />
                   </div>
                 </div>
 
                 {calculateTaktTime() && (
-                  <div className="bg-blue-50 border border-blue-100 p-3 rounded-lg flex items-center gap-3 mt-4">
-                    <CheckCircle2 className="h-5 w-5 text-blue-600" />
-                    <p className="text-sm text-blue-800">
-                      <strong>Takt Time: </strong>
-                      {timeUnitTakt === "hours" ? (calculateTaktTime()! / 3600).toFixed(2)
+                  <div className="bg-[#0057FF]/5 border border-[#0057FF]/10 p-4 rounded-xl flex items-center gap-3 mt-4">
+                    <CheckCircle2 className="h-5 w-5 text-[#0057FF]" />
+                    <p className="text-sm font-semibold text-[#0057FF]">
+                      Takt Time: {timeUnitTakt === "hours" ? (calculateTaktTime()! / 3600).toFixed(2)
                         : timeUnitTakt === "minutes" ? (calculateTaktTime()! / 60).toFixed(2)
-                        : calculateTaktTime()!.toFixed(2)} {timeUnitTakt === "hours" ? "horas" : timeUnitTakt === "minutes" ? "minutos" : "segundos"}/{demandUnit.toLowerCase()}
+                        : calculateTaktTime()!.toFixed(2)} {timeUnitTakt === "hours" ? "h" : timeUnitTakt === "minutes" ? "min" : "seg"}/{demandUnit}
                     </p>
                   </div>
                 )}
               </div>
             </div>
 
-            <div className="space-y-4 bg-indigo-50/50 p-5 rounded-xl border border-indigo-100 shadow-sm">
-              <div className="flex items-center justify-between border-b border-indigo-200 pb-2">
-                <h3 className="font-bold text-slate-800">Nova Operação</h3>
-                <select value={timeUnit} onChange={(e: any) => updateModule("gbo", { tempoUnidade: e.target.value })} className="h-8 px-2 rounded-md border border-slate-200 bg-white text-xs font-bold text-slate-600 outline-none focus:ring-2 focus:ring-indigo-500">
-                  <option value="minutes">Tempo em Minutos</option>
-                  <option value="seconds">Tempo em Segundos</option>
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                <h3 className="font-bold text-[#0F172A] text-sm tracking-wide uppercase">Nova Operação</h3>
+                <select value={timeUnit} onChange={(e: any) => updateModule("gbo", { tempoUnidade: e.target.value })} className="h-8 px-2 rounded-lg border-none bg-slate-50 text-[10px] font-bold text-slate-600 outline-none focus:ring-2 focus:ring-[#0057FF]">
+                  <option value="minutes">Minutos</option>
+                  <option value="seconds">Segundos</option>
                 </select>
               </div>
               
               <div className="space-y-3">
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Nome da Operação</label>
-                  <input placeholder="Ex: Montagem, Soldagem..." value={newOperationName} onKeyPress={handleKeyPress}
-                    onChange={(e) => { setNewOperationName(e.target.value); if (errors.operationName) setErrors((prev) => ({ ...prev, operationName: undefined })); }}
-                    className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm outline-none focus:ring-2 focus:ring-indigo-500 transition-colors"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Tempo ({timeUnit === "seconds" ? "segundos" : "minutos"})</label>
-                  <input type="number" step="0.1" min="0" placeholder="0.0" value={newOperationTime} onKeyPress={handleKeyPress}
-                    onChange={(e) => { setNewOperationTime(e.target.value); if (errors.operationTime) setErrors((prev) => ({ ...prev, operationTime: undefined })); }}
-                    className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm outline-none focus:ring-2 focus:ring-indigo-500 transition-colors"
-                  />
-                </div>
-                <button 
-                  onClick={addOperation} disabled={!newOperationName.trim() || !newOperationTime.trim() || isLoading}
-                  className="w-full h-10 flex items-center justify-center bg-slate-900 text-white rounded-lg font-bold text-xs uppercase tracking-widest shadow-md hover:bg-indigo-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+                <input placeholder="Nome da Operação" value={newOperationName} onKeyPress={handleKeyPress}
+                  onChange={(e) => { setNewOperationName(e.target.value); if (errors.operationName) setErrors((prev) => ({ ...prev, operationName: undefined })); }}
+                  className="w-full h-12 px-4 rounded-xl border-none bg-slate-50 text-sm focus:ring-2 focus:ring-[#0057FF] transition-all"
+                />
+                <input type="number" step="0.1" min="0" placeholder="Tempo" value={newOperationTime} onKeyPress={handleKeyPress}
+                  onChange={(e) => { setNewOperationTime(e.target.value); if (errors.operationTime) setErrors((prev) => ({ ...prev, operationTime: undefined })); }}
+                  className="w-full h-12 px-4 rounded-xl border-none bg-slate-50 text-sm focus:ring-2 focus:ring-[#0057FF] transition-all"
+                />
+                <button onClick={addOperation} disabled={!newOperationName.trim() || !newOperationTime.trim() || isLoading}
+                  className="w-full h-12 flex items-center justify-center bg-[#0057FF] text-white rounded-xl font-bold text-xs uppercase tracking-widest shadow-lg hover:bg-[#0047D6] transition-all disabled:opacity-50"
                 >
                   <Plus className="h-4 w-4 mr-2" /> Adicionar
                 </button>
               </div>
             </div>
 
-            <div className="flex flex-col gap-3">
-              <div className="flex gap-3">
-                <button onClick={handleImportExcel} disabled={isLoading} className="flex-1 h-10 flex items-center justify-center bg-white border border-slate-200 text-slate-600 font-bold text-xs rounded-lg hover:bg-slate-50 transition-colors shadow-sm">
-                  <Upload className="h-4 w-4 mr-2" /> Importar
-                </button>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button disabled={isLoading} className="flex-1 h-10 flex items-center justify-center bg-white border border-slate-200 text-slate-600 font-bold text-xs rounded-lg hover:bg-slate-50 transition-colors shadow-sm">
-                      <Download className="h-4 w-4 mr-2" /> Exportar
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56 bg-white rounded-xl shadow-xl border border-slate-200 p-2">
-                    <DropdownMenuItem onClick={handleExportChartPDF} disabled={operations.length === 0} className="cursor-pointer text-sm font-medium py-2 rounded-md hover:bg-slate-50 text-slate-700">
-                      <FileImage className="h-4 w-4 mr-2 text-rose-500" /> Exportar Gráfico (PDF)
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={handleExportExcel} disabled={operations.length === 0} className="cursor-pointer text-sm font-medium py-2 rounded-md hover:bg-slate-50 text-slate-700">
-                      <FileSpreadsheet className="h-4 w-4 mr-2 text-emerald-600" /> Exportar Dados (Excel)
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-              <button onClick={downloadTemplate} disabled={isLoading} className="w-full h-10 flex items-center justify-center bg-white border border-slate-200 text-slate-600 font-bold text-xs rounded-lg hover:bg-slate-50 transition-colors shadow-sm">
-                <FileSpreadsheet className="h-4 w-4 mr-2 text-emerald-600" /> Baixar Modelo Padrão (Excel)
+            <div className="flex gap-3">
+              <button onClick={handleImportExcel} disabled={isLoading} className="flex-1 h-12 flex items-center justify-center bg-white border border-slate-100 text-slate-600 font-bold text-xs rounded-xl hover:bg-slate-50 shadow-sm">
+                <Upload className="h-4 w-4 mr-2" /> Importar
               </button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button disabled={isLoading} className="flex-1 h-12 flex items-center justify-center bg-white border border-slate-100 text-slate-600 font-bold text-xs rounded-xl hover:bg-slate-50 shadow-sm">
+                    <Download className="h-4 w-4 mr-2" /> Exportar
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="rounded-2xl border-none shadow-xl p-2">
+                  <DropdownMenuItem onClick={handleExportChartPDF} disabled={operations.length === 0} className="text-sm cursor-pointer py-2 px-3 rounded-lg hover:bg-slate-50">
+                    <FileImage className="h-4 w-4 mr-2 text-rose-500" /> Exportar Gráfico (PDF)
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleExportExcel} disabled={operations.length === 0} className="text-sm cursor-pointer py-2 px-3 rounded-lg hover:bg-slate-50">
+                    <FileSpreadsheet className="h-4 w-4 mr-2 text-emerald-600" /> Exportar Dados (Excel)
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
+            <button onClick={downloadTemplate} disabled={isLoading} className="w-full h-12 flex items-center justify-center bg-white border border-slate-100 text-slate-600 font-bold text-xs rounded-xl hover:bg-slate-50 shadow-sm">
+              <FileSpreadsheet className="h-4 w-4 mr-2 text-emerald-600" /> Baixar Modelo Padrão
+            </button>
 
-            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-4">
+            <div className="bg-white border border-slate-100 rounded-2xl shadow-sm p-4">
               <DraggableOperationsList operations={operations} timeUnit={timeUnit} onReorder={reorderOperations} onRemove={removeOperation} onEdit={editOperation} />
             </div>
-
           </div>
 
           {/* LADO DIREITO: GRÁFICOS */}
@@ -415,21 +393,17 @@ export default function GBOAnalysis() {
                 <div className="print:hidden">
                   <CalculationsDashboard operations={operations} timeUnit={timeUnit} taktTime={calculateTaktTime()} taktTimeUnit={timeUnitTakt} demandUnit={demandUnit} />
                 </div>
-                <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 print:border-none print:shadow-none print:p-0">
+                <div className="bg-white border border-slate-100 rounded-2xl shadow-sm p-6 print:border-none print:shadow-none print:p-0">
                   <GBOChart operations={operations} timeUnit={timeUnit} taktTime={calculateTaktTime()} taktTimeUnit={timeUnitTakt} demandUnit={demandUnit} />
                 </div>
               </>
             ) : (
-              <div className="h-full min-h-[400px] flex flex-col items-center justify-center bg-slate-50 border border-dashed border-slate-300 rounded-2xl print:hidden">
-                <div className="p-4 rounded-full bg-slate-200/50 mb-4">
-                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
-                    <path d="M3 3v18h18" />
-                    <path d="M18 9l-5 5-4-4-5 5" />
-                    <circle cx="18" cy="9" r="2.5" fill="currentColor" />
-                  </svg>
+              <div className="h-full min-h-[400px] flex flex-col items-center justify-center bg-slate-50 border border-dashed border-slate-200 rounded-2xl print:hidden">
+                <div className="p-4 rounded-full bg-slate-100 mb-4">
+                  <ArrowRightLeft className="w-8 h-8 text-slate-300" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-600">Nenhuma operação adicionada</h3>
-                <p className="text-sm text-slate-400 mt-2">Preencha o formulário ao lado para gerar o gráfico</p>
+                <h3 className="text-lg font-bold text-slate-600">Nenhuma operação</h3>
+                <p className="text-sm text-slate-400">Preencha o formulário ao lado</p>
               </div>
             )}
           </div>
