@@ -29,7 +29,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
   const qual = useMemo(() => calcQualidade(state.qualidade), [state.qualidade]);
   const disp = useMemo(() => calcDisponibilidade(state.disponibilidade), [state.disponibilidade]);
   const lt = useMemo(() => calcLeadTime(state.leadtime), [state.leadtime]);
-  const ar = calcArea(state.area), [state.area];
+  const ar = useMemo(() => calcArea(state.area), [state.area]);
 
   const descTexto = useMemo(() => {
     const colabTxt = data.totalColaboradores === 1 ? "colaborador" : "colaboradores";
@@ -172,8 +172,8 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
           </div>
         </div>
 
-        <div className="w-[45%] flex flex-col gap-6">
-          <div className="relative bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+        <div className="w-[45%] flex flex-col gap-6 overflow-y-auto pb-36">
+          <div className="relative bg-white p-6 rounded-2xl shadow-sm border border-slate-100 transition-all hover:border-[#0057FF]/20">
             <button onClick={() => { navigator.clipboard.writeText(descTexto); setCopiedId("desc"); toast.success("Copiado!"); setTimeout(() => setCopiedId(null), 2000); }} className="absolute top-4 right-4 p-2 rounded-lg bg-slate-50 text-slate-400 hover:bg-[#0057FF] hover:text-white transition-all shadow-sm">
               {copiedId === "desc" ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
             </button>
@@ -182,7 +182,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
           </div>
 
           <div className="relative bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
-            <button onClick={() => { navigator.clipboard.writeText(textoDinamico); setCopiedId("conc"); toast.success("Copiado!"); setTimeout(() => setCopiedId(null), 2000); }} className="absolute top-4 right-4 p-2 rounded-lg bg-slate-50 text-slate-400 hover:bg-[#0057FF] hover:text-white transition-all shadow-sm border border-slate-100">
+            <button onClick={() => { navigator.clipboard.writeText(textoDinamico); setCopiedId("conc"); toast.success("Copiado!"); setTimeout(() => setCopiedId(null), 2000); }} className="absolute top-4 right-4 p-2 rounded-lg bg-slate-50 text-slate-400 hover:bg-[#0057FF] hover:text-white transition-all shadow-sm">
               {copiedId === "conc" ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
             </button>
             <h4 className="text-[10px] font-bold text-[#0057FF] uppercase tracking-widest mb-4 border-b border-slate-100 pb-2">Conclusão do Projeto</h4>
@@ -213,6 +213,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
           </div>
         </div>
       </div>
+
       {showConfirmModal && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/20 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full mx-4 animate-in zoom-in-95 duration-300">
