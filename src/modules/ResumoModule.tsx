@@ -29,12 +29,11 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
   const qual = useMemo(() => calcQualidade(state.qualidade), [state.qualidade]);
   const disp = useMemo(() => calcDisponibilidade(state.disponibilidade), [state.disponibilidade]);
   const lt = useMemo(() => calcLeadTime(state.leadtime), [state.leadtime]);
-  const ar = useMemo(() => calcArea(state.area), [state.area]);
+  const ar = calcArea(state.area), [state.area];
 
   const descTexto = useMemo(() => {
     const colabTxt = data.totalColaboradores === 1 ? "colaborador" : "colaboradores";
     const turnoTxt = data.turnos === 1 ? "Turno" : "Turnos";
-
     return `A Empresa ${data.nomeEmpresa || "—"}, da cidade de ${data.cidade || "—"} no Estado do Rio Grande do Sul, atua no ramo de ${data.ramo || "—"}, especialista em ${data.especialista || "—"}, conta com ${data.totalColaboradores || "0"} ${colabTxt} atuando em ${data.turnos} ${turnoTxt}. O produto mapeado segue o seguinte processo produtivo: ${data.processos || "—"}, com método de produção ${data.metodo || "—"}, onde a demanda é originada por ${data.origem || "—"}. Ao longo do mapeamento foram identificadas oportunidades no setor de ${data.oportunidades || "—"}, por problemas de ${data.problemas || "—"}. Nesta consultoria, a área de atuação/intervenção foi ${data.atuacao || "—"}.`;
   }, [data]);
 
@@ -58,7 +57,6 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
       const exibir = state.movimentacao.exibirNoLaudo || "ambos";
       const distTxt = mov.reducaoDist.toFixed(6).replace(".", ",");
       const tempoTxt = mov.reducaoTempo.toFixed(6).replace(".", ",");
-
       if (exibir === "ambos") {
         resultadosTexto.push(`Movimentação: A análise de fluxo evidenciou uma redução de ${distTxt}% na distância percorrida e uma queda de ${tempoTxt}% no tempo gasto com movimentação e transporte logístico.`);
         bullets.push(`Redução de ${distTxt}% na distância e ${tempoTxt}% no tempo de movimentação.`);
@@ -98,29 +96,6 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
     return { textoDinamico: textoCompleto, bulletPoints: bullets };
   }, [data, prod, pb, mov, qual, disp, lt, ar, selectedIndicadores, state.produtividade.unidade, state.leadtime, state.movimentacao.exibirNoLaudo, state.planoAcao.acoes]);
 
-  const handleCopy = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedId(id);
-    toast.success("Texto formatado copiado!");
-    setTimeout(() => setCopiedId(null), 2000);
-  };
-
-  const handleAddAcao = () => {
-    if (newAcao.trim()) {
-      const nova = { 
-        id: Date.now().toString(), 
-        what: newAcao.trim(), why: "", where: "", start: "", end: "", who: "", how: "", howMuch: "", percent: 0, obs: "", status: "NÃO INICIADO",
-        origin: "resumo" as const
-      };
-      onUpdatePlanoAcao([...state.planoAcao.acoes, nova]);
-      setNewAcao("");
-    }
-  };
-
-  const handleRemoveAcao = (id: string) => {
-    onUpdatePlanoAcao(state.planoAcao.acoes.filter(a => a.id !== id));
-  };
-
   const toggleIndicador = (id: string) => {
     if (lockedIndicadores.includes(id)) return; 
     if (selectedIndicadores.includes(id)) {
@@ -146,10 +121,10 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
     <>
       <div className="flex gap-8 h-full">
         <div className="w-[55%] flex flex-col gap-6 overflow-y-auto pr-4 pb-36">
-          <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+          <div className="flex items-center justify-between pb-2">
             <h3 className="font-bold text-slate-800 text-lg uppercase tracking-tight">Entrada de Dados</h3>
-            <button onClick={() => setShowConfirmModal(true)} className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 text-rose-600 hover:bg-rose-100 hover:text-rose-700 rounded-lg font-bold text-[10px] uppercase tracking-wider transition-colors border border-rose-100 shadow-sm">
-              <Trash2 className="w-3.5 h-3.5" /> Limpar Dados Atuais
+            <button onClick={() => setShowConfirmModal(true)} className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-lg font-bold text-[10px] uppercase tracking-wider transition-colors border border-rose-100 shadow-sm">
+              <Trash2 className="w-3.5 h-3.5" /> Limpar Dados
             </button>
           </div>
           
@@ -162,7 +137,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
             <InputField label="Turno(s)" value={data.turnos} onChange={v => onChange({ turnos: Number(v) || 1 })} type="number" />
           </div>
 
-          <div className="grid grid-cols-1 gap-4 pt-4 border-t">
+          <div className="grid grid-cols-1 gap-4 pt-4 border-t border-slate-100">
             <InputField label="Processo Produtivo Mapeado" value={data.processos} onChange={v => onChange({ processos: v })} />
             <div className="grid grid-cols-2 gap-4">
               <InputField label="Método (Puxada/Empurrada)" value={data.metodo} onChange={v => onChange({ metodo: v as any })} />
@@ -171,10 +146,8 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
             <InputField label="Oportunidades no setor de" value={data.oportunidades} onChange={v => onChange({ oportunidades: v })} />
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wide">
-                  Problemas de <span className="lowercase font-normal italic text-slate-400">(Adicione os desperdícios encontrados)</span>
-                </label>
-                <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm bg-white outline-none focus:ring-2 focus:ring-blue-500 transition-colors" value={data.problemas || ""} onChange={e => onChange({ problemas: e.target.value })} />
+                <label className="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase tracking-widest pl-1">Problemas</label>
+                <input type="text" className="w-full h-12 px-4 rounded-xl border-none bg-slate-50 text-sm outline-none focus:bg-white focus:ring-2 focus:ring-[#0057FF] transition-all" value={data.problemas || ""} onChange={e => onChange({ problemas: e.target.value })} />
               </div>
               <InputField label="Ferramentas Lean Aplicadas" value={data.ferramentas} onChange={v => onChange({ ferramentas: v })} />
             </div>
@@ -182,56 +155,55 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
             <InputField label="Motivação da Escolha" value={data.motivacao} onChange={v => onChange({ motivacao: v })} />
           </div>
 
-          <div className="pt-4 border-t space-y-4">
+          <div className="pt-4 border-t border-slate-100 space-y-4">
             <h4 className="text-sm font-bold text-slate-700 uppercase">Resumo das Ações</h4>
-            <p className="text-xs text-slate-500 mb-2">Adicione aqui o resumo das macro ações. O detalhamento completo ocorre na aba 5W2H.</p>
             <div className="flex gap-2 items-end">
-              <div className="flex-1"><InputField label="O que será feito? (What)" value={newAcao} onChange={setNewAcao} /></div>
-              <button onClick={handleAddAcao} className="h-10 px-6 bg-blue-600 text-white rounded-lg font-bold text-xs uppercase shadow-md hover:bg-blue-700 transition-colors">Adicionar</button>
+              <div className="flex-1"><InputField label="O que será feito?" value={newAcao} onChange={setNewAcao} /></div>
+              <button onClick={handleAddAcao} className="h-12 px-6 bg-[#0057FF] text-white rounded-xl font-bold text-xs uppercase shadow-md hover:bg-[#0047D6] transition-colors">Adicionar</button>
             </div>
             <div className="flex flex-col gap-2 mt-4">
               {acoesVisiveis.map(a => (
-                <div key={a.id} className="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-lg shadow-sm">
+                <div key={a.id} className="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-xl shadow-sm">
                   <span className="text-xs font-bold text-slate-700 truncate pr-4 flex-1">{a.what}</span>
-                  <button onClick={() => handleRemoveAcao(a.id)} className="p-1.5 hover:bg-rose-100 rounded-md transition-colors text-rose-500"><Trash2 className="h-4 w-4" /></button>
+                  <button onClick={() => handleRemoveAcao(a.id)} className="p-1.5 hover:bg-rose-50 rounded-lg transition-colors text-rose-500"><Trash2 className="h-4 w-4" /></button>
                 </div>
               ))}
             </div>
           </div>
         </div>
 
-        <div className="w-[45%] flex flex-col gap-6 overflow-y-auto pb-36">
-          <div className="relative bg-white p-6 rounded-2xl border border-slate-200 shadow-sm transition-all hover:border-blue-200">
-            <button onClick={() => handleCopy(descTexto, "desc")} className="absolute top-4 right-4 p-2 rounded-lg bg-slate-50 text-slate-400 hover:bg-blue-600 hover:text-white transition-all shadow-sm">
+        <div className="w-[45%] flex flex-col gap-6">
+          <div className="relative bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+            <button onClick={() => { navigator.clipboard.writeText(descTexto); setCopiedId("desc"); toast.success("Copiado!"); setTimeout(() => setCopiedId(null), 2000); }} className="absolute top-4 right-4 p-2 rounded-lg bg-slate-50 text-slate-400 hover:bg-[#0057FF] hover:text-white transition-all shadow-sm">
               {copiedId === "desc" ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
             </button>
-            <h4 className="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-4">Descrição do Processo</h4>
+            <h4 className="text-[10px] font-bold text-[#0057FF] uppercase tracking-widest mb-4">Descrição do Processo</h4>
             <p className="text-[13px] text-slate-600 leading-relaxed text-justify">{descTexto}</p>
           </div>
 
-          <div className="relative bg-blue-50/50 p-6 rounded-2xl border border-blue-100 shadow-sm flex flex-col">
-            <button onClick={() => handleCopy(textoDinamico, "conc")} className="absolute top-4 right-4 p-2 rounded-lg bg-white text-slate-400 hover:text-blue-600 transition-all shadow-sm border border-slate-100">
+          <div className="relative bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
+            <button onClick={() => { navigator.clipboard.writeText(textoDinamico); setCopiedId("conc"); toast.success("Copiado!"); setTimeout(() => setCopiedId(null), 2000); }} className="absolute top-4 right-4 p-2 rounded-lg bg-slate-50 text-slate-400 hover:bg-[#0057FF] hover:text-white transition-all shadow-sm border border-slate-100">
               {copiedId === "conc" ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
             </button>
-            <h4 className="text-[10px] font-bold text-blue-700 uppercase tracking-widest mb-4 border-b border-blue-200/50 pb-2">Conclusão do Projeto</h4>
+            <h4 className="text-[10px] font-bold text-[#0057FF] uppercase tracking-widest mb-4 border-b border-slate-100 pb-2">Conclusão do Projeto</h4>
             <div className="text-[13px] text-slate-700 leading-relaxed text-justify space-y-6 flex-1">
               <div className="whitespace-pre-wrap">{textoDinamico}</div> 
               {bulletPoints.length > 0 && (
-                <div className="bg-white border-l-4 border-blue-500 p-5 space-y-3 rounded-r-xl shadow-sm mt-4">
+                <div className="bg-slate-50 p-5 space-y-3 rounded-xl shadow-sm mt-4">
                   {bulletPoints.map((point, index) => (
                     <p key={index} className="font-bold text-slate-800 text-sm tracking-tight">• {point}</p>
                   ))}
                 </div>
               )}
             </div>
-            <div className="mt-8 pt-4 border-t border-blue-200/50">
-              <h4 className="text-[10px] font-bold text-blue-700 uppercase tracking-widest mb-3">Indicadores na Conclusão</h4>
+            <div className="mt-8 pt-4 border-t border-slate-100">
+              <h4 className="text-[10px] font-bold text-[#0057FF] uppercase tracking-widest mb-3">Indicadores</h4>
               <div className="flex flex-wrap gap-2">
                 {indicadoresList.map((ind) => {
                   const isLocked = lockedIndicadores.includes(ind.id);
                   const isActive = selectedIndicadores.includes(ind.id);
                   return (
-                    <button key={ind.id} onClick={() => toggleIndicador(ind.id)} className={`px-3 py-1.5 rounded-md text-[11px] font-bold transition-all border ${isActive ? "bg-blue-600 text-white border-blue-600 shadow-md" : "bg-white text-slate-500 border-slate-300 hover:bg-slate-100 hover:text-slate-700"} ${isLocked ? "cursor-not-allowed opacity-90" : ""}`}>
+                    <button key={ind.id} onClick={() => toggleIndicador(ind.id)} className={`px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all border ${isActive ? "bg-[#0057FF] text-white border-[#0057FF] shadow-md" : "bg-slate-50 text-slate-500 border-slate-100 hover:bg-slate-100"} ${isLocked ? "cursor-not-allowed opacity-90" : ""}`}>
                       {ind.label}
                     </button>
                   );
@@ -241,18 +213,14 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
           </div>
         </div>
       </div>
-
       {showConfirmModal && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/30 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white/80 backdrop-blur-xl border border-white/50 p-8 rounded-[2rem] shadow-2xl max-w-sm w-full mx-4 animate-in zoom-in-95 duration-300">
-            <div className="flex flex-col items-center text-center space-y-4">
-              <div className="w-14 h-14 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mb-2 shadow-sm border border-rose-200"><Trash2 className="w-7 h-7" /></div>
-              <h3 className="text-xl font-bold text-slate-800 tracking-tight">Limpar tudo?</h3>
-              <p className="text-sm text-slate-600 leading-relaxed">Isso vai apagar os dados de <strong>todas as abas</strong> permanentemente. Tem certeza?</p>
-              <div className="flex gap-3 w-full mt-6">
-                <button onClick={() => setShowConfirmModal(false)} className="flex-1 py-3 bg-blue-50 text-blue-600 hover:bg-blue-100 font-bold text-sm rounded-xl transition-colors border border-blue-100">Não</button>
-                <button onClick={() => { setShowConfirmModal(false); onClearData(); }} className="flex-1 py-3 bg-blue-600 text-white hover:bg-blue-700 shadow-md shadow-blue-200 font-bold text-sm rounded-xl transition-colors">Sim, apagar</button>
-              </div>
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/20 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full mx-4 animate-in zoom-in-95 duration-300">
+            <h3 className="text-xl font-bold text-slate-800 mb-2">Limpar tudo?</h3>
+            <p className="text-sm text-slate-600 mb-6">Apagar todos os dados de todas as abas?</p>
+            <div className="flex gap-3 w-full">
+              <button onClick={() => setShowConfirmModal(false)} className="flex-1 py-3 bg-slate-100 hover:bg-slate-200 font-bold text-sm rounded-xl transition-colors">Não</button>
+              <button onClick={() => { setShowConfirmModal(false); onClearData(); }} className="flex-1 py-3 bg-rose-600 text-white hover:bg-rose-700 font-bold text-sm rounded-xl transition-colors">Sim, apagar</button>
             </div>
           </div>
         </div>
