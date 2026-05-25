@@ -39,10 +39,8 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
   }, [data]);
 
   const { textoDinamico, bulletPoints } = useMemo(() => {
-    // FILTRO AQUI: Apenas ações vindas do Resumo
     const acoesResumo = state.planoAcao.acoes.filter(a => a.origin !== "5w2h");
     const listaAcoes = acoesResumo.length > 0 ? acoesResumo.map(a => a.what).join(", ") : "—";
-    
     const u = state.produtividade.unidade || "peças";
     
     let resultadosTexto: string[] = [];
@@ -57,8 +55,20 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
       bullets.push(`Payback de ${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2).replace(".", ",") : "0,00"} ${pb.paybackMeses === 1 ? "mês" : "meses"}.`);
     }
     if (selectedIndicadores.includes("movimentacao")) {
-      resultadosTexto.push(`Movimentação: A análise de fluxo evidenciou uma redução de ${mov.reducaoDist.toFixed(2).replace(".", ",")}% na distância percorrida e uma queda de ${mov.reducaoTempo.toFixed(2).replace(".", ",")}% no tempo gasto com movimentação e transporte logístico.`);
-      bullets.push(`Redução de ${mov.reducaoTempo.toFixed(2).replace(".", ",")}% no tempo de movimentação.`);
+      const exibir = state.movimentacao.exibirNoLaudo || "ambos";
+      const distTxt = mov.reducaoDist.toFixed(6).replace(".", ",");
+      const tempoTxt = mov.reducaoTempo.toFixed(6).replace(".", ",");
+
+      if (exibir === "ambos") {
+        resultadosTexto.push(`Movimentação: A análise de fluxo evidenciou uma redução de ${distTxt}% na distância percorrida e uma queda de ${tempoTxt}% no tempo gasto com movimentação e transporte logístico.`);
+        bullets.push(`Redução de ${distTxt}% na distância e ${tempoTxt}% no tempo de movimentação.`);
+      } else if (exibir === "distancia") {
+        resultadosTexto.push(`Movimentação: A análise de fluxo evidenciou uma redução de ${distTxt}% na distância percorrida com movimentação e transporte logístico.`);
+        bullets.push(`Redução de ${distTxt}% na distância de movimentação.`);
+      } else if (exibir === "tempo") {
+        resultadosTexto.push(`Movimentação: A análise de fluxo evidenciou uma queda de ${tempoTxt}% no tempo gasto com movimentação e transporte logístico.`);
+        bullets.push(`Redução de ${tempoTxt}% no tempo de movimentação.`);
+      }
     }
     if (selectedIndicadores.includes("qualidade")) {
       resultadosTexto.push(`Qualidade: O índice de assertividade e peças conformes evoluiu de ${qual.indiceT1.toFixed(2).replace(".", ",")}% para ${qual.indiceT3.toFixed(2).replace(".", ",")}%, garantindo maior confiabilidade ao processo e minimizando perdas.`);
@@ -81,15 +91,12 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
     }
 
     const intro = `O presente programa de fomento ao setor industrial brasileiro Brasil Mais Produtivo, proporcionou a realização de consultoria em Manufatura Enxuta na Empresa ${data.nomeEmpresa || "—"}, na cidade de ${data.cidade || "—"} no Estado do Rio Grande do Sul. A escolha do produto a ser mapeado foi motivada por: ${data.motivacao || "—"}. As ferramentas aplicadas foram: ${data.ferramentas || "—"}.`;
-    
     const desenvolvimento = `Foram elaborados planos de ação através da ferramenta 5W2H, definindo diversas ações para as oportunidades elencadas, tais como: ${listaAcoes}.\n\nApós a definição do ponto de intervenção, monitoramento e validação das melhorias, obteve-se:`;
-
     const fechamento = `O resultado geral do projeto foi agregador e positivo para a empresa, pois o envolvimento da equipe foi primordial para garantir o conhecimento necessário através do plano de ação, treinamentos, trabalho realizado e resultados alcançados. Com isso, a empresa pode manter o aculturamento do pensamento Lean e replicar os conceitos da melhoria contínua para os demais setores e linhas de produção.`;
 
     const textoCompleto = [intro, desenvolvimento, ...resultadosTexto, fechamento].join("\n\n");
-
     return { textoDinamico: textoCompleto, bulletPoints: bullets };
-  }, [data, prod, pb, mov, qual, disp, lt, ar, selectedIndicadores, state.produtividade.unidade, state.leadtime, state.planoAcao.acoes]);
+  }, [data, prod, pb, mov, qual, disp, lt, ar, selectedIndicadores, state.produtividade.unidade, state.leadtime, state.movimentacao.exibirNoLaudo, state.planoAcao.acoes]);
 
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
@@ -102,9 +109,8 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
     if (newAcao.trim()) {
       const nova = { 
         id: Date.now().toString(), 
-        what: newAcao.trim(), 
-        why: "", where: "", start: "", end: "", who: "", how: "", howMuch: "", percent: 0, obs: "", status: "NÃO INICIADO",
-        origin: "resumo" as const // Etiqueta garantindo que veio do resumo
+        what: newAcao.trim(), why: "", where: "", start: "", end: "", who: "", how: "", howMuch: "", percent: 0, obs: "", status: "NÃO INICIADO",
+        origin: "resumo" as const
       };
       onUpdatePlanoAcao([...state.planoAcao.acoes, nova]);
       setNewAcao("");
@@ -134,20 +140,15 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
     { id: "area", label: "Área de Trabalho" },
   ];
 
-  // Apenas as ações criadas aqui aparecem na lista visual do resumo
   const acoesVisiveis = state.planoAcao.acoes.filter(a => a.origin !== "5w2h");
 
   return (
     <>
       <div className="flex gap-8 h-full">
         <div className="w-[55%] flex flex-col gap-6 overflow-y-auto pr-4 pb-36">
-          
           <div className="flex items-center justify-between border-b border-slate-200 pb-2">
             <h3 className="font-bold text-slate-800 text-lg uppercase tracking-tight">Entrada de Dados</h3>
-            <button 
-              onClick={() => setShowConfirmModal(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 text-rose-600 hover:bg-rose-100 hover:text-rose-700 rounded-lg font-bold text-[10px] uppercase tracking-wider transition-colors border border-rose-100 shadow-sm"
-            >
+            <button onClick={() => setShowConfirmModal(true)} className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 text-rose-600 hover:bg-rose-100 hover:text-rose-700 rounded-lg font-bold text-[10px] uppercase tracking-wider transition-colors border border-rose-100 shadow-sm">
               <Trash2 className="w-3.5 h-3.5" /> Limpar Dados Atuais
             </button>
           </div>
@@ -167,24 +168,16 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
               <InputField label="Método (Puxada/Empurrada)" value={data.metodo} onChange={v => onChange({ metodo: v as any })} />
               <InputField label="Demanda originada por" value={data.origem} onChange={v => onChange({ origem: v })} />
             </div>
-            
             <InputField label="Oportunidades no setor de" value={data.oportunidades} onChange={v => onChange({ oportunidades: v })} />
-            
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wide">
                   Problemas de <span className="lowercase font-normal italic text-slate-400">(Adicione os desperdícios encontrados)</span>
                 </label>
-                <input
-                  type="text"
-                  className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm bg-white outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
-                  value={data.problemas || ""}
-                  onChange={e => onChange({ problemas: e.target.value })}
-                />
+                <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm bg-white outline-none focus:ring-2 focus:ring-blue-500 transition-colors" value={data.problemas || ""} onChange={e => onChange({ problemas: e.target.value })} />
               </div>
               <InputField label="Ferramentas Lean Aplicadas" value={data.ferramentas} onChange={v => onChange({ ferramentas: v })} />
             </div>
-
             <InputField label="Área de Atuação/Intervenção" value={data.atuacao} onChange={v => onChange({ atuacao: v })} />
             <InputField label="Motivação da Escolha" value={data.motivacao} onChange={v => onChange({ motivacao: v })} />
           </div>
@@ -194,21 +187,13 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
             <p className="text-xs text-slate-500 mb-2">Adicione aqui o resumo das macro ações. O detalhamento completo ocorre na aba 5W2H.</p>
             <div className="flex gap-2 items-end">
               <div className="flex-1"><InputField label="O que será feito? (What)" value={newAcao} onChange={setNewAcao} /></div>
-              <button 
-                onClick={handleAddAcao} 
-                className="h-10 px-6 bg-blue-600 text-white rounded-lg font-bold text-xs uppercase shadow-md hover:bg-blue-700 transition-colors"
-              >
-                Adicionar
-              </button>
+              <button onClick={handleAddAcao} className="h-10 px-6 bg-blue-600 text-white rounded-lg font-bold text-xs uppercase shadow-md hover:bg-blue-700 transition-colors">Adicionar</button>
             </div>
-
             <div className="flex flex-col gap-2 mt-4">
               {acoesVisiveis.map(a => (
                 <div key={a.id} className="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-lg shadow-sm">
                   <span className="text-xs font-bold text-slate-700 truncate pr-4 flex-1">{a.what}</span>
-                  <button onClick={() => handleRemoveAcao(a.id)} className="p-1.5 hover:bg-rose-100 rounded-md transition-colors text-rose-500">
-                    <Trash2 className="h-4 w-4" />
-                  </button>
+                  <button onClick={() => handleRemoveAcao(a.id)} className="p-1.5 hover:bg-rose-100 rounded-md transition-colors text-rose-500"><Trash2 className="h-4 w-4" /></button>
                 </div>
               ))}
             </div>
@@ -229,10 +214,8 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
               {copiedId === "conc" ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
             </button>
             <h4 className="text-[10px] font-bold text-blue-700 uppercase tracking-widest mb-4 border-b border-blue-200/50 pb-2">Conclusão do Projeto</h4>
-            
             <div className="text-[13px] text-slate-700 leading-relaxed text-justify space-y-6 flex-1">
               <div className="whitespace-pre-wrap">{textoDinamico}</div> 
-              
               {bulletPoints.length > 0 && (
                 <div className="bg-white border-l-4 border-blue-500 p-5 space-y-3 rounded-r-xl shadow-sm mt-4">
                   {bulletPoints.map((point, index) => (
@@ -241,24 +224,14 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
                 </div>
               )}
             </div>
-
             <div className="mt-8 pt-4 border-t border-blue-200/50">
               <h4 className="text-[10px] font-bold text-blue-700 uppercase tracking-widest mb-3">Indicadores na Conclusão</h4>
               <div className="flex flex-wrap gap-2">
                 {indicadoresList.map((ind) => {
                   const isLocked = lockedIndicadores.includes(ind.id);
                   const isActive = selectedIndicadores.includes(ind.id);
-                  
                   return (
-                    <button
-                      key={ind.id}
-                      onClick={() => toggleIndicador(ind.id)}
-                      className={`px-3 py-1.5 rounded-md text-[11px] font-bold transition-all border ${
-                        isActive 
-                          ? "bg-blue-600 text-white border-blue-600 shadow-md" 
-                          : "bg-white text-slate-500 border-slate-300 hover:bg-slate-100 hover:text-slate-700"
-                      } ${isLocked ? "cursor-not-allowed opacity-90" : ""}`}
-                    >
+                    <button key={ind.id} onClick={() => toggleIndicador(ind.id)} className={`px-3 py-1.5 rounded-md text-[11px] font-bold transition-all border ${isActive ? "bg-blue-600 text-white border-blue-600 shadow-md" : "bg-white text-slate-500 border-slate-300 hover:bg-slate-100 hover:text-slate-700"} ${isLocked ? "cursor-not-allowed opacity-90" : ""}`}>
                       {ind.label}
                     </button>
                   );
@@ -273,29 +246,12 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
         <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/30 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-white/80 backdrop-blur-xl border border-white/50 p-8 rounded-[2rem] shadow-2xl max-w-sm w-full mx-4 animate-in zoom-in-95 duration-300">
             <div className="flex flex-col items-center text-center space-y-4">
-              <div className="w-14 h-14 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mb-2 shadow-sm border border-rose-200">
-                <Trash2 className="w-7 h-7" />
-              </div>
+              <div className="w-14 h-14 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mb-2 shadow-sm border border-rose-200"><Trash2 className="w-7 h-7" /></div>
               <h3 className="text-xl font-bold text-slate-800 tracking-tight">Limpar tudo?</h3>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                Isso vai apagar os dados de <strong>todas as abas</strong> permanentemente. Tem certeza?
-              </p>
+              <p className="text-sm text-slate-600 leading-relaxed">Isso vai apagar os dados de <strong>todas as abas</strong> permanentemente. Tem certeza?</p>
               <div className="flex gap-3 w-full mt-6">
-                <button
-                  onClick={() => setShowConfirmModal(false)}
-                  className="flex-1 py-3 bg-blue-50 text-blue-600 hover:bg-blue-100 font-bold text-sm rounded-xl transition-colors border border-blue-100"
-                >
-                  Não
-                </button>
-                <button
-                  onClick={() => {
-                    setShowConfirmModal(false);
-                    onClearData();
-                  }}
-                  className="flex-1 py-3 bg-blue-600 text-white hover:bg-blue-700 shadow-md shadow-blue-200 font-bold text-sm rounded-xl transition-colors"
-                >
-                  Sim, apagar
-                </button>
+                <button onClick={() => setShowConfirmModal(false)} className="flex-1 py-3 bg-blue-50 text-blue-600 hover:bg-blue-100 font-bold text-sm rounded-xl transition-colors border border-blue-100">Não</button>
+                <button onClick={() => { setShowConfirmModal(false); onClearData(); }} className="flex-1 py-3 bg-blue-600 text-white hover:bg-blue-700 shadow-md shadow-blue-200 font-bold text-sm rounded-xl transition-colors">Sim, apagar</button>
               </div>
             </div>
           </div>
