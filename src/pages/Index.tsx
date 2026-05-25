@@ -4,7 +4,7 @@ import { Topbar } from "@/components/Topbar";
 import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } from "docx";
 import { 
   FileText, GanttChartSquare, BarChart2, Calculator, 
-  ArrowRightLeft, ShieldCheck, Clock, Timer, Square, TrendingUp, ClipboardList, Lock, LayoutTemplate
+  ArrowRightLeft, ShieldCheck, Clock, Timer, Square, BarChart3, ClipboardList, Lock, LayoutTemplate
 } from "lucide-react";
 
 import { ResumoModule } from "@/modules/ResumoModule";
@@ -314,9 +314,9 @@ const Index = () => {
         </div>
 
         <div className="bg-[#0057FF] p-4 rounded-2xl shadow-md mb-6">
-          <TrendingUp className="h-8 w-8 text-white" />
+          <BarChart3 className="h-8 w-8 text-white" />
         </div>
-        <h1 className="text-3xl font-black text-slate-900 tracking-tight mb-2">Painel de Indicadores</h1>
+        <h1 className="text-3xl font-black text-slate-900 tracking-tight mb-2">Olá!</h1>
         <p className="text-slate-400 text-sm mb-12 max-w-md text-center">Selecione um módulo abaixo para iniciar a análise ou gerar laudos.</p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 w-full max-w-5xl">
