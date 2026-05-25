@@ -182,7 +182,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
           </div>
 
           <div className="relative bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
-            <button onClick={() => { navigator.clipboard.writeText(textoDinamico); setCopiedId("conc"); toast.success("Copiado!"); setTimeout(() => setCopiedId(null), 2000); }} className="absolute top-4 right-4 p-2 rounded-lg bg-slate-50 text-slate-400 hover:bg-[#0057FF] hover:text-white transition-all shadow-sm">
+            <button onClick={() => { navigator.clipboard.writeText(textoDinamico); setCopiedId("conc"); toast.success("Copiado!"); setTimeout(() => setCopiedId(null), 2000); }} className="absolute top-4 right-4 p-2 rounded-lg bg-slate-50 text-slate-400 hover:bg-[#0057FF] hover:text-white transition-all shadow-sm border border-slate-100">
               {copiedId === "conc" ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
             </button>
             <h4 className="text-[10px] font-bold text-[#0057FF] uppercase tracking-widest mb-4 border-b border-slate-100 pb-2">Conclusão do Projeto</h4>
