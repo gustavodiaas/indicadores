@@ -1,5 +1,7 @@
+"use client"
+
 import {
-  BarChart3, Calculator, ArrowRightLeft, ShieldCheck,
+  BarChart3, Calculator, ArrowLeftRight, ShieldCheck,
   Clock, Timer, Square, FileText, Factory
 } from "lucide-react";
 import { type ModuleKey } from "@/store/useAppStore";
@@ -8,7 +10,7 @@ const modules: { key: ModuleKey; label: string; icon: React.ElementType }[] = [
   { key: "resumo", label: "Descrição do Processo", icon: FileText },
   { key: "produtividade", label: "Produtividade", icon: BarChart3 },
   { key: "payback", label: "Payback", icon: Calculator },
-  { key: "movimentacao", label: "Movimentação", icon: ArrowRightLeft },
+  { key: "movimentacao", label: "Movimentação", icon: ArrowLeftRight },
   { key: "qualidade", label: "Qualidade", icon: ShieldCheck },
   { key: "disponibilidade", label: "Disponibilidade", icon: Clock },
   { key: "leadtime", label: "Lead Time", icon: Timer },
@@ -22,26 +24,26 @@ interface Props {
 
 export function AppSidebar({ active, onSelect }: Props) {
   return (
-    <aside className="print:hidden w-64 min-h-screen bg-[#0f172a] border-r border-slate-800 flex flex-col shrink-0 transition-all duration-300">
+    <aside className="print:hidden w-64 min-h-screen bg-white border-r border-slate-100 flex flex-col shrink-0 transition-all duration-300">
       
-      {/* Header - Branding Restaurado */}
-      <div className="px-6 py-8 border-b border-slate-800 flex items-center gap-3">
-        <div className="bg-blue-600 p-2.5 rounded-lg shadow-lg">
+      {/* Header */}
+      <div className="px-6 py-8 border-b border-slate-50 flex items-center gap-3">
+        <div className="bg-[#0057FF] p-2.5 rounded-xl shadow-sm">
           <Factory className="h-5 w-5 text-white" />
         </div>
         <div className="flex flex-col">
-          <h1 className="text-sm font-bold text-white uppercase tracking-tight leading-tight">
+          <h1 className="text-sm font-bold text-slate-800 uppercase tracking-tight leading-tight">
             Consultoria Lean
           </h1>
-          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
             Análise de Indicadores
           </span>
         </div>
       </div>
 
       {/* Navegação */}
-      <nav className="flex-1 py-6 px-3 space-y-1.5 overflow-y-auto">
-        <div className="px-3 mb-4 text-[10px] font-bold text-slate-600 uppercase tracking-widest">
+      <nav className="flex-1 py-6 px-3 space-y-1 overflow-y-auto">
+        <div className="px-3 mb-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
           Menu de Análise
         </div>
         
@@ -51,13 +53,13 @@ export function AppSidebar({ active, onSelect }: Props) {
             <button
               key={m.key}
               onClick={() => onSelect(m.key)}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-all duration-200 ${
+              className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
                 isActive
-                  ? "bg-blue-600 text-white shadow-lg shadow-blue-900/20"
-                  : "text-slate-400 hover:bg-slate-800 hover:text-white"
+                  ? "bg-[#0057FF] text-white shadow-md shadow-blue-200"
+                  : "text-slate-500 hover:bg-slate-50 hover:text-[#0057FF]"
               }`}
             >
-              <m.icon className={`h-4 w-4 shrink-0 ${isActive ? "text-white" : "text-slate-500"}`} />
+              <m.icon className={`h-4 w-4 shrink-0 ${isActive ? "text-white" : "text-slate-400"}`} />
               <span>{m.label}</span>
             </button>
           );
@@ -65,9 +67,9 @@ export function AppSidebar({ active, onSelect }: Props) {
       </nav>
 
       {/* Footer */}
-      <div className="p-4 border-t border-slate-800">
-        <div className="bg-slate-800/30 rounded-lg p-3">
-          <p className="text-[10px] text-slate-500 font-bold text-center uppercase tracking-tighter">
+      <div className="p-6 border-t border-slate-50">
+        <div className="bg-slate-50 rounded-xl p-3">
+          <p className="text-[10px] text-slate-400 font-bold text-center uppercase tracking-widest">
             Sistema de Indicadores v1.0
           </p>
         </div>
