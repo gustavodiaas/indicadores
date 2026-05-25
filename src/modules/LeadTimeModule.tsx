@@ -1,9 +1,10 @@
 import { type LeadTimeData, calcLeadTime } from "@/store/useAppStore";
 import { KpiCard } from "@/components/KpiCard";
 import { ComparisonChart } from "@/components/ComparisonChart";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 interface Props {
   data: LeadTimeData;
@@ -57,15 +58,41 @@ export function LeadTimeModule({ data, onChange }: Props) {
             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Configuração</span>
             <span className="text-sm font-semibold tracking-wide">Unidade de Tempo</span>
           </div>
-          <select
-            className="h-12 bg-slate-50 rounded-xl border-none text-sm font-medium outline-none focus:bg-white focus:ring-2 focus:ring-[#0057FF] transition-all px-4 cursor-pointer"
-            value={uBase}
-            onChange={e => onChange({ unidadeTempo: e.target.value as any })}
-          >
-            <option value="minutos">Minutos</option>
-            <option value="horas">Horas</option>
-            <option value="dias">Dias</option>
-          </select>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="h-12 px-4 rounded-xl bg-slate-50 text-sm font-medium text-slate-700 flex items-center justify-between gap-2 outline-none hover:bg-slate-100 transition-all focus:bg-white focus:ring-2 focus:ring-[#0057FF]">
+                {uBase === "minutos" ? "Minutos" : uBase === "horas" ? "Horas" : "Dias"}
+                <ChevronDown className="w-4 h-4 text-slate-400" />
+              </button>
+            </DropdownMenuTrigger>
+            
+            <DropdownMenuContent className="w-48 bg-white border border-slate-100 p-2 rounded-2xl shadow-xl z-[150]">
+              <DropdownMenuItem 
+                onClick={() => onChange({ unidadeTempo: "minutos" })}
+                className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${
+                  uBase === "minutos" ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"
+                }`}
+              >
+                Minutos
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                onClick={() => onChange({ unidadeTempo: "horas" })}
+                className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${
+                  uBase === "horas" ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"
+                }`}
+              >
+                Horas
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                onClick={() => onChange({ unidadeTempo: "dias" })}
+                className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${
+                  uBase === "dias" ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"
+                }`}
+              >
+                Dias
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         {/* Contexto do Laudo */}
