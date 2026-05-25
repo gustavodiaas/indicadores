@@ -1,4 +1,4 @@
-import { FileText, TrendingUp, ShieldAlert } from "lucide-react";
+import { FileText, BarChart3, ShieldAlert } from "lucide-react";
 
 interface Props {
   onExportWord: () => void;
@@ -16,7 +16,7 @@ export function Topbar({ onExportWord }: Props) {
             <TrendingUp className="h-5 w-5 text-white" />
           </div>
           <h1 className="text-[11px] font-black text-slate-800 uppercase tracking-[0.25em] leading-none">
-            Análise de Indicadores
+            Central de Indicadores
           </h1>
         </div>
 
@@ -47,7 +47,7 @@ export function Topbar({ onExportWord }: Props) {
             className="flex items-center gap-2 px-8 py-3 text-[10px] font-bold bg-slate-900 text-white hover:bg-blue-600 rounded-full transition-all shadow-md active:scale-95 uppercase tracking-widest"
           >
             <FileText className="h-4 w-4" /> 
-            Exportar Word
+            Baixar Word
           </button>
 
         </div>
