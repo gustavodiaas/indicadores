@@ -1,9 +1,10 @@
 import { type MovimentacaoData, calcMovimentacao } from "@/store/useAppStore";
 import { KpiCard } from "@/components/KpiCard";
 import { ComparisonChart } from "@/components/ComparisonChart";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 interface Props {
   data: MovimentacaoData;
@@ -65,29 +66,37 @@ export function MovimentacaoModule({ data, onChange }: Props) {
         {/* Configurações */}
         <div className="grid grid-cols-2 gap-6">
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Unidade de Tempo</label>
-            <select
-              className="w-full h-12 rounded-xl border-none bg-slate-50 text-sm outline-none focus:bg-white focus:ring-2 focus:ring-[#0057FF] transition-all px-4 cursor-pointer"
-              value={uBase}
-              onChange={e => onChange({ unidadeTempo: e.target.value as any })}
-            >
-              <option value="segundos">Segundos</option>
-              <option value="minutos">Minutos</option>
-              <option value="horas">Horas</option>
-            </select>
+            <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 pl-1">Unidade de Tempo</label>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="w-full h-12 px-4 rounded-xl bg-slate-50 text-sm font-medium text-slate-700 flex items-center justify-between outline-none hover:bg-slate-100 transition-all focus:bg-white focus:ring-2 focus:ring-[#0057FF]">
+                  {uBase === "segundos" ? "Segundos" : uBase === "horas" ? "Horas" : "Minutos"}
+                  <ChevronDown className="w-4 h-4 text-slate-400" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white border border-slate-100 p-2 rounded-2xl shadow-xl z-[150]">
+                <DropdownMenuItem onClick={() => onChange({ unidadeTempo: "segundos" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${uBase === "segundos" ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"}`}>Segundos</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onChange({ unidadeTempo: "minutos" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${uBase === "minutos" ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"}`}>Minutos</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onChange({ unidadeTempo: "horas" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${uBase === "horas" ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"}`}>Horas</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Exibir no Laudo</label>
-            <select
-              className="w-full h-12 rounded-xl border-none bg-slate-50 text-sm outline-none focus:bg-white focus:ring-2 focus:ring-[#0057FF] transition-all px-4 cursor-pointer"
-              value={exibir}
-              onChange={e => onChange({ exibirNoLaudo: e.target.value as any })}
-            >
-              <option value="ambos">Distância e Tempo</option>
-              <option value="distancia">Apenas Distância</option>
-              <option value="tempo">Apenas Tempo</option>
-            </select>
+            <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 pl-1">Exibir no Laudo</label>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="w-full h-12 px-4 rounded-xl bg-slate-50 text-sm font-medium text-slate-700 flex items-center justify-between outline-none hover:bg-slate-100 transition-all focus:bg-white focus:ring-2 focus:ring-[#0057FF]">
+                  {exibir === "distancia" ? "Apenas Distância" : exibir === "tempo" ? "Apenas Tempo" : "Distância e Tempo"}
+                  <ChevronDown className="w-4 h-4 text-slate-400" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white border border-slate-100 p-2 rounded-2xl shadow-xl z-[150]">
+                <DropdownMenuItem onClick={() => onChange({ exibirNoLaudo: "ambos" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${exibir === "ambos" ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"}`}>Distância e Tempo</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onChange({ exibirNoLaudo: "distancia" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${exibir === "distancia" ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"}`}>Apenas Distância</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onChange({ exibirNoLaudo: "tempo" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${exibir === "tempo" ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"}`}>Apenas Tempo</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 
@@ -136,7 +145,7 @@ export function MovimentacaoModule({ data, onChange }: Props) {
       <div className="w-[40%] flex flex-col gap-6">
         <div className="grid grid-cols-2 gap-3">
           <KpiCard label="Redução Dist." value={redD} suffix="%" trend={r.reducaoDist} />
-          <KpiCard label={`Redução Tempo`} value={redT} suffix="%" trend={r.reducaoTempo} />
+          <KpiCard label="Redução Tempo" value={redT} suffix="%" trend={r.reducaoTempo} />
         </div>
 
         <div className="relative bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
