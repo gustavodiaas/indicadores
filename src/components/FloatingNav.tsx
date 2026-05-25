@@ -18,7 +18,7 @@ export function FloatingNav({ active, onSelect }: Props) {
     { key: "payback", icon: Calculator, label: "Payback" },
     { key: "movimentacao", icon: ArrowRightLeft, label: "Movimentação" },
     { key: "qualidade", icon: ShieldCheck, label: "Qualidade" },
-    { key: "disponibilidade", icon: Clock, label: "Disponibilidade" },
+    { key: "disponibilidade", icon: Clock, label: "Disp." },
     { key: "leadtime", icon: Timer, label: "Lead Time" },
     { key: "area", icon: Square, label: "Área" },
     { key: "planoAcao", icon: ClipboardList, label: "5W2H" },
@@ -26,9 +26,9 @@ export function FloatingNav({ active, onSelect }: Props) {
   ];
 
   return (
-    <div className="fixed z-[100] print:hidden left-1/2 -translate-x-1/2 bottom-6 w-[95%] md:w-max">
-      {/* Efeito Glassmorphism: Fundo escuro translúcido + Blur */}
-      <div className="flex flex-row items-center bg-[#0F172A]/90 backdrop-blur-xl border border-white/10 shadow-2xl shadow-slate-900/20 px-3 py-2 rounded-[3rem] gap-1">
+    <div className="fixed z-[100] transition-all duration-500 print:hidden left-1/2 -translate-x-1/2 bottom-6 w-[95%] md:w-max">
+      {/* Efeito Glassmorphism: Fundo branco translúcido + Blur */}
+      <div className="flex flex-row items-center bg-white/70 backdrop-blur-xl border border-white/40 shadow-2xl transition-all duration-500 overflow-x-auto [&::-webkit-scrollbar]:hidden px-3 py-3 rounded-[3rem] gap-1.5 md:gap-2">
         {navItems.map((item) => {
           const isActive = active === item.key;
           const Icon = item.icon;
@@ -37,14 +37,17 @@ export function FloatingNav({ active, onSelect }: Props) {
               key={item.key}
               onClick={() => onSelect(item.key)}
               className={`
-                group transition-all duration-300 flex flex-col items-center justify-center gap-1 h-14 w-14 rounded-full
+                group transition-all duration-300 flex flex-col items-center justify-center flex-shrink-0 gap-1.5 h-16 w-16 rounded-[2rem]
                 ${isActive 
-                  ? "bg-[#0057FF] text-white shadow-lg" 
-                  : "text-slate-400 hover:text-white hover:bg-white/10"
+                  ? "bg-[#0057FF] text-white shadow-lg scale-105" 
+                  : "text-slate-500 hover:text-[#0057FF] hover:bg-[#0057FF]/10"
                 }
               `}
             >
-              <Icon className="w-5 h-5" />
+              <Icon className={`w-5 h-5 transition-transform duration-300 ${isActive ? "" : "group-hover:scale-110"}`} />
+              <span className="text-[9px] font-bold text-center leading-none px-0.5">
+                {item.label}
+              </span>
             </button>
           );
         })}
