@@ -293,31 +293,31 @@ const Index = () => {
 
   const renderHome = () => {
     const modules: { key: ModuleKey; title: string; desc: string; icon: any; color: string }[] = [
-      { key: "resumo", title: "Resumo", desc: "Configurações gerais e laudo", icon: FileText, color: "text-blue-600 bg-blue-50" },
-      { key: "gbo", title: "GBO", desc: "Balanceamento de Operações e Gargalos", icon: GanttChartSquare, color: "text-indigo-600 bg-indigo-50" },
-      { key: "produtividade", title: "Produtividade", desc: "Análise de peças por hora e eficiência", icon: BarChart2, color: "text-emerald-600 bg-emerald-50" },
-      { key: "payback", title: "Payback", desc: "Retorno de Investimento (ROI)", icon: Calculator, color: "text-amber-600 bg-amber-50" },
-      { key: "movimentacao", title: "Movimentação", desc: "Redução de tempos e distâncias", icon: ArrowRightLeft, color: "text-orange-600 bg-orange-50" },
-      { key: "qualidade", title: "Qualidade", desc: "Controle de refugos e assertividade", icon: ShieldCheck, color: "text-rose-600 bg-rose-50" },
-      { key: "disponibilidade", title: "Disponibilidade", desc: "Mapeamento de paradas de máquina", icon: Clock, color: "text-cyan-600 bg-cyan-50" },
-      { key: "leadtime", title: "Lead Time", desc: "Redução no tempo de atravessamento", icon: Timer, color: "text-purple-600 bg-purple-50" },
-      { key: "area", title: "Área de Trabalho", desc: "Otimização de layout e m²", icon: Square, color: "text-slate-600 bg-slate-100" },
-      { key: "planoAcao", title: "Plano de Ação 5W2H", desc: "Gestão tática e exportação", icon: ClipboardList, color: "text-sky-600 bg-sky-50" },
-      { key: "a3", title: "Modelo A3", desc: "Análise e Solução de Problemas", icon: LayoutTemplate, color: "text-blue-600 bg-blue-50" },
+      { key: "resumo", title: "Resumo", desc: "Configurações gerais e laudo", icon: FileText, color: "text-[#0057FF] bg-[#0057FF]/5" },
+      { key: "gbo", title: "GBO", desc: "Balanceamento de Operações e Gargalos", icon: GanttChartSquare, color: "text-[#0057FF] bg-[#0057FF]/5" },
+      { key: "produtividade", title: "Produtividade", desc: "Análise de peças por hora e eficiência", icon: BarChart2, color: "text-[#0057FF] bg-[#0057FF]/5" },
+      { key: "payback", title: "Payback", desc: "Retorno de Investimento (ROI)", icon: Calculator, color: "text-[#0057FF] bg-[#0057FF]/5" },
+      { key: "movimentacao", title: "Movimentação", desc: "Redução de tempos e distâncias", icon: ArrowRightLeft, color: "text-[#0057FF] bg-[#0057FF]/5" },
+      { key: "qualidade", title: "Qualidade", desc: "Controle de refugos e assertividade", icon: ShieldCheck, color: "text-[#0057FF] bg-[#0057FF]/5" },
+      { key: "disponibilidade", title: "Disponibilidade", desc: "Mapeamento de paradas de máquina", icon: Clock, color: "text-[#0057FF] bg-[#0057FF]/5" },
+      { key: "leadtime", title: "Lead Time", desc: "Redução no tempo de atravessamento", icon: Timer, color: "text-[#0057FF] bg-[#0057FF]/5" },
+      { key: "area", title: "Área de Trabalho", desc: "Otimização de layout e m²", icon: Square, color: "text-[#0057FF] bg-[#0057FF]/5" },
+      { key: "planoAcao", title: "Plano de Ação 5W2H", desc: "Gestão tática e exportação", icon: ClipboardList, color: "text-[#0057FF] bg-[#0057FF]/5" },
+      { key: "a3", title: "Modelo A3", desc: "Análise e Solução de Problemas", icon: LayoutTemplate, color: "text-[#0057FF] bg-[#0057FF]/5" },
     ];
 
     return (
       <div className="flex flex-col items-center justify-center h-full w-full py-12 pb-36 px-4 animate-in fade-in zoom-in-95 duration-500 relative">
-        <div className="mb-8 flex items-center justify-center gap-2 text-[11px] font-medium text-slate-400 bg-white px-4 py-2 rounded-full border border-slate-200 shadow-sm opacity-80 hover:opacity-100 transition-opacity">
+        <div className="mb-8 flex items-center justify-center gap-2 text-[10px] font-bold text-slate-400 bg-white px-4 py-2 rounded-full border border-slate-100 shadow-sm uppercase tracking-widest">
           <Lock className="w-3 h-3 text-slate-400" />
           <span>Privacidade: Seus dados são salvos apenas localmente no seu navegador. Nenhuma informação é enviada.</span>
         </div>
 
-        <div className="bg-blue-600 p-4 rounded-2xl shadow-lg mb-6">
+        <div className="bg-[#0057FF] p-4 rounded-2xl shadow-md mb-6">
           <TrendingUp className="h-8 w-8 text-white" />
         </div>
-        <h1 className="text-3xl font-black text-slate-800 tracking-tight mb-2">Painel de Indicadores</h1>
-        <p className="text-slate-500 text-sm mb-12 max-w-md text-center">Selecione um módulo abaixo para iniciar a análise de manufatura enxuta ou gerar laudos.</p>
+        <h1 className="text-3xl font-black text-slate-900 tracking-tight mb-2">Painel de Indicadores</h1>
+        <p className="text-slate-400 text-sm mb-12 max-w-md text-center">Selecione um módulo abaixo para iniciar a análise ou gerar laudos.</p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 w-full max-w-5xl">
           {modules.map((m) => {
@@ -326,14 +326,14 @@ const Index = () => {
               <button
                 key={m.key}
                 onClick={() => setActiveModule(m.key)}
-                className="group flex items-start text-left p-6 bg-white border border-slate-200 hover:border-blue-400 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300"
+                className="group flex items-start text-left p-6 bg-white border border-slate-100 hover:border-[#0057FF]/30 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300"
               >
-                <div className={`p-3 rounded-xl ${m.color} mr-4 group-hover:scale-110 transition-transform`}>
+                <div className={`p-3 rounded-xl ${m.color} mr-4 group-hover:scale-110 group-hover:bg-[#0057FF] group-hover:text-white transition-all duration-300`}>
                   <Icon className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-slate-800 group-hover:text-blue-700 transition-colors">{m.title}</h3>
-                  <p className="text-xs text-slate-500 mt-1 line-clamp-2">{m.desc}</p>
+                  <h3 className="font-bold text-slate-800 group-hover:text-[#0057FF] transition-colors">{m.title}</h3>
+                  <p className="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed">{m.desc}</p>
                 </div>
               </button>
             );
