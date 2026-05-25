@@ -90,27 +90,41 @@ const Index = () => {
 
     if (selectedIndicadores.includes("produtividade")) {
       conclusaoParagraphs.push(createJustified([
-        tr("• Produtividade: ", true), tr(`No estágio inicial, a produtividade era de ${prod.pphT1.toFixed(2)} ${u}/h/op. Após as melhorias, a produtividade subiu para ${prod.pphT3.toFixed(2)} ${u}/h/op, representando um ganho direto de ${prod.ganho.toFixed(2)}% na eficiência operacional da célula.`)
+        tr("• Produtividade: ", true), tr(`No estágio inicial, a produtividade era de ${prod.pphT1.toFixed(6).replace(".", ",")} ${u}/h/op. Após as melhorias, a produtividade subiu para ${prod.pphT3.toFixed(6).replace(".", ",")} ${u}/h/op, representando um ganho direto de ${prod.ganho.toFixed(6).replace(".", ",")}% na eficiência operacional da célula.`)
       ]));
     }
     if (selectedIndicadores.includes("payback")) {
       conclusaoParagraphs.push(createJustified([
-        tr("• Payback: ", true), tr(`Com as ações aplicadas e a redução do custo de mão de obra por ${u}, o projeto apresenta um retorno financeiro com Payback de ${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2) : "0.00"} ${pb.paybackMeses === 1 ? "mês" : "meses"}.`)
+        tr("• Payback: ", true), tr(`Com as ações aplicadas e a redução do custo de mão de obra por ${u}, o projeto apresenta um retorno financeiro com Payback de ${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2).replace(".", ",") : "0,00"} ${pb.paybackMeses === 1 ? "mês" : "meses"}.`)
       ]));
     }
     if (selectedIndicadores.includes("movimentacao")) {
-      conclusaoParagraphs.push(createJustified([
-        tr("• Movimentação: ", true), tr(`A análise de fluxo evidenciou uma redução de ${mov.reducaoDist.toFixed(2)}% na distância percorrida e uma queda de ${mov.reducaoTempo.toFixed(2)}% no tempo gasto com movimentação e transporte logístico.`)
-      ]));
+      const exibir = movimentacao.exibirNoLaudo || "ambos";
+      const distTxt = mov.reducaoDist.toFixed(6).replace(".", ",");
+      const tempoTxt = mov.reducaoTempo.toFixed(6).replace(".", ",");
+
+      if (exibir === "ambos") {
+        conclusaoParagraphs.push(createJustified([
+          tr("• Movimentação: ", true), tr(`A análise de fluxo evidenciou uma redução de ${distTxt}% na distância percorrida e uma queda de ${tempoTxt}% no tempo gasto com movimentação e transporte logístico.`)
+        ]));
+      } else if (exibir === "distancia") {
+        conclusaoParagraphs.push(createJustified([
+          tr("• Movimentação: ", true), tr(`A análise de fluxo evidenciou uma redução de ${distTxt}% na distância percorrida com movimentação e transporte logístico.`)
+        ]));
+      } else if (exibir === "tempo") {
+        conclusaoParagraphs.push(createJustified([
+          tr("• Movimentação: ", true), tr(`A análise de fluxo evidenciou uma queda de ${tempoTxt}% no tempo gasto com movimentação e transporte logístico.`)
+        ]));
+      }
     }
     if (selectedIndicadores.includes("qualidade")) {
       conclusaoParagraphs.push(createJustified([
-        tr("• Qualidade: ", true), tr(`O índice de assertividade e peças conformes evoluiu de ${qual.indiceT1.toFixed(2)}% para ${qual.indiceT3.toFixed(2)}%, garantindo maior confiabilidade ao processo e minimizando perdas.`)
+        tr("• Qualidade: ", true), tr(`O índice de assertividade e peças conformes evoluiu de ${qual.indiceT1.toFixed(2).replace(".", ",")}% para ${qual.indiceT3.toFixed(2).replace(".", ",")}%, garantindo maior confiabilidade ao processo e minimizando perdas.`)
       ]));
     }
     if (selectedIndicadores.includes("disponibilidade")) {
       conclusaoParagraphs.push(createJustified([
-        tr("• Disponibilidade: ", true), tr(`Com a redução das paradas não planejadas, o tempo efetivo de operação da máquina aumentou, representando um ganho de ${disp.aumento.toFixed(2)}% na utilização real do recurso.`)
+        tr("• Disponibilidade: ", true), tr(`Com a redução das paradas não planejadas, o tempo efetivo de operação da máquina aumentou, representando um ganho de ${disp.aumento.toFixed(2).replace(".", ",")}% na utilização real do recurso.`)
       ]));
     }
     if (selectedIndicadores.includes("leadtime")) {
@@ -118,12 +132,12 @@ const Index = () => {
       const t1 = leadtime.leadTimeT1 || leadtime.tempoT1 || 0;
       const t3 = leadtime.leadTimeT3 || leadtime.tempoT3 || 0;
       conclusaoParagraphs.push(createJustified([
-        tr("• Lead Time: ", true), tr(`O tempo de atravessamento total caiu de ${t1} para ${t3} ${ltU}, caracterizando uma redução de ${lt.reducao.toFixed(2)}% no prazo de entrega do processo.`)
+        tr("• Lead Time: ", true), tr(`O tempo de atravessamento total caiu de ${t1} para ${t3} ${ltU}, caracterizando uma redução de ${lt.reducao.toFixed(2).replace(".", ",")}% no prazo de entrega do processo.`)
       ]));
     }
     if (selectedIndicadores.includes("area")) {
       conclusaoParagraphs.push(createJustified([
-        tr("• Área de Trabalho: ", true), tr(`A otimização do layout produtivo reduziu a área ocupada em ${ar.reducaoPercent.toFixed(1)}%, liberando ${ar.economiaM2.toFixed(1)}m² de área útil, equivalente a uma economia imobiliária mensal de R$ ${ar.economiaMensal.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}.`)
+        tr("• Área de Trabalho: ", true), tr(`A otimização do layout produtivo reduziu a área ocupada em ${ar.reducaoPercent.toFixed(1).replace(".", ",")}%, liberando ${ar.economiaM2.toFixed(1).replace(".", ",")}m² de área útil, equivalente a uma economia imobiliária mensal de R$ ${ar.economiaMensal.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}.`)
       ]));
     }
 
@@ -157,61 +171,64 @@ const Index = () => {
           ]),
           createHeading("2. Laudo de Produtividade"),
           createJustified([
-            tr("No estágio inicial, a produtividade era de "), tr(`${prod.pphT1.toFixed(2)} pçs/h/op`, true),
+            tr("No estágio inicial, a produtividade era de "), tr(`${prod.pphT1.toFixed(6).replace(".", ",")} pçs/h/op`, true),
             tr(", produzindo "), tr(String(produtividade.volumeT1 || 0), true),
             tr(" peças com "), tr(String(produtividade.operadoresT1 || 0), true),
             tr(produtividade.operadoresT1 === 1 ? " operador" : " operadores"),
             tr(" em "), tr(`${produtividade.horasT1 || 0}h`, true),
-            tr(". Após as melhorias, a produtividade subiu para "), tr(`${prod.pphT3.toFixed(2)} pçs/h/op`, true),
+            tr(". Após as melhorias, a produtividade subiu para "), tr(`${prod.pphT3.toFixed(6).replace(".", ",")} pçs/h/op`, true),
             tr(", produzindo "), tr(String(produtividade.volumeT3 || 0), true),
             tr(" peças com "), tr(String(produtividade.operadoresT3 || 0), true),
             tr(produtividade.operadoresT3 === 1 ? " operador" : " operadores"),
             tr(" em "), tr(`${produtividade.horasT3 || 0}h`, true),
-            tr(". Isso representa um ganho direto de "), tr(`${prod.ganho.toFixed(2)}%`, true),
+            tr(". Isso representa um ganho direto de "), tr(`${prod.ganho.toFixed(6).replace(".", ",")}%`, true),
             tr(" na eficiência operacional da célula.")
           ]),
           createHeading("3. Laudo de Payback"),
           createJustified([
             tr("No estágio inicial, havia "), tr(String(produtividade.operadoresT1 || 0), true),
             tr(produtividade.operadoresT1 === 1 ? " colaborador" : " colaboradores"),
-            tr(", com custo total por mês de "), tr(`R$ ${pb.salI.toFixed(2)}`, true),
+            tr(", com custo total por mês de "), tr(`R$ ${pb.salI.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, true),
             tr(". Produziam-se "), tr(`${pb.prodMensalI.toLocaleString("pt-BR")} ${produtividade.unidade || "peças"}/mês`, true),
-            tr(", a custo de mão de obra de "), tr(`R$ ${pb.custoI.toFixed(2)}`, true),
+            tr(", a custo de mão de obra de "), tr(`R$ ${pb.custoI.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, true),
             tr(". Após intervenção, permaneceram "), tr(String(produtividade.operadoresT3 || 0), true),
             tr(produtividade.operadoresT3 === 1 ? " colaborador" : " colaboradores"),
-            tr(", com custo total por mês de "), tr(`R$ ${pb.salF.toFixed(2)}`, true),
+            tr(", com custo total por mês de "), tr(`R$ ${pb.salF.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, true),
             tr(". Passaram a produzir "), tr(`${pb.prodMensalF.toLocaleString("pt-BR")} ${produtividade.unidade || "peças"}/mês`, true),
-            tr(", a custo de mão de obra de "), tr(`R$ ${pb.custoF.toFixed(2)}`, true),
-            tr(". Portanto, um payback de "), tr(`${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(1) : "0.0"} ${pb.paybackMeses === 1 ? "mês" : "meses"}`, true),
+            tr(", a custo de mão de obra de "), tr(`R$ ${pb.custoF.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, true),
+            tr(". Portanto, um payback de "), tr(`${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2).replace(".", ",") : "0,00"} ${pb.paybackMeses === 1 ? "mês" : "meses"}`, true),
             tr(".")
           ]),
           createHeading("4. Laudo de Qualidade"),
           createJustified([
             tr(`No estágio inicial, de um total de ${qualidade.quantidadeT1} peças, identificou-se ${qualidade.perdasT1} `),
             tr(qualidade.perdasT1 === 1 ? "peça não conforme " : "peças não conformes ", true),
-            tr(`(assertividade de ${qual.indiceT1.toFixed(2)}%). Após as melhorias, para um lote de ${qualidade.quantidadeT3} peças, as perdas caíram para ${qualidade.perdasT3}, evoluindo o índice de assertividade para `),
-            tr(`${qual.indiceT3.toFixed(2)}%`, true),
+            tr(`(assertividade de ${qual.indiceT1.toFixed(2).replace(".", ",")}%). Após as melhorias, para um lote de ${qualidade.quantidadeT3} peças, as perdas caíram para ${qualidade.perdasT3}, evoluindo o índice de assertividade para `),
+            tr(`${qual.indiceT3.toFixed(2).replace(".", ",")}%`, true),
             tr(", garantindo maior confiabilidade ao processo e minimizando perdas.")
           ]),
           createHeading("5. Laudo de Disponibilidade"),
           createJustified([
             tr("O tempo real de operação efetiva da máquina evoluiu de "),
             tr(`${disp.realT1} ${getUnit(disp.realT1, disponibilidade.unidadeTempo)}`, true),
-            tr(` (índice de ${disp.indT1.toFixed(2)}%)`),
+            tr(` (índice de ${disp.indT1.toFixed(2).replace(".", ",")}%)`),
             tr(" para "),
             tr(`${disp.realT3} ${getUnit(disp.realT3, disponibilidade.unidadeTempo)}`, true),
-            tr(` (índice de ${disp.indT3.toFixed(2)}%).`),
+            tr(` (índice de ${disp.indT3.toFixed(2).replace(".", ",")}%).`),
             tr(" Isso representa um ganho direto de "),
-            tr(`${disp.aumento.toFixed(2)}%`, true),
+            tr(`${disp.aumento.toFixed(2).replace(".", ",")}%`, true),
             tr(" na utilização do recurso através da redução de paradas não planejadas.")
           ]),
           createHeading("6. Laudo de Movimentação Logística"),
           createJustified([
-            tr("A análise de fluxo evidenciou uma redução de "),
-            tr(`${mov.reducaoDist.toFixed(2)}%`, true),
-            tr(` na distância percorrida (de ${movimentacao.distanciaT1}m para ${movimentacao.distanciaT3}m) e uma queda de `),
-            tr(`${mov.reducaoTempo.toFixed(2)}%`, true),
-            tr(` no tempo gasto com movimentação e transporte logístico (de ${movimentacao.tempoT1} para ${movimentacao.tempoT3} ${getUnit(movimentacao.tempoT3, movimentacao.unidadeTempo)}).`)
+            tr("A análise de fluxo evidenciou: "),
+            ...(movimentacao.exibirNoLaudo === "distancia" ? [
+              tr(`uma redução de ${mov.reducaoDist.toFixed(6).replace(".", ",")}% na distância percorrida (de ${movimentacao.distanciaT1}m para ${movimentacao.distanciaT3}m).`, true)
+            ] : movimentacao.exibirNoLaudo === "tempo" ? [
+              tr(`uma queda de ${mov.reducaoTempo.toFixed(6).replace(".", ",")}% no tempo gasto com movimentação e transporte logístico (de ${movimentacao.tempoT1} para ${movimentacao.tempoT3} ${getUnit(movimentacao.tempoT3, movimentacao.unidadeTempo)}).`, true)
+            ] : [
+              tr(`uma redução de ${mov.reducaoDist.toFixed(6).replace(".", ",")}% na distância percorrida (de ${movimentacao.distanciaT1}m para ${movimentacao.distanciaT3}m) e uma queda de ${mov.reducaoTempo.toFixed(6).replace(".", ",")}% no tempo gasto com movimentação e transporte logístico (de ${movimentacao.tempoT1} para ${movimentacao.tempoT3} ${getUnit(movimentacao.tempoT3, movimentacao.unidadeTempo)}).`, true)
+            ])
           ]),
           createHeading("7. Plano de Ação (5W2H)"),
           createJustified([
@@ -226,7 +243,7 @@ const Index = () => {
             tr(". Após as melhorias implementadas, o lead time foi reduzido para "),
             tr(`${leadtime.leadTimeT3 || leadtime.tempoT3 || 0} ${leadtime.unidadeTempo || "dias"}`, true),
             tr(", representando uma redução de "),
-            tr(`${lt.reducao.toFixed(2)}%`, true),
+            tr(`${lt.reducao.toFixed(2).replace(".", ",")}%`, true),
             tr(" no tempo total de entrega do processo.")
           ]),
           createHeading("9. Laudo de Área"),
@@ -236,9 +253,9 @@ const Index = () => {
             tr(". Com a otimização do layout, reduziu-se para "),
             tr(`${area.areaT3 || 0}m²`, true),
             tr(", liberando "),
-            tr(`${ar.economiaM2.toFixed(1)}m²`, true),
+            tr(`${ar.economiaM2.toFixed(1).replace(".", ",")}m²`, true),
             tr(" de área útil ("),
-            tr(`${ar.reducaoPercent.toFixed(1)}%`, true),
+            tr(`${ar.reducaoPercent.toFixed(1).replace(".", ",")}%`, true),
             tr(" de redução), gerando uma economia imobiliária mensal de "),
             tr(`R$ ${ar.economiaMensal.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, true),
             tr(".")
@@ -290,8 +307,7 @@ const Index = () => {
     ];
 
     return (
-      <div className="flex flex-col items-center justify-center h-full w-full py-12 pb-36 px-4 animate-in fade-in zoom-in-95 duration-500">
-        
+      <div className="flex flex-col items-center justify-center h-full w-full py-12 pb-36 px-4 animate-in fade-in zoom-in-95 duration-500 relative">
         <div className="mb-8 flex items-center justify-center gap-2 text-[11px] font-medium text-slate-400 bg-white px-4 py-2 rounded-full border border-slate-200 shadow-sm opacity-80 hover:opacity-100 transition-opacity">
           <Lock className="w-3 h-3 text-slate-400" />
           <span>Privacidade: Seus dados são salvos apenas localmente no seu navegador. Nenhuma informação é enviada.</span>
@@ -331,7 +347,6 @@ const Index = () => {
     <div className="flex flex-col h-screen w-full bg-[#F8FAFC] overflow-hidden font-inter print:bg-white print:h-auto print:overflow-visible">
       <style dangerouslySetInnerHTML={{ __html: `@media print { @page { size: landscape; margin: 10mm; } }` }} />
       <main className="flex-1 overflow-y-auto p-2 md:p-4 pb-32 print:p-0 print:overflow-visible">
-        {/* Esconde o Topbar nas abas que têm fluxos ou exportações próprias */}
         {!["home", "gbo", "planoAcao", "a3"].includes(activeModule) && (
           <div className="print:hidden relative z-[100] mb-2 animate-in slide-in-from-top-2 duration-300">
             <Topbar onExportWord={handleExportWord} />
