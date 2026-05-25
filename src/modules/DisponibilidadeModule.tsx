@@ -1,9 +1,10 @@
 import { type DisponibilidadeData, calcDisponibilidade } from "@/store/useAppStore";
 import { KpiCard } from "@/components/KpiCard";
 import { ComparisonChart } from "@/components/ComparisonChart";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 interface Props {
   data: DisponibilidadeData;
@@ -90,12 +91,42 @@ export function DisponibilidadeModule({ data, onChange }: Props) {
         </div>
 
         <div className="p-6 bg-white rounded-2xl shadow-sm border border-slate-100">
-          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Unidade de Tempo</label>
-          <select className="w-full h-12 rounded-xl border-none bg-slate-50 text-sm outline-none focus:bg-white focus:ring-2 focus:ring-[#0057FF] transition-all px-4 cursor-pointer" value={u} onChange={e => onChange({ unidadeTempo: e.target.value as any })}>
-            <option value="segundos">Segundos</option>
-            <option value="minutos">Minutos</option>
-            <option value="horas">Horas</option>
-          </select>
+          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 pl-1">Unidade de Tempo</label>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="w-full h-12 px-4 rounded-xl bg-slate-50 text-sm font-medium text-slate-700 flex items-center justify-between outline-none hover:bg-slate-100 transition-all focus:bg-white focus:ring-2 focus:ring-[#0057FF]">
+                {u === "segundos" ? "Segundos" : u === "horas" ? "Horas" : "Minutos"}
+                <ChevronDown className="w-4 h-4 text-slate-400" />
+              </button>
+            </DropdownMenuTrigger>
+            
+            <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white border border-slate-100 p-2 rounded-2xl shadow-xl z-[150]">
+              <DropdownMenuItem 
+                onClick={() => onChange({ unidadeTempo: "segundos" })}
+                className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${
+                  u === "segundos" ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"
+                }`}
+              >
+                Segundos
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                onClick={() => onChange({ unidadeTempo: "minutos" })}
+                className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${
+                  u === "minutos" ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"
+                }`}
+              >
+                Minutos
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                onClick={() => onChange({ unidadeTempo: "horas" })}
+                className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${
+                  u === "horas" ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"
+                }`}
+              >
+                Horas
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
