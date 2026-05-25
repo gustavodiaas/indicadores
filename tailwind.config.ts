@@ -14,6 +14,20 @@ export default {
     },
     extend: {
       colors: {
+        // NOSSA PALETA ROYAL BLUE & AZUL BEBÊ
+        blue: {
+          50: '#F4F7FF',  // Azul bebê ultra suave (fundos de cards e hover sutil)
+          100: '#E5EDFF', // Azul bebê um pouco mais marcado (bordas)
+          200: '#C7D9FF',
+          300: '#99B8FF',
+          400: '#6696FF',
+          500: '#1A6BFF', 
+          600: '#0057FF', // Royal Blue absoluto (Botões, ícones, destaques principais)
+          700: '#0047D6', // Royal Blue mais escuro (Hover de botões)
+          800: '#003399',
+          900: '#002266',
+        },
+        // VARIÁVEIS NATIVAS DO SHADCN MANTIDAS INTACTAS
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
