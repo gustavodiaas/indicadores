@@ -1,9 +1,10 @@
 import { type PaybackData, type ProdutividadeData, type ResumoData, calcPayback } from "@/store/useAppStore";
 import { KpiCard } from "@/components/KpiCard";
 import { ComparisonChart } from "@/components/ComparisonChart";
-import { Copy, Check, Info, AlertTriangle } from "lucide-react";
+import { Copy, Check, Info, AlertTriangle, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 interface Props {
   data: PaybackData;
@@ -34,7 +35,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
   const colabTxt1 = op1 === 1 ? "colaborador" : "colaboradores";
   const colabTxt3 = op3 === 1 ? "colaborador" : "colaboradores";
   
-  const laudo = `No estágio inicial, havia ${op1} ${colabTxt1}, com custo total por mês de ${formatBRL(r.salI)}, ${data.dedicacaoInicial || 100}% utilizados na operação. Produziam-se ${r.prodMensalI.toLocaleString("pt-BR")} ${u}/mês, a custo de mão de obra de ${formatBRL(r.custoI)}. Após intervenção, permaneceram ${op3} ${colabTxt3}, com custo total por mês de ${formatBRL(r.salF)}, ${data.dedicacaoFinal || 100}% utilizado no processo. Passaram a produzir ${r.prodMensalF.toLocaleString("pt-BR")} ${u}/mês, a custo de mão de obra de ${formatBRL(r.custoF)}. Reduziu-se então ${formatBRL(Math.max(0, r.custoI - r.custoF))} no custo de mão de obra por ${u}, que gerou o retorno mensal de ${formatBRL(r.reducaoMensal)}. Portanto, um payback de ${r.paybackMeses > 0 ? r.paybackMeses.toFixed(2) : "0,00"} ${r.paybackMeses === 1 ? "mês" : "meses"}.`;
+  const laudo = `No estágio inicial, havia ${op1} ${colabTxt1}, com custo total por mês de ${formatBRL(r.salI)}, ${data.dedicacaoInicial || 100}% utilizados na operation. Produziam-se ${r.prodMensalI.toLocaleString("pt-BR")} ${u}/mês, a custo de mão de obra de ${formatBRL(r.custoI)}. Após intervenção, permaneceram ${op3} ${colabTxt3}, com custo total por mês de ${formatBRL(r.salF)}, ${data.dedicacaoFinal || 100}% utilizado no processo. Passaram a produzir ${r.prodMensalF.toLocaleString("pt-BR")} ${u}/mês, a custo de mão de obra de ${formatBRL(r.custoF)}. Reduziu-se então ${formatBRL(Math.max(0, r.custoI - r.custoF))} no custo de mão de obra por ${u}, que gerou o retorno mensal de ${formatBRL(r.reducaoMensal)}. Portanto, um payback de ${r.paybackMeses > 0 ? r.paybackMeses.toFixed(2) : "0,00"} ${r.paybackMeses === 1 ? "mês" : "meses"}.`;
 
   const parseDecimal = (val: string) => {
     const cleaned = val.replace(/[^\d,.-]/g, '');
@@ -53,14 +54,18 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Configuração</span>
             <span className="text-sm font-semibold tracking-wide">Modelo de Cálculo</span>
           </div>
-          <select 
-            className="h-12 bg-slate-50 rounded-xl border-none text-sm font-medium outline-none focus:bg-white focus:ring-2 focus:ring-[#0057FF] px-4 cursor-pointer transition-all" 
-            value={data.tipoSalario || "bruto"} 
-            onChange={e => onChange({ tipoSalario: e.target.value as any })}
-          >
-            <option value="bruto">Salário Bruto</option>
-            <option value="encargos">Salário + Encargos</option>
-          </select>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="h-12 px-4 rounded-xl bg-slate-50 text-sm font-medium text-slate-700 flex items-center justify-between gap-2 outline-none hover:bg-slate-100 transition-all focus:bg-white focus:ring-2 focus:ring-[#0057FF]">
+                {data.tipoSalario === "encargos" ? "Salário + Encargos" : "Salário Bruto"}
+                <ChevronDown className="w-4 h-4 text-slate-400" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-48 bg-white border border-slate-100 p-2 rounded-2xl shadow-xl z-[150]">
+              <DropdownMenuItem onClick={() => onChange({ tipoSalario: "bruto" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.tipoSalario === "bruto" || !data.tipoSalario ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"}`}>Salário Bruto</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onChange({ tipoSalario: "encargos" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.tipoSalario === "encargos" ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"}`}>Salário + Encargos</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         <div className="grid grid-cols-1 gap-6">
@@ -82,10 +87,18 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
               </div>
               <div>
                 <label className="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase tracking-widest pl-1">Modo de Inserção</label>
-                <select className="w-full h-12 rounded-xl border-none bg-slate-50 text-sm outline-none focus:bg-white focus:ring-2 focus:ring-[#0057FF] transition-all px-4 cursor-pointer" value={data.modoInsercaoSalario || "total"} onChange={e => onChange({ modoInsercaoSalario: e.target.value as any })}>
-                  <option value="total">Modo: Total da Equipe</option>
-                  <option value="unitario">Modo: Por Operador</option>
-                </select>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="w-full h-12 px-4 rounded-xl bg-slate-50 text-sm font-medium text-slate-700 flex items-center justify-between outline-none hover:bg-slate-100 transition-all focus:bg-white focus:ring-2 focus:ring-[#0057FF]">
+                      {data.modoInsercaoSalario === "unitario" ? "Modo: Por Operador" : "Modo: Total da Equipe"}
+                      <ChevronDown className="w-4 h-4 text-slate-400" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white border border-slate-100 p-2 rounded-2xl shadow-xl z-[150]">
+                    <DropdownMenuItem onClick={() => onChange({ modoInsercaoSalario: "total" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.modoInsercaoSalario === "total" || !data.modoInsercaoSalario ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"}`}>Modo: Total da Equipe</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onChange({ modoInsercaoSalario: "unitario" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.modoInsercaoSalario === "unitario" ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"}`}>Modo: Por Operador</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
               <div>
                 <label className="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase tracking-widest pl-1">Dedicação (%)</label>
@@ -108,10 +121,18 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
               </div>
               <div>
                 <label className="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase tracking-widest pl-1">Modo de Inserção</label>
-                <select className="w-full h-12 rounded-xl border-none bg-slate-50 text-sm outline-none focus:bg-white focus:ring-2 focus:ring-[#0057FF] transition-all px-4 cursor-pointer" value={data.modoInsercaoSalario || "total"} onChange={e => onChange({ modoInsercaoSalario: e.target.value as any })}>
-                  <option value="total">Modo: Total da Equipe</option>
-                  <option value="unitario">Modo: Por Operador</option>
-                </select>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="w-full h-12 px-4 rounded-xl bg-slate-50 text-sm font-medium text-slate-700 flex items-center justify-between outline-none hover:bg-slate-100 transition-all focus:bg-white focus:ring-2 focus:ring-[#0057FF]">
+                      {data.modoInsercaoSalario === "unitario" ? "Modo: Por Operador" : "Modo: Total da Equipe"}
+                      <ChevronDown className="w-4 h-4 text-slate-400" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white border border-slate-100 p-2 rounded-2xl shadow-xl z-[150]">
+                    <DropdownMenuItem onClick={() => onChange({ modoInsercaoSalario: "total" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.modoInsercaoSalario === "total" || !data.modoInsercaoSalario ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"}`}>Modo: Total da Equipe</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onChange({ modoInsercaoSalario: "unitario" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.modoInsercaoSalario === "unitario" ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"}`}>Modo: Por Operador</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
               <div>
                 <label className="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase tracking-widest pl-1">Dedicação (%)</label>
@@ -125,12 +146,24 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
           <h3 className="font-bold text-slate-800 text-sm tracking-wide uppercase">Investimentos</h3>
           <div className="grid grid-cols-2 gap-6">
-            <select className="h-12 bg-slate-50 rounded-xl border-none text-sm outline-none focus:bg-white focus:ring-2 focus:ring-[#0057FF] transition-all px-4" onChange={e => onChange({ valorConsultoria: Number(e.target.value) })} value={data.valorConsultoria}>
-              <option value="0">Selecione o porte da empresa</option>
-              <option value={VALORES_CONSULTORIA.micro}>Micro Empresa</option>
-              <option value={VALORES_CONSULTORIA.pequena}>Pequena Empresa</option>
-              <option value={VALORES_CONSULTORIA.media}>Média Empresa</option>
-            </select>
+            <div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="w-full h-12 px-4 rounded-xl bg-slate-50 text-sm font-medium text-slate-700 flex items-center justify-between gap-2 outline-none hover:bg-slate-100 transition-all focus:bg-white focus:ring-2 focus:ring-[#0057FF]">
+                    {data.valorConsultoria === VALORES_CONSULTORIA.micro ? "Micro Empresa" :
+                     data.valorConsultoria === VALORES_CONSULTORIA.pequena ? "Pequena Empresa" :
+                     data.valorConsultoria === VALORES_CONSULTORIA.media ? "Média Empresa" : "Selecione o porte da empresa"}
+                    <ChevronDown className="w-4 h-4 text-slate-400" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white border border-slate-100 p-2 rounded-2xl shadow-xl z-[150]">
+                  <DropdownMenuItem onClick={() => onChange({ valorConsultoria: 0 })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.valorConsultoria === 0 || !data.valorConsultoria ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"}`}>Selecione o porte da empresa</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => onChange({ valorConsultoria: VALORES_CONSULTORIA.micro })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.valorConsultoria === VALORES_CONSULTORIA.micro ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"}`}>Micro Empresa</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => onChange({ valorConsultoria: VALORES_CONSULTORIA.pequena })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.valorConsultoria === VALORES_CONSULTORIA.pequena ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"}`}>Pequena Empresa</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => onChange({ valorConsultoria: VALORES_CONSULTORIA.media })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.valorConsultoria === VALORES_CONSULTORIA.media ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"}`}>Média Empresa</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
             <input type="text" className="h-12 px-4 rounded-xl border-none bg-slate-50 text-sm outline-none focus:bg-white focus:ring-2 focus:ring-[#0057FF] transition-all" defaultValue={formatDec(data.investimentoExtra)} onBlur={e => onChange({ investimentoExtra: parseDecimal(e.target.value) })} placeholder="Investimento Extra (R$)" />
           </div>
         </div>
@@ -149,14 +182,4 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
           <button onClick={() => { navigator.clipboard.writeText(laudo); setCopied(true); toast.success("Copiado!"); setTimeout(() => setCopied(false), 2000); }} className="absolute top-4 right-4 p-2 rounded-lg bg-slate-50 text-slate-400 hover:bg-[#0057FF] hover:text-white transition-all shadow-sm">
             {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
           </button>
-          <h4 className="text-[10px] font-bold text-[#0057FF] uppercase mb-3 tracking-widest">Laudo de Payback</h4>
-          <p className="text-xs text-slate-600 leading-relaxed text-justify whitespace-pre-wrap">{laudo}</p>
-        </div>
-        
-        <div className="mt-auto min-h-[250px]">
-          <ComparisonChart data={chartData} title={`Evolução do Custo por ${u.slice(0, -1)}`} />
-        </div>
-      </div>
-    </div>
-  );
-}
+          <h
