@@ -10,24 +10,25 @@ interface Props {
 }
 
 export function FloatingNav({ active, onSelect }: Props) {
-  const navItems: { key: ModuleKey; icon: any; label: string; color: string }[] = [
-    { key: "home", icon: Home, label: "Home", color: "bg-slate-900" },
-    { key: "resumo", icon: FileText, label: "Resumo", color: "bg-blue-600" },
-    { key: "gbo", icon: GanttChartSquare, label: "GBO", color: "bg-indigo-600" },
-    { key: "produtividade", icon: BarChart2, label: "Produtividade", color: "bg-emerald-600" },
-    { key: "payback", icon: Calculator, label: "Payback", color: "bg-amber-500" },
-    { key: "movimentacao", icon: ArrowRightLeft, label: "Movimentação", color: "bg-orange-500" },
-    { key: "qualidade", icon: ShieldCheck, label: "Qualidade", color: "bg-rose-600" },
-    { key: "disponibilidade", icon: Clock, label: "Disponibilidade", color: "bg-cyan-600" },
-    { key: "leadtime", icon: Timer, label: "Lead Time", color: "bg-purple-600" },
-    { key: "area", icon: Square, label: "Área", color: "bg-slate-600" },
-    { key: "planoAcao", icon: ClipboardList, label: "5W2H", color: "bg-sky-600" },
-    { key: "a3", icon: LayoutTemplate, label: "A3", color: "bg-indigo-500" },
+  const navItems: { key: ModuleKey; icon: any; label: string }[] = [
+    { key: "home", icon: Home, label: "Home" },
+    { key: "resumo", icon: FileText, label: "Resumo" },
+    { key: "gbo", icon: GanttChartSquare, label: "GBO" },
+    { key: "produtividade", icon: BarChart2, label: "Produtividade" },
+    { key: "payback", icon: Calculator, label: "Payback" },
+    { key: "movimentacao", icon: ArrowRightLeft, label: "Movimentação" },
+    { key: "qualidade", icon: ShieldCheck, label: "Qualidade" },
+    { key: "disponibilidade", icon: Clock, label: "Disponibilidade" },
+    { key: "leadtime", icon: Timer, label: "Lead Time" },
+    { key: "area", icon: Square, label: "Área" },
+    { key: "planoAcao", icon: ClipboardList, label: "5W2H" },
+    { key: "a3", icon: LayoutTemplate, label: "A3" },
   ];
 
   return (
-    <div className="fixed z-[100] transition-all duration-500 print:hidden left-1/2 -translate-x-1/2 bottom-6 w-[95%] md:w-max">
-      <div className="flex flex-row items-center bg-white/60 backdrop-blur-md border border-white/20 shadow-2xl transition-all duration-500 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] px-3 py-3 rounded-[3rem] gap-1.5 md:gap-2">
+    <div className="fixed z-[100] print:hidden left-1/2 -translate-x-1/2 bottom-6 w-[95%] md:w-max">
+      {/* Efeito Glassmorphism: Fundo escuro translúcido + Blur */}
+      <div className="flex flex-row items-center bg-[#0F172A]/90 backdrop-blur-xl border border-white/10 shadow-2xl shadow-slate-900/20 px-3 py-2 rounded-[3rem] gap-1">
         {navItems.map((item) => {
           const isActive = active === item.key;
           const Icon = item.icon;
@@ -36,17 +37,14 @@ export function FloatingNav({ active, onSelect }: Props) {
               key={item.key}
               onClick={() => onSelect(item.key)}
               className={`
-                group relative transition-all duration-300 flex flex-col items-center justify-center flex-shrink-0 gap-1.5 h-16 w-16
+                group transition-all duration-300 flex flex-col items-center justify-center gap-1 h-14 w-14 rounded-full
                 ${isActive 
-                  ? `${item.color} text-white scale-105 shadow-md rounded-full` 
-                  : "text-slate-500/70 hover:text-slate-700 hover:bg-white/30 rounded-2xl"
+                  ? "bg-[#0057FF] text-white shadow-lg" 
+                  : "text-slate-400 hover:text-white hover:bg-white/10"
                 }
               `}
             >
-              <Icon className={`w-5 h-5 transition-transform duration-300 ${isActive ? "scale-100" : "group-hover:scale-110"}`} />
-              <span className={`text-[9px] font-bold text-center leading-none px-0.5 ${isActive ? "text-white" : "text-slate-600"}`}>
-                {item.label}
-              </span>
+              <Icon className="w-5 h-5" />
             </button>
           );
         })}
