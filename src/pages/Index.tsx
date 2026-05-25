@@ -344,7 +344,7 @@ const Index = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen w-full bg-[#F8FAFC] overflow-hidden font-inter print:bg-white print:h-auto print:overflow-visible">
+    <div className="flex flex-col h-screen w-full bg-white overflow-hidden font-inter print:bg-white print:h-auto print:overflow-visible">
       <style dangerouslySetInnerHTML={{ __html: `@media print { @page { size: landscape; margin: 10mm; } }` }} />
       <main className="flex-1 overflow-y-auto p-2 md:p-4 pb-32 print:p-0 print:overflow-visible">
         {!["home", "gbo", "planoAcao", "a3"].includes(activeModule) && (
