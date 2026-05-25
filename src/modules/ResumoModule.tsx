@@ -31,6 +31,17 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
   const lt = useMemo(() => calcLeadTime(state.leadtime), [state.leadtime]);
   const ar = useMemo(() => calcArea(state.area), [state.area]);
 
+  const handleAddAcao = () => {
+    if (!newAcao.trim()) return;
+    const novaAcao = { id: Date.now().toString(), what: newAcao, origin: "custom" };
+    onUpdatePlanoAcao([...state.planoAcao.acoes, novaAcao]);
+    setNewAcao("");
+  };
+
+  const handleRemoveAcao = (id: string) => {
+    onUpdatePlanoAcao(state.planoAcao.acoes.filter(a => a.id !== id));
+  };
+
   const descTexto = useMemo(() => {
     const colabTxt = data.totalColaboradores === 1 ? "colaborador" : "colaboradores";
     const turnoTxt = data.turnos === 1 ? "Turno" : "Turnos";
