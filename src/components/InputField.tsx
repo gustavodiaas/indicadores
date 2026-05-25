@@ -15,7 +15,6 @@ export function InputField({ label, value, onChange, type = "text", suffix, plac
   const [localValue, setLocalValue] = useState(value?.toString() || "");
 
   useEffect(() => {
-    // Se for número, compara matematicamente. Se for texto, compara a string exata.
     if (type === "number") {
       if (Number(value) !== Number(localValue?.replace(',', '.'))) {
         setLocalValue(value?.toString() || "");
@@ -30,18 +29,16 @@ export function InputField({ label, value, onChange, type = "text", suffix, plac
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setLocalValue(val);
-    
-    // Aplica a regra da vírgula APENAS em campos numéricos
     if (type === "number") {
       onChange(val.replace(',', '.'));
     } else {
-      onChange(val); // Texto livre, passa a vírgula adiante
+      onChange(val);
     }
   };
 
   return (
     <div className="flex flex-col gap-1.5">
-      <Label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">
+      <Label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest pl-1">
         {label}
       </Label>
       <div className="relative flex items-center">
@@ -51,10 +48,15 @@ export function InputField({ label, value, onChange, type = "text", suffix, plac
           value={localValue}
           onChange={handleChange}
           placeholder={placeholder}
-          className={`h-10 bg-white border-slate-300 text-sm shadow-sm focus-visible:ring-blue-600 ${suffix ? 'pr-12' : ''}`}
+          className={`
+            h-12 rounded-xl text-sm transition-all duration-300
+            bg-slate-50 border-none shadow-none
+            focus:bg-white focus:ring-2 focus:ring-[#0057FF] focus:shadow-md
+            ${suffix ? 'pr-12' : ''}
+          `}
         />
         {suffix && (
-          <span className="absolute right-3 text-xs font-medium text-slate-400 select-none pointer-events-none">
+          <span className="absolute right-4 text-xs font-bold text-slate-400 select-none pointer-events-none">
             {suffix}
           </span>
         )}
