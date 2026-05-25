@@ -6,35 +6,16 @@
 
 @layer base {
   :root {
-    --background: 210 20% 98%;
-    --foreground: 215 25% 15%;
+    --background: 0 0% 100%; /* Branco Puro */
+    --foreground: 222 47% 11%; /* Preto Suave #0F172A */
     --card: 0 0% 100%;
-    --card-foreground: 215 25% 15%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 15%;
-    --primary: 221 83% 53%;
+    --card-foreground: 222 47% 11%;
+    --primary: 219 100% 50%; /* Royal Blue #0057FF */
     --primary-foreground: 0 0% 100%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 215 25% 27%;
-    --muted: 210 30% 95%;
-    --muted-foreground: 215 15% 47%;
-    --accent: 226 70% 55%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 214 25% 89%;
-    --input: 214 25% 89%;
-    --ring: 221 83% 53%;
+    --border: 212 18% 85%; /* Cinza Elegante #CBD5E1 */
+    --input: 212 18% 85%;
+    --ring: 219 100% 50%;
     --radius: 0.75rem;
-
-    /* Sidebar - Dark Premium */
-    --sidebar-background: 222 47% 11%;
-    --sidebar-foreground: 210 20% 80%;
-    --sidebar-primary: 221 83% 53%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 217 30% 18%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 217 25% 15%;
   }
 
   * {
@@ -42,24 +23,12 @@
   }
   
   body {
-    /* Fundo levemente acinzentado para destacar os painéis brancos */
-    @apply bg-[#F1F5F9] text-slate-800 antialiased;
+    @apply bg-white text-[#0F172A] antialiased;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
 }
 
-/* Scrollbar Premium */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 10px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
