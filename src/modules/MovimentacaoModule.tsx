@@ -30,6 +30,7 @@ export function MovimentacaoModule({ data, onChange }: Props) {
 
   const uBase = data.unidadeTempo || "minutos";
   const u = uBase;
+  const exibir = data.exibirNoLaudo || "ambos";
 
   const getUnit = (val: number, unit: string) => {
     if (unit === "segundos") return val === 1 ? "segundo" : "segundos";
@@ -40,10 +41,17 @@ export function MovimentacaoModule({ data, onChange }: Props) {
 
   const ferramentaTxt = (data.ferramentaUtilizada || "").trim() || "da ferramenta aplicada";
   const descricaoTxt = (data.acaoMelhoria || "").trim() || "com as melhorias realizadas";
-
   const formatDec = (val: number) => val.toString().replace(".", ",");
 
-  const laudo = `Por intermédio ${ferramentaTxt} foi realizado ${descricaoTxt}.\n\nDistância: A medição inicial de movimentação/transporte era de ${formatDec(dI)}m (ida e volta), onde foi reduzido para ${formatDec(dF)}m (ida e volta), representando redução de ${redD}% em distância.\nCálculo Distância: (${formatDec(dI)} - ${formatDec(dF)}) / ${dI > 0 ? formatDec(dI) : 1} × 100 = ${redD}%\n\nTempo: O tempo de movimentação era de ${formatDec(tI)} ${getUnit(tI, uBase)}, onde foi reduzido para ${formatDec(tF)} ${getUnit(tF, uBase)}, representando redução de ${redT}% em tempo ${descricaoTxt}.\nCálculo Tempo: (${formatDec(tI)} - ${formatDec(tF)}) / ${tI > 0 ? formatDec(tI) : 1} × 100 = ${redT}%`;
+  let laudo = `Por intermédio ${ferramentaTxt} foi realizado ${descricaoTxt}.`;
+
+  if (exibir === "ambos" || exibir === "distancia") {
+    laudo += `\n\nDistância: A medição inicial de movimentação/transporte era de ${formatDec(dI)}m (ida e volta), onde foi reduzido para ${formatDec(dF)}m (ida e volta), representando redução de ${redD}% em distância.\nCálculo Distância: (${formatDec(dI)} - ${formatDec(dF)}) / ${dI > 0 ? formatDec(dI) : 1} × 100 = ${redD}%`;
+  }
+
+  if (exibir === "ambos" || exibir === "tempo") {
+    laudo += `\n\nTempo: O tempo de movimentação era de ${formatDec(tI)} ${getUnit(tI, uBase)}, onde foi reduzido para ${formatDec(tF)} ${getUnit(tF, uBase)}, representando redução de ${redT}% em tempo ${descricaoTxt}.\nCálculo Tempo: (${formatDec(tI)} - ${formatDec(tF)}) / ${tI > 0 ? formatDec(tI) : 1} × 100 = ${redT}%`;
+  }
 
   const parseDecimal = (val: string) => {
     const cleaned = val.replace(/[^\d,.-]/g, "");
@@ -54,20 +62,38 @@ export function MovimentacaoModule({ data, onChange }: Props) {
     <div className="flex gap-8 h-full animate-in fade-in duration-500">
       <div className="w-[60%] flex flex-col gap-6 overflow-y-auto pr-2 pb-10">
 
-        <div className="p-5 bg-[#F8FAFC] text-slate-800 rounded-xl flex items-center justify-between shadow-sm mb-2 border border-slate-200">
-          <div className="flex flex-col">
-            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Configuração</span>
-            <span className="text-sm font-semibold tracking-wide">Unidade de Tempo</span>
+        <div className="grid grid-cols-2 gap-4 mb-2">
+          <div className="p-5 bg-[#F8FAFC] text-slate-800 rounded-xl flex items-center justify-between shadow-sm border border-slate-200">
+            <div className="flex flex-col">
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Configuração</span>
+              <span className="text-sm font-semibold tracking-wide">Unidade de Tempo</span>
+            </div>
+            <select
+              className="h-10 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg px-4 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer hover:bg-slate-50 transition-colors shadow-sm"
+              value={uBase}
+              onChange={e => onChange({ unidadeTempo: e.target.value as any })}
+            >
+              <option value="segundos">Segundos</option>
+              <option value="minutos">Minutos</option>
+              <option value="horas">Horas</option>
+            </select>
           </div>
-          <select
-            className="h-10 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg px-4 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer hover:bg-slate-50 transition-colors shadow-sm"
-            value={uBase}
-            onChange={e => onChange({ unidadeTempo: e.target.value as any })}
-          >
-            <option value="segundos">Segundos</option>
-            <option value="minutos">Minutos</option>
-            <option value="horas">Horas</option>
-          </select>
+
+          <div className="p-5 bg-[#F8FAFC] text-slate-800 rounded-xl flex items-center justify-between shadow-sm border border-slate-200">
+            <div className="flex flex-col">
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Laudo Final</span>
+              <span className="text-sm font-semibold tracking-wide">Exibir no Resumo</span>
+            </div>
+            <select
+              className="h-10 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg px-4 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer hover:bg-slate-50 transition-colors shadow-sm"
+              value={exibir}
+              onChange={e => onChange({ exibirNoLaudo: e.target.value as any })}
+            >
+              <option value="ambos">Distância e Tempo</option>
+              <option value="distancia">Apenas Distância</option>
+              <option value="tempo">Apenas Tempo</option>
+            </select>
+          </div>
         </div>
 
         <div className="p-5 bg-amber-50/60 rounded-xl border border-amber-200 space-y-4">
