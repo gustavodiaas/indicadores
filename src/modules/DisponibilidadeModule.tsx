@@ -99,6 +99,22 @@ export function DisponibilidadeModule({ data, onChange }: Props) {
         </div>
       </div>
 
-      {/* Coluna Direita: Laudo e Gráfico */}
+      {/* Lado Direito */}
       <div className="w-[40%] flex flex-col gap-6">
         <KpiCard label="Aumento de Disponibilidade" value={r.aumento.toFixed(6).replace(".", ",")} suffix="%" trend={r.aumento} />
+        
+        <div className="relative bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+          <button onClick={() => { navigator.clipboard.writeText(laudo); setCopied(true); toast.success("Copiado!"); setTimeout(() => setCopied(false), 2000); }} className="absolute top-4 right-4 p-2 rounded-lg bg-slate-50 text-slate-400 hover:bg-[#0057FF] hover:text-white transition-all shadow-sm">
+            {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+          </button>
+          <h4 className="text-[10px] font-bold text-[#0057FF] uppercase mb-3 tracking-widest">Laudo de Disponibilidade</h4>
+          <p className="text-xs text-slate-600 leading-relaxed text-justify">{laudo}</p>
+        </div>
+
+        <div className="mt-auto min-h-[250px]">
+          <ComparisonChart data={chartData} title="Evolução da Disponibilidade" />
+        </div>
+      </div>
+    </div>
+  );
+}
