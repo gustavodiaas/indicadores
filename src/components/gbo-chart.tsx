@@ -178,7 +178,7 @@ export function GBOChart({ operations, timeUnit, taktTime, taktTimeUnit, demandU
               axisLine={false}
               tickLine={false}
             />
-            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'hsl(var(--muted)/0.4)' }} />
+            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0, 87, 255, 0.04)', radius: 8 }} />
             <ReferenceLine y={averageTime} stroke="hsl(var(--chart-3))" strokeDasharray="5 5" opacity={0.7} />
             {taktTimeInDisplayUnit && (
               <ReferenceLine y={taktTimeInDisplayUnit} stroke="hsl(var(--foreground))" strokeDasharray="8 4" strokeWidth={2} opacity={0.8} />
