@@ -6,6 +6,8 @@ import {
 import { InputField } from "@/components/InputField";
 import { Trash2, Copy, Check } from "lucide-react";
 import { toast } from "sonner";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   data: ResumoData;
@@ -45,7 +47,15 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
   const descTexto = useMemo(() => {
     const colabTxt = data.totalColaboradores === 1 ? "colaborador" : "colaboradores";
     const turnoTxt = data.turnos === 1 ? "Turno" : "Turnos";
-    return `A Empresa ${data.nomeEmpresa || "—"}, da cidade de ${data.cidade || "—"} no Estado do Rio Grande do Sul, atua no ramo de ${data.ramo || "—"}, especialista em ${data.especialista || "—"}, conta com ${data.totalColaboradores || "0"} ${colabTxt} atuando em ${data.turnos} ${turnoTxt}. O produto mapeado segue o seguinte processo produtivo: ${data.processos || "—"}, com método de produção ${data.metodo || "—"}, onde a demanda é originada por ${data.origem || "—"}. Ao longo do mapeamento foram identificadas oportunidades no setor de ${data.oportunidades || "—"}, por problemas de ${data.problemas || "—"}. Nesta consultoria, a área de atuação/intervenção foi ${data.atuacao || "—"}.`;
+    return `### 1. DESCRIÇÃO DO PROCESSO OPERACIONAL
+
+A Empresa ${data.nomeEmpresa || "—"}, da cidade de ${data.cidade || "—"} no Estado do Rio Grande do Sul, atua no ramo de ${data.ramo || "—"}, especialista em ${data.especialista || "—"}, conta com ${data.totalColaboradores || "0"} ${colabTxt} atuando em ${data.turnos} ${turnoTxt}.
+
+O produto mapeado segue the seguinte processo produtivo: ${data.processos || "—"}, com método de produção ${data.metodo || "—"}, onde a demanda é originada por ${data.origem || "—"}.
+
+Ao longo do mapeamento foram identificadas oportunidades no setor de ${data.oportunidades || "—"}, por problemas de ${data.problemas || "—"}.
+
+Nesta consultoria, a área de atuação/intervenção foi ${data.atuacao || "—"}.`;
   }, [data]);
 
   const { textoDinamico, bulletPoints } = useMemo(() => {
@@ -57,11 +67,11 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
     let bullets: string[] = [];
 
     if (selectedIndicadores.includes("produtividade")) {
-      resultadosTexto.push(`Produtividade: No estágio inicial, a produtividade era de ${prod.pphT1.toFixed(6).replace(".", ",")} ${u}/h/op. Após as melhorias, a produtividade subiu para ${prod.pphT3.toFixed(6).replace(".", ",")} ${u}/h/op, representando um ganho direto de ${prod.ganho.toFixed(6).replace(".", ",")}% na eficiência operacional da célula.`);
+      resultadosTexto.push(`* **Produtividade:** No estágio inicial, a produtividade era de ${prod.pphT1.toFixed(6).replace(".", ",")} ${u}/h/op. Após as melhorias, a produtividade subiu para ${prod.pphT3.toFixed(6).replace(".", ",")} ${u}/h/op, representando um ganho direto de ${prod.ganho.toFixed(6).replace(".", ",")}% na eficiência operacional da célula.`);
       bullets.push(`Aumento de ${prod.ganho.toFixed(6).replace(".", ",")}% em produtividade.`);
     }
     if (selectedIndicadores.includes("payback")) {
-      resultadosTexto.push(`Payback: Com as ações aplicadas e a redução do custo de mão de obra por ${u}, o projeto apresenta um retorno financeiro com Payback de ${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2).replace(".", ",") : "0,00"} ${pb.paybackMeses === 1 ? "mês" : "meses"}.`);
+      resultadosTexto.push(`* **Payback:** Com as ações aplicadas e a redução do custo de mão de obra por ${u}, o projeto apresenta um retorno financeiro com Payback de ${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2).replace(".", ",") : "0,00"} ${pb.paybackMeses === 1 ? "mês" : "meses"}.`);
       bullets.push(`Payback de ${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2).replace(".", ",") : "0,00"} ${pb.paybackMeses === 1 ? "mês" : "meses"}.`);
     }
     if (selectedIndicadores.includes("movimentacao")) {
@@ -69,41 +79,53 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
       const distTxt = mov.reducaoDist.toFixed(6).replace(".", ",");
       const tempoTxt = mov.reducaoTempo.toFixed(6).replace(".", ",");
       if (exibir === "ambos") {
-        resultadosTexto.push(`Movimentação: A análise de fluxo evidenciou uma redução de ${distTxt}% na distância percorrida e uma queda de ${tempoTxt}% no tempo gasto com movimentação e transporte logístico.`);
+        resultadosTexto.push(`* **Movimentação Logística:** A análise de fluxo evidenciou uma redução de ${distTxt}% na distância percorrida e uma queda de ${tempoTxt}% no tempo gasto com movimentação e transporte logístico.`);
         bullets.push(`Redução de ${distTxt}% na distância e ${tempoTxt}% no tempo de movimentação.`);
       } else if (exibir === "distancia") {
-        resultadosTexto.push(`Movimentação: A análise de fluxo evidenciou uma redução de ${distTxt}% na distância percorrida com movimentação e transporte logístico.`);
+        resultadosTexto.push(`* **Movimentação Logística:** A análise de fluxo evidenciou uma redução de ${distTxt}% na distância percorrida com movimentação e transporte logístico.`);
         bullets.push(`Redução de ${distTxt}% na distância de movimentação.`);
       } else if (exibir === "tempo") {
-        resultadosTexto.push(`Movimentação: A análise de fluxo evidenciou uma queda de ${tempoTxt}% no tempo gasto com movimentação e transporte logístico.`);
+        resultadosTexto.push(`* **Movimentação Logística:** A análise de fluxo evidenciou uma queda de ${tempoTxt}% no tempo gasto com movimentação e transporte logístico.`);
         bullets.push(`Redução de ${tempoTxt}% no tempo de movimentação.`);
       }
     }
     if (selectedIndicadores.includes("qualidade")) {
-      resultadosTexto.push(`Qualidade: O índice de assertividade e peças conformes evoluiu de ${qual.indiceT1.toFixed(2).replace(".", ",")}% para ${qual.indiceT3.toFixed(2).replace(".", ",")}%, garantindo maior confiabilidade ao processo e minimizando perdas.`);
+      resultadosTexto.push(`* **Qualidade:** O índice de assertividade e peças conformes evoluiu de ${qual.indiceT1.toFixed(2).replace(".", ",")}% para ${qual.indiceT3.toFixed(2).replace(".", ",")}%, garantindo maior confiabilidade ao processo e minimizando perdas.`);
       bullets.push(`Índice de qualidade evoluiu para ${qual.indiceT3.toFixed(2).replace(".", ",")}%.`);
     }
     if (selectedIndicadores.includes("disponibilidade")) {
-      resultadosTexto.push(`Disponibilidade: Com a redução das paradas não planejadas, o tempo efetivo de operação da máquina aumentou, representando um ganho de ${disp.aumento.toFixed(2).replace(".", ",")}% na utilização real do recurso.`);
+      resultadosTexto.push(`* **Disponibilidade:** Com a redução das paradas não planejadas, o tempo efetivo de operação da máquina aumentou, representando um ganho de ${disp.aumento.toFixed(2).replace(".", ",")}% na utilização real do recurso.`);
       bullets.push(`Aumento de ${disp.aumento.toFixed(2).replace(".", ",")}% na disponibilidade da máquina.`);
     }
     if (selectedIndicadores.includes("leadtime")) {
       const ltU = state.leadtime.unidadeTempo || "dias";
       const t1 = state.leadtime.leadTimeT1 || state.leadtime.tempoT1 || 0;
       const t3 = state.leadtime.leadTimeT3 || state.leadtime.tempoT3 || 0;
-      resultadosTexto.push(`Lead Time: O tempo de atravessamento total caiu de ${t1} para ${t3} ${ltU}, caracterizando uma redução de ${lt.reducao.toFixed(2).replace(".", ",")}% no prazo de entrega do processo.`);
+      resultadosTexto.push(`* **Lead Time:** O tempo de atravessamento total caiu de ${t1} para ${t3} ${ltU}, caracterizando uma redução de ${lt.reducao.toFixed(2).replace(".", ",")}% no prazo de entrega do processo.`);
       bullets.push(`Redução de ${lt.reducao.toFixed(2).replace(".", ",")}% no Lead Time.`);
     }
     if (selectedIndicadores.includes("area")) {
-      resultadosTexto.push(`Área de Trabalho: A otimização do layout produtivo reduziu a área ocupada em ${ar.reducaoPercent.toFixed(1).replace(".", ",")}%, liberando ${ar.economiaM2.toFixed(1).replace(".", ",")}m² de área útil, equivalente a uma economia imobiliária mensal de R$ ${ar.economiaMensal.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}.`);
+      resultadosTexto.push(`* **Área de Trabalho:** A otimização do layout produtivo reduziu a área ocupada em ${ar.reducaoPercent.toFixed(1).replace(".", ",")}%, liberando ${ar.economiaM2.toFixed(1).replace(".", ",")}m² de área útil, equivalente a uma economia imobiliária mensal de R$ ${ar.economiaMoral?.toLocaleString("pt-BR") || ar.economiaMensal.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}.`);
       bullets.push(`Economia de ${ar.reducaoPercent.toFixed(1).replace(".", ",")}% (${ar.economiaM2.toFixed(1).replace(".", ",")}m²) de área útil.`);
     }
 
-    const intro = `O presente programa de fomento ao setor industrial brasileiro Brasil Mais Produtivo, proporcionou a realização de consultoria em Manufatura Enxuta na Empresa ${data.nomeEmpresa || "—"}, na cidade de ${data.cidade || "—"} no Estado do Rio Grande do Sul. A escolha do produto a ser mapeado foi motivada por: ${data.motivacao || "—"}. As ferramentas aplicadas foram: ${data.ferramentas || "—"}.`;
-    const desenvolvimento = `Foram elaborados planos de ação através da ferramenta 5W2H, definindo diversas ações para as oportunidades elencadas, tais como: ${listaAcoes}.\n\nApós a definição do ponto de intervenção, monitoramento e validação das melhorias, obteve-se:`;
-    const fechamento = `O resultado geral do projeto foi agregador e positivo para a empresa, pois o envolvimento da equipe foi primordial para garantir o conhecimento necessário através do plano de ação, treinamentos, trabalho realizado e resultados alcançados. Com isso, a empresa pode manter o aculturamento do pensamento Lean e replicar os conceitos da melhoria contínua para os demais setores e linhas de produção.`;
+    const intro = `### 2. INTRODUÇÃO DO PROJETO
 
-    const textoCompleto = [intro, desenvolvimento, ...resultadosTexto, fechamento].join("\n\n");
+O presente programa de fomento ao setor industrial brasileiro Brasil Mais Produtivo, proporcionou a realização de consultoria em Manufatura Enxuta na Empresa ${data.nomeEmpresa || "—"}, na cidade de ${data.cidade || "—"} no Estado do Rio Grande do Sul. A escolha do produto a ser mapeado foi motivada por: ${data.motivacao || "—"}. As ferramentas aplicadas foram: ${data.ferramentas || "—"}.`;
+    
+    const desenvolvimento = `### 3. PLANO DE AÇÃO E ANÁLISE DE RESULTADOS
+
+Foram elaborados planos de ação através da ferramenta 5W2H, definindo diversas ações para as oportunidades elencadas, tais como: ${listaAcoes}.
+
+Após a definição do ponto de intervenção, monitoramento e validação das melhorias, obteve-se os seguintes resultados consolidados:`;
+    
+    const resultadosSeccionados = resultadosTexto.join("\n\n");
+
+    const fechamento = `### 4. CONCLUSÃO DA INTERVENÇÃO
+
+O resultado geral do projeto foi agregador e positivo para a empresa, pois o envolvimento da equipe foi primordial para garantir o conhecimento necessário através do plano de ação, treinamentos, trabalho realizado e resultados alcançados. Com isso, a empresa pode manter o aculturamento do pensamento Lean e replicar os conceitos da melhoria contínua para os demais setores e linhas de produção.`;
+
+    const textoCompleto = [intro, desenvolvimento, resultadosSeccionados, fechamento].join("\n\n");
     return { textoDinamico: textoCompleto, bulletPoints: bullets };
   }, [data, prod, pb, mov, qual, disp, lt, ar, selectedIndicadores, state.produtividade.unidade, state.leadtime, state.movimentacao.exibirNoLaudo, state.planoAcao.acoes]);
 
@@ -156,10 +178,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
             </div>
             <InputField label="Oportunidades no setor de" value={data.oportunidades} onChange={v => onChange({ oportunidades: v })} />
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase tracking-widest pl-1">Problemas</label>
-                <input type="text" className="w-full h-12 px-4 rounded-xl border-none bg-slate-50 text-sm outline-none focus:bg-white focus:ring-2 focus:ring-[#0057FF] transition-all" value={data.problemas || ""} onChange={e => onChange({ problemas: e.target.value })} />
-              </div>
+              <InputField label="Problemas" value={data.problemas || ""} onChange={v => onChange({ problemas: v })} />
               <InputField label="Ferramentas Lean Aplicadas" value={data.ferramentas} onChange={v => onChange({ ferramentas: v })} />
             </div>
             <InputField label="Área de Atuação/Intervenção" value={data.atuacao} onChange={v => onChange({ atuacao: v })} />
@@ -189,7 +208,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
               {copiedId === "desc" ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
             </button>
             <h4 className="text-[10px] font-bold text-[#0057FF] uppercase tracking-widest mb-4">Descrição do Processo</h4>
-            <p className="text-[13px] text-slate-600 leading-relaxed text-justify">{descTexto}</p>
+            <p className="text-[13px] text-slate-600 leading-relaxed text-justify whitespace-pre-wrap">{descTexto}</p>
           </div>
 
           <div className="relative bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
@@ -225,18 +244,29 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
         </div>
       </div>
 
-      {showConfirmModal && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/20 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full mx-4 animate-in zoom-in-95 duration-300">
-            <h3 className="text-xl font-bold text-slate-800 mb-2">Limpar tudo?</h3>
-            <p className="text-sm text-slate-600 mb-6">Apagar todos os dados de todas as abas?</p>
-            <div className="flex gap-3 w-full">
-              <button onClick={() => setShowConfirmModal(false)} className="flex-1 py-3 bg-slate-100 hover:bg-slate-200 font-bold text-sm rounded-xl transition-colors">Não</button>
-              <button onClick={() => { setShowConfirmModal(false); onClearData(); }} className="flex-1 py-3 bg-rose-600 text-white hover:bg-rose-700 font-bold text-sm rounded-xl transition-colors">Sim, apagar</button>
+      <Dialog open={showConfirmModal} onOpenChange={setShowConfirmModal}>
+        <DialogContent className="bg-white rounded-2xl border-none shadow-2xl p-8 max-w-sm mx-auto">
+          <div className="flex flex-col items-center text-center">
+            <div className="w-16 h-16 bg-rose-50 rounded-full flex items-center justify-center mb-4">
+              <Trash2 className="h-8 w-8 text-rose-500" />
             </div>
+            <DialogHeader>
+              <DialogTitle className="text-xl font-bold text-slate-800">Limpar tudo?</DialogTitle>
+              <DialogDescription className="text-slate-500 mt-2">
+                Esta ação não pode ser desfeita. Deseja realmente apagar todos os dados de todas as abas do sistema?
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="flex gap-3 w-full mt-8">
+              <Button variant="outline" className="flex-1 rounded-xl h-12 font-bold text-slate-500" onClick={() => setShowConfirmModal(false)}>
+                Não
+              </Button>
+              <Button className="flex-1 bg-rose-500 hover:bg-rose-600 text-white rounded-xl h-12 font-bold shadow-lg shadow-rose-100" onClick={() => { setShowConfirmModal(false); onClearData(); toast.success("Todos os dados foram limpos."); }}>
+                Sim, apagar
+              </Button>
+            </DialogFooter>
           </div>
-        </div>
-      )}
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
