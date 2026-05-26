@@ -10,6 +10,7 @@ import {
   HelpCircle,
   CheckCircle2,
   FileImage,
+  ChevronDown,
 } from "lucide-react"
 import { GBOChart } from "@/components/gbo-chart"
 import { CalculationsDashboard } from "@/components/calculations-dashboard"
@@ -301,11 +302,19 @@ export default function GBOAnalysis() {
                   </div>
                   <div className="space-y-1">
                     <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-1">Unidade</label>
-                    <select value={timeUnitTakt} onChange={(e: any) => updateModule("gbo", { turnoUnidade: e.target.value })} className="w-full h-12 px-4 rounded-xl border-none bg-slate-50 text-sm outline-none focus:ring-2 focus:ring-[#0057FF] transition-all">
-                      <option value="minutes">Minutos</option>
-                      <option value="hours">Horas</option>
-                      <option value="seconds">Segundos</option>
-                    </select>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button className="w-full h-12 px-4 rounded-xl bg-slate-50 text-sm font-medium text-slate-700 flex items-center justify-between outline-none hover:bg-slate-100 transition-all focus:bg-white focus:ring-2 focus:ring-[#0057FF]">
+                          {timeUnitTakt === "minutes" ? "Minutos" : timeUnitTakt === "hours" ? "Horas" : "Segundos"}
+                          <ChevronDown className="w-4 h-4 text-slate-400" />
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white border border-slate-100 p-2 rounded-2xl shadow-xl z-[150]">
+                        <DropdownMenuItem onClick={() => updateModule("gbo", { turnoUnidade: "minutes" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${timeUnitTakt === "minutes" ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"}`}>Minutos</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => updateModule("gbo", { turnoUnidade: "hours" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${timeUnitTakt === "hours" ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"}`}>Horas</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => updateModule("gbo", { turnoUnidade: "seconds" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${timeUnitTakt === "seconds" ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"}`}>Segundos</DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
                 </div>
                 
@@ -342,10 +351,18 @@ export default function GBOAnalysis() {
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
               <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                 <h3 className="font-bold text-[#0F172A] text-sm tracking-wide uppercase">Nova Operação</h3>
-                <select value={timeUnit} onChange={(e: any) => updateModule("gbo", { tempoUnidade: e.target.value })} className="h-8 px-2 rounded-lg border-none bg-slate-50 text-[10px] font-bold text-slate-600 outline-none focus:ring-2 focus:ring-[#0057FF]">
-                  <option value="minutes">Minutos</option>
-                  <option value="seconds">Segundos</option>
-                </select>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="h-8 px-3 rounded-lg bg-slate-50 text-[10px] font-bold text-slate-600 flex items-center gap-1 outline-none hover:bg-slate-100 transition-all focus:bg-white focus:ring-2 focus:ring-[#0057FF]">
+                      {timeUnit === "minutes" ? "Minutos" : "Segundos"}
+                      <ChevronDown className="w-3 h-3 text-slate-400" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-32 bg-white border border-slate-100 p-1.5 rounded-xl shadow-xl z-[150]">
+                    <DropdownMenuItem onClick={() => updateModule("gbo", { tempoUnidade: "minutes" })} className={`w-full text-left text-[10px] font-bold py-2 px-2.5 rounded-lg cursor-pointer transition-all ${timeUnit === "minutes" ? "bg-[#0057FF] text-white" : "text-slate-600 hover:bg-slate-50"}`}>Minutos</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => updateModule("gbo", { tempoUnidade: "seconds" })} className={`w-full text-left text-[10px] font-bold py-2 px-2.5 rounded-lg cursor-pointer transition-all ${timeUnit === "seconds" ? "bg-[#0057FF] text-white" : "text-slate-600 hover:bg-slate-50"}`}>Segundos</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
               
               <div className="space-y-3">
