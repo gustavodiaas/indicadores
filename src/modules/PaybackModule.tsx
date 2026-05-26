@@ -163,8 +163,18 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
                   <DropdownMenuItem onClick={() => onChange({ valorConsultoria: VALORES_CONSULTORIA.media })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.valorConsultoria === VALORES_CONSULTORIA.media ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"}`}>Média Empresa</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+              {data.valorConsultoria > 0 && (
+                <span className="text-[11px] text-slate-400 pl-1 mt-1.5 block font-medium">
+                  Valor: {formatBRL(data.valorConsultoria)}
+                </span>
+              )}
             </div>
-            <input type="text" className="h-12 px-4 rounded-xl border-none bg-slate-50 text-sm outline-none focus:bg-white focus:ring-2 focus:ring-[#0057FF] transition-all" defaultValue={formatDec(data.investimentoExtra)} onBlur={e => onChange({ investimentoExtra: parseDecimal(e.target.value) })} placeholder="Investimento Extra (R$)" />
+            <div>
+              <label className="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase tracking-widest pl-1">
+                Investimentos Adicionais
+              </label>
+              <input type="text" className="w-full h-12 px-4 rounded-xl border-none bg-slate-50 text-sm outline-none focus:bg-white focus:ring-2 focus:ring-[#0057FF] transition-all" defaultValue={formatDec(data.investimentoExtra)} onBlur={e => onChange({ investimentoExtra: parseDecimal(e.target.value) })} placeholder="Investimento Extra (R$)" />
+            </div>
           </div>
         </div>
       </div>
