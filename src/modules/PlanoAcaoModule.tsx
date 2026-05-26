@@ -226,7 +226,7 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
         </button>
       </div>
 
-      <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+      <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
         <h3 className="font-bold text-slate-800 uppercase text-[11px] tracking-widest mb-4 border-b border-slate-100 pb-2">Metadados do Projeto</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <CustomDatePicker label="Data de Criação" value={data.metadata.dataCriacao} onChange={v => updateMeta("dataCriacao", v)} />
@@ -240,7 +240,8 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
         </div>
       </div>
 
-      <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 shadow-sm flex-1">
+      {/* AJUSTADO PARA BG-WHITE E BORDA LEVE PARA DAR DESTAQUE PREMIUM AOS INPUTS */}
+      <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex-1">
         <div className="flex flex-col gap-4 mb-6">
           <h3 className="font-bold text-slate-800 uppercase text-[11px] tracking-widest flex items-center gap-2">
             Execução de Tarefas 
