@@ -147,6 +147,9 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
           <h3 className="font-bold text-slate-800 text-sm tracking-wide uppercase">Investimentos</h3>
           <div className="grid grid-cols-2 gap-6">
             <div>
+              <label className="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase tracking-widest pl-1">
+                Porte da Empresa
+              </label>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className="w-full h-12 px-4 rounded-xl bg-slate-50 text-sm font-medium text-slate-700 flex items-center justify-between gap-2 outline-none hover:bg-slate-100 transition-all focus:bg-white focus:ring-2 focus:ring-[#0057FF]">
