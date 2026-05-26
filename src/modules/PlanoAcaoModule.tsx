@@ -1,7 +1,7 @@
 import { type PlanoAcaoData, type PlanoAcaoItem } from "@/store/useAppStore";
 import { InputField } from "@/components/InputField";
-import { Trash2, Download, CheckCircle, ChevronDown, ChevronUp, Plus } from "lucide-react";
-import { useState } from "react";
+import { Trash2, Download, CheckCircle, ChevronDown, ChevronUp, Plus, Calendar as CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import ExcelJS from "exceljs";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -9,6 +9,108 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 interface Props {
   data: PlanoAcaoData;
   onChange: (d: Partial<PlanoAcaoData>) => void;
+}
+
+function CustomDatePicker({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const initialDate = value && value.includes('-') ? new Date(value + 'T12:00:00') : new Date();
+  const [currentMonth, setCurrentMonth] = useState(initialDate.getMonth());
+  const [currentYear, setCurrentYear] = useState(initialDate.getFullYear());
+
+  useEffect(() => {
+    if (value && value.includes('-')) {
+      const d = new Date(value + 'T12:00:00');
+      setCurrentMonth(d.getMonth());
+      setCurrentYear(d.getFullYear());
+    }
+  }, [value]);
+
+  const formatDisplay = (val: string) => {
+    if (!val) return "Selecione a data";
+    const parts = val.split('-');
+    if (parts.length !== 3) return val;
+    const [y, m, d] = parts;
+    return `${d}/${m}/${y}`;
+  };
+
+  const months = [
+    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+  ];
+  const daysOfWeek = ["D", "S", "T", "Q", "Q", "S", "S"];
+
+  const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+  const daysArray = [];
+  for (let i = 0; i < firstDayOfMonth; i++) {
+    daysArray.push(null);
+  }
+  for (let i = 1; i <= daysInMonth; i++) {
+    daysArray.push(i);
+  }
+
+  return (
+    <div className="w-full">
+      <label className="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase tracking-widest pl-1">{label}</label>
+      <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+        <DropdownMenuTrigger asChild>
+          <button type="button" className="w-full h-12 px-4 rounded-xl bg-slate-50 text-sm font-medium text-slate-700 flex items-center justify-between outline-none hover:bg-slate-100 transition-all focus:bg-white focus:ring-2 focus:ring-[#0057FF] border border-transparent text-left">
+            <span className={value ? "text-slate-700" : "text-slate-400"}>{formatDisplay(value)}</span>
+            <CalendarIcon className="w-4 h-4 text-slate-400 shrink-0 ml-2" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent 
+          align="start" 
+          className="p-4 bg-white border border-slate-100 rounded-2xl shadow-xl z-[150] w-72"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <button 
+              type="button" 
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); if (currentMonth === 0) { setCurrentMonth(11); setCurrentYear(y => y - 1); } else { setCurrentMonth(m => m - 1); } }} 
+              className="p-1.5 hover:bg-slate-50 rounded-lg text-slate-600 transition-all"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+              {months[currentMonth]} {currentYear}
+            </span>
+            <button 
+              type="button" 
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); if (currentMonth === 11) { setCurrentMonth(0); setCurrentYear(y => y + 1); } else { setCurrentMonth(m => m + 1); } }} 
+              className="p-1.5 hover:bg-slate-50 rounded-lg text-slate-600 transition-all"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+          <div className="grid grid-cols-7 gap-1 text-center text-[10px] font-bold text-slate-400 mb-2">
+            {daysOfWeek.map((d, i) => <div key={i}>{d}</div>)}
+          </div>
+          <div className="grid grid-cols-7 gap-1 text-center">
+            {daysArray.map((day, i) => {
+              if (day === null) return <div key={i} className="h-8 w-8" />;
+              const dateString = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+              const isSelected = value === dateString;
+              return (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); const m = String(currentMonth + 1).padStart(2, '0'); const d = String(day).padStart(2, '0'); onChange(`${currentYear}-${m}-${d}`); setIsOpen(false); }}
+                  className={`h-8 w-8 text-xs font-semibold rounded-lg flex items-center justify-center transition-all ${
+                    isSelected 
+                      ? "bg-[#0057FF] text-white font-bold shadow-md shadow-[#0057FF]/20" 
+                      : "text-slate-600 hover:bg-slate-50"
+                  }`}
+                >
+                  {day}
+                </button>
+              );
+            })}
+          </div>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  );
 }
 
 export function PlanoAcaoModule({ data, onChange }: Props) {
@@ -25,7 +127,7 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
         id: Date.now().toString(),
         what: newAcaoWhat.trim(),
         why: "", where: "", start: "", end: "", who: "", how: "", howMuch: "", percent: 0, obs: "", status: "NÃO INICIADO",
-        origin: "5w2h" // Etiqueta garantindo que veio da aba tática
+        origin: "5w2h"
       };
       onChange({ acoes: [...data.acoes, nova] });
       setNewAcaoWhat("");
@@ -127,12 +229,12 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
       <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
         <h3 className="font-bold text-slate-800 uppercase text-[11px] tracking-widest mb-4 border-b border-slate-100 pb-2">Metadados do Projeto</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <InputField label="Data de Criação" value={data.metadata.dataCriacao} onChange={v => updateMeta("dataCriacao", v)} type="date" />
+          <CustomDatePicker label="Data de Criação" value={data.metadata.dataCriacao} onChange={v => updateMeta("dataCriacao", v)} />
           <InputField label="Responsável (Consultor/Empresário)" value={data.metadata.respCriacao} onChange={v => updateMeta("respCriacao", v)} />
           <InputField label="Objetivo" value={data.metadata.objetivo} onChange={v => updateMeta("objetivo", v)} />
           <InputField label="Meta" value={data.metadata.meta} onChange={v => updateMeta("meta", v)} />
           
-          <InputField label="Data de Revisão" value={data.metadata.dataRevisao} onChange={v => updateMeta("dataRevisao", v)} type="date" />
+          <CustomDatePicker label="Data de Revisão" value={data.metadata.dataRevisao} onChange={v => updateMeta("dataRevisao", v)} />
           <InputField label="Responsável (Revisão)" value={data.metadata.respRevisao} onChange={v => updateMeta("respRevisao", v)} />
           <div className="md:col-span-2"><InputField label="Indicador" value={data.metadata.indicador} onChange={v => updateMeta("indicador", v)} /></div>
         </div>
@@ -196,8 +298,8 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
                     <InputField label="Onde? (Where)" value={a.where} onChange={v => updateAcao(a.id, "where", v)} />
                     
                     <InputField label="Quem? (Who)" value={a.who} onChange={v => updateAcao(a.id, "who", v)} />
-                    <InputField label="Início (When)" value={a.start} onChange={v => updateAcao(a.id, "start", v)} type="date" />
-                    <InputField label="Fim (When)" value={a.end} onChange={v => updateAcao(a.id, "end", v)} type="date" />
+                    <CustomDatePicker label="Início (When)" value={a.start} onChange={v => updateAcao(a.id, "start", v)} />
+                    <CustomDatePicker label="Fim (When)" value={a.end} onChange={v => updateAcao(a.id, "end", v)} />
                     <InputField label="Quanto Custa? (How Much)" value={a.howMuch} onChange={v => updateAcao(a.id, "howMuch", v)} type="number" />
                     
                     <InputField label="% Completo" value={a.percent} onChange={v => updateAcao(a.id, "percent", Number(v) || 0)} type="number" />
