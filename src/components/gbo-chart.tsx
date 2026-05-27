@@ -93,7 +93,7 @@ export function GBOChart({ operations, timeUnit, taktTime, taktTimeUnit, demandU
           <p className="font-semibold">{label}</p>
           <p className="text-sm">
             <span className="text-muted-foreground">Tempo: </span>
-            <span className={data.isBottleneck ? "text-chart-5 font-semibold" : "text-foreground"}>
+            <span className="font-semibold" style={{ color: data.isBottleneck ? "#EF4444" : "inherit" }}>
               {data.time.toFixed(1)} {getPtUnit(timeUnit)}
             </span>
           </p>
@@ -102,7 +102,7 @@ export function GBOChart({ operations, timeUnit, taktTime, taktTimeUnit, demandU
               Original: {operations.find((op) => op.name === data.name)?.time.toFixed(1)} {getPtUnit(data.originalUnit)}
             </p>
           )}
-          {data.isBottleneck && <p className="text-xs text-chart-5 font-medium mt-1">🔴 Operação Gargalo</p>}
+          {data.isBottleneck && <p className="text-xs font-medium mt-1" style={{ color: "#EF4444" }}>🔴 Operação Gargalo</p>}
         </div>
       )
     }
@@ -152,7 +152,6 @@ export function GBOChart({ operations, timeUnit, taktTime, taktTimeUnit, demandU
         )}
       </div>
 
-      {/* Reduzido de 65vh para 50vh para garantir margem segura em qualquer impressora */}
       <div className="h-[450px] w-full mt-2 print:h-[50vh]">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData} margin={{ top: 20, right: 30, left: 35, bottom: 65 }}>
@@ -179,15 +178,15 @@ export function GBOChart({ operations, timeUnit, taktTime, taktTimeUnit, demandU
               tickLine={false}
             />
             <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0, 87, 255, 0.04)', radius: 8 }} />
-            <ReferenceLine y={averageTime} stroke="hsl(var(--chart-3))" strokeDasharray="5 5" opacity={0.7} />
+            <ReferenceLine y={averageTime} stroke="#94A3B8" strokeDasharray="5 5" opacity={0.7} />
             {taktTimeInDisplayUnit && (
-              <ReferenceLine y={taktTimeInDisplayUnit} stroke="hsl(var(--foreground))" strokeDasharray="8 4" strokeWidth={2} opacity={0.8} />
+              <ReferenceLine y={taktTimeInDisplayUnit} stroke="#0F172A" strokeDasharray="8 4" strokeWidth={2} opacity={0.8} />
             )}
             <Bar dataKey="time" radius={[6, 6, 0, 0]} isAnimationActive={false} maxBarSize={60}>
               {chartData.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={entry.exceedsTakt ? "hsl(var(--destructive))" : entry.isBottleneck ? "hsl(var(--primary)/0.7)" : "hsl(var(--primary))"}
+                  fill={entry.exceedsTakt ? "#EF4444" : "#0057FF"}
                   className="transition-all duration-300 hover:opacity-80"
                 />
               ))}
@@ -198,20 +197,20 @@ export function GBOChart({ operations, timeUnit, taktTime, taktTimeUnit, demandU
 
       <div className="flex items-center justify-center gap-6 mt-2 text-xs flex-wrap font-medium text-muted-foreground">
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-sm bg-primary"></div>
+          <div className="w-3 h-3 rounded-sm bg-[#0057FF]"></div>
           <span>Operação Normal</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-sm bg-destructive"></div>
+          <div className="w-3 h-3 rounded-sm bg-[#EF4444]"></div>
           <span>Excede Takt Time</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-4 h-0.5 bg-chart-3 border-dashed"></div>
+          <div className="w-4 h-0.5 bg-[#94A3B8] border-dashed"></div>
           <span>Tempo Médio</span>
         </div>
         {taktTimeInDisplayUnit && (
           <div className="flex items-center gap-2">
-            <div className="w-4 h-0.5 bg-foreground border-t-2 border-dashed"></div>
+            <div className="w-4 h-0.5 bg-[#0F172A] border-t-2 border-dashed"></div>
             <span>Takt Time</span>
           </div>
         )}
