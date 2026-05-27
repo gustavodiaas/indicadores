@@ -4,8 +4,10 @@ import { Topbar } from "@/components/Topbar";
 import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } from "docx";
 import { 
   FileText, GanttChartSquare, BarChart2, Calculator, 
-  ArrowRightLeft, ShieldCheck, Clock, Timer, Square, BarChart3, ClipboardList, Lock, LayoutTemplate
+  ArrowRightLeft, ShieldCheck, Clock, Timer, Square, BarChart3, ClipboardList, Lock, LayoutTemplate,
+  Sun, Moon, Sparkles
 } from "lucide-react";
+import { useState, useEffect } from "react";
 
 import { ResumoModule } from "@/modules/ResumoModule";
 import { PaybackModule } from "@/modules/PaybackModule";
@@ -19,8 +21,42 @@ import { PlanoAcaoModule } from "@/modules/PlanoAcaoModule";
 import { A3Module } from "@/modules/A3Module";
 import GBOAnalysis from "@/modules/GboModule"; 
 
+type Theme = "light" | "dark" | "system";
+
 const Index = () => {
   const { state, activeModule, setActiveModule, updateModule, clearData } = useAppStore();
+  
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window !== "undefined") {
+      return (localStorage.getItem("app-theme") as Theme) || "system";
+    }
+    return "system";
+  });
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    
+    const applyTheme = (t: Theme) => {
+      root.classList.remove("light", "dark");
+      
+      if (t === "system") {
+        const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        root.classList.add(systemTheme);
+      } else {
+        root.classList.add(t);
+      }
+    };
+
+    applyTheme(theme);
+    localStorage.setItem("app-theme", theme);
+
+    if (theme === "system") {
+      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      const handleChange = () => applyTheme("system");
+      mediaQuery.addEventListener("change", handleChange);
+      return () => mediaQuery.removeEventListener("change", handleChange);
+    }
+  }, [theme]);
 
   const handleExportWord = async () => {
     const { resumo, produtividade, payback, movimentacao, qualidade, disponibilidade, leadtime, area, planoAcao } = state;
@@ -165,7 +201,7 @@ const Index = () => {
             tr(", com método de produção "), tr(resumo.metodo || "—", true),
             tr(", onde a demanda é originada por "), tr(resumo.origem || "—", true),
             tr(". Ao longo do mapeamento foi identificado oportunidades no setor de "), tr(resumo.oportunidades || "—", true),
-            tr(", por problemas de "), tr(resumo.problemas || "—", true),
+            tr(", por problemas de </p>"), tr(resumo.problemas || "—", true),
             tr(". Nesta consultoria, a área de atuação/intervenção foi "), tr(resumo.atuacao || "—", true),
             tr(".")
           ]),
@@ -292,73 +328,98 @@ const Index = () => {
   };
 
   const renderHome = () => {
-  const modules: { key: ModuleKey; title: string; desc: string; icon: any; color: string }[] = [
-    { key: "resumo", title: "Resumo", desc: "Configurações gerais e laudo", icon: FileText, color: "text-[#0057FF] bg-[#0057FF]/5" },
-    { key: "gbo", title: "GBO", desc: "Balanceamento de Operações e Gargalos", icon: GanttChartSquare, color: "text-[#0057FF] bg-[#0057FF]/5" },
-    { key: "produtividade", title: "Produtividade", desc: "Análise de peças por hora e eficiência", icon: BarChart2, color: "text-[#0057FF] bg-[#0057FF]/5" },
-    { key: "payback", title: "Payback", desc: "Retorno de Investimento (ROI)", icon: Calculator, color: "text-[#0057FF] bg-[#0057FF]/5" },
-    { key: "movimentacao", title: "Movimentação", desc: "Redução de tempos e distâncias", icon: ArrowRightLeft, color: "text-[#0057FF] bg-[#0057FF]/5" },
-    { key: "qualidade", title: "Qualidade", desc: "Controle de refugos e assertividade", icon: ShieldCheck, color: "text-[#0057FF] bg-[#0057FF]/5" },
-    { key: "disponibilidade", title: "Disponibilidade", desc: "Mapeamento de paradas de máquina", icon: Clock, color: "text-[#0057FF] bg-[#0057FF]/5" },
-    { key: "leadtime", title: "Lead Time", desc: "Redução no tempo de atravessamento", icon: Timer, color: "text-[#0057FF] bg-[#0057FF]/5" },
-    { key: "area", title: "Área de Trabalho", desc: "Otimização de layout e m²", icon: Square, color: "text-[#0057FF] bg-[#0057FF]/5" },
-    { key: "planoAcao", title: "Plano de Ação 5W2H", desc: "Gestão tática e exportação", icon: ClipboardList, color: "text-[#0057FF] bg-[#0057FF]/5" },
-    { key: "a3", title: "Modelo A3", desc: "Análise e Solução de Problemas", icon: LayoutTemplate, color: "text-[#0057FF] bg-[#0057FF]/5" },
-  ];
+    const modules: { key: ModuleKey; title: string; desc: string; icon: any; color: string }[] = [
+      { key: "resumo", title: "Resumo", desc: "Configurações gerais e laudo", icon: FileText, color: "text-[#0057FF] bg-[#0057FF]/5" },
+      { key: "gbo", title: "GBO", desc: "Balanceamento de Operações e Gargalos", icon: GanttChartSquare, color: "text-[#0057FF] bg-[#0057FF]/5" },
+      { key: "produtividade", title: "Produtividade", desc: "Análise de peças por hora e eficiência", icon: BarChart2, color: "text-[#0057FF] bg-[#0057FF]/5" },
+      { key: "payback", title: "Payback", desc: "Retorno de Investimento (ROI)", icon: Calculator, color: "text-[#0057FF] bg-[#0057FF]/5" },
+      { key: "movimentacao", title: "Movimentação", desc: "Redução de tempos e distâncias", icon: ArrowRightLeft, color: "text-[#0057FF] bg-[#0057FF]/5" },
+      { key: "qualidade", title: "Qualidade", desc: "Controle de refugos e assertividade", icon: ShieldCheck, color: "text-[#0057FF] bg-[#0057FF]/5" },
+      { key: "disponibilidade", title: "Disponibilidade", desc: "Mapeamento de paradas de máquina", icon: Clock, color: "text-[#0057FF] bg-[#0057FF]/5" },
+      { key: "leadtime", title: "Lead Time", desc: "Redução no tempo de atravessamento", icon: Timer, color: "text-[#0057FF] bg-[#0057FF]/5" },
+      { key: "area", title: "Área de Trabalho", desc: "Otimização de layout e m²", icon: Square, color: "text-[#0057FF] bg-[#0057FF]/5" },
+      { key: "planoAcao", title: "Plano de Ação 5W2H", desc: "Gestão tática e exportação", icon: ClipboardList, color: "text-[#0057FF] bg-[#0057FF]/5" },
+      { key: "a3", title: "Modelo A3", desc: "Análise e Solução de Problemas", icon: LayoutTemplate, color: "text-[#0057FF] bg-[#0057FF]/5" },
+    ];
 
-  return (
-    <div className="w-full h-full flex items-center justify-center py-12 pb-36 px-6 animate-in fade-in zoom-in-95 duration-500">
-      <div className="w-full max-w-7xl flex flex-col lg:flex-row gap-12 items-start">
-        
-        {/* Lado Esquerdo: Painel Fixo de Contexto e Privacidade */}
-        <div className="w-full lg:w-[28%] space-y-6 lg:sticky lg:top-6 shrink-0">
-          <div className="bg-[#0057FF] p-4 rounded-2xl shadow-md inline-block">
-            <BarChart3 className="h-7 w-7 text-white" />
-          </div>
-          <div>
-            <h1 className="text-4xl font-black text-slate-900 tracking-tight mb-2">Olá!</h1>
-            <p className="text-slate-400 text-sm leading-relaxed">
-              Selecione um dos módulos operacionais ao lado para iniciar a análise, preencher dados ou gerar laudos técnicos.
-            </p>
+    return (
+      <div className="w-full h-full flex items-center justify-center py-12 pb-36 px-6 animate-in fade-in zoom-in-95 duration-500">
+        <div className="w-full max-w-7xl flex flex-col lg:flex-row gap-12 items-start">
+          
+          {/* Lado Esquerdo: Painel Fixo de Contexto, Privacidade e Tema */}
+          <div className="w-full lg:w-[28%] space-y-6 lg:sticky lg:top-6 shrink-0">
+            <div className="bg-[#0057FF] p-4 rounded-2xl shadow-md inline-block">
+              <BarChart3 className="h-7 w-7 text-white" />
+            </div>
+            <div>
+              <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Olá!</h1>
+              <p className="text-slate-400 dark:text-slate-400 text-sm leading-relaxed">
+                Selecione um dos módulos operacionais ao lado para iniciar a análise, preencher dados ou gerar laudos técnicos.
+              </p>
+            </div>
+
+            <div className="flex items-start gap-3 text-[10px] font-bold text-slate-400 dark:text-slate-400 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm uppercase tracking-widest leading-relaxed">
+              <Lock className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
+              <span>Privacidade: Seus dados são salvos apenas localmente no seu navegador. Nenhuma informação é enviada.</span>
+            </div>
+
+            {/* PÍLULA INTEGRADA DE CONTROLE DE TEMA */}
+            <div className="flex flex-col gap-2 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
+              <label className="text-[9px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-widest px-1">Aparência do Painel</label>
+              <div className="grid grid-cols-3 bg-slate-50 dark:bg-slate-950 p-1 rounded-xl gap-1">
+                <button 
+                  onClick={() => setTheme("light")} 
+                  className={`flex items-center justify-center gap-1.5 py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${theme === "light" ? "bg-white text-[#0057FF] shadow-sm" : "text-slate-400 hover:text-slate-800"}`}
+                >
+                  <Sun className="w-3.5 h-3.5" /> Claro
+                </button>
+                <button 
+                  onClick={() => setTheme("system")} 
+                  className={`flex items-center justify-center gap-1.5 py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${theme === "system" ? "bg-[#0057FF] text-white shadow-sm" : "text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"}`}
+                >
+                  <Sparkles className="w-3.5 h-3.5" /> Auto
+                </button>
+                <button 
+                  onClick={() => setTheme("dark")} 
+                  className={`flex items-center justify-center gap-1.5 py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${theme === "dark" ? "bg-slate-800 text-white shadow-sm" : "text-slate-400 hover:text-slate-200"}`}
+                >
+                  <Moon className="w-3.5 h-3.5" /> Escuro
+                </button>
+              </div>
+            </div>
           </div>
 
-          <div className="flex items-start gap-3 text-[10px] font-bold text-slate-400 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm uppercase tracking-widest leading-relaxed">
-            <Lock className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
-            <span>Privacidade: Seus dados são salvos apenas localmente no seu navegador. Nenhuma informação é enviada.</span>
-          </div>
-        </div>
-
-        {/* Lado Direito: Grid de Módulos Expandido e Dinâmico */}
-        <div className="w-full lg:w-[72%] grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {modules.map((m) => {
-            const Icon = m.icon;
-            return (
-              <button
-                key={m.key}
-                onClick={() => setActiveModule(m.key)}
-                className="group flex flex-col justify-between p-6 bg-white border border-slate-100 hover:border-[#0057FF]/30 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 min-h-[150px] text-left"
-              >
-                <div className="flex items-start justify-between w-full mb-4">
-                  <div className={`p-2.5 rounded-xl ${m.color} group-hover:scale-110 group-hover:bg-[#0057FF] group-hover:text-white transition-all duration-300`}>
-                    <Icon className="w-5 h-5" />
+          {/* Lado Direito: Grid de Módulos Expandido e Dinâmico */}
+          <div className="w-full lg:w-[72%] grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            {modules.map((m) => {
+              const Icon = m.icon;
+              return (
+                <button
+                  key={m.key}
+                  onClick={() => setActiveModule(m.key)}
+                  className="group flex flex-col justify-between p-6 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 hover:border-[#0057FF]/30 dark:hover:border-[#0057FF]/40 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 min-h-[150px] text-left"
+                >
+                  <div className="flex items-start justify-between w-full mb-4">
+                    <div className={`p-2.5 rounded-xl ${m.color} dark:bg-[#0057FF]/10 dark:text-[#0057FF] group-hover:scale-110 group-hover:bg-[#0057FF] group-hover:text-white transition-all duration-300`}>
+                      <Icon className="w-5 h-5" />
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <h3 className="font-bold text-slate-800 text-sm group-hover:text-[#0057FF] transition-colors">{m.title}</h3>
-                  <p className="text-[11px] text-slate-400 mt-1 line-clamp-2 leading-normal">{m.desc}</p>
-                </div>
-              </button>
-            );
-          })}
-        </div>
+                  <div>
+                    <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm group-hover:text-[#0057FF] transition-colors">{m.title}</h3>
+                    <p className="text-[11px] text-slate-400 dark:text-slate-400 mt-1 line-clamp-2 leading-normal">{m.desc}</p>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
 
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  };
 
   return (
-    <div className="flex flex-col h-screen w-full bg-white overflow-hidden font-inter print:bg-white print:h-auto print:overflow-visible">
+    <div className="flex flex-col h-screen w-full bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-100 overflow-hidden font-inter print:bg-white print:h-auto print:overflow-visible">
       <style dangerouslySetInnerHTML={{ __html: `@media print { @page { size: landscape; margin: 10mm; } }` }} />
       <main className="flex-1 overflow-y-auto p-2 md:p-4 pb-32 print:p-0 print:overflow-visible">
         {!["home", "gbo", "planoAcao", "a3"].includes(activeModule) && (
@@ -366,7 +427,7 @@ const Index = () => {
             <Topbar onExportWord={handleExportWord} />
           </div>
         )}
-        <div className={`w-full transition-all min-h-full relative print:shadow-none print:border-none print:rounded-none print:p-0 ${activeModule === "home" || activeModule === "a3" ? "bg-transparent p-0" : "bg-white rounded-2xl shadow-sm border border-slate-200/50 p-4 md:p-6"}`}>
+        <div className={`w-full transition-all min-h-full relative print:shadow-none print:border-none print:rounded-none print:p-0 ${activeModule === "home" || activeModule === "a3" ? "bg-transparent p-0" : "bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200/50 dark:border-slate-800/40 p-4 md:p-6"}`}>
           {activeModule === "home" && renderHome()}
           {activeModule !== "home" && activeModule !== "gbo" && (
             <div key={activeModule} className="animate-in fade-in slide-in-from-bottom-2 duration-500 w-full h-full">
