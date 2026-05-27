@@ -98,23 +98,32 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
       bullets.push(`Payback de ${pb.paybackMeses > 0 ? pb.paybackMeses.toFixed(2).replace(".", ",") : "0,00"} ${pb.paybackMeses === 1 ? "mês" : "meses"}.`);
     }
     if (selectedIndicadores.includes("movimentacao")) {
+      const mData = state.movimentacao;
+      const fer = (mData.ferramentaUtilizada || "").trim();
+      const acao = (mData.acaoMelhoria || "").trim();
+      
+      const isPlural = /,| e |\//i.test(fer);
+      const prep = fer ? (isPlural ? `das ferramentas ${fer}` : `da ferramenta ${fer}`) : "da ferramenta aplicada";
+      const baseText = `Movimentação: Por intermédio ${prep} foi realizado ${acao ? acao : "a melhoria do fluxo logístico"}.`;
+      
       const exibir = state.movimentacao.exibirNoLaudo || "ambos";
       const distTxt = mov.reducaoDist.toFixed(6).replace(".", ",");
       const tempoTxt = mov.reducaoTempo.toFixed(6).replace(".", ",");
+
       if (exibir === "ambos") {
-        const txt = `Movimentação: A análise de fluxo evidenciou uma redução de ${distTxt}% na distância percorrida e uma queda de ${tempoTxt}% no tempo gasto com movimentação e transporte logístico.`;
+        const txt = `${baseText} A análise de fluxo evidenciou uma redução de ${distTxt}% na distância percorrida e uma queda de ${tempoTxt}% no tempo gasto com movimentação e transporte logístico.`;
         resTela.push(txt);
-        resWord.push(`• MOVIMENTAÇÃO LOGÍSTICA: A análise de fluxo evidenciou uma redução de ${distTxt}% na distância percorrida e uma queda de ${tempoTxt}% no tempo gasto com movimentação e transporte logístico.`);
+        resWord.push(`• MOVIMENTAÇÃO LOGÍSTICA: ${txt.replace("Movimentação: ", "")}`);
         bullets.push(`Redução de ${distTxt}% na distância e ${tempoTxt}% no tempo de movimentação.`);
       } else if (exibir === "distancia") {
-        const txt = `Movimentação: A análise de fluxo evidenciou uma redução de ${distTxt}% na distância percorrida com movimentação e transporte logístico.`;
+        const txt = `${baseText} A análise de fluxo evidenciou uma redução de ${distTxt}% na distância percorrida com movimentação e transporte logístico.`;
         resTela.push(txt);
-        resWord.push(`• MOVIMENTAÇÃO LOGÍSTICA: A análise de fluxo evidenciou uma redução de ${distTxt}% na distância percorrida com movimentação e transporte logístico.`);
+        resWord.push(`• MOVIMENTAÇÃO LOGÍSTICA: ${txt.replace("Movimentação: ", "")}`);
         bullets.push(`Redução de ${distTxt}% na distância de movimentação.`);
       } else if (exibir === "tempo") {
-        const txt = `Movimentação: A análise de fluxo evidenciou uma queda de ${tempoTxt}% no tempo gasto com movimentação e transporte logístico.`;
+        const txt = `${baseText} A análise de fluxo evidenciou uma queda de ${tempoTxt}% no tempo gasto com movimentação e transporte logístico.`;
         resTela.push(txt);
-        resWord.push(`• MOVIMENTAÇÃO LOGÍSTICA: A análise de fluxo evidenciou uma queda de ${tempoTxt}% no tempo gasto com movimentação e transporte logístico.`);
+        resWord.push(`• MOVIMENTAÇÃO LOGÍSTICA: ${txt.replace("Movimentação: ", "")}`);
         bullets.push(`Redução de ${tempoTxt}% no tempo de movimentação.`);
       }
     }
