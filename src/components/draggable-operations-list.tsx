@@ -81,7 +81,7 @@ export function DraggableOperationsList({
 
   return (
     <div className="space-y-2 mt-6">
-      <h3 className="text-sm font-semibold text-muted-foreground mb-3 uppercase tracking-wider">
+      <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-3 uppercase tracking-wider">
         Operações Adicionadas ({operations.length})
       </h3>
       <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
@@ -92,11 +92,11 @@ export function DraggableOperationsList({
             onDragStart={() => handleDragStart(index)}
             onDragOver={(e) => handleDragOver(e, index)}
             onDragEnd={handleDragEnd}
-            className={`flex items-center gap-3 p-3 bg-card border rounded-lg transition-all ${
-              draggedIndex === index ? "opacity-50 border-primary" : "border-border hover:border-primary/50"
+            className={`flex items-center gap-3 p-3 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-lg transition-all ${
+              draggedIndex === index ? "opacity-50 border-[#0057FF]" : "hover:border-slate-300 dark:hover:border-slate-600"
             }`}
           >
-            <div className={`p-1 text-muted-foreground ${editingId === op.id ? "opacity-30" : "cursor-grab active:cursor-grabbing hover:text-foreground"}`}>
+            <div className={`p-1 text-slate-400 dark:text-slate-600 ${editingId === op.id ? "opacity-30" : "cursor-grab active:cursor-grabbing hover:text-slate-600 dark:hover:text-slate-400"}`}>
               <GripVertical className="h-4 w-4" />
             </div>
             
@@ -106,7 +106,7 @@ export function DraggableOperationsList({
                   <Input 
                     value={editName} 
                     onChange={(e) => setEditName(e.target.value)} 
-                    className="h-8 text-sm tech-glow bg-background" 
+                    className="h-8 text-sm bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100" 
                     placeholder="Nome"
                     autoFocus
                   />
@@ -116,15 +116,15 @@ export function DraggableOperationsList({
                     min="0"
                     value={editTime} 
                     onChange={(e) => setEditTime(e.target.value)} 
-                    className="h-8 w-20 text-sm tech-glow bg-background" 
+                    className="h-8 w-20 text-sm bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100" 
                     placeholder="Tempo"
                     onKeyDown={(e) => e.key === 'Enter' && saveEditing(op.id)}
                   />
                 </div>
               ) : (
                 <div className="flex flex-col min-w-0">
-                  <span className="text-sm font-medium truncate">{op.name}</span>
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-sm font-medium text-slate-800 dark:text-slate-100 truncate">{op.name}</span>
+                  <span className="text-xs text-slate-500 dark:text-slate-400">
                     {op.time.toFixed(1)} {getPtUnit(op.unit)}
                   </span>
                 </div>
@@ -136,16 +136,16 @@ export function DraggableOperationsList({
                     <Button variant="ghost" size="icon" className="h-8 w-8 text-green-500 hover:text-green-500 hover:bg-green-500/10" onClick={() => saveEditing(op.id)}>
                       <Check className="h-4 w-4" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10" onClick={cancelEditing}>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-rose-500 hover:text-rose-500 hover:bg-rose-500/10" onClick={cancelEditing}>
                       <X className="h-4 w-4" />
                     </Button>
                   </>
                 ) : (
                   <>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-primary/10" onClick={() => startEditing(op)}>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 dark:text-slate-400 hover:text-[#0057FF] hover:bg-[#0057FF]/10" onClick={() => startEditing(op)}>
                       <Pencil className="h-4 w-4" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10" onClick={() => onRemove(op.id)}>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 dark:text-slate-400 hover:text-rose-500 hover:bg-rose-500/10" onClick={() => onRemove(op.id)}>
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </>
