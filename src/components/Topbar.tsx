@@ -6,9 +6,9 @@ interface Props {
 
 export function Topbar({ onExportWord }: Props) {
   return (
-    <div className="w-full mb-2 flex justify-center print:hidden relative z-[100]">
+    <div className="fixed top-0 left-0 w-full z-[100] print:hidden">
       
-      <header className="w-full h-20 bg-white/95 backdrop-blur-md border border-slate-100 shadow-lg rounded-full px-10 flex items-center justify-between transition-all duration-500">
+      <header className="w-full h-20 bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-sm px-10 flex items-center justify-between transition-all duration-500">
         
         {/* LOGO E TÍTULO UNIFICADO */}
         <div className="flex items-center gap-4">
@@ -44,7 +44,7 @@ export function Topbar({ onExportWord }: Props) {
 
           <button 
             onClick={onExportWord} 
-            className="flex items-center gap-2 px-8 py-3 text-[10px] font-bold bg-slate-900 text-white hover:bg-[#0057FF] rounded-full transition-all shadow-md active:scale-95 uppercase tracking-widest"
+            className="flex items-center gap-2 px-8 py-3 text-[10px] font-bold bg-slate-900 text-white hover:bg-[#0057FF] rounded-xl transition-all shadow-md active:scale-95 uppercase tracking-widest"
           >
             <FileText className="h-4 w-4" /> 
             Baixar Word
