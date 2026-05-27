@@ -47,7 +47,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
   const descTexto = useMemo(() => {
     const colabTxt = data.totalColaboradores === 1 ? "colaborador" : "colaboradores";
     const turnoTxt = data.turnos === 1 ? "Turno" : "Turnos";
-    return `A Empresa ${data.nomeEmpresa || "—"}, da cidade de ${data.cidade || "—"} no Estado do Rio Grande do Sul, atua no ramo de ${data.ramo || "—"}, especialista em ${data.especialista || "—"}, conta com ${data.totalColaboradores || "0"} ${colabTxt} atuando em ${data.turnos} ${turnoTxt}. O produto mapeado segue o seguinte processo produtivo: ${data.processos || "—"}, com método de produção ${data.metodo || "—"}, onde a demanda é originada por ${data.origem || "—"}. Ao longo do mapeamento foram identificadas oportunidades no setor de ${data.oportunidades || "—"}, por problemas de ${data.problemas || "—"}. Nesta consultoria, a área de atuação/intervenção foi ${data.atuacao || "—"}.`;
+    return `A Empresa ${data.nomeEmpresa || "—"}, da cidade de ${data.cidade || "—"} no Estado do Rio Grande do Sul, atua no ramo de ${data.ramo || "—"}, especialista em ${data.especialista || "—"}, conta com ${data.totalColaboradores || "0"} ${colabTxt} atuando em ${data.turnos} ${turnoTxt}. O produto mapeado segue the seguinte processo produtivo: ${data.processos || "—"}, com método de produção ${data.metodo || "—"}, onde a demanda é originada por ${data.origem || "—"}. Ao longo do mapeamento foram identificadas oportunidades no setor de ${data.oportunidades || "—"}, por problemas de ${data.problemas || "—"}. Nesta consultoria, a área de atuação/intervenção foi ${data.atuacao || "—"}.`;
   }, [data]);
 
   const descTextoWord = useMemo(() => {
@@ -227,8 +227,8 @@ O resultado geral do projeto foi agregador e positivo para a empresa, pois o env
             </div>
             <div className="flex flex-col gap-2 mt-4">
               {acoesVisiveis.map(a => (
-                <div key={a.id} className="flex items-center justify-between p-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl shadow-sm">
-                  <span className="text-xs font-bold text-[#0F172A] dark:text-slate-200 truncate pr-4 flex-1">{a.what}</span>
+                <div key={a.id} className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800/80 rounded-xl shadow-sm">
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-200 truncate pr-4 flex-1">{a.what}</span>
                   <button onClick={() => handleRemoveAcao(a.id)} className="p-1.5 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors text-rose-500"><Trash2 className="h-4 w-4" /></button>
                 </div>
               ))}
@@ -236,9 +236,9 @@ O resultado geral do projeto foi agregador e positivo para a empresa, pois o env
           </div>
         </div>
 
-        {/* COLUNA DIREITA: CARDS DE TEXTO (ALINHADOS COM O VISUAL GBO) */}
+        {/* COLUNA DIREITA: VISUALIZAÇÃO COM O DESIGN DEEP SLATE DO GBO */}
         <div className="w-full lg:w-[45%] flex flex-col gap-6 overflow-y-auto pb-36">
-          <div className="relative bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 transition-all hover:border-[#0057FF]/20">
+          <div className="relative bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/60 transition-all hover:border-[#0057FF]/20">
             <button 
               onClick={() => { navigator.clipboard.writeText(descTextoWord); setCopiedId("desc"); toast.success("Copiado com formatação estruturada!"); setTimeout(() => setCopiedId(null), 2000); }} 
               className="absolute top-4 right-4 p-2 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-400 dark:text-slate-500 hover:bg-[#0057FF] dark:hover:bg-[#0057FF] hover:text-white transition-all shadow-sm border border-slate-100 dark:border-slate-800/40"
@@ -246,10 +246,10 @@ O resultado geral do projeto foi agregador e positivo para a empresa, pois o env
               {copiedId === "desc" ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
             </button>
             <h4 className="text-[10px] font-bold text-[#0057FF] uppercase tracking-widest mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">Descrição do Processo</h4>
-            <p className="text-[13px] text-slate-600 dark:text-slate-200 leading-relaxed text-justify whitespace-pre-wrap">{descTexto}</p>
+            <p className="text-[13px] text-slate-600 dark:text-slate-100 leading-relaxed text-justify whitespace-pre-wrap">{descTexto}</p>
           </div>
 
-          <div className="relative bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col">
+          <div className="relative bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/60 flex flex-col">
             <button 
               onClick={() => { navigator.clipboard.writeText(laudosSistemas.textoWord); setCopiedId("conc"); toast.success("Copiado com formatação estruturada!"); setTimeout(() => setCopiedId(null), 2000); }} 
               className="absolute top-4 right-4 p-2 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-400 dark:text-slate-500 hover:bg-[#0057FF] dark:hover:bg-[#0057FF] hover:text-white transition-all shadow-sm border border-slate-100 dark:border-slate-800/40"
@@ -257,10 +257,10 @@ O resultado geral do projeto foi agregador e positivo para a empresa, pois o env
               {copiedId === "conc" ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
             </button>
             <h4 className="text-[10px] font-bold text-[#0057FF] uppercase tracking-widest mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">Conclusão do Projeto</h4>
-            <div className="text-[13px] text-slate-700 dark:text-slate-200 leading-relaxed text-justify space-y-6 flex-1">
+            <div className="text-[13px] text-slate-700 dark:text-slate-100 leading-relaxed text-justify space-y-6 flex-1">
               <div className="whitespace-pre-wrap">{laudosSistemas.textoTela}</div> 
               {laudosSistemas.bulletPoints.length > 0 && (
-                <div className="bg-slate-50 dark:bg-slate-950 p-5 space-y-3 rounded-xl shadow-sm mt-4 border border-slate-100 dark:border-slate-800">
+                <div className="bg-slate-50 dark:bg-slate-950 p-5 space-y-3 rounded-xl shadow-sm mt-4 border border-slate-100 dark:border-slate-800/60">
                   {laudosSistemas.bulletPoints.map((point, index) => (
                     <p key={index} className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-tight">• {point}</p>
                   ))}
@@ -270,7 +270,7 @@ O resultado geral do projeto foi agregador e positivo para a empresa, pois o env
             <div className="mt-8 pt-4 border-t border-slate-100 dark:border-slate-800">
               <h4 className="text-[10px] font-bold text-[#0057FF] uppercase tracking-widest mb-3">Indicadores</h4>
               <div className="flex flex-wrap gap-2">
-                {indicadoresList.map((ind) => {
+                {indicatorsList.map((ind) => {
                   const isLocked = lockedIndicadores.includes(ind.id);
                   const isActive = selectedIndicadores.includes(ind.id);
                   return (
