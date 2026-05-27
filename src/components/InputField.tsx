@@ -1,6 +1,9 @@
+"use client"
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState, useEffect } from "react";
+
 interface Props {
   label: string;
   value: number | string;
@@ -9,12 +12,12 @@ interface Props {
   suffix?: string;
   placeholder?: string;
 }
+
 export function InputField({ label, value, onChange, type = "text", suffix, placeholder }: Props) {
-  // Se for 0, inicia como string vazia para o input não mostrar o zero
+  // Ajuste: inicia como string vazia se for 0 para não mostrar "0" na tela
   const [localValue, setLocalValue] = useState(value === 0 ? "" : (value?.toString() || ""));
 
   useEffect(() => {
-    // Atualiza apenas se o valor novo for diferente do que está no input
     if (value === 0 && localValue !== "") {
       setLocalValue("");
     } else if (value !== undefined && value.toString() !== localValue) {
@@ -44,7 +47,14 @@ export function InputField({ label, value, onChange, type = "text", suffix, plac
           value={localValue}
           onChange={handleChange}
           placeholder={placeholder}
-          className="h-12 rounded-xl text-sm bg-slate-50 dark:bg-slate-950 border-none shadow-none text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-[#0057FF] transition-all"
+          className={`
+            h-12 rounded-xl text-sm transition-all duration-300
+            bg-slate-50 dark:bg-slate-950 border-none shadow-none
+            text-slate-700 dark:text-slate-200
+            placeholder:text-slate-400 dark:placeholder:text-slate-600
+            focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-[#0057FF] focus:shadow-md
+            ${suffix ? 'pr-12' : ''}
+          `}
         />
         {suffix && (
           <span className="absolute right-4 text-xs font-bold text-slate-400 dark:text-slate-500 select-none pointer-events-none">
