@@ -1,3 +1,5 @@
+"use client"
+
 import { type MovimentacaoData, calcMovimentacao } from "@/store/useAppStore";
 import { KpiCard } from "@/components/KpiCard";
 import { ComparisonChart } from "@/components/ComparisonChart";
@@ -40,11 +42,21 @@ export function MovimentacaoModule({ data, onChange }: Props) {
     return unit;
   };
 
-  const ferramentaTxt = (data.ferramentaUtilizada || "").trim() || "da ferramenta aplicada";
+  // Lógica inteligente para o laudo
+  const rawFerramenta = (data.ferramentaUtilizada || "").trim();
   const descricaoTxt = (data.acaoMelhoria || "").trim() || "com as melhorias realizadas";
+  const isPlural = /,| e |\//i.test(rawFerramenta);
+  
+  let ferramentaComPreposicao = "da ferramenta aplicada";
+  if (rawFerramenta) {
+    ferramentaComPreposicao = isPlural 
+      ? `das ferramentas ${rawFerramenta}` 
+      : `da ferramenta ${rawFerramenta}`;
+  }
+
   const formatDec = (val: number) => val.toString().replace(".", ",");
 
-  let laudo = `Por intermédio ${ferramentaTxt} foi realizado ${descricaoTxt}.`;
+  let laudo = `Por intermédio ${ferramentaComPreposicao} foi realizado ${descricaoTxt}.`;
 
   if (exibir === "ambos" || exibir === "distancia") {
     laudo += `\n\nDistância: A medição inicial era de ${formatDec(dI)}m, reduzida para ${formatDec(dF)}m, representando redução de ${redD}% em distância.`;
