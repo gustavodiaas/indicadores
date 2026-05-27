@@ -457,7 +457,7 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
 
                 {expandedId === a.id && (
                   // FIX: painel expandido — bg-slate-50 sem dark estava completamente branco
-                  <div className="p-5 grid grid-cols-2 md:grid-cols-4 gap-4 bg-slate-50 dark:bg-slate-950 border-t border-slate-100 dark:border-slate-800 animate-in fade-in slide-in-from-top-2 duration-300">
+                  <div className="p-5 grid grid-cols-2 md:grid-cols-4 gap-4 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 animate-in fade-in slide-in-from-top-2 duration-300">
                     <div className="md:col-span-4"><InputField label="O que será feito? (What)" value={a.what} onChange={v => updateAcao(a.id, "what", v)} /></div>
                     <div className="md:col-span-2"><InputField label="Como? (How)" value={a.how} onChange={v => updateAcao(a.id, "how", v)} /></div>
                     <InputField label="Por que? (Why)" value={a.why} onChange={v => updateAcao(a.id, "why", v)} />
