@@ -1,10 +1,12 @@
 import { type PlanoAcaoData, type PlanoAcaoItem } from "@/store/useAppStore";
 import { InputField } from "@/components/InputField";
-import { Trash2, Download, CheckCircle, ChevronDown, ChevronUp, Plus, Calendar as CalendarIcon, ChevronLeft, ChevronRight, Upload, FileText } from "lucide-react";
+import { Trash2, Download, CheckCircle, ChevronDown, ChevronUp, Plus, Calendar as CalendarIcon, ChevronLeft, ChevronRight, Upload, FileText, Pencil } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import ExcelJS from "exceljs";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   data: PlanoAcaoData;
@@ -52,38 +54,38 @@ function CustomDatePicker({ label, value, onChange }: { label: string; value: st
 
   return (
     <div className="w-full">
-      <label className="block text-[11px] font-bold text-slate-500 mb-1.5 uppercase tracking-widest pl-1">{label}</label>
+      <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">{label}</label>
       <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>
-          <button type="button" className="w-full h-12 px-4 rounded-xl bg-slate-50 text-sm font-medium text-slate-700 flex items-center justify-between outline-none hover:bg-slate-100 transition-all focus:bg-white focus:ring-2 focus:ring-[#0057FF] border border-transparent text-left">
-            <span className={value ? "text-slate-700" : "text-slate-400"}>{formatDisplay(value)}</span>
-            <CalendarIcon className="w-4 h-4 text-slate-400 shrink-0 ml-2" />
+          <button type="button" className="w-full h-12 px-4 rounded-xl bg-slate-50 dark:bg-slate-950 text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between outline-none hover:bg-slate-100 dark:hover:bg-slate-900 transition-all focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-[#0057FF] border border-transparent dark:border-slate-800 text-left">
+            <span className={value ? "text-slate-700 dark:text-slate-200" : "text-slate-400 dark:text-slate-500"}>{formatDisplay(value)}</span>
+            <CalendarIcon className="w-4 h-4 text-slate-400 dark:text-slate-600 shrink-0 ml-2" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent 
           align="start" 
-          className="p-4 bg-white border border-slate-100 rounded-2xl shadow-xl z-[150] w-72"
+          className="p-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl shadow-xl z-[150] w-72"
         >
           <div className="flex items-center justify-between mb-4">
             <button 
               type="button" 
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); if (currentMonth === 0) { setCurrentMonth(11); setCurrentYear(y => y - 1); } else { setCurrentMonth(m => m - 1); } }} 
-              className="p-1.5 hover:bg-slate-50 rounded-lg text-slate-600 transition-all"
+              className="p-1.5 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-300 transition-all"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+            <span className="text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
               {months[currentMonth]} {currentYear}
             </span>
             <button 
               type="button" 
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); if (currentMonth === 11) { setCurrentMonth(0); setCurrentYear(y => y + 1); } else { setCurrentMonth(m => m + 1); } }} 
-              className="p-1.5 hover:bg-slate-50 rounded-lg text-slate-600 transition-all"
+              className="p-1.5 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-300 transition-all"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
-          <div className="grid grid-cols-7 gap-1 text-center text-[10px] font-bold text-slate-400 mb-2">
+          <div className="grid grid-cols-7 gap-1 text-center text-[10px] font-bold text-slate-400 dark:text-slate-500 mb-2">
             {daysOfWeek.map((d, i) => <div key={i}>{d}</div>)}
           </div>
           <div className="grid grid-cols-7 gap-1 text-center">
@@ -99,7 +101,7 @@ function CustomDatePicker({ label, value, onChange }: { label: string; value: st
                   className={`h-8 w-8 text-xs font-semibold rounded-lg flex items-center justify-center transition-all ${
                     isSelected 
                       ? "bg-[#0057FF] text-white font-bold shadow-md shadow-[#0057FF]/20" 
-                      : "text-slate-600 hover:bg-slate-50"
+                      : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
                   }`}
                 >
                   {day}
@@ -287,7 +289,6 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
       toast.error("Erro ao baixar o modelo.");
     }
   };
-
   const handleExportExcel = async () => {
     if (data.acoes.length === 0) {
       toast.error("Adicione ações antes de exportar.");
@@ -355,12 +356,12 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
   return (
     <div className="flex flex-col gap-6 h-full pb-36 animate-in fade-in duration-500 overflow-y-auto pr-2">
       
-      <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+      <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
         <div>
-          <h2 className="text-xl font-black text-slate-800 tracking-tight flex items-center gap-2">
+          <h2 className="text-xl font-black text-slate-800 dark:text-slate-100 tracking-tight flex items-center gap-2">
             <CheckCircle className="h-6 w-6 text-[#0057FF]" /> PLANO DE AÇÃO 5W2H
           </h2>
-          <p className="text-sm text-slate-500 mt-1">Gerenciamento tático e detalhamento das ações corretivas.</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Gerenciamento tático e detalhamento das ações corretivas.</p>
         </div>
         
         <div className="flex items-center gap-3">
@@ -373,14 +374,14 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
           />
           <button 
             onClick={() => document.getElementById('excel-5w2h-import')?.click()}
-            className="flex items-center gap-2 px-5 py-2.5 bg-blue-50 text-[#0057FF] border border-blue-100 rounded-xl font-bold text-xs uppercase tracking-widest shadow-sm hover:bg-blue-100 transition-all active:scale-95"
+            className="flex items-center gap-2 px-5 py-2.5 bg-blue-50 dark:bg-blue-950/30 text-[#0057FF] border border-blue-100 dark:border-blue-900/50 rounded-xl font-bold text-xs uppercase tracking-widest shadow-sm hover:bg-blue-100 dark:hover:bg-blue-950/50 transition-all active:scale-95"
           >
             <Upload className="h-4 w-4" /> Importar
           </button>
 
           <button 
             onClick={handleDownloadModelo}
-            className="flex items-center gap-2 px-5 py-2.5 bg-slate-100 text-slate-700 border border-slate-200 rounded-xl font-bold text-xs uppercase tracking-widest shadow-sm hover:bg-slate-200 transition-all active:scale-95"
+            className="flex items-center gap-2 px-5 py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-xs uppercase tracking-widest shadow-sm hover:bg-slate-200 dark:hover:bg-slate-700 transition-all active:scale-95"
           >
             <FileText className="h-4 w-4" /> Baixar Modelo
           </button>
@@ -394,8 +395,8 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
         </div>
       </div>
 
-      <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-        <h3 className="font-bold text-slate-800 uppercase text-[11px] tracking-widest mb-4 border-b border-slate-100 pb-2">Metadados do Projeto</h3>
+      <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/80">
+        <h3 className="font-bold text-slate-800 dark:text-slate-100 uppercase text-[11px] tracking-widest mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">Metadados do Projeto</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <CustomDatePicker label="Data de Criação" value={data.metadata.dataCriacao} onChange={v => updateMeta("dataCriacao", v)} />
           <InputField label="Responsável (Consultor/Empresário)" value={data.metadata.respCriacao} onChange={v => updateMeta("respCriacao", v)} />
@@ -408,9 +409,9 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
         </div>
       </div>
 
-      <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex-1">
+      <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800/80 shadow-sm flex-1">
         <div className="flex flex-col gap-4 mb-6">
-          <h3 className="font-bold text-slate-800 uppercase text-[11px] tracking-widest flex items-center gap-2">
+          <h3 className="font-bold text-slate-800 dark:text-slate-100 uppercase text-[11px] tracking-widest flex items-center gap-2">
             Execução de Tarefas 
             <span className="bg-[#0057FF]/10 text-[#0057FF] px-2 py-0.5 rounded-full text-[10px]">{data.acoes.length}</span>
           </h3>
@@ -429,29 +430,29 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
         </div>
 
         {data.acoes.length === 0 ? (
-           <div className="flex flex-col items-center justify-center p-12 text-slate-400 border-2 border-dashed border-slate-200 rounded-xl bg-white">
-             <CheckCircle className="h-12 w-12 mb-4 text-slate-300" />
-             <p className="text-sm font-bold text-slate-600">Nenhuma ação vinculada.</p>
+           <div className="flex flex-col items-center justify-center p-12 text-slate-400 dark:text-slate-600 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl bg-slate-50 dark:bg-slate-950">
+             <CheckCircle className="h-12 w-12 mb-4 text-slate-300 dark:text-slate-700" />
+             <p className="text-sm font-bold text-slate-600 dark:text-slate-300">Nenhuma ação vinculada.</p>
              <p className="text-xs mt-1">Crie tarefas no campo acima ou importe macros da aba "Resumo".</p>
            </div>
         ) : (
           <div className="flex flex-col gap-3">
             {data.acoes.map(a => (
-              <div key={a.id} className="border border-slate-100 rounded-xl bg-white shadow-sm overflow-hidden transition-all duration-300">
+              <div key={a.id} className="border border-slate-100 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-900 shadow-sm overflow-hidden transition-all duration-300">
                 <div 
-                  className="flex items-center justify-between p-4 bg-white hover:bg-slate-50/50 cursor-pointer select-none transition-colors border-b border-transparent"
+                  className="flex items-center justify-between p-4 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer select-none transition-colors border-b border-transparent dark:border-slate-800/50"
                   onClick={() => setExpandedId(expandedId === a.id ? null : a.id)}
                 >
                   <div className="flex flex-col flex-1 pr-4">
-                    <span className="text-sm font-black text-slate-800 truncate">{a.what}</span>
-                    <span className="text-xs text-slate-500 font-medium mt-0.5">Status: <span className="text-[#0057FF] font-bold">{a.status || "NÃO INICIADO"}</span> • Progresso: {a.percent || 0}%</span>
+                    <span className="text-sm font-black text-slate-800 dark:text-slate-100 truncate">{a.what}</span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">Status: <span className="text-[#0057FF] font-bold">{a.status || "NÃO INICIADO"}</span> • Progresso: {a.percent || 0}%</span>
                   </div>
                   
                   <div className="flex items-center gap-4">
                     {expandedId === a.id ? <ChevronUp className="h-5 w-5 text-slate-400" /> : <ChevronDown className="h-5 w-5 text-slate-400" />}
                     <button 
                       onClick={(e) => { e.stopPropagation(); handleRemoveAcao(a.id); }}
-                      className="p-2 hover:bg-rose-50 rounded-lg transition-colors"
+                      className="p-2 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors"
                     >
                       <Trash2 className="h-4 w-4 text-rose-500" />
                     </button>
@@ -459,7 +460,7 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
                 </div>
 
                 {expandedId === a.id && (
-                  <div className="p-5 grid grid-cols-2 md:grid-cols-4 gap-4 bg-slate-50/50 border-t border-slate-100 animate-in fade-in slide-in-from-top-2 duration-300">
+                  <div className="p-5 grid grid-cols-2 md:grid-cols-4 gap-4 bg-slate-50/50 dark:bg-slate-950 border-t border-slate-100 dark:border-slate-800 animate-in fade-in slide-in-from-top-2 duration-300">
                     <div className="md:col-span-4"><InputField label="O que será feito? (What)" value={a.what} onChange={v => updateAcao(a.id, "what", v)} /></div>
                     <div className="md:col-span-2"><InputField label="Como? (How)" value={a.how} onChange={v => updateAcao(a.id, "how", v)} /></div>
                     <InputField label="Por que? (Why)" value={a.why} onChange={v => updateAcao(a.id, "why", v)} />
@@ -474,10 +475,10 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
                     <div className="md:col-span-2"><InputField label="Observação" value={a.obs} onChange={v => updateAcao(a.id, "obs", v)} /></div>
                     
                     <div>
-                      <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 pl-1">Status</label>
+                      <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5 pl-1">Status</label>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <button className="w-full h-12 px-4 rounded-xl bg-white border border-slate-200 text-sm font-medium text-slate-700 flex items-center justify-between outline-none hover:bg-slate-50 transition-all focus:ring-2 focus:ring-[#0057FF]">
+                          <button className="w-full h-12 px-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm font-medium text-slate-700 dark:text-slate-200 flex items-center justify-between outline-none hover:bg-slate-50 dark:hover:bg-slate-800 transition-all focus:ring-2 focus:ring-[#0057FF]">
                             {a.status === "INICIADO" ? "Iniciado" :
                               a.status === "EM ANDAMENTO" ? "Em Andamento" :
                               a.status === "REJEITADO" ? "Rejeitado" :
@@ -485,12 +486,12 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
                             <ChevronDown className="w-4 h-4 text-slate-400" />
                           </button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white border border-slate-100 p-2 rounded-2xl shadow-xl z-[150]">
-                          <DropdownMenuItem onClick={() => updateAcao(a.id, "status", "NÃO INICIADO")} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${(a.status === "NÃO INICIADO" || !a.status) ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"}`}>Não Iniciado</DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => updateAcao(a.id, "status", "INICIADO")} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${a.status === "INICIADO" ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"}`}>Iniciado</DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => updateAcao(a.id, "status", "EM ANDAMENTO")} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${a.status === "EM ANDAMENTO" ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"}`}>Em Andamento</DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => updateAcao(a.id, "status", "REJEITADO")} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${a.status === "REJEITADO" ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"}`}>Rejeitado</DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => updateAcao(a.id, "status", "CONCLUIDO")} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${a.status === "CONCLUIDO" ? "bg-[#0057FF] text-white" : "text-slate-700 hover:bg-slate-50"}`}>Concluído</DropdownMenuItem>
+                        <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-2 rounded-2xl shadow-xl z-[150]">
+                          <DropdownMenuItem onClick={() => updateAcao(a.id, "status", "NÃO INICIADO")} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${(a.status === "NÃO INICIADO" || !a.status) ? "bg-[#0057FF] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"}`}>Não Iniciado</DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => updateAcao(a.id, "status", "INICIADO")} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${a.status === "INICIADO" ? "bg-[#0057FF] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"}`}>Iniciado</DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => updateAcao(a.id, "status", "EM ANDAMENTO")} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${a.status === "EM ANDAMENTO" ? "bg-[#0057FF] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"}`}>Em Andamento</DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => updateAcao(a.id, "status", "REJEITADO")} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${a.status === "REJEITADO" ? "bg-[#0057FF] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"}`}>Rejeitado</DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => updateAcao(a.id, "status", "CONCLUIDO")} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${a.status === "CONCLUIDO" ? "bg-[#0057FF] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"}`}>Concluído</DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
@@ -501,7 +502,6 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
           </div>
         )}
       </div>
-
     </div>
   );
 }
