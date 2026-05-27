@@ -1,6 +1,6 @@
 import { type PlanoAcaoData, type PlanoAcaoItem } from "@/store/useAppStore";
 import { InputField } from "@/components/InputField";
-import { Trash2, Download, CheckCircle, ChevronDown, ChevronUp, Plus, Calendar as CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
+import { Trash2, Download, CheckCircle, ChevronDown, ChevronUp, Plus, Calendar as CalendarIcon, ChevronLeft, ChevronRight, Upload } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import ExcelJS from "exceljs";
@@ -143,6 +143,112 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
     onChange({ acoes: data.acoes.filter(a => a.id !== id) });
   };
 
+  const handleImportExcel = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const parseCellString = (cell: ExcelJS.Cell): string => {
+      const val = cell.value;
+      if (val === null || val === undefined) return "";
+      if (val instanceof Date) {
+        const y = val.getFullYear();
+        const m = String(val.getMonth() + 1).padStart(2, '0');
+        const d = String(val.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+      }
+      if (typeof val === 'object' && 'result' in val) {
+        return val.result?.toString() || "";
+      }
+      return val.toString();
+    };
+
+    const parseCellNumber = (cell: ExcelJS.Cell): number => {
+      const val = cell.value;
+      if (val === null || val === undefined) return 0;
+      if (typeof val === 'object' && 'result' in val) {
+        return Number(val.result) || 0;
+      }
+      return Number(val) || 0;
+    };
+
+    try {
+      const workbook = new ExcelJS.Workbook();
+      await workbook.xlsx.load(file);
+      const ws = workbook.worksheets[0];
+
+      if (!ws) {
+        toast.error("Planilha inválida ou vazia.");
+        return;
+      }
+
+      // 1. IMPORTAR METADADOS
+      const metadata = {
+        dataCriacao: parseCellString(ws.getCell('B3')),
+        respCriacao: parseCellString(ws.getCell('D3')),
+        objetivo: parseCellString(ws.getCell('G3')),
+        meta: parseCellString(ws.getCell('I3')),
+        dataRevisao: parseCellString(ws.getCell('B4')),
+        respRevisao: parseCellString(ws.getCell('D4')),
+        indicador: parseCellString(ws.getCell('G4')),
+      };
+
+      // 2. IMPORTAR TAREFAS (A partir da Linha 8)
+      let rowNum = 8;
+      const acoesImportadas: PlanoAcaoItem[] = [];
+
+      while (rowNum < 500) {
+        const what = parseCellString(ws.getCell(`A${rowNum}`));
+        
+        if (!what.trim()) {
+          let hasMore = false;
+          for (let check = 1; check <= 3; check++) {
+            if (parseCellString(ws.getCell(`A${rowNum + check}`)).trim()) {
+              hasMore = true;
+              break;
+            }
+          }
+          if (!hasMore) break;
+          rowNum++;
+          continue;
+        }
+
+        const rawStatus = parseCellString(ws.getCell(`L${rowNum}`)).toUpperCase().trim();
+        let status: PlanoAcaoItem["status"] = "NÃO INICIADO";
+        if (rawStatus.includes("EM ANDAMENTO")) status = "EM ANDAMENTO";
+        else if (rawStatus.includes("INICIADO")) status = "INICIADO";
+        else if (rawStatus.includes("REJEITADO")) status = "REJEITADO";
+        else if (rawStatus.includes("CONCLUIDO") || rawStatus.includes("CONCLUÍDO")) status = "CONCLUIDO";
+
+        acoesImportadas.push({
+          id: Date.now().toString() + Math.random().toString(36).substring(2, 9) + rowNum,
+          what,
+          how: parseCellString(ws.getCell(`B${rowNum}`)),
+          who: parseCellString(ws.getCell(`C${rowNum}`)),
+          start: parseCellString(ws.getCell(`D${rowNum}`)),
+          end: parseCellString(ws.getCell(`E${rowNum}`)),
+          where: parseCellString(ws.getCell(`F${rowNum}`)),
+          why: parseCellString(ws.getCell(`G${rowNum}`)),
+          howMuch: parseCellString(ws.getCell(`H${rowNum}`)),
+          percent: Math.min(100, Math.max(0, Math.round(parseCellNumber(ws.getCell(`I${rowNum}`)) * 100))),
+          obs: parseCellString(ws.getCell(`K${rowNum}`)),
+          status,
+          origin: "5w2h"
+        });
+
+        rowNum++;
+      }
+
+      onChange({ metadata, acoes: acoesImportadas });
+      toast.success(`Planilha carregada! ${acoesImportadas.length} ações sincronizadas.`);
+
+    } catch (err) {
+      console.error(err);
+      toast.error("Erro ao ler o arquivo Excel. Verifique a estrutura.");
+    } finally {
+      e.target.value = "";
+    }
+  };
+
   const handleExportExcel = async () => {
     if (data.acoes.length === 0) {
       toast.error("Adicione ações antes de exportar.");
@@ -158,7 +264,6 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
       }
 
       const arrayBuffer = await response.arrayBuffer();
-      
       const workbook = new ExcelJS.Workbook();
       await workbook.xlsx.load(arrayBuffer);
       
@@ -218,12 +323,29 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
           </h2>
           <p className="text-sm text-slate-500 mt-1">Gerenciamento tático e detalhamento das ações corretivas.</p>
         </div>
-        <button 
-          onClick={handleExportExcel}
-          className="flex items-center gap-2 px-6 py-2.5 bg-emerald-600 text-white rounded-xl font-bold text-xs uppercase tracking-widest shadow-md hover:bg-emerald-700 transition-all active:scale-95"
-        >
-          <Download className="h-4 w-4" /> Baixar Planilha
-        </button>
+        
+        <div className="flex items-center gap-3">
+          <input 
+            type="file" 
+            id="excel-5w2h-import" 
+            accept=".xlsx" 
+            className="hidden" 
+            onChange={handleImportExcel} 
+          />
+          <button 
+            onClick={() => document.getElementById('excel-5w2h-import')?.click()}
+            className="flex items-center gap-2 px-5 py-2.5 bg-blue-50 text-[#0057FF] border border-blue-100 rounded-xl font-bold text-xs uppercase tracking-widest shadow-sm hover:bg-blue-100 transition-all active:scale-95"
+          >
+            <Upload className="h-4 w-4" /> Importar
+          </button>
+          
+          <button 
+            onClick={handleExportExcel}
+            className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 text-white rounded-xl font-bold text-xs uppercase tracking-widest shadow-md hover:bg-emerald-700 transition-all active:scale-95"
+          >
+            <Download className="h-4 w-4" /> Baixar Planilha
+          </button>
+        </div>
       </div>
 
       <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
@@ -240,7 +362,6 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
         </div>
       </div>
 
-      {/* AJUSTADO PARA BG-WHITE E BORDA LEVE PARA DAR DESTAQUE PREMIUM AOS INPUTS */}
       <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex-1">
         <div className="flex flex-col gap-4 mb-6">
           <h3 className="font-bold text-slate-800 uppercase text-[11px] tracking-widest flex items-center gap-2">
@@ -311,10 +432,10 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <button className="w-full h-12 px-4 rounded-xl bg-white border border-slate-200 text-sm font-medium text-slate-700 flex items-center justify-between outline-none hover:bg-slate-50 transition-all focus:ring-2 focus:ring-[#0057FF]">
-                            {a.status === "INICIADO" ? "Iniciado" :
-                             a.status === "EM ANDAMENTO" ? "Em Andamento" :
-                             a.status === "REJEITADO" ? "Rejeitado" :
-                             a.status === "CONCLUIDO" ? "Concluído" : "Não Iniciado"}
+                            ={a.status === "INICIADO" ? "Iniciado" :
+                              a.status === "EM ANDAMENTO" ? "Em Andamento" :
+                              a.status === "REJEITADO" ? "Rejeitado" :
+                              a.status === "CONCLUIDO" ? "Concluído" : "Não Iniciado"}
                             <ChevronDown className="w-4 h-4 text-slate-400" />
                           </button>
                         </DropdownMenuTrigger>
