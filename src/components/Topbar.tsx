@@ -6,9 +6,9 @@ interface Props {
 
 export function Topbar({ onExportWord }: Props) {
   return (
-    <div className="fixed top-0 left-0 w-full z-[100] print:hidden">
+    <div className="w-full z-[100] print:hidden mb-6 shrink-0">
       
-      <header className="w-full h-20 bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-sm px-10 flex items-center justify-between transition-all duration-500">
+      <header className="w-full h-20 bg-white border-b border-slate-100 px-10 flex items-center justify-between transition-all duration-500">
         
         {/* LOGO E TÍTULO UNIFICADO */}
         <div className="flex items-center gap-4">
