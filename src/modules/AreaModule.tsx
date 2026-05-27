@@ -1,5 +1,4 @@
 import { type AreaData, calcArea } from "@/store/useAppStore";
-import { InputField } from "@/components/InputField";
 import { KpiCard } from "@/components/KpiCard";
 import { ComparisonChart } from "@/components/ComparisonChart";
 import { Copy, Check } from "lucide-react";
@@ -11,6 +10,29 @@ interface Props {
   onChange: (d: Partial<AreaData>) => void;
 }
 
+function LocalInputField({ label, value, onChange, suffix, type = "number" }: { label: string; value: any; onChange: (v: string) => void; suffix?: string; type?: string }) {
+  return (
+    <div className="space-y-1.5 w-full">
+      <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest pl-1">
+        {label}
+      </label>
+      <div className="relative flex items-center">
+        <input
+          type={type}
+          value={value ?? ""}
+          onChange={(e) => onChange(e.target.value)}
+          className="w-full h-12 px-4 pr-16 rounded-xl border border-transparent bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#0057FF] transition-all"
+        />
+        {suffix && (
+          <span className="absolute right-4 text-xs font-bold text-slate-400 dark:text-slate-500 pointer-events-none">
+            {suffix}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export function AreaModule({ data, onChange }: Props) {
   const [copied, setCopied] = useState(false);
   const r = calcArea(data);
@@ -19,29 +41,31 @@ export function AreaModule({ data, onChange }: Props) {
   const laudo = `A área ocupada inicial era de ${data.areaT1 || 0}m². Com o novo layout/otimização, reduziu-se para ${data.areaT3 || 0}m², liberando ${r.economiaM2.toFixed(1).replace(".", ",")}m² de área útil (${r.reducaoPercent.toFixed(1).replace(".", ",")}%), gerando uma economia imobiliária mensal de R$ ${r.economiaMensal.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}.`;
 
   return (
-    <div className="flex gap-8 h-full animate-in fade-in duration-500">
+    <div className="flex flex-col lg:flex-row gap-8 h-full animate-in fade-in duration-500">
       {/* Coluna Esquerda: Cards Modernos */}
-      <div className="w-[60%] grid grid-cols-2 gap-6 overflow-y-auto pr-2 pb-10">
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
-          <h3 className="font-bold text-slate-800 text-sm tracking-wide uppercase">Estado T1</h3>
-          <InputField label="Área Ocupada" value={data.areaT1} onChange={v => onChange({ areaT1: Number(v) })} suffix="m²" />
+      <div className="w-full lg:w-[60%] flex flex-col gap-6 overflow-y-auto pr-2 pb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/80 space-y-4">
+            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-100 dark:border-slate-800 pb-2">Estado T1</h3>
+            <LocalInputField label="Área Ocupada" value={data.areaT1} onChange={v => onChange({ areaT1: Number(v) || 0 })} suffix="m²" />
+          </div>
+          
+          <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/80 space-y-4">
+            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-100 dark:border-slate-800 pb-2">Estado T3</h3>
+            <LocalInputField label="Área Ocupada" value={data.areaT3} onChange={v => onChange({ areaT3: Number(v) || 0 })} suffix="m²" />
+          </div>
         </div>
         
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
-          <h3 className="font-bold text-slate-800 text-sm tracking-wide uppercase">Estado T3</h3>
-          <InputField label="Área Ocupada" value={data.areaT3} onChange={v => onChange({ areaT3: Number(v) })} suffix="m²" />
-        </div>
-        
-        <div className="col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-          <InputField label="Valor do Aluguel/m²" value={data.valorAluguel} onChange={v => onChange({ valorAluguel: Number(v) })} suffix="R$/m²" />
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/80">
+          <LocalInputField label="Valor do Aluguel/m²" value={data.valorAluguel} onChange={v => onChange({ valorAluguel: Number(v) || 0 })} suffix="R$/m²" />
         </div>
       </div>
 
       {/* Coluna Direita: Laudo e Gráfico */}
-      <div className="w-[40%] flex flex-col gap-6">
+      <div className="w-full lg:w-[40%] flex flex-col gap-6">
         <KpiCard label="Redução de Área" value={r.reducaoPercent.toFixed(1).replace(".", ",")} suffix="%" trend={r.reducaoPercent} />
         
-        <div className="relative bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+        <div className="relative bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/60">
           <button
             onClick={() => {
               navigator.clipboard.writeText(laudo);
@@ -49,15 +73,15 @@ export function AreaModule({ data, onChange }: Props) {
               toast.success("Copiado!");
               setTimeout(() => setCopied(false), 2000);
             }}
-            className="absolute top-4 right-4 p-2 rounded-lg bg-slate-50 text-slate-400 hover:bg-[#0057FF] hover:text-white transition-all"
+            className="absolute top-4 right-4 p-2 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-400 dark:text-slate-500 hover:bg-[#0057FF] dark:hover:bg-[#0057FF] hover:text-white transition-all border border-slate-100 dark:border-slate-800/40"
           >
             {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
           </button>
-          <h4 className="text-[10px] font-bold text-[#0057FF] uppercase mb-3 tracking-widest">Impacto em Área</h4>
-          <p className="text-xs text-slate-600 leading-relaxed text-justify">{laudo}</p>
+          <h4 className="text-[10px] font-bold text-[#0057FF] uppercase mb-3 tracking-widest border-b border-slate-100 dark:border-slate-800 pb-2">Impacto em Área</h4>
+          <p className="text-[13px] text-slate-600 dark:text-slate-200 leading-relaxed text-justify">{laudo}</p>
         </div>
 
-        <div className="mt-auto pt-2 min-h-[250px]">
+        <div className="mt-auto min-h-[250px] bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-100 dark:border-slate-800/60 shadow-sm">
           <ComparisonChart data={chartData} title="Ocupação de Espaço" />
         </div>
       </div>
