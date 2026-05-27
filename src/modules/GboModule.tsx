@@ -399,7 +399,7 @@ export default function GBOAnalysis() {
                   onChange={(e) => { setNewOperationName(e.target.value); if (errors.operationName) setErrors((prev) => ({ ...prev, operationName: undefined })); }}
                   className="w-full h-12 px-4 rounded-xl border-none bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#0057FF] transition-all"
                 />
-                <input type="number" step="0.1" min="0" placeholder="Tempo" value={newOperationTime} onKeyPress={handleKeyPress}
+                <input type="number" step="0.01" min="0" placeholder="Tempo" value={newOperationTime} onKeyPress={handleKeyPress}
                   onChange={(e) => { setNewOperationTime(e.target.value); if (errors.operationTime) setErrors((prev) => ({ ...prev, operationTime: undefined })); }}
                   className="w-full h-12 px-4 rounded-xl border-none bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#0057FF] transition-all"
                 />
