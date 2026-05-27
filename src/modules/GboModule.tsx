@@ -2,6 +2,8 @@
 
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
+import jsPDF from "jspdf"
+import html2canvas from "html2canvas"
 import {
   Plus,
   Download,
@@ -193,11 +195,35 @@ export default function GBOAnalysis() {
     }
   }
 
-  const handleExportChartPDF = () => {
+  const handleExportChartPDF = async () => {
     if (operations.length === 0) return
-    setTimeout(() => {
-      window.print()
-    }, 300)
+
+    const element = document.getElementById("gbo-chart-container")
+    if (!element) return
+
+    setIsLoading(true)
+    try {
+      const canvas = await html2canvas(element, {
+        scale: 2, 
+        useCORS: true,
+        backgroundColor: "#ffffff"
+      })
+      
+      const imgData = canvas.toDataURL("image/png")
+      const pdf = new jsPDF("l", "mm", "a4")
+      const imgWidth = 280
+      const imgHeight = (canvas.height * imgWidth) / canvas.width
+      
+      pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight)
+      pdf.save("Relatorio_GBO.pdf")
+      
+      toast({ title: "✅ PDF exportado", description: "O gráfico foi salvo." })
+    } catch (error) {
+      console.error(error)
+      toast({ title: "❌ Erro", description: "Falha ao gerar o PDF.", variant: "destructive" })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleImportExcel = () => {
@@ -423,8 +449,8 @@ export default function GBOAnalysis() {
                   <CalculationsDashboard operations={operations} timeUnit={timeUnit} taktTime={calculateTaktTime()} taktTimeUnit={timeUnitTakt} demandUnit={demandUnit} />
                 </div>
                 
-                {/* FRAME DE INTEGRAÇÃO VISUAL (Corrigido para Print) */}
-                <div className="print-canvas bg-white rounded-3xl shadow-xl border border-slate-200 dark:border-slate-700 p-6 print:border-none print:shadow-none print:p-0">
+                {/* FRAME DE INTEGRAÇÃO VISUAL */}
+                <div id="gbo-chart-container" className="print-canvas bg-white rounded-3xl shadow-xl border border-slate-200 dark:border-slate-700 p-6 print:border-none print:shadow-none print:p-0">
                   <div className="text-slate-900">
                     <GBOChart operations={operations} timeUnit={timeUnit} taktTime={calculateTaktTime()} taktTimeUnit={timeUnitTakt} demandUnit={demandUnit} />
                   </div>
