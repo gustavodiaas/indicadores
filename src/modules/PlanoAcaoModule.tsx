@@ -222,7 +222,7 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
           onClick={handleExportExcel}
           className="flex items-center gap-2 px-6 py-2.5 bg-emerald-600 text-white rounded-xl font-bold text-xs uppercase tracking-widest shadow-md hover:bg-emerald-700 transition-all active:scale-95"
         >
-          <Download className="h-4 w-4" /> Exportar Planilha
+          <Download className="h-4 w-4" /> Baixar Planilha
         </button>
       </div>
 
