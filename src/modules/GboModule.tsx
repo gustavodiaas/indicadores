@@ -229,20 +229,22 @@ export default function GBOAnalysis() {
     <>
       <style dangerouslySetInnerHTML={{__html: `
         @media print {
-          @page { size: landscape; margin: 0; }
+          @page { size: landscape; margin: 1cm; }
           body { 
             background: white !important; 
             -webkit-print-color-adjust: exact !important; 
             print-color-adjust: exact !important; 
+          }
+          .print-canvas {
+            width: 100% !important;
+            padding: 20px !important;
+            overflow: visible !important;
           }
           [data-radix-toast-provider], 
           [role="region"][aria-label="Notifications"], 
           .toaster,
           [data-radix-popper-content-wrapper] {
             display: none !important;
-            opacity: 0 !important;
-            visibility: hidden !important;
-            pointer-events: none !important;
           }
         }
       `}} />
@@ -421,12 +423,10 @@ export default function GBOAnalysis() {
                   <CalculationsDashboard operations={operations} timeUnit={timeUnit} taktTime={calculateTaktTime()} taktTimeUnit={timeUnitTakt} demandUnit={demandUnit} />
                 </div>
                 
-                {/* FRAME DE INTEGRAÇÃO VISUAL */}
-                <div className="relative p-1 rounded-[2rem] bg-slate-200/20 dark:bg-slate-800/30 border border-slate-200/50 dark:border-slate-700/50">
-                  <div className="bg-white rounded-[1.75rem] shadow-xl p-6 print:border-none print:shadow-none print:p-0">
-                    <div className="text-slate-900">
-                      <GBOChart operations={operations} timeUnit={timeUnit} taktTime={calculateTaktTime()} taktTimeUnit={timeUnitTakt} demandUnit={demandUnit} />
-                    </div>
+                {/* FRAME DE INTEGRAÇÃO VISUAL (Corrigido para Print) */}
+                <div className="print-canvas bg-white rounded-3xl shadow-xl border border-slate-200 dark:border-slate-700 p-6 print:border-none print:shadow-none print:p-0">
+                  <div className="text-slate-900">
+                    <GBOChart operations={operations} timeUnit={timeUnit} taktTime={calculateTaktTime()} taktTimeUnit={timeUnitTakt} demandUnit={demandUnit} />
                   </div>
                 </div>
               </>
