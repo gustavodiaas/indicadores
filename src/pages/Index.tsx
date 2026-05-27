@@ -5,7 +5,7 @@ import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } fro
 import { 
   FileText, GanttChartSquare, BarChart2, Calculator, 
   ArrowRightLeft, ShieldCheck, Clock, Timer, Square, BarChart3, ClipboardList, Lock, LayoutTemplate,
-  Sun, Moon, Sparkles
+  SunMedium, MoonStar, Eclipse
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -371,19 +371,19 @@ const Index = () => {
                   onClick={() => setTheme("light")} 
                   className={`flex items-center justify-center gap-1.5 py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${theme === "light" ? "bg-white text-[#0057FF] shadow-sm" : "text-slate-400 hover:text-slate-800"}`}
                 >
-                  <Sun className="w-3.5 h-3.5" /> Claro
+                  <SunMedium className="w-3.5 h-3.5" /> Claro
                 </button>
                 <button 
                   onClick={() => setTheme("system")} 
                   className={`flex items-center justify-center gap-1.5 py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${theme === "system" ? "bg-[#0057FF] text-white shadow-sm" : "text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"}`}
                 >
-                  <Sparkles className="w-3.5 h-3.5" /> Auto
+                  <Eclipse className="w-3.5 h-3.5" /> Auto
                 </button>
                 <button 
                   onClick={() => setTheme("dark")} 
                   className={`flex items-center justify-center gap-1.5 py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${theme === "dark" ? "bg-slate-800 text-white shadow-sm" : "text-slate-400 hover:text-slate-200"}`}
                 >
-                  <Moon className="w-3.5 h-3.5" /> Escuro
+                  <MoonStar className="w-3.5 h-3.5" /> Escuro
                 </button>
               </div>
             </div>
