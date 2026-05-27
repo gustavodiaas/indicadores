@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useMemo } from "react";
 import { 
   type ResumoData, type AppState,
@@ -17,7 +19,9 @@ interface Props {
 }
 
 // Campo de digitação customizado e integrado ao tema escuro do GBO
-const displayValue = (value === 0 || value === null || value === undefined) ? "" : value;
+function LocalInputField({ label, value, onChange, type = "text" }: { label: string; value: any; onChange: (v: string) => void; type?: string }) {
+  const displayValue = (value === 0 || value === null || value === undefined) ? "" : value;
+  
   return (
     <div className="space-y-1.5 w-full">
       <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest pl-1">
@@ -32,6 +36,7 @@ const displayValue = (value === 0 || value === null || value === undefined) ? ""
     </div>
   );
 }
+
 export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClearData }: Props) {
   const [newAcao, setNewAcao] = useState("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -60,23 +65,15 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
   };
 
   const descTexto = useMemo(() => {
-    const colabTxt = data.totalColaboradores === 1 ? "colaborador" : "colaboradores";
-    const turnoTxt = data.turnos === 1 ? "Turno" : "Turnos";
-    return `A Empresa ${data.nomeEmpresa || "—"}, da cidade de ${data.cidade || "—"} no Estado do Rio Grande do Sul, atua no ramo de ${data.ramo || "—"}, especialista em ${data.especialista || "—"}, conta com ${data.totalColaboradores || "0"} ${colabTxt} atuando em ${data.turnos} ${turnoTxt}. O produto mapeado segue o seguinte processo produtivo: ${data.processos || "—"}, com método de produção ${data.metodo || "—"}, onde a demanda é originada por ${data.origem || "—"}. Ao longo do mapeamento foram identificadas oportunidades no setor de ${data.oportunidades || "—"}, por problemas de ${data.problemas || "—"}. Nesta consultoria, a área de atuação/intervenção foi ${data.atuacao || "—"}.`;
+    const colabTxt = (data.totalColaboradores || 0) === 1 ? "colaborador" : "colaboradores";
+    const turnoTxt = (data.turnos || 0) === 1 ? "Turno" : "Turnos";
+    return `A Empresa ${data.nomeEmpresa || "—"}, da cidade de ${data.cidade || "—"} no Estado do Rio Grande do Sul, atua no ramo de ${data.ramo || "—"}, especialista em ${data.especialista || "—"}, conta com ${data.totalColaboradores || "0"} ${colabTxt} atuando em ${data.turnos || 0} ${turnoTxt}. O produto mapeado segue o seguinte processo produtivo: ${data.processos || "—"}, com método de produção ${data.metodo || "—"}, onde a demanda é originada por ${data.origem || "—"}. Ao longo do mapeamento foram identificadas oportunidades no setor de ${data.oportunidades || "—"}, por problemas de ${data.problemas || "—"}. Nesta consultoria, a área de atuação/intervenção foi ${data.atuacao || "—"}.`;
   }, [data]);
 
   const descTextoWord = useMemo(() => {
-    const colabTxt = data.totalColaboradores === 1 ? "colaborador" : "colaboradores";
-    const turnoTxt = data.turnos === 1 ? "Turno" : "Turnos";
-    return `1. DESCRIÇÃO DO PROCESSO OPERACIONAL
-
-A Empresa ${data.nomeEmpresa || "—"}, da cidade de ${data.cidade || "—"} no Estado do Rio Grande do Sul, atua no ramo de ${data.ramo || "—"}, especialista em ${data.especialista || "—"}, conta com ${data.totalColaboradores || "0"} ${colabTxt} atuando em ${data.turnos} ${turnoTxt}.
-
-O produto mapeado segue o seguinte processo produtivo: ${data.processos || "—"}, com método de produção ${data.metodo || "—"}, onde a demanda é originada por ${data.origem || "—"}.
-
-Ao longo do mapeamento foram identificadas oportunidades no setor de ${data.oportunidades || "—"}, por problemas de ${data.problemas || "—"}.
-
-Nesta consultoria, a área de atuação/intervenção foi ${data.atuacao || "—"}.`;
+    const colabTxt = (data.totalColaboradores || 0) === 1 ? "colaborador" : "colaboradores";
+    const turnoTxt = (data.turnos || 0) === 1 ? "Turno" : "Turnos";
+    return `1. DESCRIÇÃO DO PROCESSO OPERACIONAL\n\nA Empresa ${data.nomeEmpresa || "—"}, da cidade de ${data.cidade || "—"} no Estado do Rio Grande do Sul, atua no ramo de ${data.ramo || "—"}, especialista em ${data.especialista || "—"}, conta com ${data.totalColaboradores || "0"} ${colabTxt} atuando em ${data.turnos || 0} ${turnoTxt}.\n\nO produto mapeado segue o seguinte processo produtivo: ${data.processos || "—"}, com método de produção ${data.metodo || "—"}, onde a demanda é originada por ${data.origem || "—"}.\n\nAo longo do mapeamento foram identificadas oportunidades no setor de ${data.oportunidades || "—"}, por problemas de ${data.problemas || "—"}.\n\nNesta consultoria, a área de atuação/intervenção foi ${data.atuacao || "—"}.`;
   }, [data]);
 
   const laudosSistemas = useMemo(() => {
@@ -153,19 +150,11 @@ Nesta consultoria, a área de atuação/intervenção foi ${data.atuacao || "—
     const desTela = `Foram elaborados planos de ação através da ferramenta 5W2H, definindo diversas ações para as oportunidades elencadas, tais como: ${listaAcoes}.\n\nApós a definição do ponto de intervenção, monitoramento e validação das melhorias, obteve-se:`;
     const fimTela = `O resultado geral do projeto foi agregador e positivo para a empresa, pois o envolvimento da equipe foi primordial para garantir o conhecimento necessário através do plano de ação, treinamentos, trabalho realizado e resultados alcançados. Com isso, a empresa pode manter o aculturamento do pensamento Lean e replicar os conceitos da melhoria contínua para os demais setores e linhas de produção.`;
 
-    const introWord = `2. INTRODUÇÃO DO PROJETO
-
-O presente programa de fomento ao setor industrial brasileiro Brasil Mais Produtivo, proporcionou a realização de consultoria em Manufatura Enxuta na Empresa ${data.nomeEmpresa || "—"}, na cidade de ${data.cidade || "—"} no Estado do Rio Grande do Sul. A escolha do produto a ser mapeado foi motivada por: ${data.motivacao || "—"}. As ferramentas aplicadas foram: ${data.ferramentas || "—"}.`;
+    const introWord = `2. INTRODUÇÃO DO PROJETO\n\nO presente programa de fomento ao setor industrial brasileiro Brasil Mais Produtivo, proporcionou a realização de consultoria em Manufatura Enxuta na Empresa ${data.nomeEmpresa || "—"}, na cidade de ${data.cidade || "—"} no Estado do Rio Grande do Sul. A escolha do produto a ser mapeado foi motivada por: ${data.motivacao || "—"}. As ferramentas aplicadas foram: ${data.ferramentas || "—"}.`;
     
-    const desWord = `3. PLANO DE AÇÃO E ANÁLISE DE RESULTADOS
-
-Foram elaborados planos de ação através da ferramenta 5W2H, definindo diversas ações para as oportunidades elencadas, tais como: ${listaAcoes}.
-
-Após a definição do ponto de intervenção, monitoramento e validação das melhorias, obteve-se os seguintes resultados consolidados:`;
+    const desWord = `3. PLANO DE AÇÃO E ANÁLISE DE RESULTADOS\n\nForam elaborados planos de ação através da ferramenta 5W2H, definindo diversas ações para as oportunidades elencadas, tais como: ${listaAcoes}.\n\nApós a definição do ponto de intervenção, monitoramento e validação das melhorias, obteve-se os seguintes resultados consolidados:`;
     
-    const fimWord = `4. CONCLUSÃO DA INTERVENÇÃO
-
-O resultado geral do projeto foi agregador e positivo para a empresa, pois o envolvimento da equipe foi primordial para garantir o conhecimento necessário através do plano de ação, treinamentos, trabalho realizado e resultados alcançados. Com isso, a empresa pode manter o aculturamento do pensamento Lean e replicar os conceitos da melhoria contínua para os demais setores e linhas de produção.`;
+    const fimWord = `4. CONCLUSÃO DA INTERVENÇÃO\n\nO resultado geral do projeto foi agregador e positivo para a empresa, pois o envolvimento da equipe foi primordial para garantir o conhecimento necessário através do plano de ação, treinamentos, trabalho realizado e resultados alcançados. Com isso, a empresa pode manter o aculturamento do pensamento Lean e replicar os conceitos da melhoria contínua para os demais setores e linhas de produção.`;
 
     return {
       textoTela: [introTela, desTela, ...resTela, fimTela].join("\n\n"),
@@ -215,18 +204,9 @@ O resultado geral do projeto foi agregador e positivo para a empresa, pois o env
             <LocalInputField label="Cidade" value={data.cidade} onChange={v => onChange({ cidade: v })} />
             <LocalInputField label="Ramo de Atuação" value={data.ramo} onChange={v => onChange({ ramo: v })} />
             <LocalInputField label="Especialista em" value={data.especialista} onChange={v => onChange({ especialista: v })} />
-           <LocalInputField 
-  label="Total de Colaboradores" 
-  value={data.totalColaboradores} 
-  onChange={v => onChange({ totalColaboradores: v === "" ? 0 : Number(v) })} 
-  type="number" 
-/>
-<LocalInputField 
-  label="Turno(s)" 
-  value={data.turnos} 
-  onChange={v => onChange({ turnos: v === "" ? 0 : Number(v) })} 
-  type="number" 
-/>
+            <LocalInputField label="Total de Colaboradores" value={data.totalColaboradores} onChange={v => onChange({ totalColaboradores: v === "" ? 0 : Number(v) })} type="number" />
+            <LocalInputField label="Turno(s)" value={data.turnos} onChange={v => onChange({ turnos: v === "" ? 0 : Number(v) })} type="number" />
+          </div>
 
           <div className="grid grid-cols-1 gap-4 pt-4 border-t border-slate-100 dark:border-slate-800">
             <LocalInputField label="Processo Produtivo Mapeado" value={data.processos} onChange={v => onChange({ processos: v })} />
@@ -295,13 +275,12 @@ O resultado geral do projeto foi agregador e positivo para a empresa, pois o env
               <h4 className="text-[10px] font-bold text-[#0057FF] uppercase tracking-widest mb-3">Indicadores</h4>
               <div className="flex flex-wrap gap-2">
                 {indicadoresList.map((ind) => {
-                  const isLocked = lockedIndicadores.includes(ind.id);
                   const isActive = selectedIndicadores.includes(ind.id);
                   return (
                     <button 
                       key={ind.id} 
                       onClick={() => toggleIndicador(ind.id)} 
-                      className={`px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all border ${isActive ? "bg-[#0057FF] text-white border-[#0057FF] shadow-md" : "bg-slate-50 dark:bg-slate-950 text-slate-500 dark:text-slate-400 border-slate-100 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900"} ${isLocked ? "cursor-not-allowed opacity-90" : ""}`}
+                      className={`px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all border ${isActive ? "bg-[#0057FF] text-white border-[#0057FF] shadow-md" : "bg-slate-50 dark:bg-slate-950 text-slate-500 dark:text-slate-400 border-slate-100 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900"}`}
                     >
                       {ind.label}
                     </button>
