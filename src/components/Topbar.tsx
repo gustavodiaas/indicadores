@@ -8,14 +8,14 @@ export function Topbar({ onExportWord }: Props) {
   return (
     <div className="w-full z-[100] print:hidden mb-6 shrink-0">
       
-      <header className="w-full h-20 bg-white border-b border-slate-100 px-10 flex items-center justify-between transition-all duration-500">
+      <header className="w-full h-20 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800/80 px-10 flex items-center justify-between transition-all duration-500">
         
         {/* LOGO E TÍTULO UNIFICADO */}
         <div className="flex items-center gap-4">
           <div className="bg-[#0057FF] p-2 rounded-xl shadow-sm">
             <BarChart3 className="h-5 w-5 text-white" />
           </div>
-          <h1 className="text-[11px] font-black text-slate-800 uppercase tracking-[0.25em] leading-none">
+          <h1 className="text-[11px] font-black text-slate-800 dark:text-slate-200 uppercase tracking-[0.25em] leading-none">
             Central de Indicadores
           </h1>
         </div>
@@ -24,12 +24,12 @@ export function Topbar({ onExportWord }: Props) {
         <div className="flex items-center gap-6">
           
           <div className="relative group inline-block">
-            <div className="flex items-center gap-2 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-[#0057FF] cursor-help transition-colors rounded-full">
+            <div className="flex items-center gap-2 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 hover:text-[#0057FF] dark:hover:text-[#0057FF] cursor-help transition-colors rounded-full">
               <ShieldAlert className="w-4 h-4" />
               Privacidade
             </div>
             
-            <div className="absolute top-full right-0 mt-4 w-[340px] p-6 bg-slate-900 text-slate-300 text-[11px] rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 border border-slate-800 z-[110] pointer-events-none group-hover:pointer-events-auto">
+            <div className="absolute top-full right-0 mt-4 w-[340px] p-6 bg-slate-900 dark:bg-slate-950 text-slate-300 dark:text-slate-400 text-[11px] rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 border border-slate-800 dark:border-slate-800/60 z-[110] pointer-events-none group-hover:pointer-events-auto">
               <h4 className="font-bold text-white mb-3 uppercase tracking-widest text-[10px] border-b border-white/10 pb-2 text-left">Aviso de Privacidade</h4>
               
               <div className="text-justify space-y-3 font-normal normal-case">
@@ -40,11 +40,11 @@ export function Topbar({ onExportWord }: Props) {
             </div>
           </div>
 
-          <div className="h-6 w-px bg-slate-100" />
+          <div className="h-6 w-px bg-slate-100 dark:bg-slate-800" />
 
           <button 
             onClick={onExportWord} 
-            className="flex items-center gap-2 px-8 py-3 text-[10px] font-bold bg-slate-900 text-white hover:bg-[#0057FF] rounded-xl transition-all shadow-md active:scale-95 uppercase tracking-widest"
+            className="flex items-center gap-2 px-8 py-3 text-[10px] font-bold bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 hover:bg-[#0057FF] dark:hover:bg-[#0057FF] dark:hover:text-white rounded-xl transition-all shadow-md active:scale-95 uppercase tracking-widest"
           >
             <FileText className="h-4 w-4" /> 
             Baixar Word
