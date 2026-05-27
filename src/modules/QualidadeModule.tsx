@@ -10,7 +10,6 @@ interface Props {
   onChange: (d: Partial<QualidadeData>) => void;
 }
 
-// Campo de digitação customizado e integrado ao tema escuro do GBO
 function LocalInputField({ label, value, onChange, type = "number" }: { label: string; value: any; onChange: (v: string) => void; type?: string }) {
   return (
     <div className="space-y-1.5 w-full">
@@ -60,7 +59,7 @@ export function QualidadeModule({ data, onChange }: Props) {
 
       </div>
 
-      {/* COLUNA DIREITA: KPIs E LAUDO */}
+      {/* COLUNA DIREITA: KPIs E LAUDO (100% ADAPTADOS PARA MODO ESCURO) */}
       <div className="w-full lg:w-[40%] flex flex-col gap-4">
         <KpiCard label="Aumento de Qualidade" value={r.aumento.toFixed(1)} suffix="%" trend={r.aumento} />
         
@@ -82,7 +81,7 @@ export function QualidadeModule({ data, onChange }: Props) {
           <p className="text-[13px] text-slate-600 dark:text-slate-200 leading-relaxed text-justify">{laudo}</p>
         </div>
 
-        <div className="mt-auto pt-6 min-h-[250px] light bg-white rounded-2xl p-4 border border-slate-100 shadow-sm">
+        <div className="mt-auto pt-6 min-h-[250px] bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-100 dark:border-slate-800/60 shadow-sm">
           <ComparisonChart data={chartData} title="Índice de Peças Boas" />
         </div>
       </div>
