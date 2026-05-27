@@ -191,7 +191,7 @@ const Index = () => {
           createJustified([
             tr("A Empresa "), tr(resumo.nomeEmpresa || "—", true),
             tr(", da cidade de "), tr(resumo.cidade || "—", true),
-            tr(" no Estado do Rio Grande do Sul, atua no ramo de "), tr(resumo.ramo || "—", true),
+            tr(" no State do Rio Grande do Sul, atua no ramo de "), tr(resumo.ramo || "—", true),
             tr(", especialista em "), tr(resumo.especialista || "—", true),
             tr(", conta com "), tr(String(resumo.totalColaboradores || 0), true),
             tr(resumo.totalColaboradores === 1 ? " colaborador" : " colaboradores"),
@@ -420,7 +420,19 @@ const Index = () => {
 
   return (
     <div className="flex flex-col h-screen w-full bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-100 overflow-hidden font-inter print:bg-white print:h-auto print:overflow-visible">
-      <style dangerouslySetInnerHTML={{ __html: `@media print { @page { size: landscape; margin: 10mm; } }` }} />
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media print { @page { size: landscape; margin: 10mm; } }
+        
+        /* Remove as setas nativas de inputs do tipo number */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        input[type=number] {
+          -moz-appearance: textfield;
+        }
+      ` }} />
       <main className="flex-1 overflow-y-auto p-2 md:p-4 pb-32 print:p-0 print:overflow-visible">
         {!["home", "gbo", "planoAcao", "a3"].includes(activeModule) && (
           <div className="print:hidden relative z-[100] mb-2 animate-in slide-in-from-top-2 duration-300">
