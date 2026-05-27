@@ -47,7 +47,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
   const descTexto = useMemo(() => {
     const colabTxt = data.totalColaboradores === 1 ? "colaborador" : "colaboradores";
     const turnoTxt = data.turnos === 1 ? "Turno" : "Turnos";
-    return `A Empresa ${data.nomeEmpresa || "—"}, da cidade de ${data.cidade || "—"} no Estado do Rio Grande do Sul, atua no ramo de ${data.ramo || "—"}, especialista em ${data.especialista || "—"}, conta com ${data.totalColaboradores || "0"} ${colabTxt} atuando em ${data.turnos} ${turnoTxt}. O produto mapeado segue the seguinte processo produtivo: ${data.processos || "—"}, com método de produção ${data.metodo || "—"}, onde a demanda é originada por ${data.origem || "—"}. Ao longo do mapeamento foram identificadas oportunidades no setor de ${data.oportunidades || "—"}, por problemas de ${data.problemas || "—"}. Nesta consultoria, a área de atuação/intervenção foi ${data.atuacao || "—"}.`;
+    return `A Empresa ${data.nomeEmpresa || "—"}, da cidade de ${data.cidade || "—"} no Estado do Rio Grande do Sul, atua no ramo de ${data.ramo || "—"}, especialista em ${data.especialista || "—"}, conta com ${data.totalColaboradores || "0"} ${colabTxt} atuando em ${data.turnos} ${turnoTxt}. O produto mapeado segue o seguinte processo produtivo: ${data.processos || "—"}, com método de produção ${data.metodo || "—"}, onde a demanda é originada por ${data.origem || "—"}. Ao longo do mapeamento foram identificadas oportunidades no setor de ${data.oportunidades || "—"}, por problemas de ${data.problemas || "—"}. Nesta consultoria, a área de atuação/intervenção foi ${data.atuacao || "—"}.`;
   }, [data]);
 
   const descTextoWord = useMemo(() => {
@@ -205,7 +205,7 @@ O resultado geral do projeto foi agregador e positivo para a empresa, pois o env
           </div>
 
           <div className="grid grid-cols-1 gap-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-            <InputField label="Processo Produtivo Mapeado" value={data.processos} onChange={v => onChange({ processos: v })} />
+            <InputField label="Processo Produtivo Mapeado" value={data.processos} onChange={v => onChange({ processes: v })} />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <InputField label="Método (Puxada/Empurrada)" value={data.metodo} onChange={v => onChange({ metodo: v as any })} />
               <InputField label="Demanda originada por" value={data.origem} onChange={v => onChange({ origem: v })} />
@@ -236,7 +236,7 @@ O resultado geral do projeto foi agregador e positivo para a empresa, pois o env
           </div>
         </div>
 
-        {/* COLUNA DIREITA: VISUALIZAÇÃO COM O DESIGN DEEP SLATE DO GBO */}
+        {/* COLUNA DIREITA: CARDS DE VISUALIZAÇÃO DE TEXTO */}
         <div className="w-full lg:w-[45%] flex flex-col gap-6 overflow-y-auto pb-36">
           <div className="relative bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/60 transition-all hover:border-[#0057FF]/20">
             <button 
@@ -260,7 +260,7 @@ O resultado geral do projeto foi agregador e positivo para a empresa, pois o env
             <div className="text-[13px] text-slate-700 dark:text-slate-100 leading-relaxed text-justify space-y-6 flex-1">
               <div className="whitespace-pre-wrap">{laudosSistemas.textoTela}</div> 
               {laudosSistemas.bulletPoints.length > 0 && (
-                <div className="bg-slate-50 dark:bg-slate-950 p-5 space-y-3 rounded-xl shadow-sm mt-4 border border-slate-100 dark:border-slate-800/60">
+                <div className="bg-slate-50 dark:bg-slate-950 p-5 space-y-3 rounded-xl shadow-sm mt-4 border border-slate-100 dark:border-slate-800">
                   {laudosSistemas.bulletPoints.map((point, index) => (
                     <p key={index} className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-tight">• {point}</p>
                   ))}
@@ -270,7 +270,7 @@ O resultado geral do projeto foi agregador e positivo para a empresa, pois o env
             <div className="mt-8 pt-4 border-t border-slate-100 dark:border-slate-800">
               <h4 className="text-[10px] font-bold text-[#0057FF] uppercase tracking-widest mb-3">Indicadores</h4>
               <div className="flex flex-wrap gap-2">
-                {indicatorsList.map((ind) => {
+                {indicadoresList.map((ind) => {
                   const isLocked = lockedIndicadores.includes(ind.id);
                   const isActive = selectedIndicadores.includes(ind.id);
                   return (
