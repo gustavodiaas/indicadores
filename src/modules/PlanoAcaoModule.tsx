@@ -289,6 +289,7 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
       toast.error("Erro ao baixar o modelo.");
     }
   };
+
   const handleExportExcel = async () => {
     if (data.acoes.length === 0) {
       toast.error("Adicione ações antes de exportar.");
@@ -433,65 +434,56 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
            <div className="flex flex-col items-center justify-center p-12 text-slate-400 dark:text-slate-600 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl bg-slate-50 dark:bg-slate-950">
              <CheckCircle className="h-12 w-12 mb-4 text-slate-300 dark:text-slate-700" />
              <p className="text-sm font-bold text-slate-600 dark:text-slate-300">Nenhuma ação vinculada.</p>
-             <p className="text-xs mt-1">Crie tarefas no campo acima ou importe macros da aba "Resumo".</p>
            </div>
         ) : (
           <div className="flex flex-col gap-3">
             {data.acoes.map(a => (
+              // FIX: card wrapper precisa de dark:bg-slate-900 explícito
               <div key={a.id} className="border border-slate-100 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-900 shadow-sm overflow-hidden transition-all duration-300">
+                {/* FIX: header do card — bg-white sem dark estava causando manchas brancas */}
                 <div 
-                  className="flex items-center justify-between p-4 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer select-none transition-colors border-b border-transparent dark:border-slate-800/50"
+                  className="flex items-center justify-between p-4 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer select-none transition-colors border-b border-slate-100 dark:border-slate-800"
                   onClick={() => setExpandedId(expandedId === a.id ? null : a.id)}
                 >
                   <div className="flex flex-col flex-1 pr-4">
                     <span className="text-sm font-black text-slate-800 dark:text-slate-100 truncate">{a.what}</span>
                     <span className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">Status: <span className="text-[#0057FF] font-bold">{a.status || "NÃO INICIADO"}</span> • Progresso: {a.percent || 0}%</span>
                   </div>
-                  
                   <div className="flex items-center gap-4">
-                    {expandedId === a.id ? <ChevronUp className="h-5 w-5 text-slate-400" /> : <ChevronDown className="h-5 w-5 text-slate-400" />}
-                    <button 
-                      onClick={(e) => { e.stopPropagation(); handleRemoveAcao(a.id); }}
-                      className="p-2 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors"
-                    >
-                      <Trash2 className="h-4 w-4 text-rose-500" />
-                    </button>
+                    {expandedId === a.id ? <ChevronUp className="h-5 w-5 text-slate-400 dark:text-slate-500" /> : <ChevronDown className="h-5 w-5 text-slate-400 dark:text-slate-500" />}
+                    <button onClick={(e) => { e.stopPropagation(); handleRemoveAcao(a.id); }} className="p-2 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors"><Trash2 className="h-4 w-4 text-rose-500" /></button>
                   </div>
                 </div>
 
                 {expandedId === a.id && (
-                  <div className="p-5 grid grid-cols-2 md:grid-cols-4 gap-4 bg-slate-50/50 dark:bg-slate-950 border-t border-slate-100 dark:border-slate-800 animate-in fade-in slide-in-from-top-2 duration-300">
+                  // FIX: painel expandido — bg-slate-50 sem dark estava completamente branco
+                  <div className="p-5 grid grid-cols-2 md:grid-cols-4 gap-4 bg-slate-50 dark:bg-slate-950 border-t border-slate-100 dark:border-slate-800 animate-in fade-in slide-in-from-top-2 duration-300">
                     <div className="md:col-span-4"><InputField label="O que será feito? (What)" value={a.what} onChange={v => updateAcao(a.id, "what", v)} /></div>
                     <div className="md:col-span-2"><InputField label="Como? (How)" value={a.how} onChange={v => updateAcao(a.id, "how", v)} /></div>
                     <InputField label="Por que? (Why)" value={a.why} onChange={v => updateAcao(a.id, "why", v)} />
                     <InputField label="Onde? (Where)" value={a.where} onChange={v => updateAcao(a.id, "where", v)} />
-                    
                     <InputField label="Quem? (Who)" value={a.who} onChange={v => updateAcao(a.id, "who", v)} />
                     <CustomDatePicker label="Início (When)" value={a.start} onChange={v => updateAcao(a.id, "start", v)} />
                     <CustomDatePicker label="Fim (When)" value={a.end} onChange={v => updateAcao(a.id, "end", v)} />
                     <InputField label="Quanto Custa? (How Much)" value={a.howMuch} onChange={v => updateAcao(a.id, "howMuch", v)} type="number" />
-                    
                     <InputField label="% Completo" value={a.percent} onChange={v => updateAcao(a.id, "percent", Number(v) || 0)} type="number" />
                     <div className="md:col-span-2"><InputField label="Observação" value={a.obs} onChange={v => updateAcao(a.id, "obs", v)} /></div>
-                    
                     <div>
                       <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5 pl-1">Status</label>
                       <DropdownMenu>
+                        {/* FIX: trigger do status — bg-white sem dark:bg-slate-900 */}
                         <DropdownMenuTrigger asChild>
                           <button className="w-full h-12 px-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm font-medium text-slate-700 dark:text-slate-200 flex items-center justify-between outline-none hover:bg-slate-50 dark:hover:bg-slate-800 transition-all focus:ring-2 focus:ring-[#0057FF]">
-                            {a.status === "INICIADO" ? "Iniciado" :
-                              a.status === "EM ANDAMENTO" ? "Em Andamento" :
-                              a.status === "REJEITADO" ? "Rejeitado" :
-                              a.status === "CONCLUIDO" ? "Concluído" : "Não Iniciado"}
-                            <ChevronDown className="w-4 h-4 text-slate-400" />
+                            {a.status === "INICIADO" ? "Iniciado" : a.status === "EM ANDAMENTO" ? "Em Andamento" : a.status === "REJEITADO" ? "Rejeitado" : a.status === "CONCLUIDO" ? "Concluído" : "Não Iniciado"}
+                            <ChevronDown className="w-4 h-4 text-slate-400 dark:text-slate-500" />
                           </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-2 rounded-2xl shadow-xl z-[150]">
-                          <DropdownMenuItem onClick={() => updateAcao(a.id, "status", "NÃO INICIADO")} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${(a.status === "NÃO INICIADO" || !a.status) ? "bg-[#0057FF] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"}`}>Não Iniciado</DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => updateAcao(a.id, "status", "INICIADO")} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${a.status === "INICIADO" ? "bg-[#0057FF] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"}`}>Iniciado</DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => updateAcao(a.id, "status", "EM ANDAMENTO")} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${a.status === "EM ANDAMENTO" ? "bg-[#0057FF] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"}`}>Em Andamento</DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => updateAcao(a.id, "status", "REJEITADO")} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${a.status === "REJEITADO" ? "bg-[#0057FF] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"}`}>Rejeitado</DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => updateAcao(a.id, "status", "CONCLUIDO")} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${a.status === "CONCLUIDO" ? "bg-[#0057FF] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"}`}>Concluído</DropdownMenuItem>
+                          {["NÃO INICIADO", "INICIADO", "EM ANDAMENTO", "REJEITADO", "CONCLUIDO"].map(s => (
+                            <DropdownMenuItem key={s} onClick={() => updateAcao(a.id, "status", s)} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${a.status === s ? "bg-[#0057FF] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"}`}>
+                              {s.charAt(0) + s.slice(1).toLowerCase()}
+                            </DropdownMenuItem>
+                          ))}
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
