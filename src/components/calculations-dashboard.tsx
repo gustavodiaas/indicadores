@@ -55,17 +55,17 @@ export function CalculationsDashboard({
   const taktTimeInDisplayUnit = taktTime ? convertFromSeconds(taktTime, timeUnit) : undefined
 
   return (
-    <div className="glass-panel p-6 rounded-3xl border border-primary/20 shadow-[0_0_20px_-5px_rgba(6,182,212,0.1)]">
+    <div className="bg-slate-50 dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
         {/* Tempo Total */}
-        <Card className="glass-panel border-primary/20 relative overflow-hidden group">
+        <Card className="bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 relative overflow-hidden group">
           <div className="absolute inset-0 bg-primary/5 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 relative z-10">
-            <CardTitle className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Tempo Total</CardTitle>
+            <CardTitle className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Tempo Total</CardTitle>
             <Clock className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent className="relative z-10">
-            <div className="text-2xl font-bold text-foreground drop-shadow-md">{totalTime.toFixed(1)}</div>
+            <div className="text-2xl font-bold text-slate-900 dark:text-white drop-shadow-md">{totalTime.toFixed(1)}</div>
             <Badge variant="outline" className="mt-2 bg-primary/10 text-primary border-primary/20 text-[10px] uppercase tracking-wider">
               {getPtUnit(timeUnit)}
             </Badge>
@@ -73,14 +73,14 @@ export function CalculationsDashboard({
         </Card>
 
         {/* Número de Operações */}
-        <Card className="glass-panel border-primary/20 relative overflow-hidden group">
+        <Card className="bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 relative overflow-hidden group">
           <div className="absolute inset-0 bg-primary/5 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 relative z-10">
-            <CardTitle className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Operações</CardTitle>
+            <CardTitle className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Operações</CardTitle>
             <Layers className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent className="relative z-10">
-            <div className="text-2xl font-bold text-foreground drop-shadow-md">{operations.length}</div>
+            <div className="text-2xl font-bold text-slate-900 dark:text-white drop-shadow-md">{operations.length}</div>
             <Badge variant="outline" className="mt-2 bg-primary/10 text-primary border-primary/20 text-[10px] uppercase tracking-wider">
               Etapas
             </Badge>
@@ -88,46 +88,46 @@ export function CalculationsDashboard({
         </Card>
 
         {/* Tempo Médio */}
-        <Card className="glass-panel border-primary/20 relative overflow-hidden group">
+        <Card className="bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 relative overflow-hidden group">
           <div className="absolute inset-0 bg-primary/5 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 relative z-10">
-            <CardTitle className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Tempo Médio</CardTitle>
+            <CardTitle className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Tempo Médio</CardTitle>
             <Activity className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent className="relative z-10">
-            <div className="text-2xl font-bold text-foreground drop-shadow-md">{avgTime.toFixed(1)}</div>
+            <div className="text-2xl font-bold text-slate-900 dark:text-white drop-shadow-md">{avgTime.toFixed(1)}</div>
             <Badge variant="outline" className="mt-2 bg-primary/10 text-primary border-primary/20 text-[10px] uppercase tracking-wider">
               {getPtUnit(timeUnit)}
             </Badge>
           </CardContent>
         </Card>
 
-        {/* Operação Gargalo (Destaque Visual + Truncamento) */}
-        <Card className="glass-panel border-destructive/40 relative overflow-hidden group shadow-[0_0_15px_-3px_rgba(239,68,68,0.15)]">
-          <div className="absolute inset-0 bg-destructive/5 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+        {/* Operação Gargalo */}
+        <Card className="bg-white dark:bg-slate-900 border-rose-200 dark:border-rose-900/50 relative overflow-hidden group">
+          <div className="absolute inset-0 bg-rose-500/5 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 relative z-10">
-            <CardTitle className="text-xs font-bold text-destructive uppercase tracking-wider animate-pulse">Gargalo</CardTitle>
-            <AlertTriangle className="h-4 w-4 text-destructive" />
+            <CardTitle className="text-xs font-bold text-rose-600 dark:text-rose-400 uppercase tracking-wider animate-pulse">Gargalo</CardTitle>
+            <AlertTriangle className="h-4 w-4 text-rose-600" />
           </CardHeader>
           <CardContent className="relative z-10 w-full overflow-hidden">
-            <div className="text-xl md:text-2xl font-bold text-destructive drop-shadow-sm truncate max-w-full" title={bottleneck?.name}>
+            <div className="text-xl md:text-2xl font-bold text-rose-600 dark:text-rose-400 drop-shadow-sm truncate max-w-full" title={bottleneck?.name}>
               {bottleneck?.name || "-"}
             </div>
-            <Badge variant="outline" className="mt-2 bg-destructive/10 text-destructive border-destructive/20 text-[10px] uppercase tracking-wider">
+            <Badge variant="outline" className="mt-2 bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-900 text-[10px] uppercase tracking-wider">
               {bottleneckTime.toFixed(1)} {getPtUnit(timeUnit)}
             </Badge>
           </CardContent>
         </Card>
 
         {/* Takt Time */}
-        <Card className="glass-panel border-primary/20 relative overflow-hidden group">
+        <Card className="bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 relative overflow-hidden group">
           <div className="absolute inset-0 bg-primary/5 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 relative z-10">
-            <CardTitle className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Takt Time</CardTitle>
+            <CardTitle className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Takt Time</CardTitle>
             <Timer className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent className="relative z-10">
-            <div className="text-2xl font-bold text-foreground drop-shadow-md">
+            <div className="text-2xl font-bold text-slate-900 dark:text-white drop-shadow-md">
               {taktTimeInDisplayUnit ? taktTimeInDisplayUnit.toFixed(1) : "-"}
             </div>
             <Badge variant="outline" className="mt-2 bg-primary/10 text-primary border-primary/20 text-[10px] uppercase tracking-wider">
