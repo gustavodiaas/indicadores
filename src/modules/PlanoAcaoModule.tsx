@@ -1,6 +1,6 @@
 import { type PlanoAcaoData, type PlanoAcaoItem } from "@/store/useAppStore";
 import { InputField } from "@/components/InputField";
-import { Trash2, Download, CheckCircle, ChevronDown, ChevronUp, Plus, Calendar as CalendarIcon, ChevronLeft, ChevronRight, Upload } from "lucide-react";
+import { Trash2, Download, CheckCircle, ChevronDown, ChevronUp, Plus, Calendar as CalendarIcon, ChevronLeft, ChevronRight, Upload, FileText } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import ExcelJS from "exceljs";
@@ -181,7 +181,6 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
         return;
       }
 
-      // 1. IMPORTAR METADADOS
       const metadata = {
         dataCriacao: parseCellString(ws.getCell('B3')),
         respCriacao: parseCellString(ws.getCell('D3')),
@@ -192,7 +191,6 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
         indicador: parseCellString(ws.getCell('G4')),
       };
 
-      // 2. IMPORTAR TAREFAS (A partir da Linha 8)
       let rowNum = 8;
       const acoesImportadas: PlanoAcaoItem[] = [];
 
@@ -246,6 +244,47 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
       toast.error("Erro ao ler o arquivo Excel. Verifique a estrutura.");
     } finally {
       e.target.value = "";
+    }
+  };
+
+  const handleDownloadModelo = async () => {
+    try {
+      const response = await fetch('/template_5w2h.xlsx');
+      
+      if (!response.ok) {
+        toast.error("Arquivo de modelo não encontrado na pasta public.");
+        return;
+      }
+
+      const arrayBuffer = await response.arrayBuffer();
+      const workbook = new ExcelJS.Workbook();
+      await workbook.xlsx.load(arrayBuffer);
+      
+      const ws = workbook.worksheets[0];
+      const m = data.metadata;
+
+      if (m.dataCriacao) ws.getCell('B3').value = m.dataCriacao;
+      if (m.respCriacao) ws.getCell('D3').value = m.respCriacao;
+      if (m.objetivo) ws.getCell('G3').value = m.objetivo;
+      if (m.meta) ws.getCell('I3').value = m.meta;
+
+      if (m.dataRevisao) ws.getCell('B4').value = m.dataRevisao;
+      if (m.respRevisao) ws.getCell('D4').value = m.respRevisao;
+      if (m.indicador) ws.getCell('G4').value = m.indicador;
+
+      const buffer = await workbook.xlsx.writeBuffer();
+      const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `Modelo_Plano_Acao_${m.indicador || 'Vazio'}.xlsx`;
+      link.click();
+      window.URL.revokeObjectURL(url);
+
+      toast.success("Modelo limpo baixado com sucesso!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Erro ao baixar o modelo.");
     }
   };
 
@@ -337,6 +376,13 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
             className="flex items-center gap-2 px-5 py-2.5 bg-blue-50 text-[#0057FF] border border-blue-100 rounded-xl font-bold text-xs uppercase tracking-widest shadow-sm hover:bg-blue-100 transition-all active:scale-95"
           >
             <Upload className="h-4 w-4" /> Importar
+          </button>
+
+          <button 
+            onClick={handleDownloadModelo}
+            className="flex items-center gap-2 px-5 py-2.5 bg-slate-100 text-slate-700 border border-slate-200 rounded-xl font-bold text-xs uppercase tracking-widest shadow-sm hover:bg-slate-200 transition-all active:scale-95"
+          >
+            <FileText className="h-4 w-4" /> Baixar Modelo
           </button>
           
           <button 
@@ -432,7 +478,7 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <button className="w-full h-12 px-4 rounded-xl bg-white border border-slate-200 text-sm font-medium text-slate-700 flex items-center justify-between outline-none hover:bg-slate-50 transition-all focus:ring-2 focus:ring-[#0057FF]">
-                            ={a.status === "INICIADO" ? "Iniciado" :
+                            {a.status === "INICIADO" ? "Iniciado" :
                               a.status === "EM ANDAMENTO" ? "Em Andamento" :
                               a.status === "REJEITADO" ? "Rejeitado" :
                               a.status === "CONCLUIDO" ? "Concluído" : "Não Iniciado"}
