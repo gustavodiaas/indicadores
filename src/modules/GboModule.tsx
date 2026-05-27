@@ -414,16 +414,19 @@ export default function GBOAnalysis() {
           </div>
 
           {/* COLUNA DIREITA: GRÁFICOS */}
-          <div className="xl:w-[60%] flex flex-col gap-6 print:w-full dark:text-slate-100">
+          <div className="xl:w-[60%] flex flex-col gap-6 print:w-full">
             {operations.length > 0 ? (
               <>
                 <div className="print:hidden">
                   <CalculationsDashboard operations={operations} timeUnit={timeUnit} taktTime={calculateTaktTime()} taktTimeUnit={timeUnitTakt} demandUnit={demandUnit} />
                 </div>
-                {/* FRAME DE INTEGRAÇÃO VISUAL PARA O GRÁFICO */}
-                <div className="bg-slate-100 dark:bg-slate-950/50 p-6 rounded-3xl border border-slate-200 dark:border-slate-800">
-                  <div className="bg-white rounded-2xl shadow-sm p-6 print:border-none print:shadow-none print:p-0">
-                    <GBOChart operations={operations} timeUnit={timeUnit} taktTime={calculateTaktTime()} taktTimeUnit={timeUnitTakt} demandUnit={demandUnit} />
+                
+                {/* FRAME DE INTEGRAÇÃO VISUAL */}
+                <div className="relative p-1 rounded-[2rem] bg-slate-200/20 dark:bg-slate-800/30 border border-slate-200/50 dark:border-slate-700/50">
+                  <div className="bg-white rounded-[1.75rem] shadow-xl p-6 print:border-none print:shadow-none print:p-0">
+                    <div className="text-slate-900">
+                      <GBOChart operations={operations} timeUnit={timeUnit} taktTime={calculateTaktTime()} taktTimeUnit={timeUnitTakt} demandUnit={demandUnit} />
+                    </div>
                   </div>
                 </div>
               </>
