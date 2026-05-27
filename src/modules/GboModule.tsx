@@ -283,7 +283,7 @@ export default function GBOAnalysis() {
 
         <div className="flex flex-col xl:flex-row gap-8 pb-12 print:p-12">
           
-          {/* COLUNA ESQUERDA: FOMULÁRIOS (CONFIGURADO COM MODO ESCURO) */}
+          {/* COLUNA ESQUERDA: FOMULÁRIOS */}
           <div className="xl:w-[40%] flex flex-col gap-6 print:hidden">
             
             <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 space-y-4">
@@ -413,23 +413,26 @@ export default function GBOAnalysis() {
             </div>
           </div>
 
-          {/* COLUNA DIREITA: GRÁFICOS E INDICADORES (BLINDADOS COM FUNDO CLARO ESTÁTICO) */}
-          <div className="xl:w-[60%] flex flex-col gap-6 print:w-full text-slate-900 light">
+          {/* COLUNA DIREITA: GRÁFICOS */}
+          <div className="xl:w-[60%] flex flex-col gap-6 print:w-full dark:text-slate-100">
             {operations.length > 0 ? (
               <>
                 <div className="print:hidden">
                   <CalculationsDashboard operations={operations} timeUnit={timeUnit} taktTime={calculateTaktTime()} taktTimeUnit={timeUnitTakt} demandUnit={demandUnit} />
                 </div>
-                <div className="bg-white border border-slate-100 rounded-2xl shadow-sm p-6 print:border-none print:shadow-none print:p-0">
-                  <GBOChart operations={operations} timeUnit={timeUnit} taktTime={calculateTaktTime()} taktTimeUnit={timeUnitTakt} demandUnit={demandUnit} />
+                {/* FRAME DE INTEGRAÇÃO VISUAL PARA O GRÁFICO */}
+                <div className="bg-slate-100 dark:bg-slate-950/50 p-6 rounded-3xl border border-slate-200 dark:border-slate-800">
+                  <div className="bg-white rounded-2xl shadow-sm p-6 print:border-none print:shadow-none print:p-0">
+                    <GBOChart operations={operations} timeUnit={timeUnit} taktTime={calculateTaktTime()} taktTimeUnit={timeUnitTakt} demandUnit={demandUnit} />
+                  </div>
                 </div>
               </>
             ) : (
-              <div className="h-full min-h-[400px] flex flex-col items-center justify-center bg-white border border-slate-100 rounded-2xl shadow-sm print:hidden">
-                <div className="p-4 rounded-full bg-slate-50 mb-4">
-                  <Plus className="w-8 h-8 text-slate-300" />
+              <div className="h-full min-h-[400px] flex flex-col items-center justify-center bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl shadow-sm print:hidden">
+                <div className="p-4 rounded-full bg-slate-50 dark:bg-slate-950 mb-4">
+                  <Plus className="w-8 h-8 text-slate-300 dark:text-slate-700" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-600">Nenhuma operação adicionada</h3>
+                <h3 className="text-lg font-bold text-slate-600 dark:text-slate-300">Nenhuma operação adicionada</h3>
                 <p className="text-sm text-slate-400 mt-2">Preencha o formulário ao lado para gerar o gráfico</p>
               </div>
             )}
