@@ -95,7 +95,7 @@ export function CalculationsDashboard({
             <Activity className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent className="relative z-10">
-            <div className="text-2xl font-bold text-slate-900 dark:text-white drop-shadow-md">{avgTime.toFixed(1)}</div>
+            <div className="text-2xl font-bold text-slate-900 dark:text-white drop-shadow-md">{avgTimeparseFloat(valor.toFixed(2))}</div>
             <Badge variant="outline" className="mt-2 bg-primary/10 text-primary border-primary/20 text-[10px] uppercase tracking-wider">
               {getPtUnit(timeUnit)}
             </Badge>
@@ -114,7 +114,7 @@ export function CalculationsDashboard({
               {bottleneck?.name || "-"}
             </div>
             <Badge variant="outline" className="mt-2 bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-900 text-[10px] uppercase tracking-wider">
-              {bottleneckTime.toFixed(1)} {getPtUnit(timeUnit)}
+              {bottleneckTimeparseFloat(valor.toFixed(2))} {getPtUnit(timeUnit)}
             </Badge>
           </CardContent>
         </Card>
@@ -128,7 +128,7 @@ export function CalculationsDashboard({
           </CardHeader>
           <CardContent className="relative z-10">
             <div className="text-2xl font-bold text-slate-900 dark:text-white drop-shadow-md">
-              {taktTimeInDisplayUnit ? taktTimeInDisplayUnit.toFixed(1) : "-"}
+              {taktTimeInDisplayUnit ? taktTimeInDisplayUnitparseFloat(valor.toFixed(2)) : "-"}
             </div>
             <Badge variant="outline" className="mt-2 bg-primary/10 text-primary border-primary/20 text-[10px] uppercase tracking-wider">
               {getPtUnit(timeUnit)} / un
