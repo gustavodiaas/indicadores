@@ -3,7 +3,6 @@ import {
   type ResumoData, type AppState,
   calcProdutividade, calcPayback, calcMovimentacao, calcQualidade, calcDisponibilidade, calcLeadTime, calcArea 
 } from "@/store/useAppStore";
-import { InputField } from "@/components/InputField";
 import { Trash2, Copy, Check } from "lucide-react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
@@ -17,13 +16,30 @@ interface Props {
   onClearData: () => void;
 }
 
+// Campo de digitação customizado e integrado ao tema escuro do GBO
+function LocalInputField({ label, value, onChange, type = "text" }: { label: string; value: any; onChange: (v: string) => void; type?: string }) {
+  return (
+    <div className="space-y-1.5 w-full">
+      <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest pl-1">
+        {label}
+      </label>
+      <input
+        type={type}
+        value={value ?? ""}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full h-12 px-4 rounded-xl border border-transparent bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#0057FF] transition-all"
+      />
+    </div>
+  );
+}
+
 export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClearData }: Props) {
   const [newAcao, setNewAcao] = useState("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const lockedIndicadores = ["produtividade", "payback"];
-  const selectedIndicadores = Array.from(new Set([...(data.indicadoresConclusao || []), ...lockedIndicadores]));
+  const selectedIndicadores = Array.from(new Set([...(data.indicatorsConclusao || data.indicadoresConclusao || []), ...lockedIndicadores]));
 
   const prod = useMemo(() => calcProdutividade(state.produtividade), [state.produtividade]);
   const pb = useMemo(() => calcPayback(state.payback, state.produtividade, state.resumo), [state.payback, state.produtividade, state.resumo]);
@@ -113,7 +129,7 @@ Nesta consultoria, a área de atuação/intervenção foi ${data.atuacao || "—
       bullets.push(`Índice de qualidade evoluiu para ${qual.indiceT3.toFixed(2).replace(".", ",")}%.`);
     }
     if (selectedIndicadores.includes("disponibilidade")) {
-      const txt = `Disponibilidade: Com a redução das paradas não planejadas, o tempo efetivo de operation da máquina aumentou, representando um ganho de ${disp.aumento.toFixed(2).replace(".", ",")}% na utilização real do recurso.`;
+      const txt = `Disponibilidade: Com a redução das paradas não planejadas, o tempo efetivo de operação da máquina aumentou, representando um ganho de ${disp.aumento.toFixed(2).replace(".", ",")}% na utilização real do recurso.`;
       resTela.push(txt);
       resWord.push(`• DISPONIBILIDADE: Com a redução das paradas não planejadas, o tempo efetivo de operação da máquina aumentou, representando um ganho de ${disp.aumento.toFixed(2).replace(".", ",")}% na utilização real do recurso.`);
       bullets.push(`Aumento de ${disp.aumento.toFixed(2).replace(".", ",")}% na disponibilidade da máquina.`);
@@ -196,33 +212,33 @@ O resultado geral do projeto foi agregador e positivo para a empresa, pois o env
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <InputField label="Empresa" value={data.nomeEmpresa} onChange={v => onChange({ nomeEmpresa: v })} />
-            <InputField label="Cidade" value={data.cidade} onChange={v => onChange({ cidade: v })} />
-            <InputField label="Ramo de Atuação" value={data.ramo} onChange={v => onChange({ ramo: v })} />
-            <InputField label="Especialista em" value={data.especialista} onChange={v => onChange({ especialista: v })} />
-            <InputField label="Total de Colaboradores" value={data.totalColaboradores} onChange={v => onChange({ totalColaboradores: Number(v) || 0 })} type="number" />
-            <InputField label="Turno(s)" value={data.turnos} onChange={v => onChange({ turnos: Number(v) || 1 })} type="number" />
+            <LocalInputField label="Empresa" value={data.nomeEmpresa} onChange={v => onChange({ nomeEmpresa: v })} />
+            <LocalInputField label="Cidade" value={data.cidade} onChange={v => onChange({ cidade: v })} />
+            <LocalInputField label="Ramo de Atuação" value={data.ramo} onChange={v => onChange({ ramo: v })} />
+            <LocalInputField label="Especialista em" value={data.especialista} onChange={v => onChange({ especialista: v })} />
+            <LocalInputField label="Total de Colaboradores" value={data.totalColaboradores} onChange={v => onChange({ totalColaboradores: Number(v) || 0 })} type="number" />
+            <LocalInputField label="Turno(s)" value={data.turnos} onChange={v => onChange({ turnos: Number(v) || 1 })} type="number" />
           </div>
 
           <div className="grid grid-cols-1 gap-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-            <InputField label="Processo Produtivo Mapeado" value={data.processos} onChange={v => onChange({ processes: v })} />
+            <LocalInputField label="Processo Produtivo Mapeado" value={data.processos} onChange={v => onChange({ processos: v })} />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <InputField label="Método (Puxada/Empurrada)" value={data.metodo} onChange={v => onChange({ metodo: v as any })} />
-              <InputField label="Demanda originada por" value={data.origem} onChange={v => onChange({ origem: v })} />
+              <LocalInputField label="Método (Puxada/Empurrada)" value={data.metodo} onChange={v => onChange({ metodo: v })} />
+              <LocalInputField label="Demanda originada por" value={data.origem} onChange={v => onChange({ origem: v })} />
             </div>
-            <InputField label="Oportunidades no setor de" value={data.oportunidades} onChange={v => onChange({ oportunidades: v })} />
+            <LocalInputField label="Oportunidades no setor de" value={data.oportunidades} onChange={v => onChange({ oportunidades: v })} />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <InputField label="Problemas" value={data.problemas || ""} onChange={v => onChange({ problemas: v })} />
-              <InputField label="Ferramentas Lean Aplicadas" value={data.ferramentas} onChange={v => onChange({ ferramentas: v })} />
+              <LocalInputField label="Problemas" value={data.problemas || ""} onChange={v => onChange({ problemas: v })} />
+              <LocalInputField label="Ferramentas Lean Aplicadas" value={data.ferramentas} onChange={v => onChange({ ferramentas: v })} />
             </div>
-            <InputField label="Área de Atuação/Intervenção" value={data.atuacao} onChange={v => onChange({ atuacao: v })} />
-            <InputField label="Motivação da Escolha" value={data.motivacao} onChange={v => onChange({ motivacao: v })} />
+            <LocalInputField label="Área de Atuação/Intervenção" value={data.atuacao} onChange={v => onChange({ atuacao: v })} />
+            <LocalInputField label="Motivação da Escolha" value={data.motivacao} onChange={v => onChange({ motivacao: v })} />
           </div>
 
           <div className="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-4">
             <h4 className="text-sm font-bold text-[#0F172A] dark:text-slate-100 uppercase">Resumo das Ações</h4>
             <div className="flex gap-2 items-end">
-              <div className="flex-1"><InputField label="O que será feito?" value={newAcao} onChange={setNewAcao} /></div>
+              <div className="flex-1"><LocalInputField label="O que será feito?" value={newAcao} onChange={setNewAcao} /></div>
               <button onClick={handleAddAcao} className="h-12 px-6 bg-[#0057FF] text-white rounded-xl font-bold text-xs uppercase shadow-md hover:bg-[#0047D6] transition-colors">Adicionar</button>
             </div>
             <div className="flex flex-col gap-2 mt-4">
