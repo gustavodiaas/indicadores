@@ -17,7 +17,7 @@ interface Props {
 }
 
 // Campo de digitação customizado e integrado ao tema escuro do GBO
-function LocalInputField({ label, value, onChange, type = "text" }: { label: string; value: any; onChange: (v: string) => void; type?: string }) {
+const displayValue = (value === 0 || value === null || value === undefined) ? "" : value;
   return (
     <div className="space-y-1.5 w-full">
       <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest pl-1">
@@ -25,14 +25,13 @@ function LocalInputField({ label, value, onChange, type = "text" }: { label: str
       </label>
       <input
         type={type}
-        value={value ?? ""}
+        value={displayValue}
         onChange={(e) => onChange(e.target.value)}
         className="w-full h-12 px-4 rounded-xl border border-transparent bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#0057FF] transition-all"
       />
     </div>
   );
 }
-
 export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClearData }: Props) {
   const [newAcao, setNewAcao] = useState("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -216,9 +215,18 @@ O resultado geral do projeto foi agregador e positivo para a empresa, pois o env
             <LocalInputField label="Cidade" value={data.cidade} onChange={v => onChange({ cidade: v })} />
             <LocalInputField label="Ramo de Atuação" value={data.ramo} onChange={v => onChange({ ramo: v })} />
             <LocalInputField label="Especialista em" value={data.especialista} onChange={v => onChange({ especialista: v })} />
-            <LocalInputField label="Total de Colaboradores" value={data.totalColaboradores} onChange={v => onChange({ totalColaboradores: Number(v) || 0 })} type="number" />
-            <LocalInputField label="Turno(s)" value={data.turnos} onChange={v => onChange({ turnos: Number(v) || 1 })} type="number" />
-          </div>
+           <LocalInputField 
+  label="Total de Colaboradores" 
+  value={data.totalColaboradores} 
+  onChange={v => onChange({ totalColaboradores: v === "" ? 0 : Number(v) })} 
+  type="number" 
+/>
+<LocalInputField 
+  label="Turno(s)" 
+  value={data.turnos} 
+  onChange={v => onChange({ turnos: v === "" ? 0 : Number(v) })} 
+  type="number" 
+/>
 
           <div className="grid grid-cols-1 gap-4 pt-4 border-t border-slate-100 dark:border-slate-800">
             <LocalInputField label="Processo Produtivo Mapeado" value={data.processos} onChange={v => onChange({ processos: v })} />
