@@ -35,6 +35,8 @@ export function CalculationsDashboard({
     return u
   }
 
+  const formatNum = (num: number) => parseFloat(num.toFixed(2))
+
   const convertToSeconds = (time: number, unit: "minutes" | "seconds") => (unit === "minutes" ? time * 60 : time)
   const convertFromSeconds = (timeSec: number, targetUnit: "minutes" | "seconds") =>
     targetUnit === "minutes" ? timeSec / 60 : timeSec
@@ -65,7 +67,7 @@ export function CalculationsDashboard({
             <Clock className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent className="relative z-10">
-            <div className="text-2xl font-bold text-slate-900 dark:text-white drop-shadow-md">{totalTime.toFixed(1)}</div>
+            <div className="text-2xl font-bold text-slate-900 dark:text-white drop-shadow-md">{formatNum(totalTime)}</div>
             <Badge variant="outline" className="mt-2 bg-primary/10 text-primary border-primary/20 text-[10px] uppercase tracking-wider">
               {getPtUnit(timeUnit)}
             </Badge>
@@ -95,7 +97,7 @@ export function CalculationsDashboard({
             <Activity className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent className="relative z-10">
-            <div className="text-2xl font-bold text-slate-900 dark:text-white drop-shadow-md">{avgTimeparseFloat(valor.toFixed(2))}</div>
+            <div className="text-2xl font-bold text-slate-900 dark:text-white drop-shadow-md">{formatNum(avgTime)}</div>
             <Badge variant="outline" className="mt-2 bg-primary/10 text-primary border-primary/20 text-[10px] uppercase tracking-wider">
               {getPtUnit(timeUnit)}
             </Badge>
@@ -114,7 +116,7 @@ export function CalculationsDashboard({
               {bottleneck?.name || "-"}
             </div>
             <Badge variant="outline" className="mt-2 bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-900 text-[10px] uppercase tracking-wider">
-              {bottleneckTimeparseFloat(valor.toFixed(2))} {getPtUnit(timeUnit)}
+              {formatNum(bottleneckTime)} {getPtUnit(timeUnit)}
             </Badge>
           </CardContent>
         </Card>
@@ -128,7 +130,7 @@ export function CalculationsDashboard({
           </CardHeader>
           <CardContent className="relative z-10">
             <div className="text-2xl font-bold text-slate-900 dark:text-white drop-shadow-md">
-              {taktTimeInDisplayUnit ? taktTimeInDisplayUnitparseFloat(valor.toFixed(2)) : "-"}
+              {taktTimeInDisplayUnit ? formatNum(taktTimeInDisplayUnit) : "-"}
             </div>
             <Badge variant="outline" className="mt-2 bg-primary/10 text-primary border-primary/20 text-[10px] uppercase tracking-wider">
               {getPtUnit(timeUnit)} / un
