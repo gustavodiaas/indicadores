@@ -44,14 +44,12 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
     onUpdatePlanoAcao(state.planoAcao.acoes.filter(a => a.id !== id));
   };
 
-  // TEXTO ORIGINAL PARA A TELA DO RESUMO (MANTIDO 100% FIEL)
   const descTexto = useMemo(() => {
     const colabTxt = data.totalColaboradores === 1 ? "colaborador" : "colaboradores";
     const turnoTxt = data.turnos === 1 ? "Turno" : "Turnos";
     return `A Empresa ${data.nomeEmpresa || "—"}, da cidade de ${data.cidade || "—"} no Estado do Rio Grande do Sul, atua no ramo de ${data.ramo || "—"}, especialista em ${data.especialista || "—"}, conta com ${data.totalColaboradores || "0"} ${colabTxt} atuando em ${data.turnos} ${turnoTxt}. O produto mapeado segue o seguinte processo produtivo: ${data.processos || "—"}, com método de produção ${data.metodo || "—"}, onde a demanda é originada por ${data.origem || "—"}. Ao longo do mapeamento foram identificadas oportunidades no setor de ${data.oportunidades || "—"}, por problemas de ${data.problemas || "—"}. Nesta consultoria, a área de atuação/intervenção foi ${data.atuacao || "—"}.`;
   }, [data]);
 
-  // VERSÃO ESTRUTURADA EXCLUSIVA PARA O COPIAR E COLAR DO WORD
   const descTextoWord = useMemo(() => {
     const colabTxt = data.totalColaboradores === 1 ? "colaborador" : "colaboradores";
     const turnoTxt = data.turnos === 1 ? "Turno" : "Turnos";
@@ -66,7 +64,6 @@ Ao longo do mapeamento foram identificadas oportunidades no setor de ${data.opor
 Nesta consultoria, a área de atuação/intervenção foi ${data.atuacao || "—"}.`;
   }, [data]);
 
-  // LAUDOS E TEXTOS DINÂMICOS DA CONCLUSÃO
   const laudosSistemas = useMemo(() => {
     const acoesResumo = state.planoAcao.acoes.filter(a => a.origin !== "5w2h");
     const listaAcoes = acoesResumo.length > 0 ? acoesResumo.map(a => a.what).join(", ") : "—";
@@ -77,7 +74,7 @@ Nesta consultoria, a área de atuação/intervenção foi ${data.atuacao || "—
     let bullets: string[] = [];
 
     if (selectedIndicadores.includes("produtividade")) {
-      const txt = `Produtividade: No estágio inicial, a produtividade era de ${prod.pphT1.toFixed(6).replace(".", ",")} ${u}/h/op. Após as melhorias, a produtividade subiu para ${prod.pphT3.toFixed(6).replace(".", ",")} ${u}/h/op, representando um ganho direto de ${prod.ganho.toFixed(6).replace(".", ",")}% na eficiência operacional da célula.`;
+      const txt = `Produtividade: No estágio inicial, a produtividade era de ${prod.pphT1.toFixed(6).replace(".", ",")} ${u}/h/op. Após as melhorias, a produtividade subiu para ${prod.pphT3.toFixed(6).replace(".", ",")} ${u}/h/op, representing um ganho direto de ${prod.ganho.toFixed(6).replace(".", ",")}% na eficiência operacional da célula.`;
       resTela.push(txt);
       resWord.push(`• PRODUTIVIDADE: No estágio inicial, a produtividade era de ${prod.pphT1.toFixed(6).replace(".", ",")} ${u}/h/op. Após as melhorias, a produtividade subiu para ${prod.pphT3.toFixed(6).replace(".", ",")} ${u}/h/op, representando um ganho direto de ${prod.ganho.toFixed(6).replace(".", ",")}% na eficiência operacional da célula.`);
       bullets.push(`Aumento de ${prod.ganho.toFixed(6).replace(".", ",")}% em produtividade.`);
@@ -153,7 +150,7 @@ Após a definição do ponto de intervenção, monitoramento e validação das m
     
     const fimWord = `4. CONCLUSÃO DA INTERVENÇÃO
 
-O resultado geral do projeto foi agregador e positivo para a empresa, pois o envolvimento da equipe foi primordial para garantir o conhecimento necessário através do plano de ação, treinamentos, trabalho realizado e resultados alcançados. Com isso, a empresa pode manter o aculturamento do pensamento Lean e replicar os conceitos da melhoria contínua para os demais setores e linhas de produção.`;
+O resultado geral do projeto foi agregador e positivo para a empresa, pois o envolvimento da equipe foi primordial para garantir o conhecimento necessário através do plano de ação, treinamentos, trabalho realizado e resultados alcançados. Com isso, a empresa pode manter o aculturamento do pensamento Lean e replicar os conceitos da melhoria contínControle do pensamento Lean e replicar os conceitos da melhoria contínua para os demais setores e linhas de produção.`;
 
     return {
       textoTela: [introTela, desTela, ...resTela, fimTela].join("\n\n"),
@@ -185,16 +182,20 @@ O resultado geral do projeto foi agregador e positivo para a empresa, pois o env
 
   return (
     <>
-      <div className="flex gap-8 h-full">
-        <div className="w-[55%] flex flex-col gap-6 overflow-y-auto pr-4 pb-36">
-          <div className="flex items-center justify-between pb-2">
-            <h3 className="font-bold text-slate-800 text-lg uppercase tracking-tight">Entrada de Dados</h3>
-            <button onClick={() => setShowConfirmModal(true)} className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-lg font-bold text-[10px] uppercase tracking-wider transition-colors border border-rose-100 shadow-sm">
+      <div className="flex flex-col lg:flex-row gap-8 h-full">
+        {/* COLUNA ESQUERDA: ENTRADA DE DADOS */}
+        <div className="w-full lg:w-[55%] flex flex-col gap-6 overflow-y-auto pr-2 pb-36">
+          <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-lg uppercase tracking-tight">Entrada de Dados</h3>
+            <button 
+              onClick={() => setShowConfirmModal(true)} 
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-950/50 rounded-lg font-bold text-[10px] uppercase tracking-wider transition-colors border border-rose-100 dark:border-rose-900/40 shadow-sm"
+            >
               <Trash2 className="w-3.5 h-3.5" /> Limpar Dados
             </button>
           </div>
           
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <InputField label="Empresa" value={data.nomeEmpresa} onChange={v => onChange({ nomeEmpresa: v })} />
             <InputField label="Cidade" value={data.cidade} onChange={v => onChange({ cidade: v })} />
             <InputField label="Ramo de Atuação" value={data.ramo} onChange={v => onChange({ ramo: v })} />
@@ -203,14 +204,14 @@ O resultado geral do projeto foi agregador e positivo para a empresa, pois o env
             <InputField label="Turno(s)" value={data.turnos} onChange={v => onChange({ turnos: Number(v) || 1 })} type="number" />
           </div>
 
-          <div className="grid grid-cols-1 gap-4 pt-4 border-t border-slate-100">
+          <div className="grid grid-cols-1 gap-4 pt-4 border-t border-slate-100 dark:border-slate-800">
             <InputField label="Processo Produtivo Mapeado" value={data.processos} onChange={v => onChange({ processos: v })} />
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <InputField label="Método (Puxada/Empurrada)" value={data.metodo} onChange={v => onChange({ metodo: v as any })} />
               <InputField label="Demanda originada por" value={data.origem} onChange={v => onChange({ origem: v })} />
             </div>
             <InputField label="Oportunidades no setor de" value={data.oportunidades} onChange={v => onChange({ oportunidades: v })} />
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <InputField label="Problemas" value={data.problemas || ""} onChange={v => onChange({ problemas: v })} />
               <InputField label="Ferramentas Lean Aplicadas" value={data.ferramentas} onChange={v => onChange({ ferramentas: v })} />
             </div>
@@ -218,59 +219,66 @@ O resultado geral do projeto foi agregador e positivo para a empresa, pois o env
             <InputField label="Motivação da Escolha" value={data.motivacao} onChange={v => onChange({ motivacao: v })} />
           </div>
 
-          <div className="pt-4 border-t border-slate-100 space-y-4">
-            <h4 className="text-sm font-bold text-slate-700 uppercase">Resumo das Ações</h4>
+          <div className="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-4">
+            <h4 className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase">Resumo das Ações</h4>
             <div className="flex gap-2 items-end">
               <div className="flex-1"><InputField label="O que será feito?" value={newAcao} onChange={setNewAcao} /></div>
               <button onClick={handleAddAcao} className="h-12 px-6 bg-[#0057FF] text-white rounded-xl font-bold text-xs uppercase shadow-md hover:bg-[#0047D6] transition-colors">Adicionar</button>
             </div>
             <div className="flex flex-col gap-2 mt-4">
               {acoesVisiveis.map(a => (
-                <div key={a.id} className="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-xl shadow-sm">
-                  <span className="text-xs font-bold text-slate-700 truncate pr-4 flex-1">{a.what}</span>
-                  <button onClick={() => handleRemoveAcao(a.id)} className="p-1.5 hover:bg-rose-50 rounded-lg transition-colors text-rose-500"><Trash2 className="h-4 w-4" /></button>
+                <div key={a.id} className="flex items-center justify-between p-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-xl shadow-sm">
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-300 truncate pr-4 flex-1">{a.what}</span>
+                  <button onClick={() => handleRemoveAcao(a.id)} className="p-1.5 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors text-rose-500"><Trash2 className="h-4 w-4" /></button>
                 </div>
               ))}
             </div>
           </div>
         </div>
 
-        <div className="w-[45%] flex flex-col gap-6 overflow-y-auto pb-36">
-          <div className="relative bg-white p-6 rounded-2xl shadow-sm border border-slate-100 transition-all hover:border-[#0057FF]/20">
-            {/* O BOTÃO COPIA A VERSÃO DO WORD (descTextoWord) */}
-            <button onClick={() => { navigator.clipboard.writeText(descTextoWord); setCopiedId("desc"); toast.success("Copiado com formatação estruturada!"); setTimeout(() => setCopiedId(null), 2000); }} className="absolute top-4 right-4 p-2 rounded-lg bg-slate-50 text-slate-400 hover:bg-[#0057FF] hover:text-white transition-all shadow-sm">
+        {/* COLUNA DIREITA: VISUALIZAÇÃO DOS TEXTOS (PINTADOS DE DEEP SLATE COM CONTRASTE) */}
+        <div className="w-full lg:w-[45%] flex flex-col gap-6 overflow-y-auto pb-36">
+          <div className="relative bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/60 transition-all hover:border-[#0057FF]/20">
+            <button 
+              onClick={() => { navigator.clipboard.writeText(descTextoWord); setCopiedId("desc"); toast.success("Copiado com formatação estruturada!"); setTimeout(() => setCopiedId(null), 2000); }} 
+              className="absolute top-4 right-4 p-2 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-400 dark:text-slate-500 hover:bg-[#0057FF] dark:hover:bg-[#0057FF] hover:text-white transition-all shadow-sm border border-slate-100 dark:border-slate-800/40"
+            >
               {copiedId === "desc" ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
             </button>
             <h4 className="text-[10px] font-bold text-[#0057FF] uppercase tracking-widest mb-4">Descrição do Processo</h4>
-            {/* A TELA EXIBE A VERSÃO LIMPA ORIGINAL (descTexto) */}
-            <p className="text-[13px] text-slate-600 leading-relaxed text-justify whitespace-pre-wrap">{descTexto}</p>
+            <p className="text-[13px] text-slate-600 dark:text-slate-200 leading-relaxed text-justify whitespace-pre-wrap">{descTexto}</p>
           </div>
 
-          <div className="relative bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
-            {/* O BOTÃO COPIA A VERSÃO DO WORD (laudosSistemas.textoWord) */}
-            <button onClick={() => { navigator.clipboard.writeText(laudosSistemas.textoWord); setCopiedId("conc"); toast.success("Copiado com formatação estruturada!"); setTimeout(() => setCopiedId(null), 2000); }} className="absolute top-4 right-4 p-2 rounded-lg bg-slate-50 text-slate-400 hover:bg-[#0057FF] hover:text-white transition-all shadow-sm border border-slate-100">
+          <div className="relative bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/60 flex flex-col">
+            <button 
+              onClick={() => { navigator.clipboard.writeText(laudosSistemas.textoWord); setCopiedId("conc"); toast.success("Copiado com formatação estruturada!"); setTimeout(() => setCopiedId(null), 2000); }} 
+              className="absolute top-4 right-4 p-2 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-400 dark:text-slate-500 hover:bg-[#0057FF] dark:hover:bg-[#0057FF] hover:text-white transition-all shadow-sm border border-slate-100 dark:border-slate-800/40"
+            >
               {copiedId === "conc" ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
             </button>
-            <h4 className="text-[10px] font-bold text-[#0057FF] uppercase tracking-widest mb-4 border-b border-slate-100 pb-2">Conclusão do Projeto</h4>
-            <div className="text-[13px] text-slate-700 leading-relaxed text-justify space-y-6 flex-1">
-              {/* A TELA EXIBE A VERSÃO LIMPA ORIGINAL (laudosSistemas.textoTela) */}
+            <h4 className="text-[10px] font-bold text-[#0057FF] uppercase tracking-widest mb-4 border-b border-slate-100 dark:border-slate-800/60 pb-2">Conclusão do Projeto</h4>
+            <div className="text-[13px] text-slate-700 dark:text-slate-200 leading-relaxed text-justify space-y-6 flex-1">
               <div className="whitespace-pre-wrap">{laudosSistemas.textoTela}</div> 
               {laudosSistemas.bulletPoints.length > 0 && (
-                <div className="bg-slate-50 p-5 space-y-3 rounded-xl shadow-sm mt-4">
+                <div className="bg-slate-50 dark:bg-slate-950 p-5 space-y-3 rounded-xl shadow-sm mt-4 border border-slate-100 dark:border-slate-800/60>">
                   {laudosSistemas.bulletPoints.map((point, index) => (
-                    <p key={index} className="font-bold text-slate-800 text-sm tracking-tight">• {point}</p>
+                    <p key={index} className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-tight">• {point}</p>
                   ))}
                 </div>
               )}
             </div>
-            <div className="mt-8 pt-4 border-t border-slate-100">
+            <div className="mt-8 pt-4 border-t border-slate-100 dark:border-slate-800">
               <h4 className="text-[10px] font-bold text-[#0057FF] uppercase tracking-widest mb-3">Indicadores</h4>
               <div className="flex flex-wrap gap-2">
                 {indicadoresList.map((ind) => {
                   const isLocked = lockedIndicadores.includes(ind.id);
                   const isActive = selectedIndicadores.includes(ind.id);
                   return (
-                    <button key={ind.id} onClick={() => toggleIndicador(ind.id)} className={`px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all border ${isActive ? "bg-[#0057FF] text-white border-[#0057FF] shadow-md" : "bg-slate-50 text-slate-500 border-slate-100 hover:bg-slate-100"} ${isLocked ? "cursor-not-allowed opacity-90" : ""}`}>
+                    <button 
+                      key={ind.id} 
+                      onClick={() => toggleIndicador(ind.id)} 
+                      className={`px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all border ${isActive ? "bg-[#0057FF] text-white border-[#0057FF] shadow-md" : "bg-slate-50 dark:bg-slate-950 text-slate-500 dark:text-slate-400 border-slate-100 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900"} ${isLocked ? "cursor-not-allowed opacity-90" : ""}`}
+                    >
                       {ind.label}
                     </button>
                   );
@@ -282,22 +290,22 @@ O resultado geral do projeto foi agregador e positivo para a empresa, pois o env
       </div>
 
       <Dialog open={showConfirmModal} onOpenChange={setShowConfirmModal}>
-        <DialogContent className="bg-white rounded-2xl border-none shadow-2xl p-8 max-w-sm mx-auto">
+        <DialogContent className="bg-white dark:bg-slate-900 rounded-2xl border-none shadow-2xl p-8 max-w-sm mx-auto">
           <div className="flex flex-col items-center text-center">
-            <div className="w-16 h-16 bg-rose-50 rounded-full flex items-center justify-center mb-4">
+            <div className="w-16 h-16 bg-rose-50 dark:bg-rose-950/40 rounded-full flex items-center justify-center mb-4">
               <Trash2 className="h-8 w-8 text-rose-500" />
             </div>
             <DialogHeader>
-              <DialogTitle className="text-xl font-bold text-slate-800">Limpar tudo?</DialogTitle>
-              <DialogDescription className="text-slate-500 mt-2">
+              <DialogTitle className="text-xl font-bold text-slate-800 dark:text-slate-100">Limpar tudo?</DialogTitle>
+              <DialogDescription className="text-slate-500 dark:text-slate-400 mt-2">
                 Esta ação não pode ser desfeita. Deseja realmente apagar todos os dados de todas as abas do sistema?
               </DialogDescription>
             </DialogHeader>
             <DialogFooter className="flex gap-3 w-full mt-8">
-              <Button variant="outline" className="flex-1 rounded-xl h-12 font-bold text-slate-500" onClick={() => setShowConfirmModal(false)}>
+              <Button variant="outline" className="flex-1 rounded-xl h-12 font-bold text-slate-500 dark:text-slate-400" onClick={() => setShowConfirmModal(false)}>
                 Não
               </Button>
-              <Button className="flex-1 bg-rose-500 hover:bg-rose-600 text-white rounded-xl h-12 font-bold shadow-lg shadow-rose-100" onClick={() => { setShowConfirmModal(false); onClearData(); toast.success("Todos os dados foram limpos."); }}>
+              <Button className="flex-1 bg-rose-500 hover:bg-rose-600 text-white rounded-xl h-12 font-bold shadow-lg shadow-rose-100 dark:shadow-none" onClick={() => { setShowConfirmModal(false); onClearData(); toast.success("Todos os dados foram limpos."); }}>
                 Sim, apagar
               </Button>
             </DialogFooter>
