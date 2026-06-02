@@ -35,10 +35,10 @@ export function ProdutividadeModule({ data, onChange }: Props) {
         <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Configuração</span>
-              <Info className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 cursor-help hover:text-[#0057FF]" />
+              <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Calculado com 21 dias úteis</span>
+              <Info className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 cursor-help hover:text-[#0057FF]"/>
             </div>
-            <span className="text-sm font-semibold tracking-wide text-slate-900 dark:text-slate-100">Unidade de Medida</span>
+            <span className="text-sm font-semibold tracking-wide text-slate-900 dark:text-slate-100">Medidor de Produtividade</span>
           </div>
           <input 
             type="text" 
