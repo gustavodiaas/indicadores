@@ -65,6 +65,7 @@ export default function GBOAnalysis() {
   const [newOperationName, setNewOperationName] = useState("")
   const [newOperationTime, setNewOperationTime] = useState("")
   const [previousTimeUnitTakt, setPreviousTimeUnitTakt] = useState<"minutes" | "seconds" | "hours">(timeUnitTakt)
+  const [demandPeriod, setDemandPeriod] = useState<"dia" | "mes">("dia")
   const [errors, setErrors] = useState<{
     operationName?: string
     operationTime?: string
@@ -103,9 +104,11 @@ export default function GBOAnalysis() {
   const calculateTaktTime = (): number | undefined => {
     if (!workShiftTime || !dailyDemand) return undefined
     const shiftTime = Number.parseFloat(workShiftTime)
-    const demand = Number.parseFloat(dailyDemand)
+    const rawDemand = Number.parseFloat(dailyDemand)
 
-    if (shiftTime <= 0 || demand <= 0) return undefined
+    if (shiftTime <= 0 || rawDemand <= 0) return undefined
+
+    const demand = demandPeriod === "mes" ? rawDemand / 21 : rawDemand
 
     let shiftTimeInSeconds = shiftTime
     if (timeUnitTakt === "minutes") {
@@ -318,6 +321,23 @@ export default function GBOAnalysis() {
               <h3 className="font-bold text-[#0F172A] dark:text-slate-100 border-b border-slate-100 dark:border-slate-800 pb-2 flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-[#0057FF] animate-pulse"></div>
                 Cálculo do Takt Time
+                <div className="ml-auto flex items-center gap-1.5">
+                  <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Demanda</span>
+                  <div className="flex rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700">
+                    <button
+                      onClick={() => setDemandPeriod("dia")}
+                      className={`px-3 py-1 text-[10px] font-bold uppercase tracking-widest transition-all ${demandPeriod === "dia" ? "bg-[#0057FF] text-white" : "bg-slate-50 dark:bg-slate-950 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900"}`}
+                    >
+                      Dia
+                    </button>
+                    <button
+                      onClick={() => setDemandPeriod("mes")}
+                      className={`px-3 py-1 text-[10px] font-bold uppercase tracking-widest transition-all ${demandPeriod === "mes" ? "bg-[#0057FF] text-white" : "bg-slate-50 dark:bg-slate-950 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900"}`}
+                    >
+                      Mês
+                    </button>
+                  </div>
+                </div>
               </h3>
               
               <div className="space-y-3">
@@ -348,7 +368,7 @@ export default function GBOAnalysis() {
                 </div>
                 
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest pl-1">Demanda ({demandUnit}/dia)</label>
+                  <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest pl-1">Demanda ({demandUnit}/{demandPeriod === "mes" ? "mês" : "dia"})</label>
                   <div className="grid grid-cols-2 gap-4">
                     <input type="number" step="1" min="0" placeholder="100" value={dailyDemand}
                       onChange={(e) => { updateModule("gbo", { demanda: Number(e.target.value) }); validateTaktFields(); }} onBlur={validateTaktFields}
