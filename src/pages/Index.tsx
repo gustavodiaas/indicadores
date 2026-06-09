@@ -24,7 +24,7 @@ import GBOAnalysis from "@/modules/GboModule";
 type Theme = "light" | "dark" | "system";
 
 const Index = () => {
-  const { state, activeModule, setActiveModule, updateModule, clearData } = useAppStore();
+  const { state, activeModule, setActiveModule, updateModule, clearData, loadState } = useAppStore();
   
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window !== "undefined") {
@@ -436,7 +436,7 @@ const Index = () => {
       <main className="flex-1 overflow-y-auto p-2 md:p-4 pb-32 print:p-0 print:overflow-visible">
         {!["home", "gbo", "planoAcao", "a3"].includes(activeModule) && (
           <div className="print:hidden relative z-[100] mb-2 animate-in slide-in-from-top-2 duration-300">
-            <Topbar onExportWord={handleExportWord} />
+            <Topbar onExportWord={handleExportWord} state={state} loadState={loadState} />
           </div>
         )}
         <div className={`w-full transition-all min-h-full relative print:shadow-none print:border-none print:rounded-none print:p-0 ${activeModule === "home" || activeModule === "a3" ? "bg-transparent p-0" : "bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200/50 dark:border-slate-800/40 p-4 md:p-6"}`}>
