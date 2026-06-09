@@ -1,4 +1,4 @@
-import { FileText, BarChart3, ShieldAlert, Upload } from "lucide-react";
+import { FileText, BarChart3, ShieldAlert, Upload, Save, FolderOpen } from "lucide-react";
 import { useRef } from "react";
 import { useAppStore } from "@/store/useAppStore";
 import { toast } from "sonner";
@@ -9,6 +9,7 @@ interface Props {
 
 export function Topbar({ onExportWord }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { updateModule } = useAppStore();
 
   const handleImportClick = () => {
     fileInputRef.current?.click();
@@ -22,27 +23,62 @@ export function Topbar({ onExportWord }: Props) {
       const text = await file.text();
       const parsedData = JSON.parse(text);
       
-      useAppStore.setState((state) => ({
-        ...state,
-        resumo: { ...state.resumo, ...(parsedData?.resumo || {}) },
-        produtividade: { ...state.produtividade, ...(parsedData?.produtividade || {}) },
-        payback: { ...state.payback, ...(parsedData?.payback || {}) },
-        movimentacao: { ...state.movimentacao, ...(parsedData?.movimentacao || {}) },
-        qualidade: { ...state.qualidade, ...(parsedData?.qualidade || {}) },
-        disponibilidade: { ...state.disponibilidade, ...(parsedData?.disponibilidade || {}) },
-        leadtime: { ...state.leadtime, ...(parsedData?.leadtime || {}) },
-        area: { ...state.area, ...(parsedData?.area || {}) }
-      }));
+      if (parsedData.resumo) updateModule("resumo", parsedData.resumo);
+      if (parsedData.produtividade) updateModule("produtividade", parsedData.produtividade);
+      if (parsedData.payback) updateModule("payback", parsedData.payback);
+      if (parsedData.movimentacao) updateModule("movimentacao", parsedData.movimentacao);
+      if (parsedData.qualidade) updateModule("qualidade", parsedData.qualidade);
+      if (parsedData.disponibilidade) updateModule("disponibilidade", parsedData.disponibilidade);
+      if (parsedData.leadtime) updateModule("leadtime", parsedData.leadtime);
+      if (parsedData.area) updateModule("area", parsedData.area);
 
-      toast.success("Projeto carregado com sucesso!");
+      toast.success("Projeto importado com sucesso!");
     } catch (error: any) {
       console.error("ERRO DE IMPORTAÇÃO:", error);
-      // Agora o balão vermelho vai mostrar o erro exato do sistema, e não apenas uma mensagem genérica
       toast.error(`Erro na leitura: ${error?.message || "Falha desconhecida"}`);
     } finally {
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
+
+  const handleSaveLocal = () => {
+    const current = useAppStore.getState();
+    const projectData = {
+      resumo: current.resumo,
+      produtividade: current.produtividade,
+      payback: current.payback,
+      movimentacao: current.movimentacao,
+      qualidade: current.qualidade,
+      disponibilidade: current.disponibilidade,
+      leadtime: current.leadtime,
+      area: current.area
+    };
+    localStorage.setItem("lean_projeto_local", JSON.stringify(projectData));
+    toast.success("Projeto salvo no navegador!");
+  };
+
+  const handleLoadLocal = () => {
+    const localData = localStorage.getItem("lean_projeto_local");
+    if (!localData) {
+      toast.error("Nenhum projeto salvo encontrado neste navegador.");
+      return;
+    }
+    try {
+      const parsedData = JSON.parse(localData);
+      if (parsedData.resumo) updateModule("resumo", parsedData.resumo);
+      if (parsedData.produtividade) updateModule("produtividade", parsedData.produtividade);
+      if (parsedData.payback) updateModule("payback", parsedData.payback);
+      if (parsedData.movimentacao) updateModule("movimentacao", parsedData.movimentacao);
+      if (parsedData.qualidade) updateModule("qualidade", parsedData.qualidade);
+      if (parsedData.disponibilidade) updateModule("disponibilidade", parsedData.disponibilidade);
+      if (parsedData.leadtime) updateModule("leadtime", parsedData.leadtime);
+      if (parsedData.area) updateModule("area", parsedData.area);
+      toast.success("Projeto carregado do cache com sucesso!");
+    } catch (e) {
+      toast.error("Erro ao carregar o projeto local.");
+    }
+  };
+
   return (
     <div className="w-full z-[100] print:hidden mb-6 shrink-0">
       
@@ -89,11 +125,27 @@ export function Topbar({ onExportWord }: Props) {
           />
 
           <button 
+            onClick={handleSaveLocal}  
+            className="flex items-center gap-2 px-4 py-3 text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 rounded-xl transition-all shadow-sm active:scale-95 uppercase tracking-widest"
+          >
+            <Save className="h-4 w-4" />
+            Salvar no PC
+          </button>
+
+          <button 
+            onClick={handleLoadLocal}  
+            className="flex items-center gap-2 px-4 py-3 text-[10px] font-bold bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 hover:bg-amber-100 rounded-xl transition-all shadow-sm active:scale-95 uppercase tracking-widest"
+          >
+            <FolderOpen className="h-4 w-4" />
+            Carregar Salvo
+          </button>
+
+          <button 
             onClick={handleImportClick} 
-            className="flex items-center gap-2 px-8 py-3 text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-all shadow-sm active:scale-95 uppercase tracking-widest"
+            className="flex items-center gap-2 px-6 py-3 text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-all shadow-sm active:scale-95 uppercase tracking-widest"
           >
             <Upload className="h-4 w-4" /> 
-            Importar
+            Importar .lean
           </button>
 
           <button 
