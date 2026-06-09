@@ -122,7 +122,7 @@ export function Topbar({ onExportWord, state, loadState }: Props) {
             className="flex items-center gap-2 px-6 py-3 text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-all shadow-sm active:scale-95 uppercase tracking-widest"
           >
             <Download className="h-4 w-4" />
-            Exportar .lean
+            Exportar Dados
           </button>
 
           <button 
@@ -130,7 +130,7 @@ export function Topbar({ onExportWord, state, loadState }: Props) {
             className="flex items-center gap-2 px-6 py-3 text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-all shadow-sm active:scale-95 uppercase tracking-widest"
           >
             <Upload className="h-4 w-4" /> 
-            Importar .lean
+            Importar Dados
           </button>
 
           <button 
