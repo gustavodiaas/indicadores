@@ -14,35 +14,35 @@ export function Topbar({ onExportWord }: Props) {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      try {
-        const content = event.target?.result as string;
-        const parsedData = JSON.parse(content);
-        
-       useAppStore.setState((state) => ({
-          ...state,
-          resumo: { ...state.resumo, ...parsedData.resumo },
-          produtividade: { ...state.produtividade, ...parsedData.produtividade },
-          payback: { ...state.payback, ...parsedData.payback },
-          movimentacao: { ...state.movimentacao, ...parsedData.movimentacao },
-          qualidade: { ...state.qualidade, ...parsedData.qualidade },
-          disponibilidade: { ...state.disponibilidade, ...parsedData.disponibilidade },
-          leadtime: { ...state.leadtime, ...parsedData.leadtime },
-          area: { ...state.area, ...parsedData.area }
-        }));
-        toast.success("Projeto carregado com sucesso!");
-      } catch (error) {
-        console.error("ERRO DE IMPORTAÇÃO:", error);
-        toast.error("Erro na leitura. O arquivo não é um .lean válido.");
-      } finally {
-        if (fileInputRef.current) fileInputRef.current.value = "";
-      }
-    };
+    try {
+      // Leitura moderna e síncrona
+      const text = await file.text();
+      const parsedData = JSON.parse(text);
+      
+      useAppStore.setState((state) => ({
+        ...state,
+        resumo: { ...state.resumo, ...parsedData.resumo },
+        produtividade: { ...state.produtividade, ...parsedData.produtividade },
+        payback: { ...state.payback, ...parsedData.payback },
+        movimentacao: { ...state.movimentacao, ...parsedData.movimentacao },
+        qualidade: { ...state.qualidade, ...parsedData.qualidade },
+        disponibilidade: { ...state.disponibilidade, ...parsedData.disponibilidade },
+        leadtime: { ...state.leadtime, ...parsedData.leadtime },
+        area: { ...state.area, ...parsedData.area }
+      }));
+
+      toast.success("Projeto carregado com sucesso!");
+    } catch (error) {
+      console.error("ERRO DE IMPORTAÇÃO:", error);
+      toast.error("Erro na leitura. O arquivo não é um .lean válido.");
+    } finally {
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
     
     // Forçando a leitura como texto e codificação padrão da web
     reader.readAsText(file, "UTF-8");
