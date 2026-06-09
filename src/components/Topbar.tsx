@@ -1,4 +1,4 @@
-import { FileText, BarChart3, ShieldAlert, Upload } from "lucide-react";
+import { FileText, BarChart3, ShieldAlert, Upload, Download } from "lucide-react";
 import { useRef } from "react";
 import { useAppStore } from "@/store/useAppStore";
 import { toast } from "sonner";
@@ -9,11 +9,38 @@ interface Props {
 
 export function Topbar({ onExportWord }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  // Puxando a função nativa que atualiza a tela na hora
-  const { loadState } = useAppStore();
+  const { state, loadState } = useAppStore();
 
   const handleImportClick = () => {
     fileInputRef.current?.click();
+  };
+
+  const handleExportLean = () => {
+    try {
+      const exportData = {
+        resumo: state.resumo,
+        produtividade: state.produtividade,
+        payback: state.payback,
+        area: state.area,
+        movimentacao: state.movimentacao,
+        disponibilidade: state.disponibilidade,
+        qualidade: state.qualidade,
+        leadtime: state.leadtime,
+      };
+
+      const json = JSON.stringify(exportData, null, 2);
+      const blob = new Blob([json], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      const nomeEmpresa = state.resumo?.nomeEmpresa?.trim().replace(/\s+/g, "_") || "Projeto";
+      link.href = url;
+      link.download = `${nomeEmpresa}.lean`;
+      link.click();
+      URL.revokeObjectURL(url);
+      toast.success("Projeto exportado com sucesso!");
+    } catch (error: any) {
+      toast.error(`Erro ao exportar: ${error?.message || "Falha desconhecida"}`);
+    }
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,7 +50,7 @@ export function Topbar({ onExportWord }: Props) {
     try {
       const text = await file.text();
       const parsedData = JSON.parse(text);
-      
+
       const saved = localStorage.getItem("consultoria-lean-state");
       const current = saved ? JSON.parse(saved) : {};
 
@@ -36,12 +63,10 @@ export function Topbar({ onExportWord }: Props) {
         qualidade: { ...current.qualidade, ...(parsedData?.qualidade || {}) },
         disponibilidade: { ...current.disponibilidade, ...(parsedData?.disponibilidade || {}) },
         leadtime: { ...current.leadtime, ...(parsedData?.leadtime || {}) },
-        area: { ...current.area, ...(parsedData?.area || {}) }
+        area: { ...current.area, ...(parsedData?.area || {}) },
       };
 
-      // Injeta os dados na tela instantaneamente (sem recarregar a página)
       loadState(newState as any);
-
       toast.success("Projeto importado com sucesso!");
     } catch (error: any) {
       console.error("ERRO DE IMPORTAÇÃO:", error);
@@ -88,11 +113,19 @@ export function Topbar({ onExportWord }: Props) {
 
           <input
             type="file"
-            accept=".lean"
+            accept=".lean,application/json"
             ref={fileInputRef}
             onChange={handleFileChange}
             className="hidden"
           />
+
+          <button
+            onClick={handleExportLean}
+            className="flex items-center gap-2 px-6 py-3 text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-all shadow-sm active:scale-95 uppercase tracking-widest"
+          >
+            <Download className="h-4 w-4" />
+            Exportar .lean
+          </button>
 
           <button 
             onClick={handleImportClick} 
