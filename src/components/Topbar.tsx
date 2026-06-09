@@ -43,10 +43,6 @@ export function Topbar({ onExportWord }: Props) {
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
-    
-    // Forçando a leitura como texto e codificação padrão da web
-    reader.readAsText(file, "UTF-8");
-  };
   return (
     <div className="w-full z-[100] print:hidden mb-6 shrink-0">
       
