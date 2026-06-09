@@ -1,15 +1,16 @@
 import { FileText, BarChart3, ShieldAlert, Upload, Download } from "lucide-react";
 import { useRef } from "react";
-import { useAppStore } from "@/store/useAppStore";
+import { AppState } from "@/store/useAppStore";
 import { toast } from "sonner";
 
 interface Props {
   onExportWord: () => void;
+  state: AppState;
+  loadState: (data: AppState) => void;
 }
 
-export function Topbar({ onExportWord }: Props) {
+export function Topbar({ onExportWord, state, loadState }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { state, loadState } = useAppStore();
 
   const handleImportClick = () => {
     fileInputRef.current?.click();
@@ -51,22 +52,19 @@ export function Topbar({ onExportWord }: Props) {
       const text = await file.text();
       const parsedData = JSON.parse(text);
 
-      const saved = localStorage.getItem("consultoria-lean-state");
-      const current = saved ? JSON.parse(saved) : {};
-
       const newState = {
-        ...current,
-        resumo: { ...current.resumo, ...(parsedData?.resumo || {}) },
-        produtividade: { ...current.produtividade, ...(parsedData?.produtividade || {}) },
-        payback: { ...current.payback, ...(parsedData?.payback || {}) },
-        movimentacao: { ...current.movimentacao, ...(parsedData?.movimentacao || {}) },
-        qualidade: { ...current.qualidade, ...(parsedData?.qualidade || {}) },
-        disponibilidade: { ...current.disponibilidade, ...(parsedData?.disponibilidade || {}) },
-        leadtime: { ...current.leadtime, ...(parsedData?.leadtime || {}) },
-        area: { ...current.area, ...(parsedData?.area || {}) },
+        ...state,
+        resumo: { ...state.resumo, ...(parsedData?.resumo || {}) },
+        produtividade: { ...state.produtividade, ...(parsedData?.produtividade || {}) },
+        payback: { ...state.payback, ...(parsedData?.payback || {}) },
+        movimentacao: { ...state.movimentacao, ...(parsedData?.movimentacao || {}) },
+        qualidade: { ...state.qualidade, ...(parsedData?.qualidade || {}) },
+        disponibilidade: { ...state.disponibilidade, ...(parsedData?.disponibilidade || {}) },
+        leadtime: { ...state.leadtime, ...(parsedData?.leadtime || {}) },
+        area: { ...state.area, ...(parsedData?.area || {}) },
       };
 
-      loadState(newState as any);
+      loadState(newState as AppState);
       toast.success("Projeto importado com sucesso!");
     } catch (error: any) {
       console.error("ERRO DE IMPORTAÇÃO:", error);
