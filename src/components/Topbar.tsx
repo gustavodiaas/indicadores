@@ -9,7 +9,8 @@ interface Props {
 
 export function Topbar({ onExportWord }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { updateModule } = useAppStore();
+  // Puxando a função nativa que atualiza a tela na hora
+  const { loadState } = useAppStore();
 
   const handleImportClick = () => {
     fileInputRef.current?.click();
@@ -23,15 +24,23 @@ export function Topbar({ onExportWord }: Props) {
       const text = await file.text();
       const parsedData = JSON.parse(text);
       
-      // O spread operator {...} força o React a entender que é um dado novo e atualizar a tela
-      if (parsedData.resumo) updateModule("resumo", { ...parsedData.resumo });
-      if (parsedData.produtividade) updateModule("produtividade", { ...parsedData.produtividade });
-      if (parsedData.payback) updateModule("payback", { ...parsedData.payback });
-      if (parsedData.movimentacao) updateModule("movimentacao", { ...parsedData.movimentacao });
-      if (parsedData.qualidade) updateModule("qualidade", { ...parsedData.qualidade });
-      if (parsedData.disponibilidade) updateModule("disponibilidade", { ...parsedData.disponibilidade });
-      if (parsedData.leadtime) updateModule("leadtime", { ...parsedData.leadtime });
-      if (parsedData.area) updateModule("area", { ...parsedData.area });
+      const saved = localStorage.getItem("consultoria-lean-state");
+      const current = saved ? JSON.parse(saved) : {};
+
+      const newState = {
+        ...current,
+        resumo: { ...current.resumo, ...(parsedData?.resumo || {}) },
+        produtividade: { ...current.produtividade, ...(parsedData?.produtividade || {}) },
+        payback: { ...current.payback, ...(parsedData?.payback || {}) },
+        movimentacao: { ...current.movimentacao, ...(parsedData?.movimentacao || {}) },
+        qualidade: { ...current.qualidade, ...(parsedData?.qualidade || {}) },
+        disponibilidade: { ...current.disponibilidade, ...(parsedData?.disponibilidade || {}) },
+        leadtime: { ...current.leadtime, ...(parsedData?.leadtime || {}) },
+        area: { ...current.area, ...(parsedData?.area || {}) }
+      };
+
+      // Injeta os dados na tela instantaneamente (sem recarregar a página)
+      loadState(newState as any);
 
       toast.success("Projeto importado com sucesso!");
     } catch (error: any) {
