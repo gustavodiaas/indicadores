@@ -38,15 +38,16 @@ export function Topbar({ onExportWord }: Props) {
 
         toast.success("Projeto carregado com sucesso!");
       } catch (error) {
-        console.error(error);
-        toast.error("Erro ao ler arquivo. Verifique se é um arquivo .lean válido.");
+        console.error("ERRO DE IMPORTAÇÃO:", error);
+        toast.error("Erro na leitura. O arquivo não é um .lean válido.");
       } finally {
         if (fileInputRef.current) fileInputRef.current.value = "";
       }
     };
-    reader.readAsText(file);
+    
+    // Forçando a leitura como texto e codificação padrão da web
+    reader.readAsText(file, "UTF-8");
   };
-
   return (
     <div className="w-full z-[100] print:hidden mb-6 shrink-0">
       
