@@ -100,9 +100,12 @@ export function useAppStore() {
     try { const saved = localStorage.getItem("consultoria-lean-state"); return saved ? { ...defaultState, ...JSON.parse(saved) } : defaultState; } catch { return defaultState; }
   });
   
-  const [activeModule, setActiveModule] = useState<ModuleKey>("home");
+  const [activeModule, setActiveModule] = useState<ModuleKey>(() => {
+    try { return (localStorage.getItem("consultoria-lean-module") as ModuleKey) || "home"; } catch { return "home"; }
+  });
 
   useEffect(() => { localStorage.setItem("consultoria-lean-state", JSON.stringify(state)); }, [state]);
+  useEffect(() => { localStorage.setItem("consultoria-lean-module", activeModule); }, [activeModule]);
 
   const updateModule = useCallback(<K extends keyof AppState>(key: K, data: Partial<AppState[K]>) => {
     setState(prev => ({ ...prev, [key]: { ...prev[key], ...data } as any }));
