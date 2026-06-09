@@ -1,10 +1,53 @@
-import { FileText, BarChart3, ShieldAlert } from "lucide-react";
+import { FileText, BarChart3, ShieldAlert, Upload } from "lucide-react";
+import { useRef } from "react";
+import { useAppStore } from "@/store/useAppStore";
+import { toast } from "sonner";
 
 interface Props {
   onExportWord: () => void;
 }
 
 export function Topbar({ onExportWord }: Props) {
+  export function Topbar({ onExportWord }: Props) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImportClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const content = event.target?.result as string;
+        const parsedData = JSON.parse(content);
+        
+        useAppStore.setState((state) => ({
+          ...state,
+          resumo: parsedData.resumo || state.resumo,
+          produtividade: parsedData.produtividade || state.produtividade,
+          payback: parsedData.payback || state.payback,
+          movimentacao: parsedData.movimentacao || state.movimentacao,
+          qualidade: parsedData.qualidade || state.qualidade,
+          disponibilidade: parsedData.disponibilidade || state.disponibilidade,
+          leadtime: parsedData.leadtime || state.leadtime,
+          area: parsedData.area || state.area
+        }));
+
+        toast.success("Projeto carregado com sucesso!");
+      } catch (error) {
+        console.error(error);
+        toast.error("Erro ao ler arquivo. Verifique se é um arquivo .lean válido.");
+      } finally {
+        if (fileInputRef.current) fileInputRef.current.value = "";
+      }
+    };
+    reader.readAsText(file);
+  };
+
   return (
     <div className="w-full z-[100] print:hidden mb-6 shrink-0">
       
@@ -41,6 +84,22 @@ export function Topbar({ onExportWord }: Props) {
           </div>
 
           <div className="h-6 w-px bg-slate-100 dark:bg-slate-800" />
+
+          <input
+            type="file"
+            accept=".lean"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            className="hidden"
+          />
+
+          <button 
+            onClick={handleImportClick} 
+            className="flex items-center gap-2 px-8 py-3 text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-all shadow-sm active:scale-95 uppercase tracking-widest"
+          >
+            <Upload className="h-4 w-4" /> 
+            Importar
+          </button>
 
           <button 
             onClick={onExportWord} 
