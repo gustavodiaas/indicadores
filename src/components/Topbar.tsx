@@ -8,7 +8,6 @@ interface Props {
 }
 
 export function Topbar({ onExportWord }: Props) {
-  export function Topbar({ onExportWord }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImportClick = () => {
