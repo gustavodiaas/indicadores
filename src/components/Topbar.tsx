@@ -19,26 +19,26 @@ export function Topbar({ onExportWord }: Props) {
     if (!file) return;
 
     try {
-      // Leitura moderna e síncrona
       const text = await file.text();
       const parsedData = JSON.parse(text);
       
       useAppStore.setState((state) => ({
         ...state,
-        resumo: { ...state.resumo, ...parsedData.resumo },
-        produtividade: { ...state.produtividade, ...parsedData.produtividade },
-        payback: { ...state.payback, ...parsedData.payback },
-        movimentacao: { ...state.movimentacao, ...parsedData.movimentacao },
-        qualidade: { ...state.qualidade, ...parsedData.qualidade },
-        disponibilidade: { ...state.disponibilidade, ...parsedData.disponibilidade },
-        leadtime: { ...state.leadtime, ...parsedData.leadtime },
-        area: { ...state.area, ...parsedData.area }
+        resumo: { ...state.resumo, ...(parsedData?.resumo || {}) },
+        produtividade: { ...state.produtividade, ...(parsedData?.produtividade || {}) },
+        payback: { ...state.payback, ...(parsedData?.payback || {}) },
+        movimentacao: { ...state.movimentacao, ...(parsedData?.movimentacao || {}) },
+        qualidade: { ...state.qualidade, ...(parsedData?.qualidade || {}) },
+        disponibilidade: { ...state.disponibilidade, ...(parsedData?.disponibilidade || {}) },
+        leadtime: { ...state.leadtime, ...(parsedData?.leadtime || {}) },
+        area: { ...state.area, ...(parsedData?.area || {}) }
       }));
 
       toast.success("Projeto carregado com sucesso!");
-    } catch (error) {
+    } catch (error: any) {
       console.error("ERRO DE IMPORTAÇÃO:", error);
-      toast.error("Erro na leitura. O arquivo não é um .lean válido.");
+      // Agora o balão vermelho vai mostrar o erro exato do sistema, e não apenas uma mensagem genérica
+      toast.error(`Erro na leitura: ${error?.message || "Falha desconhecida"}`);
     } finally {
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
