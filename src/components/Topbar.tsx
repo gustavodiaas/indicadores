@@ -24,18 +24,17 @@ export function Topbar({ onExportWord }: Props) {
         const content = event.target?.result as string;
         const parsedData = JSON.parse(content);
         
-        useAppStore.setState((state) => ({
+       useAppStore.setState((state) => ({
           ...state,
-          resumo: parsedData.resumo || state.resumo,
-          produtividade: parsedData.produtividade || state.produtividade,
-          payback: parsedData.payback || state.payback,
-          movimentacao: parsedData.movimentacao || state.movimentacao,
-          qualidade: parsedData.qualidade || state.qualidade,
-          disponibilidade: parsedData.disponibilidade || state.disponibilidade,
-          leadtime: parsedData.leadtime || state.leadtime,
-          area: parsedData.area || state.area
+          resumo: { ...state.resumo, ...parsedData.resumo },
+          produtividade: { ...state.produtividade, ...parsedData.produtividade },
+          payback: { ...state.payback, ...parsedData.payback },
+          movimentacao: { ...state.movimentacao, ...parsedData.movimentacao },
+          qualidade: { ...state.qualidade, ...parsedData.qualidade },
+          disponibilidade: { ...state.disponibilidade, ...parsedData.disponibilidade },
+          leadtime: { ...state.leadtime, ...parsedData.leadtime },
+          area: { ...state.area, ...parsedData.area }
         }));
-
         toast.success("Projeto carregado com sucesso!");
       } catch (error) {
         console.error("ERRO DE IMPORTAÇÃO:", error);
