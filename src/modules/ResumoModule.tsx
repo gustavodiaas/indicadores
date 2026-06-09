@@ -7,7 +7,6 @@ import {
 } from "@/store/useAppStore";
 import { Trash2, Copy, Check } from "lucide-react";
 import { toast } from "sonner";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
 interface Props {
@@ -303,29 +302,40 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
         </div>
       </div>
 
-      <Dialog open={showConfirmModal} onOpenChange={setShowConfirmModal}>
-        <DialogContent className="bg-white dark:bg-slate-900 rounded-2xl border-none shadow-2xl p-8 max-w-sm mx-auto">
-          <div className="flex flex-col items-center text-center">
-            <div className="w-16 h-16 bg-rose-50 dark:bg-rose-950/40 rounded-full flex items-center justify-center mb-4">
-              <Trash2 className="h-8 w-8 text-rose-500" />
+      {showConfirmModal && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+            onClick={() => setShowConfirmModal(false)}
+          />
+          <div className="relative bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800 p-8 w-full max-w-sm flex flex-col items-center text-center gap-4 animate-in zoom-in-95 fade-in duration-200">
+            <div className="w-14 h-14 bg-rose-50 dark:bg-rose-950/40 rounded-full flex items-center justify-center">
+              <Trash2 className="h-7 w-7 text-rose-500" />
             </div>
-            <DialogHeader>
-              <DialogTitle className="text-xl font-bold text-slate-800 dark:text-slate-100">Limpar tudo?</DialogTitle>
-              <DialogDescription className="text-slate-500 dark:text-slate-400 mt-2">
+            <div>
+              <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">Limpar tudo?</h3>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
                 Esta ação não pode ser desfeita. Deseja realmente apagar todos os dados de todas as abas do sistema?
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter className="flex gap-3 w-full mt-8">
-              <Button variant="outline" className="flex-1 rounded-xl h-12 font-bold text-slate-500 dark:text-slate-400" onClick={() => setShowConfirmModal(false)}>
+              </p>
+            </div>
+            <div className="flex gap-3 w-full mt-2">
+              <Button
+                variant="outline"
+                className="flex-1 rounded-xl h-11 font-bold text-slate-500 dark:text-slate-400"
+                onClick={() => setShowConfirmModal(false)}
+              >
                 Não
               </Button>
-              <Button className="flex-1 bg-rose-500 hover:bg-rose-600 text-white rounded-xl h-12 font-bold shadow-lg shadow-rose-100 dark:shadow-none" onClick={() => { setShowConfirmModal(false); onClearData(); toast.success("Todos os dados foram limpos."); }}>
+              <Button
+                className="flex-1 bg-rose-500 hover:bg-rose-600 text-white rounded-xl h-11 font-bold shadow-lg shadow-rose-100 dark:shadow-none"
+                onClick={() => { setShowConfirmModal(false); onClearData(); toast.success("Todos os dados foram limpos."); }}
+              >
                 Sim, apagar
               </Button>
-            </DialogFooter>
+            </div>
           </div>
-        </DialogContent>
-      </Dialog>
+        </div>
+      )}
     </>
   );
 }
