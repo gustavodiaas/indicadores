@@ -5,7 +5,7 @@ import {
   type ResumoData, type AppState,
   calcProdutividade, calcPayback, calcMovimentacao, calcQualidade, calcDisponibilidade, calcLeadTime, calcArea 
 } from "@/store/useAppStore";
-import { Trash2, Copy, Check } from "lucide-react";
+import { Trash2, Copy, Check, Download } from "lucide-react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -52,6 +52,34 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
   const disp = useMemo(() => calcDisponibilidade(state.disponibilidade), [state.disponibilidade]);
   const lt = useMemo(() => calcLeadTime(state.leadtime), [state.leadtime]);
   const ar = useMemo(() => calcArea(state.area), [state.area]);
+
+  const handleExportProject = () => {
+    const projectData = {
+      resumo: state.resumo,
+      produtividade: state.produtividade,
+      payback: state.payback,
+      movimentacao: state.movimentacao,
+      qualidade: state.qualidade,
+      disponibilidade: state.disponibilidade,
+      leadtime: state.leadtime,
+      area: state.area
+    };
+
+    const json = JSON.stringify(projectData, null, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    
+    const fileName = data.nomeEmpresa 
+      ? `Projeto_${data.nomeEmpresa.replace(/\s+/g, '_')}.lean` 
+      : 'Projeto_Consultoria.lean';
+      
+    a.download = fileName;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("Projeto exportado com sucesso!");
+  };
 
   const handleAddAcao = () => {
     if (!newAcao.trim()) return;
@@ -200,12 +228,20 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
         <div className="w-full lg:w-[55%] flex flex-col gap-6 overflow-y-auto pr-2 pb-36">
           <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
             <h3 className="font-bold text-[#0F172A] dark:text-slate-100 text-lg uppercase tracking-tight">Entrada de Dados</h3>
-            <button 
-              onClick={() => setShowConfirmModal(true)} 
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-950/50 rounded-lg font-bold text-[10px] uppercase tracking-wider transition-colors border border-rose-100 dark:border-rose-900/40 shadow-sm"
-            >
-              <Trash2 className="w-3.5 h-3.5" /> Limpar Dados
-            </button>
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={handleExportProject} 
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-[#0057FF]/10 text-[#0057FF] hover:bg-[#0057FF]/20 rounded-lg font-bold text-[10px] uppercase tracking-wider transition-colors border border-[#0057FF]/20 shadow-sm"
+              >
+                <Download className="w-3.5 h-3.5" /> Exportar Dados
+              </button>
+              <button 
+                onClick={() => setShowConfirmModal(true)} 
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-950/50 rounded-lg font-bold text-[10px] uppercase tracking-wider transition-colors border border-rose-100 dark:border-rose-900/40 shadow-sm"
+              >
+                <Trash2 className="w-3.5 h-3.5" /> Limpar Dados
+              </button>
+            </div>
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
