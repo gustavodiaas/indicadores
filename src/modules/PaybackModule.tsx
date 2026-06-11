@@ -1,9 +1,8 @@
 import { type PaybackData, type ProdutividadeData, type ResumoData, calcPayback } from "@/store/useAppStore";
 import { KpiCard } from "@/components/KpiCard";
 import { ComparisonChart } from "@/components/ComparisonChart";
-import { Copy, Check, ChevronDown } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
+import { ChevronDown } from "lucide-react";
+import { EditableLaudoCard } from "@/components/EditableLaudoCard";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 interface Props {
@@ -20,7 +19,6 @@ const VALORES_CONSULTORIA = {
 };
 
 export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
-  const [copied, setCopied] = useState(false);
   const r = calcPayback(data, prodData, resumoData);
 
   const chartData = [{ name: "Custo Unitário (R$)", T1: Number(r.custoI.toFixed(2)), T3: Number(r.custoF.toFixed(2)) }];
@@ -192,13 +190,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
           <KpiCard label="Payback" value={r.paybackMeses > 0 ? r.paybackMeses.toFixed(2).replace(".", ",") : "0,00"} suffix={r.paybackMeses === 1 ? "mês" : "meses"} />
         </div>
         
-        <div className="relative bg-white dark:bg-slate-900 p-6 border border-slate-100 dark:border-slate-800/60 rounded-2xl shadow-sm">
-          <button onClick={() => { navigator.clipboard.writeText(laudo); setCopied(true); toast.success("Copiado!"); setTimeout(() => setCopied(false), 2000); }} className="absolute top-4 right-4 p-2 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-400 dark:text-slate-500 hover:bg-[#0057FF] dark:hover:bg-[#0057FF] hover:text-white transition-all shadow-sm border border-slate-100 dark:border-slate-800/40">
-            {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-          </button>
-          <h4 className="text-[10px] font-bold text-[#0057FF] uppercase mb-3 tracking-widest border-b border-slate-100 dark:border-slate-800 pb-2">Laudo de Payback</h4>
-          <p className="text-[13px] text-slate-600 dark:text-slate-200 leading-relaxed text-justify whitespace-pre-wrap">{laudo}</p>
-        </div>
+          <EditableLaudoCard title="Laudo de Payback" laudo={laudo} />
         
         <div className="mt-auto min-h-[250px] bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-100 dark:border-slate-800/60 shadow-sm">
           <ComparisonChart data={chartData} title={`Evolução do Custo por ${u.slice(0, -1)}`} />
