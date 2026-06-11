@@ -93,11 +93,34 @@ const defaultState: AppState = {
   a3: { titulo: "", data: "", aprovacoes: "", background: "", objetivos: "", estadoAtual: "", analise: "", estadoFuturo: "", planoAcao: [], indicadores: [], observacoes: "" }
 };
 
-const safeDiv = (num: number, den: number) => (den > 0 ? num / den : 0);
+const mergeDeep = (target: any, source: any) => {
+  const output = Object.assign({}, target);
+  for (const key in source) {
+    if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+      output[key] = { ...target[key], ...source[key] };
+    } else {
+      output[key] = source[key];
+    }
+  }
+  return output;
+};
+
+const safeDiv = (num: number, den: number) => {
+  const n = Number(num);
+  const d = Number(den);
+  return (d > 0 && !isNaN(n) && !isNaN(d)) ? n / d : 0;
+};
 
 export function useAppStore() {
   const [state, setState] = useState<AppState>(() => {
-    try { const saved = localStorage.getItem("consultoria-lean-state"); return saved ? { ...defaultState, ...JSON.parse(saved) } : defaultState; } catch { return defaultState; }
+    try {
+      const saved = localStorage.getItem("consultoria-lean-state");
+      if (!saved) return defaultState;
+      const parsed = JSON.parse(saved);
+      return mergeDeep(defaultState, parsed);
+    } catch {
+      return defaultState;
+    }
   });
   
   const [activeModule, setActiveModule] = useState<ModuleKey>(() => {
@@ -107,11 +130,22 @@ export function useAppStore() {
   useEffect(() => { localStorage.setItem("consultoria-lean-state", JSON.stringify(state)); }, [state]);
   useEffect(() => { localStorage.setItem("consultoria-lean-module", activeModule); }, [activeModule]);
 
+  useEffect(() => {
+    const handleSync = () => {
+      try {
+        const saved = localStorage.getItem("consultoria-lean-state");
+        if (saved) setState(mergeDeep(defaultState, JSON.parse(saved)));
+      } catch {}
+    };
+    window.addEventListener("app-data-sync", handleSync);
+    return () => window.removeEventListener("app-data-sync", handleSync);
+  }, []);
+
   const updateModule = useCallback(<K extends keyof AppState>(key: K, data: Partial<AppState[K]>) => {
     setState(prev => ({ ...prev, [key]: { ...prev[key], ...data } as any }));
   }, []);
 
-  const loadState = useCallback((data: AppState) => { setState({ ...defaultState, ...data }); }, []);
+  const loadState = useCallback((data: AppState) => { setState(mergeDeep(defaultState, data)); }, []);
   const clearData = useCallback(() => { 
     localStorage.removeItem("consultoria-lean-state"); 
     window.location.reload(); 
@@ -120,13 +154,18 @@ export function useAppStore() {
   return { state, activeModule, setActiveModule, updateModule, loadState, clearData };
 }
 
-export function calcProdutividade(d: ProdutividadeData) { const pphT1 = safeDiv(d.volumeT1, (d.horasT1 * d.operadoresT1)); const pphT3 = safeDiv(d.volumeT3, (d.horasT3 * d.operadoresT3)); const ganho = pphT1 > 0 ? ((pphT3 - pphT1) / pphT1) * 100 : 0; return { pphT1, pphT3, ganho }; }
+export function calcProdutividade(d: ProdutividadeData) { 
+  const pphT1 = safeDiv(d.volumeT1, (d.horasT1 * d.operadoresT1)); 
+  const pphT3 = safeDiv(d.volumeT3, (d.horasT3 * d.operadoresT3)); 
+  const ganho = pphT1 > 0 ? ((pphT3 - pphT1) / pphT1) * 100 : 0; 
+  return { pphT1, pphT3, ganho }; 
+}
 
 export function calcPayback(d: PaybackData, prod: ProdutividadeData, res?: ResumoData) { 
   const prodMensalI = prod.volumeT1 * 21; 
   const prodMensalF = prod.volumeT3 * 21; 
-  const encI = d.tipoSalario === "bruto" ? 1 : (d.encargosInicial || 1); 
-  const encF = d.tipoSalario === "bruto" ? 1 : (d.encargosFinal || 1); 
+  const encI = d.tipoSalario === "bruto" ? 1 : (d.encargosInicial ?? 0); 
+  const encF = d.tipoSalario === "bruto" ? 1 : (d.encargosFinal ?? 0); 
   const dedI = (d.dedicacaoInicial || 100) / 100; 
   const dedF = (d.dedicacaoFinal || 100) / 100; 
 
