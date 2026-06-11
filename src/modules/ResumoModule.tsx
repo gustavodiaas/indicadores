@@ -5,9 +5,10 @@ import {
   type ResumoData, type AppState,
   calcProdutividade, calcPayback, calcMovimentacao, calcQualidade, calcDisponibilidade, calcLeadTime, calcArea 
 } from "@/store/useAppStore";
-import { Trash2, Copy, Check } from "lucide-react";
+import { Trash2, Pencil, Copy } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { EditableLaudoCard } from "@/components/EditableLaudoCard";
 
 interface Props {
   data: ResumoData;
@@ -38,8 +39,10 @@ function LocalInputField({ label, value, onChange, type = "text" }: { label: str
 
 export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClearData }: Props) {
   const [newAcao, setNewAcao] = useState("");
-  const [copiedId, setCopiedId] = useState<string | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [editingConc, setEditingConc] = useState(false);
+  const [concOverride, setConcOverride] = useState<string | null>(null);
+  const [concDraft, setConcDraft] = useState("");
 
   const lockedIndicadores = ["produtividade", "payback"];
   const selectedIndicadores = Array.from(new Set([...(data.indicatorsConclusao || data.indicadoresConclusao || []), ...lockedIndicadores]));
@@ -252,35 +255,90 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
 
         {/* COLUNA DIREITA: CARDS DE VISUALIZAÇÃO DE TEXTO */}
         <div className="w-full lg:w-[45%] flex flex-col gap-6 overflow-y-auto pb-36">
-          <div className="relative bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/60 transition-all hover:border-[#0057FF]/20">
-            <button 
-              onClick={() => { navigator.clipboard.writeText(descTextoWord); setCopiedId("desc"); toast.success("Copiado com formatação estruturada!"); setTimeout(() => setCopiedId(null), 2000); }} 
-              className="absolute top-4 right-4 p-2 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-400 dark:text-slate-500 hover:bg-[#0057FF] dark:hover:bg-[#0057FF] hover:text-white transition-all shadow-sm border border-slate-100 dark:border-slate-800/40"
-            >
-              {copiedId === "desc" ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-            </button>
-            <h4 className="text-[10px] font-bold text-[#0057FF] uppercase tracking-widest mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">Descrição do Processo</h4>
-            <p className="text-[13px] text-slate-600 dark:text-slate-100 leading-relaxed text-justify whitespace-pre-wrap">{descTexto}</p>
-          </div>
+          <EditableLaudoCard title="Descrição do Processo" laudo={descTexto} laudoWord={descTextoWord} />
 
           <div className="relative bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/60 flex flex-col">
-            <button 
-              onClick={() => { navigator.clipboard.writeText(laudosSistemas.textoWord); setCopiedId("conc"); toast.success("Copiado com formatação estruturada!"); setTimeout(() => setCopiedId(null), 2000); }} 
-              className="absolute top-4 right-4 p-2 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-400 dark:text-slate-500 hover:bg-[#0057FF] dark:hover:bg-[#0057FF] hover:text-white transition-all shadow-sm border border-slate-100 dark:border-slate-800/40"
-            >
-              {copiedId === "conc" ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-            </button>
-            <h4 className="text-[10px] font-bold text-[#0057FF] uppercase tracking-widest mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">Conclusão do Projeto</h4>
-            <div className="text-[13px] text-slate-700 dark:text-slate-100 leading-relaxed text-justify space-y-6 flex-1">
-              <div className="whitespace-pre-wrap">{laudosSistemas.textoTela}</div> 
-              {laudosSistemas.bulletPoints.length > 0 && (
-                <div className="bg-slate-50 dark:bg-slate-950 p-5 space-y-3 rounded-xl shadow-sm mt-4 border border-slate-100 dark:border-slate-800">
-                  {laudosSistemas.bulletPoints.map((point, index) => (
-                    <p key={index} className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-tight">• {point}</p>
-                  ))}
-                </div>
+            {/* Botões de ação */}
+            <div className="absolute top-4 right-4 flex items-center gap-1.5">
+              {concOverride !== null && !editingConc && (
+                <button
+                  onClick={() => { setConcOverride(null); toast("Texto restaurado ao original."); }}
+                  className="p-2 rounded-lg bg-amber-50 dark:bg-amber-950/30 text-amber-500 dark:text-amber-400 hover:bg-amber-100 transition-all shadow-sm border border-amber-100 dark:border-amber-900/40 text-[10px] font-bold uppercase tracking-wider px-2.5"
+                >
+                  Restaurar
+                </button>
+              )}
+              {!editingConc && (
+                <button
+                  onClick={() => { setConcDraft(concOverride !== null ? concOverride : laudosSistemas.textoTela); setEditingConc(true); }}
+                  className="p-2 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-400 dark:text-slate-500 hover:bg-[#0057FF] dark:hover:bg-[#0057FF] hover:text-white transition-all shadow-sm border border-slate-100 dark:border-slate-800/40"
+                  title="Editar texto"
+                >
+                  <Pencil className="h-4 w-4" />
+                </button>
+              )}
+              {!editingConc && (
+                <button
+                  onClick={() => {
+                    const textoWord = concOverride !== null
+                      ? laudosSistemas.textoWord.replace(laudosSistemas.textoTela, concOverride)
+                      : laudosSistemas.textoWord;
+                    navigator.clipboard.writeText(textoWord);
+                    toast.success("Copiado com formatação estruturada!");
+                  }}
+                  className="p-2 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-400 dark:text-slate-500 hover:bg-[#0057FF] dark:hover:bg-[#0057FF] hover:text-white transition-all shadow-sm border border-slate-100 dark:border-slate-800/40"
+                  title="Copiar texto"
+                >
+                  <Copy className="h-4 w-4" />
+                </button>
               )}
             </div>
+
+            <h4 className="text-[10px] font-bold text-[#0057FF] uppercase tracking-widest mb-4 border-b border-slate-100 dark:border-slate-800 pb-2 pr-28">
+              Conclusão do Projeto
+              {concOverride !== null && <span className="ml-2 text-amber-500 font-bold">· editado</span>}
+            </h4>
+
+            {/* Modo visualização */}
+            {!editingConc && (
+              <div className="text-[13px] text-slate-700 dark:text-slate-100 leading-relaxed text-justify space-y-6 flex-1">
+                <div className="whitespace-pre-wrap">{concOverride !== null ? concOverride : laudosSistemas.textoTela}</div>
+                {laudosSistemas.bulletPoints.length > 0 && (
+                  <div className="bg-slate-50 dark:bg-slate-950 p-5 space-y-3 rounded-xl shadow-sm mt-4 border border-slate-100 dark:border-slate-800">
+                    {laudosSistemas.bulletPoints.map((point, index) => (
+                      <p key={index} className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-tight">• {point}</p>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Modo edição */}
+            {editingConc && (
+              <div className="flex flex-col gap-3 flex-1">
+                <textarea
+                  autoFocus
+                  value={concDraft}
+                  onChange={e => setConcDraft(e.target.value)}
+                  className="w-full min-h-[200px] px-4 py-3 rounded-xl border border-[#0057FF]/30 bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 text-[13px] leading-relaxed outline-none focus:ring-2 focus:ring-[#0057FF] transition-all resize-y"
+                />
+                <div className="flex gap-2 justify-end">
+                  <button
+                    onClick={() => setEditingConc(false)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors border border-slate-100 dark:border-slate-800 text-[11px] font-bold uppercase tracking-wider"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={() => { setConcOverride(concDraft); setEditingConc(false); toast.success("Texto salvo!"); }}
+                    className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-[#0057FF] text-white hover:bg-[#0047D6] transition-colors text-[11px] font-bold uppercase tracking-wider shadow-md"
+                  >
+                    Salvar
+                  </button>
+                </div>
+              </div>
+            )}
+
             <div className="mt-8 pt-4 border-t border-slate-100 dark:border-slate-800">
               <h4 className="text-[10px] font-bold text-[#0057FF] uppercase tracking-widest mb-3">Indicadores</h4>
               <div className="flex flex-wrap gap-2">
