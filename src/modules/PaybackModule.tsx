@@ -36,18 +36,18 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
   const laudo = `No estágio inicial, havia ${op1} ${colabTxt1}, com custo total por mês de ${formatBRL(r.salI)}, ${data.dedicacaoInicial || 100}% utilizados na operação. Produziam-se ${r.prodMensalI.toLocaleString("pt-BR")} ${u}/mês, a custo de mão de obra de ${formatBRL(r.custoI)}. Após intervenção, permaneceram ${op3} ${colabTxt3}, com custo total por mês de ${formatBRL(r.salF)}, ${data.dedicacaoFinal || 100}% utilizado no processo. Passaram a produzir ${r.prodMensalF.toLocaleString("pt-BR")} ${u}/mês, a custo de mão de obra de ${formatBRL(r.custoF)}. Reduziu-se então ${formatBRL(Math.max(0, r.custoI - r.custoF))} no custo de mão de obra por ${u}, que gerou o retorno mensal de ${formatBRL(r.reducaoMensal)}. Portanto, um payback de ${r.paybackMeses > 0 ? r.paybackMeses.toFixed(2) : "0,00"} ${r.paybackMeses === 1 ? "mês" : "meses"}.`;
 
   const parseDecimal = (val: string) => {
-    const cleaned = val.replace(/[^\d,.-]/g, '');
-    return Number(cleaned.replace(",", "."));
+    if (!val) return 0;
+    const cleaned = val.toString().replace(/\./g, '').replace(/[^\d,.-]/g, '').replace(",", ".");
+    const parsed = Number(cleaned);
+    return isNaN(parsed) ? 0 : parsed;
   };
 
   const isUnitario = data.modoInsercaoSalario === "unitario";
 
   return (
     <div className="flex flex-col lg:flex-row gap-8 h-full animate-in fade-in duration-500">
-      {/* COLUNA ESQUERDA: ENTRADA DE DADOS */}
       <div className="w-full lg:w-[60%] flex flex-col gap-6 overflow-y-auto pr-2 pb-36">
 
-        {/* Configuração */}
         <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
           <div className="flex flex-col">
             <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Configuração</span>
@@ -68,7 +68,6 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
         </div>
 
         <div className="grid grid-cols-1 gap-6">
-          {/* T1 */}
           <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/80 space-y-4">
             <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-100 dark:border-slate-800 pb-2">Estado Inicial (T1)</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -112,8 +111,8 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
                     type="text"
                     key={`encI-${data.tipoSalario}`}
                     className="w-full h-12 px-4 rounded-xl border border-[#0057FF]/30 bg-blue-50/40 dark:bg-blue-950/20 text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#0057FF] transition-all"
-                    defaultValue=""
-                    onBlur={e => onChange({ encargosInicial: parseDecimal(e.target.value) || 1 })}
+                    defaultValue={formatDec(data.encargosInicial)}
+                    onBlur={e => onChange({ encargosInicial: parseDecimal(e.target.value) })}
                     placeholder="Ex: 1,90"
                   />
                 </div>
@@ -121,7 +120,6 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
             </div>
           </div>
 
-          {/* T3 */}
           <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/80 space-y-4">
             <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-100 dark:border-slate-800 pb-2">Estado Final (T3)</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -161,8 +159,8 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
                     type="text"
                     key={`encF-${data.tipoSalario}`}
                     className="w-full h-12 px-4 rounded-xl border border-[#0057FF]/30 bg-blue-50/40 dark:bg-blue-950/20 text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#0057FF] transition-all"
-                    defaultValue=""
-                    onBlur={e => onChange({ encargosFinal: parseDecimal(e.target.value) || 1 })}
+                    defaultValue={formatDec(data.encargosFinal)}
+                    onBlur={e => onChange({ encargosFinal: parseDecimal(e.target.value) })}
                     placeholder="Ex: 1,90"
                   />
                 </div>
@@ -171,7 +169,6 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
           </div>
         </div>
 
-        {/* Investimentos */}
         <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/80 space-y-4">
           <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-100 dark:border-slate-800 pb-2">Investimentos</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -211,7 +208,6 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
         </div>
       </div>
 
-      {/* COLUNA DIREITA: KPIs E LAUDO */}
       <div className="w-full lg:w-[40%] flex flex-col gap-6">
         <div className="grid grid-cols-2 gap-3">
           <KpiCard label="Custo Inicial" value={formatBRL(r.custoI)} />
