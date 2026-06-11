@@ -18,18 +18,18 @@ export function ProdutividadeModule({ data, onChange }: Props) {
   const opTxt3 = data.operadoresT3 === 1 ? "operador" : "operadores";
 
   const parseDecimal = (val: string) => {
-    const cleaned = val.replace(/\./g, '').replace(",", ".");
-    return Number(cleaned) || 0;
+    if (!val) return 0;
+    const cleaned = val.toString().replace(/\./g, '').replace(",", ".");
+    const parsed = Number(cleaned);
+    return isNaN(parsed) ? 0 : parsed;
   };
 
   const laudo = `No estágio inicial, a produtividade era de ${r.pphT1.toFixed(6).replace(".", ",")} ${u}/h/op, produzindo ${data.volumeT1 || 0} ${u} com ${data.operadoresT1 || 0} ${opTxt1} em ${data.horasT1 || 0}h. Após as melhorias, a produtividade subiu para ${r.pphT3.toFixed(6).replace(".", ",")} ${u}/h/op, produzindo ${data.volumeT3 || 0} ${u} com ${data.operadoresT3 || 0} ${opTxt3} em ${data.horasT3 || 0}h. Isso representa um ganho direto de ${r.ganho.toFixed(6).replace(".", ",")}% na eficiência operacional da célula.`;
 
   return (
     <div className="flex flex-col lg:flex-row gap-8 h-full animate-in fade-in duration-500">
-      {/* COLUNA ESQUERDA: CONFIGURAÇÃO E DADOS */}
       <div className="w-full lg:w-[60%] flex flex-col gap-6 overflow-y-auto pr-2 pb-10">
         
-        {/* Configuração */}
         <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
@@ -47,7 +47,6 @@ export function ProdutividadeModule({ data, onChange }: Props) {
           />
         </div>
 
-        {/* Blocos de Dados */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/80 space-y-4">
             <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-100 dark:border-slate-800 pb-2">
@@ -97,7 +96,6 @@ export function ProdutividadeModule({ data, onChange }: Props) {
         </div>
       </div>
 
-      {/* COLUNA DIREITA: KPIs E LAUDO */}
       <div className="w-full lg:w-[40%] flex flex-col gap-6">
         <KpiCard label="Ganho de Produtividade" value={r.ganho.toFixed(6).replace(".", ",")} suffix="%" trend={r.ganho} />
         
