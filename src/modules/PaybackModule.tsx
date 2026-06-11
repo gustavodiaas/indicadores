@@ -103,6 +103,21 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
                 <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Dedicação (%)</label>
                 <input type="text" className="w-full h-12 px-4 rounded-xl border border-transparent dark:border-slate-800/40 bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#0057FF] transition-all" defaultValue={formatDec(data.dedicacaoInicial) || "100,00"} onBlur={e => onChange({ dedicacaoInicial: parseDecimal(e.target.value) || 100 })} placeholder="Ex: 100,00" />
               </div>
+              {data.tipoSalario === "encargos" && (
+                <div className="sm:col-span-2">
+                  <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">
+                    Fator de Encargos T1 <span className="text-slate-400 normal-case font-normal">(ex: 1,90 = 90% de encargos)</span>
+                  </label>
+                  <input
+                    type="text"
+                    key={`encI-${data.tipoSalario}`}
+                    className="w-full h-12 px-4 rounded-xl border border-[#0057FF]/30 bg-blue-50/40 dark:bg-blue-950/20 text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#0057FF] transition-all"
+                    defaultValue=""
+                    onBlur={e => onChange({ encargosInicial: parseDecimal(e.target.value) || 1 })}
+                    placeholder="Ex: 1,90"
+                  />
+                </div>
+              )}
             </div>
           </div>
 
@@ -137,6 +152,21 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
                 <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Dedicação (%)</label>
                 <input type="text" className="w-full h-12 px-4 rounded-xl border border-transparent dark:border-slate-800/40 bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#0057FF] transition-all" defaultValue={formatDec(data.dedicacaoFinal) || "100,00"} onBlur={e => onChange({ dedicacaoFinal: parseDecimal(e.target.value) || 100 })} placeholder="Ex: 100,00" />
               </div>
+              {data.tipoSalario === "encargos" && (
+                <div className="sm:col-span-2">
+                  <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">
+                    Fator de Encargos T3 <span className="text-slate-400 normal-case font-normal">(ex: 1,90 = 90% de encargos)</span>
+                  </label>
+                  <input
+                    type="text"
+                    key={`encF-${data.tipoSalario}`}
+                    className="w-full h-12 px-4 rounded-xl border border-[#0057FF]/30 bg-blue-50/40 dark:bg-blue-950/20 text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#0057FF] transition-all"
+                    defaultValue=""
+                    onBlur={e => onChange({ encargosFinal: parseDecimal(e.target.value) || 1 })}
+                    placeholder="Ex: 1,90"
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>
