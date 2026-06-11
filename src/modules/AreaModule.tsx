@@ -1,9 +1,7 @@
 import { type AreaData, calcArea } from "@/store/useAppStore";
 import { KpiCard } from "@/components/KpiCard";
 import { ComparisonChart } from "@/components/ComparisonChart";
-import { Copy, Check } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
+import { EditableLaudoCard } from "@/components/EditableLaudoCard";
 
 interface Props {
   data: AreaData;
@@ -34,7 +32,6 @@ function LocalInputField({ label, value, onChange, suffix, type = "number" }: { 
 }
 
 export function AreaModule({ data, onChange }: Props) {
-  const [copied, setCopied] = useState(false);
   const r = calcArea(data);
   const chartData = [{ name: "Área (m²)", T1: data.areaT1 || 0, T3: data.areaT3 || 0 }];
 
@@ -65,21 +62,7 @@ export function AreaModule({ data, onChange }: Props) {
       <div className="w-full lg:w-[40%] flex flex-col gap-6">
         <KpiCard label="Redução de Área" value={r.reducaoPercent.toFixed(1).replace(".", ",")} suffix="%" trend={r.reducaoPercent} />
         
-        <div className="relative bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/60">
-          <button
-            onClick={() => {
-              navigator.clipboard.writeText(laudo);
-              setCopied(true);
-              toast.success("Copiado!");
-              setTimeout(() => setCopied(false), 2000);
-            }}
-            className="absolute top-4 right-4 p-2 rounded-lg bg-slate-50 dark:bg-slate-950 text-slate-400 dark:text-slate-500 hover:bg-[#0057FF] dark:hover:bg-[#0057FF] hover:text-white transition-all border border-slate-100 dark:border-slate-800/40"
-          >
-            {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-          </button>
-          <h4 className="text-[10px] font-bold text-[#0057FF] uppercase mb-3 tracking-widest border-b border-slate-100 dark:border-slate-800 pb-2">Impacto em Área</h4>
-          <p className="text-[13px] text-slate-600 dark:text-slate-200 leading-relaxed text-justify">{laudo}</p>
-        </div>
+          <EditableLaudoCard title="Impacto em Área" laudo={laudo} />
 
         <div className="mt-auto min-h-[250px] bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-100 dark:border-slate-800/60 shadow-sm">
           <ComparisonChart data={chartData} title="Ocupação de Espaço" />
