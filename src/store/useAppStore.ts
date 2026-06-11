@@ -81,7 +81,7 @@ export interface AppState {
 
 const defaultState: AppState = {
   produtividade: { volumeT1: 0, volumeT3: 0, horasT1: 8, horasT3: 8, operadoresT1: 1, operadoresT3: 1, unidade: "peças" },
-  payback: { tipoSalario: "bruto", modoInsercaoSalario: "total", salarioBaseInicial: 0, encargosInicial: 1.9, dedicacaoInicial: 100, salarioBaseFinal: 0, encargosFinal: 1.9, dedicacaoFinal: 100, valorConsultoria: 0, investimentoExtra: 0 },
+  payback: { tipoSalario: "bruto", modoInsercaoSalario: "total", salarioBaseInicial: 0, encargosInicial: 0, dedicacaoInicial: 100, salarioBaseFinal: 0, encargosFinal: 0, dedicacaoFinal: 100, valorConsultoria: 0, investimentoExtra: 0 },
   movimentacao: { distanciaT1: 0, distanciaT3: 0, tempoT1: 0, tempoT3: 0, unidadeTempo: "minutos", ferramentaUtilizada: "", acaoMelhoria: "", exibirNoLaudo: "ambos" },
   qualidade: { quantidadeT1: 0, quantidadeT3: 0, perdasT1: 0, perdasT3: 0 },
   disponibilidade: { tempoTotalT1: 480, tempoTotalT3: 480, paradasPlanT1: 0, paradasPlanT3: 0, paradasNaoPlanT1: 0, paradasNaoPlanT3: 0, unidadeTempo: "minutos" },
