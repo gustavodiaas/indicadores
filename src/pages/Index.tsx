@@ -78,7 +78,7 @@ const Index = () => {
     };
 
     const acoesResumo = planoAcao.acoes.filter(a => a.origin !== "5w2h");
-    const acoesStr = acoesResumo.length > 0 ? acoesResumo.map(a => a.what).join(", ") : "—";
+    const acoesStr = acoesResumo.length > 0 ? acoesResumo.map(a => a.what).join(", ") : "-";
 
     const tr = (text: string, bold = false) => new TextRun({ text, bold, font: "Arial", size: 22 }); 
     
@@ -102,13 +102,13 @@ const Index = () => {
       createHeading("10. Conclusão do Projeto"),
       createJustified([
         tr("O presente programa de fomento ao setor industrial brasileiro Brasil Mais Produtivo, proporcionou a realização de consultoria em Manufatura Enxuta na Empresa "),
-        tr(resumo.nomeEmpresa || "—", true),
+        tr(resumo.nomeEmpresa || "-", true),
         tr(", na cidade de "),
-        tr(resumo.cidade || "—", true),
+        tr(resumo.cidade || "-", true),
         tr(" no Estado do Rio Grande do Sul. A escolha do produto a ser mapeado foi motivada por: "),
-        tr(resumo.motivacao || "—", true),
+        tr(resumo.motivacao || "-", true),
         tr(". As ferramentas aplicadas foram: "),
-        tr(resumo.ferramentas || "—", true),
+        tr(resumo.ferramentas || "-", true),
         tr(".")
       ]),
       new Paragraph({ text: "", spacing: { after: 120 } }),
@@ -189,20 +189,20 @@ const Index = () => {
           new Paragraph({ text: "RELATÓRIO TÉCNICO DE CONSULTORIA", heading: HeadingLevel.HEADING_1, alignment: AlignmentType.CENTER, spacing: { after: 400 } }),
           createHeading("1. Descrição do Processo"),
           createJustified([
-            tr("A Empresa "), tr(resumo.nomeEmpresa || "—", true),
-            tr(", da cidade de "), tr(resumo.cidade || "—", true),
-            tr(" no State do Rio Grande do Sul, atua no ramo de "), tr(resumo.ramo || "—", true),
-            tr(", especialista em "), tr(resumo.especialista || "—", true),
+            tr("A Empresa "), tr(resumo.nomeEmpresa || "-", true),
+            tr(", da cidade de "), tr(resumo.cidade || "-", true),
+            tr(" no Estado do Rio Grande do Sul, atua no ramo de "), tr(resumo.ramo || "-", true),
+            tr(", especialista em "), tr(resumo.especialista || "-", true),
             tr(", conta com "), tr(String(resumo.totalColaboradores || 0), true),
             tr(resumo.totalColaboradores === 1 ? " colaborador" : " colaboradores"),
             tr(" atuando em "), tr(String(resumo.turnos), true),
             tr(resumo.turnos === 1 ? " Turno. " : " Turnos. "),
-            tr("O produto mapeado segue o seguinte processo produtivo: "), tr(resumo.processos || "—", true),
-            tr(", com método de produção "), tr(resumo.metodo || "—", true),
-            tr(", onde a demanda é originada por "), tr(resumo.origem || "—", true),
-            tr(". Ao longo do mapeamento foi identificado oportunidades no setor de "), tr(resumo.oportunidades || "—", true),
-            tr(", por problemas de </p>"), tr(resumo.problemas || "—", true),
-            tr(". Nesta consultoria, a área de atuação/intervenção foi "), tr(resumo.atuacao || "—", true),
+            tr("O produto mapeado segue o seguinte processo produtivo: "), tr(resumo.processos || "-", true),
+            tr(", com método de produção "), tr(resumo.metodo || "-", true),
+            tr(", onde a demanda é originada por "), tr(resumo.origem || "-", true),
+            tr(". Ao longo do mapeamento foi identificado oportunidades no setor de "), tr(resumo.oportunidades || "-", true),
+            tr(", por problemas de "), tr(resumo.problemas || "-", true),
+            tr(". Nesta consultoria, a área de atuação/intervenção foi "), tr(resumo.atuacao || "-", true),
             tr(".")
           ]),
           createHeading("2. Laudo de Produtividade"),
