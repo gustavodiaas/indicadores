@@ -13,8 +13,8 @@ interface Props {
 }
 
 const VALORES_CONSULTORIA = {
-  micro: 15834.40,
-  pequena: 21772.30,
+  micro: 16516.00,
+  pequena: 22709.50,
   media: 22800.00,
 };
 
