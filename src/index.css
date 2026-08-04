@@ -1,59 +1,72 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   PALETA RICO INVESTIMENTOS
+   Primária   : #002D72  (Navy Rico)
+   Acento     : #FF6B00  (Laranja Rico)
+   Hover      : #001E54  (Navy escuro)
+   Hover acen.: #E55A00  (Laranja escuro)
+   ============================================================ */
+
 @layer base {
   :root {
-    /* === Nova Paleta === */
-    --background: 240 27% 97%;       /* #F6F7FB */
-    --foreground: 233 16% 13%;       /* #1A1C25 */
-    --card: 0 0% 100%;               /* #FFFFFF */
-    --card-foreground: 233 16% 13%;
-
-    --primary: 258 90% 60%;          /* #6F3FF5 */
-    --primary-dark: 258 71% 52%;     /* #5630D9 */
-    --primary-light: 258 100% 71%;   /* #8C6CFF */
+    /* Modo CLARO */
+    --background:   210 40% 98%;          /* #F4F7FB quase branco azulado */
+    --foreground:   215 60% 10%;          /* #0A1828 azul quase preto */
+    --card:         0 0% 100%;
+    --card-foreground: 215 60% 10%;
+    --primary:      220 100% 33%;         /* #002D72 Navy Rico */
     --primary-foreground: 0 0% 100%;
-
-    --secondary: 233 16% 95%;
-    --secondary-foreground: 233 16% 13%;
-
-    --muted: 240 20% 96%;
-    --muted-foreground: 228 8% 45%;  /* #666B7A */
-
-    --accent: 258 90% 97%;
-    --accent-foreground: 258 90% 60%;
-
-    --destructive: 358 76% 59%;      /* #E5484D */
+    --secondary:    25 100% 40%;          /* #FF6B00 Laranja Rico */
+    --secondary-foreground: 0 0% 100%;
+    --muted:        210 20% 94%;
+    --muted-foreground: 215 20% 45%;
+    --accent:       25 100% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive:  0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-
-    --border: 233 30% 91%;           /* #E8EAF2 */
-    --input: 233 30% 91%;
-    --ring: 258 90% 60%;
-
+    --border:       215 20% 87%;
+    --input:        215 20% 87%;
+    --ring:         25 100% 50%;          /* foco = laranja */
     --radius: 0.75rem;
+  }
 
-    /* === Status === */
-    --success: 141 73% 42%;          /* #1DB954 */
-    --warning: 38 100% 56%;          /* #FFB020 */
-    --error: 358 76% 59%;            /* #E5484D */
+  .dark {
+    /* Modo ESCURO */
+    --background:   218 70% 7%;           /* #001022 Navy profundo */
+    --foreground:   210 20% 95%;
+    --card:         218 60% 11%;          /* #001833 cards */
+    --card-foreground: 210 20% 95%;
+    --primary:      220 100% 33%;         /* Navy Rico mantido */
+    --primary-foreground: 0 0% 100%;
+    --secondary:    25 100% 50%;
+    --secondary-foreground: 0 0% 100%;
+    --muted:        218 45% 15%;
+    --muted-foreground: 215 15% 60%;
+    --accent:       25 100% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive:  0 62% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --border:       218 40% 18%;
+    --input:        218 40% 18%;
+    --ring:         25 100% 50%;
   }
 
   * {
     @apply border-border;
   }
-  
+
   body {
-    background-color: #F6F7FB;
-    color: #1A1C25;
-    @apply antialiased;
+    @apply bg-[#F4F7FB] dark:bg-[#001022] text-[#0A1828] dark:text-slate-100 antialiased;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
 }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #E8EAF2; border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: #666B7A; }
+::-webkit-scrollbar-thumb { background: #C4CEDC; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #8FA3BF; }
