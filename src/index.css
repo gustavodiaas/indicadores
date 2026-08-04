@@ -6,16 +6,39 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%; /* Branco Puro */
-    --foreground: 222 47% 11%; /* Preto Suave #0F172A */
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
-    --primary: 219 100% 50%; /* Royal Blue #0057FF */
+    /* === Nova Paleta === */
+    --background: 240 27% 97%;       /* #F6F7FB */
+    --foreground: 233 16% 13%;       /* #1A1C25 */
+    --card: 0 0% 100%;               /* #FFFFFF */
+    --card-foreground: 233 16% 13%;
+
+    --primary: 258 90% 60%;          /* #6F3FF5 */
+    --primary-dark: 258 71% 52%;     /* #5630D9 */
+    --primary-light: 258 100% 71%;   /* #8C6CFF */
     --primary-foreground: 0 0% 100%;
-    --border: 212 18% 85%; /* Cinza Elegante #CBD5E1 */
-    --input: 212 18% 85%;
-    --ring: 219 100% 50%;
+
+    --secondary: 233 16% 95%;
+    --secondary-foreground: 233 16% 13%;
+
+    --muted: 240 20% 96%;
+    --muted-foreground: 228 8% 45%;  /* #666B7A */
+
+    --accent: 258 90% 97%;
+    --accent-foreground: 258 90% 60%;
+
+    --destructive: 358 76% 59%;      /* #E5484D */
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 233 30% 91%;           /* #E8EAF2 */
+    --input: 233 30% 91%;
+    --ring: 258 90% 60%;
+
     --radius: 0.75rem;
+
+    /* === Status === */
+    --success: 141 73% 42%;          /* #1DB954 */
+    --warning: 38 100% 56%;          /* #FFB020 */
+    --error: 358 76% 59%;            /* #E5484D */
   }
 
   * {
@@ -23,12 +46,14 @@
   }
   
   body {
-    @apply bg-white text-[#0F172A] antialiased;
+    background-color: #F6F7FB;
+    color: #1A1C25;
+    @apply antialiased;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
 }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+::-webkit-scrollbar-thumb { background: #E8EAF2; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #666B7A; }
