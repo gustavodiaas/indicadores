@@ -8,90 +8,63 @@ export default {
     container: {
       center: true,
       padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
+      screens: { "2xl": "1400px" },
     },
     extend: {
       colors: {
-        // PALETA PRIMARY PURPLE (unificada)
-        primary: {
-          DEFAULT:    '#6F3FF5',
-          foreground: '#FFFFFF',
-          dark:       '#5630D9',
-          light:      '#8C6CFF',
-          50:         '#F0EBFF',
-          100:        '#E2D5FF',
-          200:        '#C9B3FF',
-          300:        '#A880FF',
-          400:        '#8C6CFF',
-          500:        '#6F3FF5',
-          600:        '#5630D9',
-          700:        '#4220B3',
-          800:        '#2D1A66',
-          900:        '#1A0A3D',
+        /* ── PALETA RICO INVESTIMENTOS ───────────────────────── */
+        rico: {
+          navy:        "#002D72",  // primária — azul escuro Rico
+          "navy-dark": "#001E54",  // hover de botões navy
+          "navy-deep": "#001022",  // fundo dark
+          "navy-card": "#001833",  // card dark
+          orange:      "#FF6B00",  // acento laranja Rico
+          "orange-dk": "#E55A00",  // hover laranja
+          "orange-lt": "#FFF0E6",  // fundo laranja suave (claro)
         },
-        // TOKENS SEMÂNTICOS
-        brand: {
-          background: '#F6F7FB',
-          surface:    '#FFFFFF',
-          text:       '#1A1C25',
-          textSecondary: '#666B7A',
-          border:     '#E8EAF2',
-          success:    '#1DB954',
-          error:      '#E5484D',
-          warning:    '#FFB020',
-        },
-        // VARIÁVEIS NATIVAS DO SHADCN MANTIDAS INTACTAS
+        /* ── SHADCN / RADIX ──────────────────────────────────── */
         border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
+        input:  "hsl(var(--input))",
+        ring:   "hsl(var(--ring))",
         background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        "sidebar-bg": "hsl(var(--sidebar-bg))",
-        "sidebar-fg": "hsl(var(--sidebar-fg))",
-        "sidebar-active": "hsl(var(--sidebar-active))",
-        "sidebar-active-fg": "hsl(var(--sidebar-active-fg))",
-        "sidebar-hover": "hsl(var(--sidebar-hover))",
-        "sidebar-border-clr": "hsl(var(--sidebar-border))",
-        "kpi-positive": "hsl(var(--kpi-positive))",
-        "kpi-negative": "hsl(var(--kpi-negative))",
-        "chart-t1": "hsl(var(--chart-t1))",
-        "chart-t3": "hsl(var(--chart-t3))",
-        // primary já definido acima com os tokens reais
+        foreground:  "hsl(var(--foreground))",
+        primary: {
+          DEFAULT:    "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
+          DEFAULT:    "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {
-          DEFAULT: "hsl(var(--destructive))",
+          DEFAULT:    "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
         },
         muted: {
-          DEFAULT: "hsl(var(--muted))",
+          DEFAULT:    "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
+          DEFAULT:    "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
         },
         popover: {
-          DEFAULT: "hsl(var(--popover))",
+          DEFAULT:    "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
         },
         card: {
-          DEFAULT: "hsl(var(--card))",
+          DEFAULT:    "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
         sidebar: {
-          DEFAULT: "hsl(var(--sidebar-background))",
-          foreground: "hsl(var(--sidebar-foreground))",
-          primary: "hsl(var(--sidebar-primary))",
+          DEFAULT:              "hsl(var(--sidebar-background))",
+          foreground:           "hsl(var(--sidebar-foreground))",
+          primary:              "hsl(var(--sidebar-primary))",
           "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
-          accent: "hsl(var(--sidebar-accent))",
-          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
-          border: "hsl(var(--sidebar-border))",
-          ring: "hsl(var(--sidebar-ring))",
+          accent:               "hsl(var(--sidebar-accent))",
+          "accent-foreground":  "hsl(var(--sidebar-accent-foreground))",
+          border:               "hsl(var(--sidebar-border))",
+          ring:                 "hsl(var(--sidebar-ring))",
         },
       },
       borderRadius: {
@@ -101,25 +74,17 @@ export default {
       },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to:   { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to:   { height: "0" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
+        "accordion-up":   "accordion-up 0.2s ease-out",
       },
     },
   },
