@@ -57,10 +57,10 @@ export function CalculationsDashboard({
   const taktTimeInDisplayUnit = taktTime ? convertFromSeconds(taktTime, timeUnit) : undefined
 
   return (
-    <div className="bg-slate-50 dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+    <div className="bg-slate-50 dark:bg-[#001833] p-6 rounded-3xl border border-slate-200 dark:border-[#002D72]/30 shadow-sm">
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
         {/* Tempo Total */}
-        <Card className="bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 relative overflow-hidden group">
+        <Card className="bg-white dark:bg-[#001833] border-slate-100 dark:border-[#002D72]/30 relative overflow-hidden group">
           <div className="absolute inset-0 bg-primary/5 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 relative z-10">
             <CardTitle className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Tempo Total</CardTitle>
@@ -75,7 +75,7 @@ export function CalculationsDashboard({
         </Card>
 
         {/* Número de Operações */}
-        <Card className="bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 relative overflow-hidden group">
+        <Card className="bg-white dark:bg-[#001833] border-slate-100 dark:border-[#002D72]/30 relative overflow-hidden group">
           <div className="absolute inset-0 bg-primary/5 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 relative z-10">
             <CardTitle className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Operações</CardTitle>
@@ -90,7 +90,7 @@ export function CalculationsDashboard({
         </Card>
 
         {/* Tempo Médio */}
-        <Card className="bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 relative overflow-hidden group">
+        <Card className="bg-white dark:bg-[#001833] border-slate-100 dark:border-[#002D72]/30 relative overflow-hidden group">
           <div className="absolute inset-0 bg-primary/5 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 relative z-10">
             <CardTitle className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Tempo Médio</CardTitle>
@@ -105,7 +105,7 @@ export function CalculationsDashboard({
         </Card>
 
         {/* Operação Gargalo */}
-        <Card className="bg-white dark:bg-slate-900 border-rose-200 dark:border-rose-900/50 relative overflow-hidden group">
+        <Card className="bg-white dark:bg-[#001833] border-rose-200 dark:border-rose-900/50 relative overflow-hidden group">
           <div className="absolute inset-0 bg-rose-500/5 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 relative z-10">
             <CardTitle className="text-xs font-bold text-rose-600 dark:text-rose-400 uppercase tracking-wider animate-pulse">Gargalo</CardTitle>
@@ -122,7 +122,7 @@ export function CalculationsDashboard({
         </Card>
 
         {/* Takt Time */}
-        <Card className="bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 relative overflow-hidden group">
+        <Card className="bg-white dark:bg-[#001833] border-slate-100 dark:border-[#002D72]/30 relative overflow-hidden group">
           <div className="absolute inset-0 bg-primary/5 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 relative z-10">
             <CardTitle className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Takt Time</CardTitle>
