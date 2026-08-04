@@ -14,21 +14,22 @@ export default {
     },
     extend: {
       colors: {
-        // PALETA PRIMARY PURPLE
+        // PALETA PRIMARY PURPLE (unificada)
         primary: {
-          DEFAULT: '#6F3FF5',
-          dark:    '#5630D9',
-          light:   '#8C6CFF',
-          50:      '#F0EBFF',
-          100:     '#E2D5FF',
-          200:     '#C9B3FF',
-          300:     '#A880FF',
-          400:     '#8C6CFF',
-          500:     '#6F3FF5',
-          600:     '#5630D9',
-          700:     '#4220B3',
-          800:     '#2D1A66',
-          900:     '#1A0A3D',
+          DEFAULT:    '#6F3FF5',
+          foreground: '#FFFFFF',
+          dark:       '#5630D9',
+          light:      '#8C6CFF',
+          50:         '#F0EBFF',
+          100:        '#E2D5FF',
+          200:        '#C9B3FF',
+          300:        '#A880FF',
+          400:        '#8C6CFF',
+          500:        '#6F3FF5',
+          600:        '#5630D9',
+          700:        '#4220B3',
+          800:        '#2D1A66',
+          900:        '#1A0A3D',
         },
         // TOKENS SEMÂNTICOS
         brand: {
@@ -57,10 +58,7 @@ export default {
         "kpi-negative": "hsl(var(--kpi-negative))",
         "chart-t1": "hsl(var(--chart-t1))",
         "chart-t3": "hsl(var(--chart-t3))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
+        // primary já definido acima com os tokens reais
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
