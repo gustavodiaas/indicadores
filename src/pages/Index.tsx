@@ -331,18 +331,18 @@ const Index = () => {
 
   const renderHome = () => {
     const modules: { key: ModuleKey; title: string; desc: string; icon: any; color: string }[] = [
-      { key: "resumo", title: "Resumo", desc: "Configurações gerais e laudo", icon: FileText, color: "text-[#0057FF] bg-[#0057FF]/5" },
-      { key: "gbo", title: "GBO", desc: "Balanceamento de Operações e Gargalos", icon: GanttChartSquare, color: "text-[#0057FF] bg-[#0057FF]/5" },
-      { key: "produtividade", title: "Produtividade", desc: "Análise de peças por hora e eficiência", icon: BarChart2, color: "text-[#0057FF] bg-[#0057FF]/5" },
-      { key: "payback", title: "Payback", desc: "Retorno de Investimento (ROI)", icon: Calculator, color: "text-[#0057FF] bg-[#0057FF]/5" },
-      { key: "movimentacao", title: "Movimentação", desc: "Redução de tempos e distâncias", icon: ArrowRightLeft, color: "text-[#0057FF] bg-[#0057FF]/5" },
-      { key: "qualidade", title: "Qualidade", desc: "Controle de refugos e assertividade", icon: ShieldCheck, color: "text-[#0057FF] bg-[#0057FF]/5" },
-      { key: "disponibilidade", title: "Disponibilidade", desc: "Mapeamento de paradas de máquina", icon: Clock, color: "text-[#0057FF] bg-[#0057FF]/5" },
-      { key: "leadtime", title: "Lead Time", desc: "Redução no tempo de atravessamento", icon: Timer, color: "text-[#0057FF] bg-[#0057FF]/5" },
-      { key: "area", title: "Área de Trabalho", desc: "Otimização de layout e m²", icon: Square, color: "text-[#0057FF] bg-[#0057FF]/5" },
-      { key: "planoAcao", title: "Plano de Ação 5W2H", desc: "Gestão tática e exportação", icon: ClipboardList, color: "text-[#0057FF] bg-[#0057FF]/5" },
-      { key: "a3", title: "Modelo A3", desc: "Análise e Solução de Problemas", icon: LayoutTemplate, color: "text-[#0057FF] bg-[#0057FF]/5" },
-      { key: "manual", title: "Manual Técnico", desc: "Guia completo de uso de todas as abas", icon: BookOpen, color: "text-[#0057FF] bg-[#0057FF]/5" },
+      { key: "resumo", title: "Resumo", desc: "Configurações gerais e laudo", icon: FileText, color: "text-[#002D72] bg-[#002D72]/5" },
+      { key: "gbo", title: "GBO", desc: "Balanceamento de Operações e Gargalos", icon: GanttChartSquare, color: "text-[#002D72] bg-[#002D72]/5" },
+      { key: "produtividade", title: "Produtividade", desc: "Análise de peças por hora e eficiência", icon: BarChart2, color: "text-[#002D72] bg-[#002D72]/5" },
+      { key: "payback", title: "Payback", desc: "Retorno de Investimento (ROI)", icon: Calculator, color: "text-[#002D72] bg-[#002D72]/5" },
+      { key: "movimentacao", title: "Movimentação", desc: "Redução de tempos e distâncias", icon: ArrowRightLeft, color: "text-[#002D72] bg-[#002D72]/5" },
+      { key: "qualidade", title: "Qualidade", desc: "Controle de refugos e assertividade", icon: ShieldCheck, color: "text-[#002D72] bg-[#002D72]/5" },
+      { key: "disponibilidade", title: "Disponibilidade", desc: "Mapeamento de paradas de máquina", icon: Clock, color: "text-[#002D72] bg-[#002D72]/5" },
+      { key: "leadtime", title: "Lead Time", desc: "Redução no tempo de atravessamento", icon: Timer, color: "text-[#002D72] bg-[#002D72]/5" },
+      { key: "area", title: "Área de Trabalho", desc: "Otimização de layout e m²", icon: Square, color: "text-[#002D72] bg-[#002D72]/5" },
+      { key: "planoAcao", title: "Plano de Ação 5W2H", desc: "Gestão tática e exportação", icon: ClipboardList, color: "text-[#002D72] bg-[#002D72]/5" },
+      { key: "a3", title: "Modelo A3", desc: "Análise e Solução de Problemas", icon: LayoutTemplate, color: "text-[#002D72] bg-[#002D72]/5" },
+      { key: "manual", title: "Manual Técnico", desc: "Guia completo de uso de todas as abas", icon: BookOpen, color: "text-[#002D72] bg-[#002D72]/5" },
     ];
 
     return (
@@ -351,7 +351,7 @@ const Index = () => {
           
           {/* Lado Esquerdo: Painel Fixo de Contexto, Privacidade e Tema */}
           <div className="w-full lg:w-[28%] space-y-6 lg:sticky lg:top-6 shrink-0">
-            <div className="bg-[#0057FF] p-4 rounded-2xl shadow-md inline-block">
+            <div className="bg-[#FF6B00] p-4 rounded-2xl shadow-lg inline-block">
               <BarChart3 className="h-7 w-7 text-white" />
             </div>
             <div>
@@ -361,30 +361,30 @@ const Index = () => {
               </p>
             </div>
 
-            <div className="flex items-start gap-3 text-[10px] font-bold text-slate-400 dark:text-slate-400 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm uppercase tracking-widest leading-relaxed">
+            <div className="flex items-start gap-3 text-[10px] font-bold text-slate-400 dark:text-slate-400 bg-white dark:bg-[#001833] p-4 rounded-2xl border border-slate-100 dark:border-[#002D72]/30 shadow-sm uppercase tracking-widest leading-relaxed">
               <Lock className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
               <span>Privacidade: Seus dados são salvos apenas localmente no seu navegador. Nenhuma informação é enviada.</span>
             </div>
 
             {/* PÍLULA INTEGRADA DE CONTROLE DE TEMA */}
-            <div className="flex flex-col gap-2 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
+            <div className="flex flex-col gap-2 bg-white dark:bg-[#001833] p-4 rounded-2xl border border-slate-100 dark:border-[#002D72]/30 shadow-sm">
               <label className="text-[9px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-widest px-1">Aparência do Painel</label>
-              <div className="grid grid-cols-3 bg-slate-50 dark:bg-slate-950 p-1 rounded-xl gap-1">
+              <div className="grid grid-cols-3 bg-slate-100 dark:bg-[#001022] p-1 rounded-xl gap-1">
                 <button 
                   onClick={() => setTheme("light")} 
-                  className={`flex items-center justify-center gap-1.5 py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${theme === "light" ? "bg-white text-[#0057FF] shadow-sm" : "text-slate-400 hover:text-slate-800"}`}
+                  className={`flex items-center justify-center gap-1.5 py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${theme === "light" ? "bg-white text-[#FF6B00] shadow-sm" : "text-slate-400 hover:text-slate-800"}`}
                 >
                   <SunMedium className="w-3.5 h-3.5" /> Claro
                 </button>
                 <button 
                   onClick={() => setTheme("system")} 
-                  className={`flex items-center justify-center gap-1.5 py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${theme === "system" ? "bg-[#0057FF] text-white shadow-sm" : "text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"}`}
+                  className={`flex items-center justify-center gap-1.5 py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${theme === "system" ? "bg-[#002D72] text-white shadow-sm" : "text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"}`}
                 >
                   <Eclipse className="w-3.5 h-3.5" /> Auto
                 </button>
                 <button 
                   onClick={() => setTheme("dark")} 
-                  className={`flex items-center justify-center gap-1.5 py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${theme === "dark" ? "bg-slate-800 text-white shadow-sm" : "text-slate-400 hover:text-slate-200"}`}
+                  className={`flex items-center justify-center gap-1.5 py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${theme === "dark" ? "bg-[#002D72] text-white shadow-sm" : "text-slate-400 hover:text-slate-200 dark:hover:text-slate-100"}`}
                 >
                   <MoonStar className="w-3.5 h-3.5" /> Escuro
                 </button>
@@ -400,15 +400,15 @@ const Index = () => {
                 <button
                   key={m.key}
                   onClick={() => setActiveModule(m.key)}
-                  className="group flex flex-col justify-between p-6 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 hover:border-[#0057FF]/30 dark:hover:border-[#0057FF]/40 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 min-h-[150px] text-left"
+                  className="group flex flex-col justify-between p-6 bg-white dark:bg-[#001833] border border-slate-100 dark:border-[#002D72]/25 hover:border-[#FF6B00]/50 dark:hover:border-[#FF6B00]/40 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 min-h-[150px] text-left"
                 >
                   <div className="flex items-start justify-between w-full mb-4">
-                    <div className={`p-2.5 rounded-xl ${m.color} dark:bg-[#0057FF]/10 dark:text-[#0057FF] group-hover:scale-110 group-hover:bg-[#0057FF] group-hover:text-white transition-all duration-300`}>
+                    <div className={`p-2.5 rounded-xl ${m.color} dark:bg-[#FF6B00]/10 dark:text-[#FF6B00] group-hover:scale-110 group-hover:bg-[#FF6B00] group-hover:text-white transition-all duration-300`}>
                       <Icon className="w-5 h-5" />
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm group-hover:text-[#0057FF] transition-colors">{m.title}</h3>
+                    <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm group-hover:text-[#FF6B00] transition-colors">{m.title}</h3>
                     <p className="text-[11px] text-slate-400 dark:text-slate-400 mt-1 line-clamp-2 leading-normal">{m.desc}</p>
                   </div>
                 </button>
@@ -422,7 +422,7 @@ const Index = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen w-full bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-100 overflow-hidden font-inter print:bg-white print:h-auto print:overflow-visible">
+    <div className="flex flex-col h-screen w-full bg-[#F4F7FB] dark:bg-[#001022] text-[#0A1828] dark:text-slate-100 overflow-hidden font-inter print:bg-white print:h-auto print:overflow-visible">
       <style dangerouslySetInnerHTML={{ __html: `
         @media print { @page { size: landscape; margin: 10mm; } }
         
@@ -442,7 +442,7 @@ const Index = () => {
             <Topbar onExportWord={handleExportWord} state={state} loadState={loadState} />
           </div>
         )}
-        <div className={`w-full transition-all min-h-full relative print:shadow-none print:border-none print:rounded-none print:p-0 ${activeModule === "home" || activeModule === "a3" ? "bg-transparent p-0" : "bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200/50 dark:border-slate-800/40 p-4 md:p-6"}`}>
+        <div className={`w-full transition-all min-h-full relative print:shadow-none print:border-none print:rounded-none print:p-0 ${activeModule === "home" || activeModule === "a3" ? "bg-transparent p-0" : "bg-white dark:bg-[#001833] rounded-2xl shadow-sm border border-slate-200/50 dark:border-[#002D72]/20 p-4 md:p-6"}`}>
           {activeModule === "home" && renderHome()}
           {activeModule !== "home" && activeModule !== "gbo" && (
             <div key={activeModule} className="animate-in fade-in slide-in-from-bottom-2 duration-500 w-full h-full">
