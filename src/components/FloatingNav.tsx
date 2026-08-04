@@ -1,7 +1,7 @@
 import { ModuleKey } from "@/store/useAppStore";
 import { 
   FileText, GanttChartSquare, BarChart2, Calculator, 
-  ArrowRightLeft, ShieldCheck, Clock, Timer, Square, Home, ClipboardList, LayoutTemplate
+  ArrowRightLeft, ShieldCheck, Clock, Timer, Square, Home, ClipboardList, LayoutTemplate, BookOpen
 } from "lucide-react";
 
 interface Props {
@@ -23,6 +23,7 @@ export function FloatingNav({ active, onSelect }: Props) {
     { key: "area", icon: Square, label: "Área" },
     { key: "planoAcao", icon: ClipboardList, label: "5W2H" },
     { key: "a3", icon: LayoutTemplate, label: "A3" },
+    { key: "manual", icon: BookOpen, label: "Manual" },
   ];
 
   return (
