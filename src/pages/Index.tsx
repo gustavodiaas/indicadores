@@ -5,7 +5,7 @@ import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } fro
 import { 
   FileText, GanttChartSquare, BarChart2, Calculator, 
   ArrowRightLeft, ShieldCheck, Clock, Timer, Square, BarChart3, ClipboardList, Lock, LayoutTemplate,
-  SunMedium, MoonStar, Eclipse
+  SunMedium, MoonStar, Eclipse, BookOpen
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -19,6 +19,7 @@ import { LeadTimeModule } from "@/modules/LeadTimeModule";
 import { AreaModule } from "@/modules/AreaModule";
 import { PlanoAcaoModule } from "@/modules/PlanoAcaoModule";
 import { A3Module } from "@/modules/A3Module";
+import { ManualModule } from "@/modules/ManualModule";
 import GBOAnalysis from "@/modules/GboModule"; 
 
 type Theme = "light" | "dark" | "system";
@@ -323,6 +324,7 @@ const Index = () => {
       case "area": return <AreaModule data={state.area} onChange={d => updateModule("area", d)} />;
       case "planoAcao": return <PlanoAcaoModule data={state.planoAcao} onChange={d => updateModule("planoAcao", d)} />;
       case "a3": return <A3Module data={state.a3} onChange={d => updateModule("a3", d)} />;
+      case "manual": return <ManualModule />;
       default: return null;
     }
   };
@@ -340,6 +342,7 @@ const Index = () => {
       { key: "area", title: "Área de Trabalho", desc: "Otimização de layout e m²", icon: Square, color: "text-[#0057FF] bg-[#0057FF]/5" },
       { key: "planoAcao", title: "Plano de Ação 5W2H", desc: "Gestão tática e exportação", icon: ClipboardList, color: "text-[#0057FF] bg-[#0057FF]/5" },
       { key: "a3", title: "Modelo A3", desc: "Análise e Solução de Problemas", icon: LayoutTemplate, color: "text-[#0057FF] bg-[#0057FF]/5" },
+      { key: "manual", title: "Manual Técnico", desc: "Guia completo de uso de todas as abas", icon: BookOpen, color: "text-[#0057FF] bg-[#0057FF]/5" },
     ];
 
     return (
@@ -434,7 +437,7 @@ const Index = () => {
         }
       ` }} />
       <main className="flex-1 overflow-y-auto p-2 md:p-4 pb-32 print:p-0 print:overflow-visible">
-        {!["home", "gbo", "planoAcao", "a3"].includes(activeModule) && (
+        {!["home", "gbo", "planoAcao", "a3", "manual"].includes(activeModule) && (
           <div className="print:hidden relative z-[100] mb-2 animate-in slide-in-from-top-2 duration-300">
             <Topbar onExportWord={handleExportWord} state={state} loadState={loadState} />
           </div>
