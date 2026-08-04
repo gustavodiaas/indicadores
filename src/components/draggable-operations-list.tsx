@@ -92,8 +92,8 @@ export function DraggableOperationsList({
             onDragStart={() => handleDragStart(index)}
             onDragOver={(e) => handleDragOver(e, index)}
             onDragEnd={handleDragEnd}
-            className={`flex items-center gap-3 p-3 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-lg transition-all ${
-              draggedIndex === index ? "opacity-50 border-[#0057FF]" : "hover:border-slate-300 dark:hover:border-slate-600"
+            className={`flex items-center gap-3 p-3 bg-white dark:bg-[#001833] border border-slate-100 dark:border-[#002D72]/30 rounded-lg transition-all ${
+              draggedIndex === index ? "opacity-50 border-[#002D72]" : "hover:border-slate-300 dark:hover:border-slate-600"
             }`}
           >
             <div className={`p-1 text-slate-400 dark:text-slate-600 ${editingId === op.id ? "opacity-30" : "cursor-grab active:cursor-grabbing hover:text-slate-600 dark:hover:text-slate-400"}`}>
@@ -106,7 +106,7 @@ export function DraggableOperationsList({
                   <Input 
                     value={editName} 
                     onChange={(e) => setEditName(e.target.value)} 
-                    className="h-8 text-sm bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100" 
+                    className="h-8 text-sm bg-white dark:bg-[#001022] border-slate-200 dark:border-[#002D72]/30 text-slate-800 dark:text-slate-100" 
                     placeholder="Nome"
                     autoFocus
                   />
@@ -116,7 +116,7 @@ export function DraggableOperationsList({
                     min="0"
                     value={editTime} 
                     onChange={(e) => setEditTime(e.target.value)} 
-                    className="h-8 w-20 text-sm bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100" 
+                    className="h-8 w-20 text-sm bg-white dark:bg-[#001022] border-slate-200 dark:border-[#002D72]/30 text-slate-800 dark:text-slate-100" 
                     placeholder="Tempo"
                     onKeyDown={(e) => e.key === 'Enter' && saveEditing(op.id)}
                   />
@@ -133,7 +133,7 @@ export function DraggableOperationsList({
               <div className="flex items-center gap-1 ml-2">
                 {editingId === op.id ? (
                   <>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-green-500 hover:text-green-500 hover:bg-green-500/10" onClick={() => saveEditing(op.id)}>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-[#FF6B00] hover:text-[#FF6B00] hover:bg-[#FF6B00]/10" onClick={() => saveEditing(op.id)}>
                       <Check className="h-4 w-4" />
                     </Button>
                     <Button variant="ghost" size="icon" className="h-8 w-8 text-rose-500 hover:text-rose-500 hover:bg-rose-500/10" onClick={cancelEditing}>
@@ -142,7 +142,7 @@ export function DraggableOperationsList({
                   </>
                 ) : (
                   <>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 dark:text-slate-400 hover:text-[#0057FF] hover:bg-[#0057FF]/10" onClick={() => startEditing(op)}>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 dark:text-slate-400 hover:text-[#002D72] hover:bg-[#002D72]/10" onClick={() => startEditing(op)}>
                       <Pencil className="h-4 w-4" />
                     </Button>
                     <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 dark:text-slate-400 hover:text-rose-500 hover:bg-rose-500/10" onClick={() => onRemove(op.id)}>
