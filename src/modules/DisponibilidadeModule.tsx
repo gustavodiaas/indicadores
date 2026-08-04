@@ -36,74 +36,74 @@ export function DisponibilidadeModule({ data, onChange }: Props) {
         
         {/* Bloco T1 e T3 Modernizados */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/80 space-y-4">
-            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-100 dark:border-slate-800 pb-2">Estado T1 (Inicial)</h3>
+          <div className="bg-white dark:bg-[#001833] p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-[#002D72]/25 space-y-4">
+            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-100 dark:border-[#002D72]/30 pb-2">Estado T1 (Inicial)</h3>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Tempo Total</label>
-              <input type="text" className="w-full h-12 px-4 rounded-xl border border-transparent dark:border-slate-800/40 bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#0057FF] transition-all"
+              <input type="text" className="w-full h-12 px-4 rounded-xl border border-transparent dark:border-[#002D72]/20 bg-slate-50 dark:bg-[#001022] text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
                 defaultValue={data.tempoTotalT1 !== undefined ? data.tempoTotalT1.toString().replace(".", ",") : "0"}
                 onBlur={e => onChange({ tempoTotalT1: parseDecimal(e.target.value) || 0 })} />
             </div>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Paradas Planejadas</label>
-              <input type="text" className="w-full h-12 px-4 rounded-xl border border-transparent dark:border-slate-800/40 bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#0057FF] transition-all"
+              <input type="text" className="w-full h-12 px-4 rounded-xl border border-transparent dark:border-[#002D72]/20 bg-slate-50 dark:bg-[#001022] text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
                 defaultValue={data.paradasPlanT1 !== undefined ? data.paradasPlanT1.toString().replace(".", ",") : "0"}
                 onBlur={e => onChange({ paradasPlanT1: parseDecimal(e.target.value) || 0 })} />
             </div>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Paradas Não Planejadas</label>
-              <input type="text" className="w-full h-12 px-4 rounded-xl border border-transparent dark:border-slate-800/40 bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#0057FF] transition-all"
+              <input type="text" className="w-full h-12 px-4 rounded-xl border border-transparent dark:border-[#002D72]/20 bg-slate-50 dark:bg-[#001022] text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
                 defaultValue={data.paradasNaoPlanT1 !== undefined ? data.paradasNaoPlanT1.toString().replace(".", ",") : "0"}
                 onBlur={e => onChange({ paradasNaoPlanT1: parseDecimal(e.target.value) || 0 })} />
             </div>
-            <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
+            <div className="pt-4 border-t border-slate-100 dark:border-[#002D72]/30">
               <span className="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Disponibilidade T1</span>
-              <span className="text-xl font-black text-[#0057FF]">{r.indT1.toFixed(6).replace(".", ",")} %</span>
+              <span className="text-xl font-black text-[#002D72]">{r.indT1.toFixed(6).replace(".", ",")} %</span>
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/80 space-y-4">
-            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-100 dark:border-slate-800 pb-2">Estado T3 (Final)</h3>
+          <div className="bg-white dark:bg-[#001833] p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-[#002D72]/25 space-y-4">
+            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-100 dark:border-[#002D72]/30 pb-2">Estado T3 (Final)</h3>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Tempo Total</label>
-              <input type="text" className="w-full h-12 px-4 rounded-xl border border-transparent dark:border-slate-800/40 bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#0057FF] transition-all"
+              <input type="text" className="w-full h-12 px-4 rounded-xl border border-transparent dark:border-[#002D72]/20 bg-slate-50 dark:bg-[#001022] text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
                 defaultValue={data.tempoTotalT3 !== undefined ? data.tempoTotalT3.toString().replace(".", ",") : "0"}
                 onBlur={e => onChange({ tempoTotalT3: parseDecimal(e.target.value) || 0 })} />
             </div>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Paradas Planejadas</label>
-              <input type="text" className="w-full h-12 px-4 rounded-xl border border-transparent dark:border-slate-800/40 bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#0057FF] transition-all"
+              <input type="text" className="w-full h-12 px-4 rounded-xl border border-transparent dark:border-[#002D72]/20 bg-slate-50 dark:bg-[#001022] text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
                 defaultValue={data.paradasPlanT3 !== undefined ? data.paradasPlanT3.toString().replace(".", ",") : "0"}
                 onBlur={e => onChange({ paradasPlanT3: parseDecimal(e.target.value) || 0 })} />
             </div>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Paradas Não Planejadas</label>
-              <input type="text" className="w-full h-12 px-4 rounded-xl border border-transparent dark:border-slate-800/40 bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#0057FF] transition-all"
+              <input type="text" className="w-full h-12 px-4 rounded-xl border border-transparent dark:border-[#002D72]/20 bg-slate-50 dark:bg-[#001022] text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
                 defaultValue={data.paradasNaoPlanT3 !== undefined ? data.paradasNaoPlanT3.toString().replace(".", ",") : "0"}
                 onBlur={e => onChange({ paradasNaoPlanT3: parseDecimal(e.target.value) || 0 })} />
             </div>
-            <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
+            <div className="pt-4 border-t border-slate-100 dark:border-[#002D72]/30">
               <span className="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Disponibilidade T3</span>
-              <span className="text-xl font-black text-[#0057FF]">{r.indT3.toFixed(6).replace(".", ",")} %</span>
+              <span className="text-xl font-black text-[#002D72]">{r.indT3.toFixed(6).replace(".", ",")} %</span>
             </div>
           </div>
         </div>
 
-        <div className="p-6 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/80">
+        <div className="p-6 bg-white dark:bg-[#001833] rounded-2xl shadow-sm border border-slate-100 dark:border-[#002D72]/25">
           <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3 pl-1">Unidade de Tempo</label>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="w-full h-12 px-4 rounded-xl bg-slate-50 dark:bg-slate-950 text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between outline-none hover:bg-slate-100 dark:hover:bg-slate-900 transition-all focus:ring-2 focus:ring-[#0057FF] border border-transparent dark:border-slate-800/40">
+              <button className="w-full h-12 px-4 rounded-xl bg-slate-50 dark:bg-[#001022] text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between outline-none hover:bg-slate-100 dark:hover:bg-[#001833] transition-all focus:ring-2 focus:ring-[#FF6B00] border border-transparent dark:border-[#002D72]/20">
                 {u === "segundos" ? "Segundos" : u === "horas" ? "Horas" : "Minutos"}
                 <ChevronDown className="w-4 h-4 text-slate-400" />
               </button>
             </DropdownMenuTrigger>
             
-            <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-2 rounded-2xl shadow-xl z-[150]">
+            <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white dark:bg-[#001833] border border-slate-100 dark:border-[#002D72]/30 p-2 rounded-2xl shadow-xl z-[150]">
               <DropdownMenuItem 
                 onClick={() => onChange({ unidadeTempo: "segundos" })}
                 className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${
-                  u === "segundos" ? "bg-[#0057FF] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+                  u === "segundos" ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#002D72]/30"
                 }`}
               >
                 Segundos
@@ -111,7 +111,7 @@ export function DisponibilidadeModule({ data, onChange }: Props) {
               <DropdownMenuItem 
                 onClick={() => onChange({ unidadeTempo: "minutos" })}
                 className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${
-                  u === "minutos" ? "bg-[#0057FF] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+                  u === "minutos" ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#002D72]/30"
                 }`}
               >
                 Minutos
@@ -119,7 +119,7 @@ export function DisponibilidadeModule({ data, onChange }: Props) {
               <DropdownMenuItem 
                 onClick={() => onChange({ unidadeTempo: "horas" })}
                 className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${
-                  u === "horas" ? "bg-[#0057FF] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+                  u === "horas" ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#002D72]/30"
                 }`}
               >
                 Horas
@@ -135,7 +135,7 @@ export function DisponibilidadeModule({ data, onChange }: Props) {
         
         <EditableLaudoCard title="Laudo de Disponibilidade" laudo={laudo} />
 
-        <div className="mt-auto min-h-[250px] bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-100 dark:border-slate-800/60 shadow-sm">
+        <div className="mt-auto min-h-[250px] bg-white dark:bg-[#001833] rounded-2xl p-4 border border-slate-100 dark:border-[#002D72]/20 shadow-sm">
           <ComparisonChart data={chartData} title="Evolução da Disponibilidade" />
         </div>
       </div>
