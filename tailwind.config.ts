@@ -14,18 +14,32 @@ export default {
     },
     extend: {
       colors: {
-        // NOSSA PALETA ROYAL BLUE & AZUL BEBÊ
-        blue: {
-          50: '#F4F7FF',  // Azul bebê ultra suave (fundos de cards e hover sutil)
-          100: '#E5EDFF', // Azul bebê um pouco mais marcado (bordas)
-          200: '#C7D9FF',
-          300: '#99B8FF',
-          400: '#6696FF',
-          500: '#1A6BFF', 
-          600: '#0057FF', // Royal Blue absoluto (Botões, ícones, destaques principais)
-          700: '#0047D6', // Royal Blue mais escuro (Hover de botões)
-          800: '#003399',
-          900: '#002266',
+        // PALETA PRIMARY PURPLE
+        primary: {
+          DEFAULT: '#6F3FF5',
+          dark:    '#5630D9',
+          light:   '#8C6CFF',
+          50:      '#F0EBFF',
+          100:     '#E2D5FF',
+          200:     '#C9B3FF',
+          300:     '#A880FF',
+          400:     '#8C6CFF',
+          500:     '#6F3FF5',
+          600:     '#5630D9',
+          700:     '#4220B3',
+          800:     '#2D1A66',
+          900:     '#1A0A3D',
+        },
+        // TOKENS SEMÂNTICOS
+        brand: {
+          background: '#F6F7FB',
+          surface:    '#FFFFFF',
+          text:       '#1A1C25',
+          textSecondary: '#666B7A',
+          border:     '#E8EAF2',
+          success:    '#1DB954',
+          error:      '#E5484D',
+          warning:    '#FFB020',
         },
         // VARIÁVEIS NATIVAS DO SHADCN MANTIDAS INTACTAS
         border: "hsl(var(--border))",
