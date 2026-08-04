@@ -182,13 +182,13 @@ export function GBOChart({ operations, timeUnit, taktTime, taktTimeUnit, demandU
             <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0, 87, 255, 0.04)', radius: 8 }} />
             <ReferenceLine y={averageTime} stroke="#94A3B8" strokeDasharray="5 5" opacity={0.7} />
             {taktTimeInDisplayUnit && (
-              <ReferenceLine y={taktTimeInDisplayUnit} stroke="#0F172A" strokeDasharray="8 4" strokeWidth={2} opacity={0.8} />
+              <ReferenceLine y={taktTimeInDisplayUnit} stroke="#002D72" strokeDasharray="8 4" strokeWidth={2} opacity={0.8} />
             )}
             <Bar dataKey="time" radius={[6, 6, 0, 0]} isAnimationActive={false} maxBarSize={60}>
               {chartData.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={entry.exceedsTakt ? "#EF4444" : "#0057FF"}
+                  fill={entry.exceedsTakt ? "#EF4444" : "#FF6B00"}
                   className="transition-all duration-300 hover:opacity-80"
                 />
               ))}
@@ -199,7 +199,7 @@ export function GBOChart({ operations, timeUnit, taktTime, taktTimeUnit, demandU
 
       <div className="flex items-center justify-center gap-6 mt-2 text-xs flex-wrap font-medium text-muted-foreground">
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-sm bg-[#0057FF]"></div>
+          <div className="w-3 h-3 rounded-sm bg-[#FF6B00]"></div>
           <span>Operação Normal</span>
         </div>
         <div className="flex items-center gap-2">
@@ -212,7 +212,7 @@ export function GBOChart({ operations, timeUnit, taktTime, taktTimeUnit, demandU
         </div>
         {taktTimeInDisplayUnit && (
           <div className="flex items-center gap-2">
-            <div className="w-4 h-0.5 bg-[#0F172A] border-t-2 border-dashed"></div>
+            <div className="w-4 h-0.5 bg-[#002D72] border-t-2 border-dashed"></div>
             <span>Takt Time</span>
           </div>
         )}
