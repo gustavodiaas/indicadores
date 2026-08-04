@@ -49,10 +49,10 @@ export function InputField({ label, value, onChange, type = "text", suffix, plac
           placeholder={placeholder}
           className={`
             h-12 rounded-xl text-sm transition-all duration-300
-            bg-slate-50 dark:bg-slate-950 border-none shadow-none
+            bg-slate-50 dark:bg-[#001022] border-none shadow-none
             text-slate-700 dark:text-slate-200
             placeholder:text-slate-400 dark:placeholder:text-slate-600
-            focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-[#0057FF] focus:shadow-md
+            focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-[#FF6B00] focus:shadow-md
             ${suffix ? 'pr-12' : ''}
           `}
         />
