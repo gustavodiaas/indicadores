@@ -21,8 +21,8 @@ function P({ children }: { children: React.ReactNode }) {
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="py-2.5 border-b border-slate-100 dark:border-slate-800/60 last:border-b-0">
-      <span className="block text-[11px] font-bold text-[#0057FF] uppercase tracking-widest mb-0.5">{label}</span>
+    <div className="py-2.5 border-b border-slate-100 dark:border-[#002D72]/20 last:border-b-0">
+      <span className="block text-[11px] font-bold text-[#002D72] uppercase tracking-widest mb-0.5">{label}</span>
       <span className="text-[13px] text-slate-600 dark:text-slate-300 leading-relaxed">{children}</span>
     </div>
   );
@@ -30,7 +30,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 function FieldGroup({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-slate-50 dark:bg-slate-950 rounded-xl p-4 border border-slate-100 dark:border-slate-800/60 mb-4">
+    <div className="bg-slate-50 dark:bg-[#001022] rounded-xl p-4 border border-slate-100 dark:border-[#002D72]/20 mb-4">
       {children}
     </div>
   );
@@ -38,7 +38,7 @@ function FieldGroup({ children }: { children: React.ReactNode }) {
 
 function Formula({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-slate-900 dark:bg-black text-emerald-400 font-mono text-[12px] rounded-xl p-4 mb-4 overflow-x-auto whitespace-pre leading-relaxed">
+    <div className="bg-slate-900 dark:bg-black text-[#FF6B00] font-mono text-[12px] rounded-xl p-4 mb-4 overflow-x-auto whitespace-pre leading-relaxed">
       {children}
     </div>
   );
@@ -46,8 +46,8 @@ function Formula({ children }: { children: React.ReactNode }) {
 
 function Tip({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex gap-3 bg-blue-50 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/40 rounded-xl p-4 mb-4">
-      <Info className="w-4 h-4 text-[#0057FF] shrink-0 mt-0.5" />
+    <div className="flex gap-3 bg-[#002D72]/5 dark:bg-[#002D72]/20 border border-[#002D72]/15 dark:border-[#002D72]/30 rounded-xl p-4 mb-4">
+      <Info className="w-4 h-4 text-[#FF6B00] shrink-0 mt-0.5" />
       <span className="text-[12.5px] text-slate-700 dark:text-slate-300 leading-relaxed">{children}</span>
     </div>
   );
@@ -430,8 +430,8 @@ export function ManualModule() {
                 onClick={() => setActive(s.id)}
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl text-left text-[12px] font-bold uppercase tracking-wider transition-all ${
                   isActive
-                    ? "bg-[#0057FF] text-white shadow-md"
-                    : "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/60"
+                    ? "bg-[#FF6B00] text-white shadow-md"
+                    : "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-[#002D72]/30/60"
                 }`}
               >
                 <Icon className="w-4 h-4 shrink-0" />
