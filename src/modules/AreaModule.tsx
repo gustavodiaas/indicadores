@@ -19,7 +19,7 @@ function LocalInputField({ label, value, onChange, suffix, type = "number" }: { 
           type={type}
           value={value ?? ""}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full h-12 px-4 pr-16 rounded-xl border border-transparent bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#0057FF] transition-all"
+          className="w-full h-12 px-4 pr-16 rounded-xl border border-transparent bg-slate-50 dark:bg-[#001022] text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
         />
         {suffix && (
           <span className="absolute right-4 text-xs font-bold text-slate-400 dark:text-slate-500 pointer-events-none">
@@ -42,18 +42,18 @@ export function AreaModule({ data, onChange }: Props) {
       {/* Coluna Esquerda: Cards Modernos */}
       <div className="w-full lg:w-[60%] flex flex-col gap-6 overflow-y-auto pr-2 pb-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/80 space-y-4">
-            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-100 dark:border-slate-800 pb-2">Estado T1</h3>
+          <div className="bg-white dark:bg-[#001833] p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-[#002D72]/25 space-y-4">
+            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-100 dark:border-[#002D72]/30 pb-2">Estado T1</h3>
             <LocalInputField label="Área Ocupada" value={data.areaT1} onChange={v => onChange({ areaT1: Number(v) || 0 })} suffix="m²" />
           </div>
           
-          <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/80 space-y-4">
-            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-100 dark:border-slate-800 pb-2">Estado T3</h3>
+          <div className="bg-white dark:bg-[#001833] p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-[#002D72]/25 space-y-4">
+            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-100 dark:border-[#002D72]/30 pb-2">Estado T3</h3>
             <LocalInputField label="Área Ocupada" value={data.areaT3} onChange={v => onChange({ areaT3: Number(v) || 0 })} suffix="m²" />
           </div>
         </div>
         
-        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/80">
+        <div className="bg-white dark:bg-[#001833] p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-[#002D72]/25">
           <LocalInputField label="Valor do Aluguel/m²" value={data.valorAluguel} onChange={v => onChange({ valorAluguel: Number(v) || 0 })} suffix="R$/m²" />
         </div>
       </div>
@@ -64,7 +64,7 @@ export function AreaModule({ data, onChange }: Props) {
         
           <EditableLaudoCard title="Impacto em Área" laudo={laudo} />
 
-        <div className="mt-auto min-h-[250px] bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-100 dark:border-slate-800/60 shadow-sm">
+        <div className="mt-auto min-h-[250px] bg-white dark:bg-[#001833] rounded-2xl p-4 border border-slate-100 dark:border-[#002D72]/20 shadow-sm">
           <ComparisonChart data={chartData} title="Ocupação de Espaço" />
         </div>
       </div>
