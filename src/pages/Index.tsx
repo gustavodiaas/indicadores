@@ -356,20 +356,20 @@ const Index = () => {
             </div>
             <div>
               <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Olá!</h1>
-              <p className="text-slate-400 dark:text-slate-400 text-sm leading-relaxed">
+              <p className="text-slate-400 dark:text-slate-300 text-sm leading-relaxed">
                 Selecione um dos módulos operacionais ao lado para iniciar a análise, preencher dados ou gerar laudos técnicos.
               </p>
             </div>
 
-            <div className="flex items-start gap-3 text-[10px] font-bold text-slate-400 dark:text-slate-400 bg-white dark:bg-[#001833] p-4 rounded-2xl border border-slate-100 dark:border-[#002D72]/30 shadow-sm uppercase tracking-widest leading-relaxed">
+            <div className="flex items-start gap-3 text-[10px] font-bold text-slate-400 dark:text-slate-400 bg-white dark:bg-[#001833] p-4 rounded-2xl border border-slate-100 dark:border-[#4A6FA5]/40 shadow-sm uppercase tracking-widest leading-relaxed">
               <Lock className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
               <span>Privacidade: Seus dados são salvos apenas localmente no seu navegador. Nenhuma informação é enviada.</span>
             </div>
 
             {/* PÍLULA INTEGRADA DE CONTROLE DE TEMA */}
-            <div className="flex flex-col gap-2 bg-white dark:bg-[#001833] p-4 rounded-2xl border border-slate-100 dark:border-[#002D72]/30 shadow-sm">
+            <div className="flex flex-col gap-2 bg-white dark:bg-[#001833] p-4 rounded-2xl border border-slate-100 dark:border-[#4A6FA5]/40 shadow-sm">
               <label className="text-[9px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-widest px-1">Aparência do Painel</label>
-              <div className="grid grid-cols-3 bg-slate-100 dark:bg-[#001022] p-1 rounded-xl gap-1">
+              <div className="grid grid-cols-3 bg-slate-100 dark:bg-[#0A2347] p-1 rounded-xl gap-1">
                 <button 
                   onClick={() => setTheme("light")} 
                   className={`flex items-center justify-center gap-1.5 py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${theme === "light" ? "bg-white text-[#FF6B00] shadow-sm" : "text-slate-400 hover:text-slate-800"}`}
@@ -384,7 +384,7 @@ const Index = () => {
                 </button>
                 <button 
                   onClick={() => setTheme("dark")} 
-                  className={`flex items-center justify-center gap-1.5 py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${theme === "dark" ? "bg-[#002D72] text-white shadow-sm" : "text-slate-400 hover:text-slate-200 dark:hover:text-slate-100"}`}
+                  className={`flex items-center justify-center gap-1.5 py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${theme === "dark" ? "bg-[#002D72] text-white shadow-sm" : "text-slate-500 dark:text-slate-300 hover:text-slate-700 dark:hover:text-white"}`}
                 >
                   <MoonStar className="w-3.5 h-3.5" /> Escuro
                 </button>
@@ -400,7 +400,7 @@ const Index = () => {
                 <button
                   key={m.key}
                   onClick={() => setActiveModule(m.key)}
-                  className="group flex flex-col justify-between p-6 bg-white dark:bg-[#001833] border border-slate-100 dark:border-[#002D72]/25 hover:border-[#FF6B00]/50 dark:hover:border-[#FF6B00]/40 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 min-h-[150px] text-left"
+                  className="group flex flex-col justify-between p-6 bg-white dark:bg-[#001833] border border-slate-100 dark:border-[#4A6FA5]/35 hover:border-[#FF6B00]/50 dark:hover:border-[#FF6B00]/40 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 min-h-[150px] text-left"
                 >
                   <div className="flex items-start justify-between w-full mb-4">
                     <div className={`p-2.5 rounded-xl ${m.color} dark:bg-[#FF6B00]/10 dark:text-[#FF6B00] group-hover:scale-110 group-hover:bg-[#FF6B00] group-hover:text-white transition-all duration-300`}>
@@ -422,7 +422,7 @@ const Index = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen w-full bg-[#F4F7FB] dark:bg-[#001022] text-[#0A1828] dark:text-slate-100 overflow-hidden font-inter print:bg-white print:h-auto print:overflow-visible">
+    <div className="flex flex-col h-screen w-full bg-[#F4F7FB] dark:bg-[#0A2347] text-[#0A1828] dark:text-slate-100 overflow-hidden font-inter print:bg-white print:h-auto print:overflow-visible">
       <style dangerouslySetInnerHTML={{ __html: `
         @media print { @page { size: landscape; margin: 10mm; } }
         
@@ -442,7 +442,7 @@ const Index = () => {
             <Topbar onExportWord={handleExportWord} state={state} loadState={loadState} />
           </div>
         )}
-        <div className={`w-full transition-all min-h-full relative print:shadow-none print:border-none print:rounded-none print:p-0 ${activeModule === "home" || activeModule === "a3" ? "bg-transparent p-0" : "bg-white dark:bg-[#001833] rounded-2xl shadow-sm border border-slate-200/50 dark:border-[#002D72]/20 p-4 md:p-6"}`}>
+        <div className={`w-full transition-all min-h-full relative print:shadow-none print:border-none print:rounded-none print:p-0 ${activeModule === "home" || activeModule === "a3" ? "bg-transparent p-0" : "bg-white dark:bg-[#001833] rounded-2xl shadow-sm border border-slate-200/50 dark:border-[#4A6FA5]/30 p-4 md:p-6"}`}>
           {activeModule === "home" && renderHome()}
           {activeModule !== "home" && activeModule !== "gbo" && (
             <div key={activeModule} className="animate-in fade-in slide-in-from-bottom-2 duration-500 w-full h-full">
