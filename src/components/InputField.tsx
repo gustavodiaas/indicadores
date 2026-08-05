@@ -14,7 +14,6 @@ interface Props {
 }
 
 export function InputField({ label, value, onChange, type = "text", suffix, placeholder }: Props) {
-  // Ajuste: inicia como string vazia se for 0 para não mostrar "0" na tela
   const [localValue, setLocalValue] = useState(value === 0 ? "" : (value?.toString() || ""));
 
   useEffect(() => {
@@ -37,7 +36,7 @@ export function InputField({ label, value, onChange, type = "text", suffix, plac
 
   return (
     <div className="flex flex-col gap-1.5 w-full">
-      <Label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest pl-1">
+      <Label className="text-[10px] font-bold text-slate-500 dark:text-slate-300 uppercase tracking-widest pl-1">
         {label}
       </Label>
       <div className="relative flex items-center">
@@ -49,15 +48,17 @@ export function InputField({ label, value, onChange, type = "text", suffix, plac
           placeholder={placeholder}
           className={`
             h-12 rounded-xl text-sm transition-all duration-300
-            bg-slate-50 dark:bg-[#001022] border-none shadow-none
-            text-slate-700 dark:text-slate-200
-            placeholder:text-slate-400 dark:placeholder:text-slate-600
-            focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-[#FF6B00] focus:shadow-md
+            bg-slate-50 dark:bg-[#0A2347]
+            border border-slate-200 dark:border-[#4A6FA5]/50
+            text-slate-800 dark:text-white
+            placeholder:text-slate-400 dark:placeholder:text-slate-500
+            focus:bg-white dark:focus:bg-[#0D2B57]
+            focus:ring-2 focus:ring-[#FF6B00] focus:border-[#FF6B00] focus:shadow-md
             ${suffix ? 'pr-12' : ''}
           `}
         />
         {suffix && (
-          <span className="absolute right-4 text-xs font-bold text-slate-400 dark:text-slate-500 select-none pointer-events-none">
+          <span className="absolute right-4 text-xs font-bold text-slate-400 dark:text-slate-400 select-none pointer-events-none">
             {suffix}
           </span>
         )}
