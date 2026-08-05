@@ -29,7 +29,7 @@ export function FloatingNav({ active, onSelect }: Props) {
   return (
     <div className="fixed z-[100] transition-all duration-500 print:hidden left-1/2 -translate-x-1/2 bottom-6 w-[95%] md:w-max">
       {/* Efeito Glassmorphism adaptado para os dois modos */}
-      <div className="flex flex-row items-center bg-white/60 dark:bg-[#001833]/60 backdrop-blur-xl border border-slate-200/40 dark:border-[#002D72]/30/40 shadow-2xl transition-all duration-500 overflow-x-auto [&::-webkit-scrollbar]:hidden px-3 py-3 rounded-[3rem] gap-1.5 md:gap-2">
+      <div className="flex flex-row items-center bg-white/60 dark:bg-[#001833]/60 backdrop-blur-xl border border-slate-200/40 dark:border-[#4A6FA5]/40 shadow-2xl transition-all duration-500 overflow-x-auto [&::-webkit-scrollbar]:hidden px-3 py-3 rounded-[3rem] gap-1.5 md:gap-2">
         {navItems.map((item) => {
           const isActive = active === item.key;
           const Icon = item.icon;
