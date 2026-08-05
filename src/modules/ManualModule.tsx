@@ -21,8 +21,8 @@ function P({ children }: { children: React.ReactNode }) {
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="py-2.5 border-b border-slate-100 dark:border-[#002D72]/20 last:border-b-0">
-      <span className="block text-[11px] font-bold text-[#002D72] uppercase tracking-widest mb-0.5">{label}</span>
+    <div className="py-2.5 border-b border-slate-100 dark:border-[#4A6FA5]/30 last:border-b-0">
+      <span className="block text-[11px] font-bold text-[#002D72] dark:text-[#FF6B00] uppercase tracking-widest mb-0.5">{label}</span>
       <span className="text-[13px] text-slate-600 dark:text-slate-300 leading-relaxed">{children}</span>
     </div>
   );
@@ -30,7 +30,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 function FieldGroup({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-slate-50 dark:bg-[#001022] rounded-xl p-4 border border-slate-100 dark:border-[#002D72]/20 mb-4">
+    <div className="bg-slate-50 dark:bg-[#0A2347] rounded-xl p-4 border border-slate-100 dark:border-[#4A6FA5]/30 mb-4">
       {children}
     </div>
   );
@@ -46,7 +46,7 @@ function Formula({ children }: { children: React.ReactNode }) {
 
 function Tip({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex gap-3 bg-[#002D72]/5 dark:bg-[#002D72]/20 border border-[#002D72]/15 dark:border-[#002D72]/30 rounded-xl p-4 mb-4">
+    <div className="flex gap-3 bg-[#002D72]/5 dark:bg-[#002D72]/20 border border-[#002D72]/15 dark:border-[#4A6FA5]/40 rounded-xl p-4 mb-4">
       <Info className="w-4 h-4 text-[#FF6B00] shrink-0 mt-0.5" />
       <span className="text-[12.5px] text-slate-700 dark:text-slate-300 leading-relaxed">{children}</span>
     </div>
