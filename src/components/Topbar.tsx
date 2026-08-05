@@ -77,7 +77,7 @@ export function Topbar({ onExportWord, state, loadState }: Props) {
   return (
     <div className="w-full z-[100] print:hidden mb-6 shrink-0">
       
-      <header className="w-full h-20 bg-white dark:bg-[#001833] border-b border-slate-100 dark:border-[#002D72]/25 px-10 flex items-center justify-between transition-all duration-500">
+      <header className="w-full h-20 bg-white dark:bg-[#001833] border-b border-slate-100 dark:border-[#4A6FA5]/35 px-10 flex items-center justify-between transition-all duration-500">
         
         <div className="flex items-center gap-4">
           <div className="bg-[#FF6B00] p-2 rounded-xl shadow-sm">
@@ -96,7 +96,7 @@ export function Topbar({ onExportWord, state, loadState }: Props) {
               Privacidade
             </div>
             
-            <div className="absolute top-full right-0 mt-4 w-[340px] p-6 bg-slate-900 dark:bg-[#001022] text-slate-300 dark:text-slate-400 text-[11px] rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 border border-slate-800 dark:border-[#002D72]/30/60 z-[110] pointer-events-none group-hover:pointer-events-auto">
+            <div className="absolute top-full right-0 mt-4 w-[340px] p-6 bg-[#001022] dark:bg-[#000814] text-slate-300 dark:text-slate-300 text-[11px] rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 border border-[#002D72]/40 dark:border-[#4A6FA5]/40 z-[110] pointer-events-none group-hover:pointer-events-auto">
               <h4 className="font-bold text-white mb-3 uppercase tracking-widest text-[10px] border-b border-white/10 pb-2 text-left">Aviso de Privacidade</h4>
               
               <div className="text-justify space-y-3 font-normal normal-case">
