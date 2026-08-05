@@ -30,7 +30,7 @@ export function ProdutividadeModule({ data, onChange }: Props) {
     <div className="flex flex-col lg:flex-row gap-8 h-full animate-in fade-in duration-500">
       <div className="w-full lg:w-[60%] flex flex-col gap-6 overflow-y-auto pr-2 pb-10">
         
-        <div className="bg-white dark:bg-[#001833] p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-[#002D72]/25 flex items-center justify-between">
+        <div className="bg-white dark:bg-[#001833] p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-[#4A6FA5]/35 flex items-center justify-between">
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
               <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Calculado com 21 dias úteis</span>
@@ -40,7 +40,7 @@ export function ProdutividadeModule({ data, onChange }: Props) {
           </div>
           <input 
             type="text" 
-            className="h-12 w-40 bg-slate-50 dark:bg-[#001022] text-slate-800 dark:text-slate-200 rounded-xl border border-transparent dark:border-[#002D72]/20 text-sm font-medium outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all px-4"
+            className="h-12 w-40 bg-slate-50 dark:bg-[#0A2347] text-slate-800 dark:text-white rounded-xl border border-transparent dark:border-[#4A6FA5]/30 text-sm font-medium outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all px-4"
             value={data.unidade}
             onChange={e => onChange({ unidade: e.target.value })}
             placeholder="Ex: peças, kg..."
@@ -48,48 +48,48 @@ export function ProdutividadeModule({ data, onChange }: Props) {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div className="bg-white dark:bg-[#001833] p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-[#002D72]/25 space-y-4">
-            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-100 dark:border-[#002D72]/30 pb-2">
+          <div className="bg-white dark:bg-[#001833] p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-[#4A6FA5]/35 space-y-4">
+            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-100 dark:border-[#4A6FA5]/40 pb-2">
               T1 - Inicial
             </h3>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Volume ({u})</label>
-              <input type="text" className="w-full h-12 px-4 rounded-xl border border-transparent bg-slate-50 dark:bg-[#001022] text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all" 
+              <input type="text" className="w-full h-12 px-4 rounded-xl border border-slate-200 dark:border-[#4A6FA5]/40 bg-slate-50 dark:bg-[#0A2347] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all" 
                 defaultValue={data.volumeT1?.toString().replace(".", ",")} 
                 onBlur={e => onChange({ volumeT1: parseDecimal(e.target.value) })} />
             </div>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Horas</label>
-              <input type="text" className="w-full h-12 px-4 rounded-xl border border-transparent bg-slate-50 dark:bg-[#001022] text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all" 
+              <input type="text" className="w-full h-12 px-4 rounded-xl border border-slate-200 dark:border-[#4A6FA5]/40 bg-slate-50 dark:bg-[#0A2347] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all" 
                 defaultValue={data.horasT1?.toString().replace(".", ",")} 
                 onBlur={e => onChange({ horasT1: parseDecimal(e.target.value) })} />
             </div>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Operadores</label>
-              <input type="number" className="w-full h-12 px-4 rounded-xl border border-transparent bg-slate-50 dark:bg-[#001022] text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all" 
+              <input type="number" className="w-full h-12 px-4 rounded-xl border border-slate-200 dark:border-[#4A6FA5]/40 bg-slate-50 dark:bg-[#0A2347] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all" 
                 value={data.operadoresT1 ?? ""} onChange={e => onChange({ operadoresT1: Number(e.target.value) })} />
             </div>
           </div>
 
-          <div className="bg-white dark:bg-[#001833] p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-[#002D72]/25 space-y-4">
-            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-100 dark:border-[#002D72]/30 pb-2">
+          <div className="bg-white dark:bg-[#001833] p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-[#4A6FA5]/35 space-y-4">
+            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-100 dark:border-[#4A6FA5]/40 pb-2">
               T3 - Final
             </h3>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Volume ({u})</label>
-              <input type="text" className="w-full h-12 px-4 rounded-xl border border-transparent bg-slate-50 dark:bg-[#001022] text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all" 
+              <input type="text" className="w-full h-12 px-4 rounded-xl border border-slate-200 dark:border-[#4A6FA5]/40 bg-slate-50 dark:bg-[#0A2347] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all" 
                 defaultValue={data.volumeT3?.toString().replace(".", ",")} 
                 onBlur={e => onChange({ volumeT3: parseDecimal(e.target.value) })} />
             </div>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Horas</label>
-              <input type="text" className="w-full h-12 px-4 rounded-xl border border-transparent bg-slate-50 dark:bg-[#001022] text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all" 
+              <input type="text" className="w-full h-12 px-4 rounded-xl border border-slate-200 dark:border-[#4A6FA5]/40 bg-slate-50 dark:bg-[#0A2347] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all" 
                 defaultValue={data.horasT3?.toString().replace(".", ",")} 
                 onBlur={e => onChange({ horasT3: parseDecimal(e.target.value) })} />
             </div>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Operadores</label>
-              <input type="number" className="w-full h-12 px-4 rounded-xl border border-transparent bg-slate-50 dark:bg-[#001022] text-slate-800 dark:text-slate-200 text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all" 
+              <input type="number" className="w-full h-12 px-4 rounded-xl border border-slate-200 dark:border-[#4A6FA5]/40 bg-slate-50 dark:bg-[#0A2347] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all" 
                 value={data.operadoresT3 ?? ""} onChange={e => onChange({ operadoresT3: Number(e.target.value) })} />
             </div>
           </div>
@@ -101,7 +101,7 @@ export function ProdutividadeModule({ data, onChange }: Props) {
         
         <EditableLaudoCard title="Laudo Operacional" laudo={laudo} />
         
-        <div className="mt-auto min-h-[250px] bg-white dark:bg-[#001833] rounded-2xl p-4 border border-slate-100 dark:border-[#002D72]/20 shadow-sm">
+        <div className="mt-auto min-h-[250px] bg-white dark:bg-[#001833] rounded-2xl p-4 border border-slate-100 dark:border-[#4A6FA5]/30 shadow-sm">
           <ComparisonChart data={chartData} title={`Evolução (${u}/h/op)`} />
         </div>
       </div>
