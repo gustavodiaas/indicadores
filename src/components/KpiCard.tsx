@@ -15,12 +15,12 @@ export function KpiCard({ label, value, suffix, trend }: Props) {
     ? "text-[#002D72] bg-[#002D72]/8 border-[#002D72]/15 dark:text-[#FF6B00] dark:bg-[#FF6B00]/10 dark:border-[#FF6B00]/20" 
     : isNegative 
       ? "text-rose-600 bg-rose-50 border-rose-100 dark:text-rose-400 dark:bg-rose-950/30 dark:border-rose-900/50" 
-      : "text-slate-600 bg-slate-50 border-slate-100 dark:text-slate-400 dark:bg-[#001022]/30 dark:border-slate-900/50";
+      : "text-slate-600 bg-slate-50 border-slate-100 dark:text-slate-400 dark:bg-[#002D72]/10 dark:border-[#4A6FA5]/30";
       
   const TrendIcon = isPositive ? TrendingUp : isNegative ? TrendingDown : Minus;
 
   return (
-    <div className="flex flex-col p-5 bg-white dark:bg-[#001833] border border-slate-200/80 dark:border-[#002D72]/25 rounded-xl shadow-sm hover:shadow-md hover:border-[#FF6B00]/30 dark:hover:border-[#FF6B00]/40 transition-all duration-300 group">
+    <div className="flex flex-col p-5 bg-white dark:bg-[#001833] border border-slate-200/80 dark:border-[#4A6FA5]/35 rounded-xl shadow-sm hover:shadow-md hover:border-[#FF6B00]/30 dark:hover:border-[#FF6B00]/40 transition-all duration-300 group">
       <span className="text-sm font-medium text-slate-500 dark:text-slate-400 group-hover:text-[#002D72] dark:group-hover:text-[#FF6B00] transition-colors duration-300">
         {label}
       </span>
