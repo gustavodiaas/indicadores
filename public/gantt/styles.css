@@ -3236,10 +3236,20 @@ kbd {
 
   body.print-paper-a3 #printReportContent.is-ultra-dense .print-report-table {
     font-size: 7.5pt;
-     @media (prefers-color-scheme: dark) {
-  body {
-    background-color: #0A2347;
-    color: #f1f5f9;
+    /* Correção nativa para o modo escuro no iframe */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
   }
+}
+
+html[data-theme="dark"], body.dark-mode, .dark-theme {
+  background-color: #0A2347 !important;
+  color: #f1f5f9 !important;
+}
+
+/* Se o script ler a classe ou atributo do tema */
+.app-shell {
+  background-color: inherit;
 }
      
