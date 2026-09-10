@@ -3503,3 +3503,266 @@ input[type=number], input[type=time] {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(74, 111, 165, 0.7);
 }
+
+/* ── Acabamento visual integrado à Central de Indicadores ─────────────── */
+:root {
+  --border: rgba(15, 23, 42, 0.09);
+  --border-light: rgba(15, 23, 42, 0.055);
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+}
+
+html.dark {
+  --background: #0b0b0f;
+  --surface: #1c1c1e;
+  --surface-secondary: #2c2c2e;
+  --text-primary: #f5f5f7;
+  --text-secondary: #a1a1aa;
+  --border: rgba(255, 255, 255, 0.11);
+  --border-light: rgba(255, 255, 255, 0.07);
+  --blue-soft: rgba(10, 132, 255, 0.14);
+  --shadow-menu: 0 20px 55px rgba(0, 0, 0, 0.42);
+}
+
+body,
+.app-shell,
+html.dark body,
+html.dark .app-shell {
+  background: var(--background) !important;
+}
+
+.app-shell {
+  padding: 14px 18px 24px;
+}
+
+.app-header,
+html.dark .app-header {
+  min-height: 64px;
+  padding: 0 18px;
+  border: 1px solid var(--border-light) !important;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.78) !important;
+  box-shadow: 0 12px 34px rgba(15, 23, 42, 0.045);
+  backdrop-filter: blur(22px) saturate(145%);
+}
+
+html.dark .app-header {
+  background: rgba(28, 28, 30, 0.86) !important;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.2);
+}
+
+.brand-title,
+html.dark .brand-title {
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: 650;
+}
+
+.brand-subtitle {
+  margin: 3px 0 0;
+  color: var(--text-secondary);
+  font-size: 11px;
+}
+
+main {
+  padding-top: 16px;
+}
+
+.context-panel,
+html.dark .context-panel {
+  padding: 20px;
+  border: 1px solid var(--border-light) !important;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.8) !important;
+  box-shadow: 0 14px 38px rgba(15, 23, 42, 0.045);
+  backdrop-filter: blur(20px) saturate(135%);
+}
+
+html.dark .context-panel {
+  background: rgba(28, 28, 30, 0.88) !important;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.18);
+}
+
+input,
+select,
+html.dark input,
+html.dark select,
+html.dark textarea {
+  min-height: 40px;
+  border-color: transparent !important;
+  border-radius: 10px;
+  background: #f1f1f4 !important;
+  color: var(--text-primary) !important;
+}
+
+html.dark input,
+html.dark select,
+html.dark textarea {
+  background: #2c2c2e !important;
+}
+
+input:hover,
+select:hover,
+html.dark input:hover,
+html.dark select:hover {
+  border-color: rgba(10, 132, 255, 0.35) !important;
+}
+
+.button,
+.icon-button {
+  border-radius: 10px;
+}
+
+.button-secondary,
+.icon-button,
+html.dark .button-secondary,
+html.dark .icon-button {
+  border-color: var(--border-light);
+  background: rgba(255, 255, 255, 0.65);
+}
+
+html.dark .button-secondary,
+html.dark .icon-button {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.button-secondary:hover,
+.icon-button:hover,
+html.dark .button-secondary:hover,
+html.dark .icon-button:hover {
+  border-color: rgba(10, 132, 255, 0.22);
+  background: var(--blue-soft);
+}
+
+.view-bar {
+  flex-wrap: wrap;
+  padding: 14px 0;
+}
+
+.view-actions {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.segmented-control,
+html.dark .segmented-control {
+  border: 0;
+  border-radius: 12px;
+  background: rgba(118, 118, 128, 0.12);
+}
+
+html.dark .segmented-control {
+  background: rgba(118, 118, 128, 0.24);
+}
+
+.segment.is-active,
+html.dark .segment.is-active {
+  background: var(--surface);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.1);
+}
+
+.kpi-grid {
+  grid-template-columns: repeat(auto-fit, minmax(176px, 1fr));
+  gap: 12px;
+}
+
+.kpi-card,
+html.dark .kpi-card {
+  position: relative;
+  min-height: 116px;
+  overflow: hidden;
+  padding: 17px;
+  border: 1px solid var(--border-light) !important;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.82) !important;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.04);
+}
+
+html.dark .kpi-card {
+  background: rgba(28, 28, 30, 0.9) !important;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.16);
+}
+
+.kpi-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  border-radius: 3px;
+  background: #8e8e93;
+}
+
+.kpi-current::before { background: var(--current); }
+.kpi-proposed::before { background: var(--proposed); }
+.kpi-card.is-positive::before { background: var(--agrega); }
+.kpi-card.is-negative::before { background: var(--nao-agrega); }
+
+.workspace {
+  gap: 12px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
+}
+
+.editor-panel,
+.comparison-panel,
+.timeline-panel,
+.video-workspace,
+html.dark .editor-panel,
+html.dark .comparison-panel,
+html.dark .timeline-panel,
+html.dark .video-workspace {
+  border: 1px solid var(--border-light) !important;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.82) !important;
+  box-shadow: 0 14px 38px rgba(15, 23, 42, 0.045);
+}
+
+html.dark .editor-panel,
+html.dark .comparison-panel,
+html.dark .timeline-panel,
+html.dark .video-workspace {
+  background: rgba(28, 28, 30, 0.9) !important;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.18);
+}
+
+.timeline-empty,
+html.dark .timeline-empty {
+  border-radius: 14px;
+  background-color: #f7f7fa;
+  background-image: linear-gradient(to right, rgba(10, 132, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(10, 132, 255, 0.08) 1px, transparent 1px);
+}
+
+html.dark .timeline-empty {
+  background-color: #151519;
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.065) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.065) 1px, transparent 1px);
+}
+
+html.dark .timeline-empty-content {
+  border-color: var(--border-light);
+  background: rgba(28, 28, 30, 0.94);
+}
+
+html.dark .gantt-svg-stage-even { fill: #1c1c1e !important; }
+html.dark .gantt-svg-stage-odd { fill: #242426 !important; }
+html.dark .gantt-svg-row-divider { stroke: rgba(255, 255, 255, 0.07) !important; }
+
+::-webkit-scrollbar-thumb {
+  background: rgba(142, 142, 147, 0.42);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(142, 142, 147, 0.65);
+}
+
+@media (max-width: 760px) {
+  .app-shell { padding: 10px; }
+  .app-header { padding: 10px 12px; }
+  .brand-subtitle, .save-status { display: none; }
+  .context-panel { padding: 15px; }
+  .segment { min-width: 74px; }
+}
