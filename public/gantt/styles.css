@@ -3272,7 +3272,6 @@ html.dark .activity-form {
   color: #f1f5f9 !important;
   border-color: rgba(74, 111, 165, 0.3) !important;
 }
-
 html.dark input, 
 html.dark select, 
 html.dark textarea {
@@ -3280,4 +3279,29 @@ html.dark textarea {
   color: #f1f5f9 !important;
   border-color: rgba(74, 111, 165, 0.4) !important;
 }
-     
+/* Ocultar setas nativas de inputs de número e tempo */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button,
+input::-webkit-calendar-picker-indicator {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number], input[type=time] {
+  -moz-appearance: textfield;
+}
+
+/* Barra de rolagem customizada para o padrão do site */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(74, 111, 165, 0.4);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(74, 111, 165, 0.7);
+}
