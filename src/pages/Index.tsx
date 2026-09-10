@@ -435,12 +435,14 @@ const Index = () => {
           -moz-appearance: textfield;
         }
       ` }} />
-      <div className="absolute left-0 top-0 z-50 h-full print:hidden">
-        <Sidebar active={activeModule} onSelect={setActiveModule} />
+      <div className="absolute left-0 top-0 z-50 h-full pointer-events-none print:hidden">
+        <div className="pointer-events-auto h-full backdrop-blur-md bg-white/75 dark:bg-[#0A2347]/75 shadow-2xl border-r border-slate-200/40 dark:border-slate-700/40">
+          <Sidebar active={activeModule} onSelect={setActiveModule} />
+        </div>
       </div>
       <main className="flex-1 flex flex-col h-screen overflow-y-auto pl-16">
         {!["home", "gbo", "planoAcao", "a3", "manual", "gantt"].includes(activeModule) && (
-          <div className="print:hidden relative z-[40] mb-2 animate-in slide-in-from-top-2 duration-300 px-4 pt-4">
+          <div className="print:hidden relative z-30 mb-2 animate-in slide-in-from-top-2 duration-300 px-4 pt-4">
             <Topbar onExportWord={handleExportWord} state={state} loadState={loadState} />
           </div>
         )}
