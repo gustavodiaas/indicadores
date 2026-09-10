@@ -229,7 +229,66 @@
 
   init();
 
+  // ── Tema ───────────────────────────────────────────────────────────────────────
+  // O app pai (Central de Indicadores) resolve o seletor CLARO / AUTO / ESCURO e grava a
+  // classe "light" ou "dark" no <html> dele — o "AUTO" já chega resolvido. Como este
+  // módulo roda num iframe do mesmo domínio, dá para espelhar essa classe diretamente,
+  // sem precisar de mensagem nem de recarregar o iframe.
+  //
+  // Fora do iframe (abrindo o index.html direto) não há pai para consultar, e aí a
+  // preferência do sistema operacional é o melhor palpite disponível.
+  function parentThemeRoot() {
+    try {
+      if (window.parent === window) return null;
+      const root = window.parent.document.documentElement;
+      // Um pai de outra origem lança SecurityError antes de chegar aqui.
+      if (!root || !root.classList) return null;
+      // Se por algum motivo o "pai" for este mesmo documento, observar a própria raiz
+      // que estamos alterando criaria um laço. Melhor cair no palpite do sistema.
+      return root === document.documentElement ? null : root;
+    } catch (_error) {
+      return null;
+    }
+  }
+
+  function applyTheme(isDark) {
+    const root = document.documentElement;
+    root.classList.toggle("dark", isDark);
+    root.classList.toggle("light", !isDark);
+    // Alinha também os controles nativos do navegador: barras de rolagem, seletores de
+    // hora e o fundo padrão dos campos.
+    root.style.colorScheme = isDark ? "dark" : "light";
+  }
+
+  function syncThemeWithHost() {
+    const hostRoot = parentThemeRoot();
+
+    if (!hostRoot) {
+      const query = window.matchMedia("(prefers-color-scheme: dark)");
+      const applyFromSystem = () => applyTheme(query.matches);
+      applyFromSystem();
+      if (typeof query.addEventListener === "function") query.addEventListener("change", applyFromSystem);
+      else if (typeof query.addListener === "function") query.addListener(applyFromSystem);
+      return;
+    }
+
+    const applyFromHost = () => applyTheme(hostRoot.classList.contains("dark"));
+    applyFromHost();
+    // O pai troca a classe quando o usuário muda o seletor, e também sozinho quando está
+    // em AUTO e o sistema muda. Observar o atributo cobre os dois casos.
+    try {
+      new window.MutationObserver(applyFromHost).observe(hostRoot, {
+        attributes: true,
+        attributeFilter: ["class"],
+      });
+    } catch (_error) {
+      // Sem observer o tema inicial já foi aplicado; só não acompanha trocas.
+    }
+  }
+
   function init() {
+    // Antes de qualquer render, para a tela não piscar no tema errado.
+    syncThemeWithHost();
     bindEvents();
     syncGlobalInputs();
     renderVideoLibrary();
