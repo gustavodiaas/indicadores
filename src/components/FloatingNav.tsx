@@ -1,7 +1,7 @@
 import { ModuleKey } from "@/store/useAppStore";
 import { 
   FileText, GanttChartSquare, BarChart2, Calculator, 
-  ArrowRightLeft, ShieldCheck, Clock, Timer, Square, Home, ClipboardList, LayoutTemplate, BookOpen
+  ArrowRightLeft, ShieldCheck, Clock, Timer, Square, Home, ClipboardList, LayoutTemplate, calendar, BookOpen
 } from "lucide-react";
 
 interface Props {
