@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 
-export type ModuleKey = "home" | "resumo" | "produtividade" | "payback" | "movimentacao" | "qualidade" | "disponibilidade" | "leadtime" | "area" | "gbo" | "planoAcao" | "a3" | "manual";
+export type ModuleKey = "home" | "resumo" | "produtividade" | "payback" | "movimentacao" | "qualidade" | "disponibilidade" | "leadtime" | "area" | "gbo" | "planoAcao" | "a3" | "gantt" | "manual";
 
 export interface ProdutividadeData { 
   volumeT1: number; volumeT3: number; 
