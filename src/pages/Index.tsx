@@ -28,25 +28,6 @@ type Theme = "light" | "dark" | "system";
 const Index = () => {
   const { state, activeModule, setActiveModule, updateModule, clearData, loadState } = useAppStore();
 
-  return (
-  <div className="flex h-screen w-full bg-[#F4F7FB] dark:bg-[#0A2347] text-[#0A1828] dark:text-slate-100 overflow-hidden font-inter">
-    {/* Barra lateral retrátil com efeito Apple Glassmorphism */}
-    <Sidebar active={activeModule} onSelect={setActiveModule} />
-
-    {/* Área de Conteúdo Principal */}
-    <main className="flex-1 flex flex-col h-screen overflow-y-auto">
-      {!["home", "gbo", "planoAcao", "a3", "manual", "gantt"].includes(activeModule) && (
-        <Topbar onExportWord={handleExportWord} state={state} loadState={loadState} />
-      )}
-      <div className="p-4 md:p-6 flex-1 w-full max-w-[1600px] mx-auto">
-        {activeModule === "home" && renderHome()}
-        {activeModule !== "home" && activeModule !== "gbo" && renderPanelModules()}
-        {activeModule === "gbo" && <GBOAnalysis />}
-      </div>
-    </main>
-  </div>
-);
-  
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window !== "undefined") {
       return (localStorage.getItem("app-theme") as Theme) || "system";
@@ -371,7 +352,6 @@ const Index = () => {
       <div className="w-full h-full flex items-center justify-center py-12 pb-36 px-6 animate-in fade-in zoom-in-95 duration-500">
         <div className="w-full max-w-7xl flex flex-col lg:flex-row gap-12 items-start">
           
-          {/* Lado Esquerdo: Painel Fixo de Contexto, Privacidade e Tema */}
           <div className="w-full lg:w-[28%] space-y-4 lg:sticky lg:top-6 shrink-0">
             <div className="bg-[#FF6B00] p-3 rounded-xl shadow-md inline-block">
               <BarChart3 className="h-6 w-6 text-white" />
@@ -388,7 +368,6 @@ const Index = () => {
               <span>Privacidade: Seus dados são salvos apenas localmente no seu navegador. Nenhuma informação é enviada.</span>
             </div>
 
-            {/* PÍLULA INTEGRADA DE CONTROLE DE TEMA */}
             <div className="flex flex-col gap-2 bg-white dark:bg-[#001833] p-3 rounded-xl border border-slate-100 dark:border-[#4A6FA5]/40 shadow-sm">
               <label className="text-[9px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-widest px-1">Aparência do Painel</label>
               <div className="grid grid-cols-3 bg-slate-100 dark:bg-[#0A2347] p-1 rounded-xl gap-1">
@@ -414,7 +393,6 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Lado Direito: Grid de Módulos Expandido e Dinâmico */}
           <div className="w-full lg:w-[72%] grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {modules.map((m) => {
               const Icon = m.icon;
@@ -444,11 +422,10 @@ const Index = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen w-full bg-[#F4F7FB] dark:bg-[#0A2347] text-[#0A1828] dark:text-slate-100 overflow-hidden font-inter print:bg-white print:h-auto print:overflow-visible">
+    <div className="flex h-screen w-full bg-[#F4F7FB] dark:bg-[#0A2347] text-[#0A1828] dark:text-slate-100 overflow-hidden font-inter print:bg-white print:h-auto print:overflow-visible">
       <style dangerouslySetInnerHTML={{ __html: `
         @media print { @page { size: landscape; margin: 10mm; } }
         
-        /* Remove as setas nativas de inputs do tipo number */
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
           -webkit-appearance: none;
@@ -458,13 +435,14 @@ const Index = () => {
           -moz-appearance: textfield;
         }
       ` }} />
-      <main className={`flex-1 overflow-y-auto ${activeModule === "gantt" ? "p-0" : "p-2 md:p-4 pb-24"} print:p-0 print:overflow-visible`}>
+      <Sidebar active={activeModule} onSelect={setActiveModule} />
+      <main className="flex-1 flex flex-col h-screen overflow-y-auto">
         {!["home", "gbo", "planoAcao", "a3", "manual", "gantt"].includes(activeModule) && (
           <div className="print:hidden relative z-[100] mb-2 animate-in slide-in-from-top-2 duration-300">
             <Topbar onExportWord={handleExportWord} state={state} loadState={loadState} />
           </div>
         )}
-        <div className={`w-full transition-all min-h-full relative print:shadow-none print:border-none print:rounded-none print:p-0 ${activeModule === "home" || activeModule === "a3" || activeModule === "gantt" ? "bg-transparent p-0" : "bg-white dark:bg-[#001833] rounded-xl shadow-sm border border-slate-200/50 dark:border-[#4A6FA5]/30 p-3 md:p-5"}`}>
+        <div className={`p-4 md:p-6 flex-1 w-full max-w-[1600px] mx-auto print:shadow-none print:border-none print:rounded-none print:p-0 ${activeModule === "home" || activeModule === "a3" || activeModule === "gantt" ? "bg-transparent p-0" : "bg-white dark:bg-[#001833] rounded-xl shadow-sm border border-slate-200/50 dark:border-[#4A6FA5]/30"}`}>
           {activeModule === "home" && renderHome()}
           {activeModule !== "home" && activeModule !== "gbo" && (
             <div key={activeModule} className="animate-in fade-in slide-in-from-bottom-2 duration-500 w-full h-full">
@@ -476,9 +454,6 @@ const Index = () => {
           </div>
         </div>
       </main>
-      <div className="print:hidden">
-        <FloatingNav active={activeModule} onSelect={setActiveModule} />
-      </div>
     </div>
   );
 };
