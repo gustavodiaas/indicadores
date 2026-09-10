@@ -3236,6 +3236,10 @@ kbd {
 
   body.print-paper-a3 #printReportContent.is-ultra-dense .print-report-table {
     font-size: 7.5pt;
+     @media (prefers-color-scheme: dark) {
+  body {
+    background-color: #0A2347;
+    color: #f1f5f9;
   }
-
 }
+     
