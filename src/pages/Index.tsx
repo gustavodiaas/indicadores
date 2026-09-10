@@ -439,7 +439,7 @@ const Index = () => {
           -moz-appearance: textfield;
         }
       ` }} />
-      <main className={`flex-1 overflow-y-auto ${activeModule === "gantt" ? "p-0 pb-24" : "p-2 md:p-4 pb-28"} print:p-0 print:overflow-visible`}>
+      <main className={`flex-1 overflow-y-auto ${activeModule === "gantt" ? "p-0" : "p-2 md:p-4 pb-24"} print:p-0 print:overflow-visible`}>
         {!["home", "gbo", "planoAcao", "a3", "manual", "gantt"].includes(activeModule) && (
           <div className="print:hidden relative z-[100] mb-2 animate-in slide-in-from-top-2 duration-300">
             <Topbar onExportWord={handleExportWord} state={state} loadState={loadState} />
