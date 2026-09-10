@@ -38,13 +38,13 @@
 }
 
 html.dark {
-  --background: #001022;
-  --surface: #001833;
-  --surface-secondary: #0A2347;
+  --background: #0b0b0f;
+  --surface: #1c1c1e;
+  --surface-secondary: #2c2c2e;
   --text-primary: #f1f5f9;
   --text-secondary: #94a3b8;
-  --border: #1e3a5f;
-  --border-light: #0d2040;
+  --border: rgba(255, 255, 255, 0.11);
+  --border-light: rgba(255, 255, 255, 0.07);
   --success-soft: rgba(52, 199, 89, 0.15);
   --warning-soft: rgba(255, 159, 10, 0.15);
   --danger-soft: rgba(255, 59, 48, 0.15);
@@ -55,32 +55,32 @@ html.dark {
 
 /* ── Overrides de elementos com cores fixas no claro ── */
 html.dark .segmented-control {
-  background: #040e1e;
+  background: #151519;
 }
 
 html.dark .segment.is-active {
-  background: #001833;
+  background: #2c2c2e;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
 html.dark .timeline-empty {
-  background-color: #040e1e;
-  background-image: linear-gradient(to right, #0d2040 1px, transparent 1px),
-    linear-gradient(to bottom, #0d2040 1px, transparent 1px);
+  background-color: #151519;
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.065) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.065) 1px, transparent 1px);
 }
 
 html.dark .timeline-empty-content {
-  background: rgba(0, 24, 51, 0.96);
-  border-color: #1e3a5f;
+  background: rgba(28, 28, 30, 0.96);
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
 html.dark .empty-list {
-  background: rgba(4, 14, 30, 0.6);
+  background: rgba(21, 21, 25, 0.72);
 }
 
 html.dark input:hover,
 html.dark select:hover {
-  border-color: #2a4f7a;
+  border-color: rgba(10, 132, 255, 0.4);
 }
 
 html.dark .availability-strip .has-overlap strong {
@@ -98,37 +98,37 @@ html.dark .kpi-card.is-negative small {
 }
 
 html.dark .button-secondary {
-  border-color: #1e3a5f;
-  background: #001833;
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.07);
 }
 
 html.dark .button-secondary:hover {
-  border-color: #2a4f7a;
-  background: #0A2347;
+  border-color: rgba(10, 132, 255, 0.28);
+  background: rgba(10, 132, 255, 0.14);
 }
 
 html.dark .icon-button {
-  border-color: #1e3a5f;
-  background: #001833;
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.07);
 }
 
 html.dark .icon-button:hover {
-  background: #0A2347;
+  background: rgba(10, 132, 255, 0.14);
 }
 
 html.dark .action-menu {
-  background: #001833;
-  border-color: #1e3a5f;
+  background: #242426;
+  border-color: rgba(255, 255, 255, 0.08);
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
 }
 
 html.dark .action-menu button:hover {
-  background: #0A2347;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 html.dark .comparison-callout {
-  background: #040e1e;
-  border-color: #1e3a5f;
+  background: #151519;
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
 html.dark .comparison-callout.is-positive {
@@ -142,44 +142,44 @@ html.dark .comparison-callout.is-negative {
 }
 
 html.dark .method-strip {
-  background: #040e1e;
-  border-color: #0d2040;
+  background: #151519;
+  border-color: rgba(255, 255, 255, 0.07);
 }
 
 html.dark .method-index {
-  background: #001833;
+  background: #2c2c2e;
   color: #94a3b8;
 }
 
 html.dark .video-library {
-  background: #0A2347;
+  background: #2c2c2e;
 }
 
 html.dark .video-library-empty {
-  border-color: #1e3a5f;
+  border-color: rgba(255, 255, 255, 0.08);
   color: #94a3b8;
 }
 
 html.dark .video-frame {
-  background: #040e1e;
+  background: #151519;
 }
 
 html.dark .video-clock-row {
-  background: #001833;
-  border-color: #0d2040;
+  background: #242426;
+  border-color: rgba(255, 255, 255, 0.07);
 }
 
 html.dark .video-interval-card {
-  background: #0A2347;
-  border-color: #1e3a5f;
+  background: #2c2c2e;
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
 html.dark .classification-summary {
-  border-color: #0d2040;
+  border-color: rgba(255, 255, 255, 0.07);
 }
 
 html.dark .app-footer {
-  border-color: #0d2040;
+  border-color: rgba(255, 255, 255, 0.07);
   color: #475569;
 }
 
@@ -188,19 +188,19 @@ html.dark .help-content h3 {
 }
 
 html.dark code {
-  background: #040e1e;
-  border-color: #1e3a5f;
+  background: #151519;
+  border-color: rgba(255, 255, 255, 0.08);
   color: #93c5fd;
 }
 
 html.dark dialog {
-  background: #001833;
-  border-color: #1e3a5f;
+  background: #1c1c1e;
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
 html.dark .print-paper-option {
-  background: #0A2347;
-  border-color: #1e3a5f;
+  background: #2c2c2e;
+  border-color: rgba(255, 255, 255, 0.08);
   color: #f1f5f9;
 }
 
@@ -211,13 +211,13 @@ html.dark .print-paper-option:has(:checked) {
 
 /* Timeline SVG dark mode via CSS custom properties injetadas */
 html.dark .gantt-svg-stage-even {
-  fill: #001833 !important;
+  fill: #1c1c1e !important;
 }
 html.dark .gantt-svg-stage-odd {
-  fill: #0A2347 !important;
+  fill: #242426 !important;
 }
 html.dark .gantt-svg-row-divider {
-  stroke: #0d2040 !important;
+  stroke: rgba(255, 255, 255, 0.07) !important;
 }
 
 * {
@@ -3453,7 +3453,7 @@ kbd {
    operacional passar por cima de quem escolheu CLARO na Central de Indicadores.
    Aberto fora do iframe, o app.js consulta o sistema e aplica a mesma classe. */
 html.dark body, html.dark .app-shell {
-  background-color: #0A2347 !important;
+  background-color: #0b0b0f !important;
   color: #f1f5f9 !important;
 }
 
@@ -3466,16 +3466,16 @@ html.dark .video-workspace,
 html.dark .timeline-panel, 
 html.dark .kpi-card, 
 html.dark .activity-form {
-  background-color: #001833 !important;
+  background-color: #1c1c1e !important;
   color: #f1f5f9 !important;
-  border-color: rgba(74, 111, 165, 0.3) !important;
+  border-color: rgba(255, 255, 255, 0.07) !important;
 }
 html.dark input, 
 html.dark select, 
 html.dark textarea {
-  background-color: #0A2347 !important;
+  background-color: #2c2c2e !important;
   color: #f1f5f9 !important;
-  border-color: rgba(74, 111, 165, 0.4) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
 }
 /* Ocultar setas nativas de inputs de número e tempo */
 input::-webkit-outer-spin-button,

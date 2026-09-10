@@ -325,7 +325,6 @@ const Index = () => {
       case "area": return <AreaModule data={state.area} onChange={d => updateModule("area", d)} />;
       case "planoAcao": return <PlanoAcaoModule data={state.planoAcao} onChange={d => updateModule("planoAcao", d)} />;
       case "a3": return <A3Module data={state.a3} onChange={d => updateModule("a3", d)} />;
-      case "gantt": return <GanttModule />;
       case "manual": return <ManualModule />;
       default: return null;
     }
@@ -452,7 +451,7 @@ const Index = () => {
     }`}
 >
           {activeModule === "home" && renderHome()}
-          {activeModule !== "home" && activeModule !== "gbo" && (
+          {activeModule !== "home" && activeModule !== "gbo" && activeModule !== "gantt" && (
             <div key={activeModule} className="module-shell animate-in fade-in slide-in-from-bottom-2 duration-500 w-full min-h-full">
               {renderPanelModules()}
             </div>
@@ -461,6 +460,7 @@ const Index = () => {
             <GBOAnalysis />
           </div>
         </div>
+        <GanttModule active={activeModule === "gantt"} />
       </main>
     </div>
   );
