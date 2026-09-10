@@ -2873,6 +2873,7 @@
           height: stageHeight,
           rx: 7,
           fill: stageIndex % 2 === 0 ? "#FFFFFF" : "#F6F6F8",
+          class: stageIndex % 2 === 0 ? "gantt-svg-stage-even" : "gantt-svg-stage-odd",
         }),
       );
       const stageLabel = svgElement("text", {
@@ -3022,6 +3023,7 @@
           x2: width - 14,
           y2: rowY + rowHeight,
           stroke: "#ECECF0",
+          class: "gantt-svg-row-divider",
           "stroke-width": 1,
         }),
       );
