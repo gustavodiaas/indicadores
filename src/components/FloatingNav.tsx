@@ -23,6 +23,7 @@ export function FloatingNav({ active, onSelect }: Props) {
     { key: "area", icon: Square, label: "Área" },
     { key: "planoAcao", icon: ClipboardList, label: "5W2H" },
     { key: "a3", icon: LayoutTemplate, label: "A3" },
+    { key: "gantt", icon: Calendar, label: "Gantt" },
     { key: "manual", icon: BookOpen, label: "Manual" },
   ];
 
