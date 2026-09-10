@@ -44,12 +44,180 @@ html.dark {
   --text-primary: #f1f5f9;
   --text-secondary: #94a3b8;
   --border: #1e3a5f;
-  --border-light: #0d1e36;
+  --border-light: #0d2040;
   --success-soft: rgba(52, 199, 89, 0.15);
   --warning-soft: rgba(255, 159, 10, 0.15);
   --danger-soft: rgba(255, 59, 48, 0.15);
   --blue-soft: rgba(0, 122, 255, 0.15);
+  --shadow-menu: 0 12px 36px rgba(0, 0, 0, 0.45);
   --focus-ring: 0 0 0 3px rgba(255, 107, 0, 0.4);
+}
+
+/* ── Overrides de elementos com cores fixas no claro ── */
+html.dark .segmented-control {
+  background: #040e1e;
+}
+
+html.dark .segment.is-active {
+  background: #001833;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+html.dark .timeline-empty {
+  background-color: #040e1e;
+  background-image: linear-gradient(to right, #0d2040 1px, transparent 1px),
+    linear-gradient(to bottom, #0d2040 1px, transparent 1px);
+}
+
+html.dark .timeline-empty-content {
+  background: rgba(0, 24, 51, 0.96);
+  border-color: #1e3a5f;
+}
+
+html.dark .empty-list {
+  background: rgba(4, 14, 30, 0.6);
+}
+
+html.dark input:hover,
+html.dark select:hover {
+  border-color: #2a4f7a;
+}
+
+html.dark .availability-strip .has-overlap strong {
+  color: #fb923c;
+}
+
+html.dark .kpi-card.is-positive strong,
+html.dark .kpi-card.is-positive small {
+  color: #4ade80;
+}
+
+html.dark .kpi-card.is-negative strong,
+html.dark .kpi-card.is-negative small {
+  color: #f87171;
+}
+
+html.dark .button-secondary {
+  border-color: #1e3a5f;
+  background: #001833;
+}
+
+html.dark .button-secondary:hover {
+  border-color: #2a4f7a;
+  background: #0A2347;
+}
+
+html.dark .icon-button {
+  border-color: #1e3a5f;
+  background: #001833;
+}
+
+html.dark .icon-button:hover {
+  background: #0A2347;
+}
+
+html.dark .action-menu {
+  background: #001833;
+  border-color: #1e3a5f;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+}
+
+html.dark .action-menu button:hover {
+  background: #0A2347;
+}
+
+html.dark .comparison-callout {
+  background: #040e1e;
+  border-color: #1e3a5f;
+}
+
+html.dark .comparison-callout.is-positive {
+  background: rgba(52, 199, 89, 0.1);
+  border-color: rgba(52, 199, 89, 0.3);
+}
+
+html.dark .comparison-callout.is-negative {
+  background: rgba(255, 59, 48, 0.1);
+  border-color: rgba(255, 59, 48, 0.3);
+}
+
+html.dark .method-strip {
+  background: #040e1e;
+  border-color: #0d2040;
+}
+
+html.dark .method-index {
+  background: #001833;
+  color: #94a3b8;
+}
+
+html.dark .video-library {
+  background: #0A2347;
+}
+
+html.dark .video-library-empty {
+  border-color: #1e3a5f;
+  color: #94a3b8;
+}
+
+html.dark .video-frame {
+  background: #040e1e;
+}
+
+html.dark .video-clock-row {
+  background: #001833;
+  border-color: #0d2040;
+}
+
+html.dark .video-interval-card {
+  background: #0A2347;
+  border-color: #1e3a5f;
+}
+
+html.dark .classification-summary {
+  border-color: #0d2040;
+}
+
+html.dark .app-footer {
+  border-color: #0d2040;
+  color: #475569;
+}
+
+html.dark .help-content h3 {
+  color: #f1f5f9;
+}
+
+html.dark code {
+  background: #040e1e;
+  border-color: #1e3a5f;
+  color: #93c5fd;
+}
+
+html.dark dialog {
+  background: #001833;
+  border-color: #1e3a5f;
+}
+
+html.dark .print-paper-option {
+  background: #0A2347;
+  border-color: #1e3a5f;
+  color: #f1f5f9;
+}
+
+html.dark .print-paper-option:has(:checked) {
+  border-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.1);
+}
+
+/* Timeline SVG dark mode via CSS custom properties injetadas */
+html.dark .gantt-svg-stage-even {
+  fill: #001833 !important;
+}
+html.dark .gantt-svg-stage-odd {
+  fill: #0A2347 !important;
+}
+html.dark .gantt-svg-row-divider {
+  stroke: #0d2040 !important;
 }
 
 * {
