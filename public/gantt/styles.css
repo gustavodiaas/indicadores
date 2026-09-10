@@ -237,32 +237,6 @@ body {
   line-height: 1.45;
 }
 
-/* ── Scrollbar estilo Apple ── */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 10px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-secondary);
-}
-
-/* ── Remove setas nativas de inputs numéricos ── */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-input[type=number] {
-  -moz-appearance: textfield;
-}
-
 button,
 input,
 select {
@@ -354,11 +328,12 @@ select[aria-invalid="true"] {
   top: 12px;
 }
 
+/* Sem limite de largura: o módulo roda dentro de um iframe que já ocupa a área útil da
+   tela, e travar em 1680px deixava faixas vazias nas laterais em monitores largos. */
 .app-shell {
-  width: auto;
-  max-width: 1680px;
-  margin: 0 auto;
-  padding: 0 24px 96px; /* 96px = espaço para a FloatingNav do app pai */
+  width: 100%;
+  margin: 0;
+  padding: 0 24px;
 }
 
 .app-header {
@@ -1271,11 +1246,12 @@ main {
   color: #d92d20;
 }
 
+/* A linha do tempo fica na segunda coluna, ao lado da lista de atividades. Antes ela
+   ocupava a largura inteira abaixo, o que deixava a coluna da direita vazia.
+   A divisória entre as duas colunas vem do border-right do painel da esquerda. */
 .timeline-panel {
-  grid-column: 1 / -1;
   min-width: 0;
   padding: 20px;
-  border-top: 1px solid var(--border-light);
   background: var(--surface);
 }
 
@@ -2521,6 +2497,28 @@ kbd {
   }
 }
 
+/* As duas colunas param de caber por volta de 1060px: os mínimos somam 1010px e o
+   workspace tem overflow:hidden, então a linha do tempo seria cortada à direita em vez
+   de encolher. Abaixo deste ponto ela volta a ficar embaixo da lista, inteira.
+   Precisa vir depois do bloco de 1280px, que também define as colunas. */
+@media (max-width: 1080px) {
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+
+  /* Empilhado, a divisória passa a ser horizontal. */
+  .editor-panel,
+  .comparison-panel {
+    border-right: 0;
+  }
+
+  .timeline-panel {
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-top-color: var(--border-light);
+  }
+}
+
 @media (max-width: 980px) {
   .app-shell {
     padding: 0 16px;
@@ -3445,24 +3443,15 @@ kbd {
 
   body.print-paper-a3 #printReportContent.is-ultra-dense .print-report-table {
     font-size: 7.5pt;
-    /* Correção nativa para o modo escuro no iframe */
-@media (prefers-color-scheme: dark) {
-  body, .app-shell {
-    background-color: #0A2347 !important;
-    color: #f1f5f9 !important;
   }
-  
-  .app-header, .context-panel, .breaks-panel, .editor-panel, .comparison-panel, .video-workspace, .timeline-panel, .kpi-card, .activity-form {
-    background-color: #001833 !important;
-    color: #f1f5f9 !important;
-    border-color: rgba(74, 111, 165, 0.3) !important;
-  }
+}
 
-  input, select, textarea {
-    background-color: #0A2347 !important;
-    color: #f1f5f9 !important;
-    border-color: rgba(74, 111, 165, 0.4) !important;
-  }
+/* ── Tema escuro ──────────────────────────────────────────────────────────────────
+   A classe "dark" no <html> é a única chave do tema, e quem a define é o app pai:
+   ele resolve o seletor CLARO / AUTO / ESCURO e o app.js daqui espelha a decisão.
+   Não há regra por prefers-color-scheme de propósito — ela faria o sistema
+   operacional passar por cima de quem escolheu CLARO na Central de Indicadores.
+   Aberto fora do iframe, o app.js consulta o sistema e aplica a mesma classe. */
 html.dark body, html.dark .app-shell {
   background-color: #0A2347 !important;
   color: #f1f5f9 !important;
