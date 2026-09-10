@@ -1,0 +1,869 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Aplicação local para elaboração e comparação de atividades de Trabalho Padronizado."
+    />
+    <meta name="color-scheme" content="light" />
+    <title>Consultoria Lean Manufacturing</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="mfv-template-data.js" defer></script>
+    <script src="mfv-export.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+
+    <div class="app-shell">
+      <header class="app-header">
+        <div class="brand-block">
+          <div>
+            <h1 class="brand-title">Consultoria Lean Manufacturing</h1>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <span class="save-status" id="saveStatus" role="status" aria-live="polite">
+            <span class="status-dot" aria-hidden="true"></span>
+            Salvo neste navegador
+          </span>
+          <button class="button button-secondary button-compact" id="helpButton" type="button">
+            Como funciona
+          </button>
+          <div class="menu-wrap">
+            <button
+              class="icon-button"
+              id="moreButton"
+              type="button"
+              aria-label="Abrir ações do arquivo"
+              aria-expanded="false"
+              aria-controls="fileMenu"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="5" cy="12" r="1.7"></circle>
+                <circle cx="12" cy="12" r="1.7"></circle>
+                <circle cx="19" cy="12" r="1.7"></circle>
+              </svg>
+            </button>
+            <div class="action-menu" id="fileMenu" hidden>
+              <button type="button" data-menu-action="help">Como funciona</button>
+              <button type="button" data-menu-action="print">Imprimir relatório</button>
+              <div class="menu-divider" role="separator"></div>
+              <button type="button" data-menu-action="export">Baixar estudo</button>
+              <button type="button" data-menu-action="import">Importar estudo</button>
+              <div class="menu-divider" role="separator"></div>
+              <button class="danger-text" type="button" data-menu-action="reset">
+                Apagar todos os dados
+              </button>
+            </div>
+          </div>
+          <input id="importInput" type="file" accept="application/json,.json" hidden />
+        </div>
+      </header>
+
+      <main id="conteudo" tabindex="-1">
+        <section class="context-panel" aria-labelledby="studyHeading">
+          <div class="context-main">
+            <div class="study-name-group">
+              <label for="studyName" id="studyHeading">Nome do estudo</label>
+              <input
+                id="studyName"
+                class="study-name-input"
+                type="text"
+                maxlength="120"
+                autocomplete="off"
+                value="Novo estudo"
+              />
+            </div>
+
+            <div class="global-settings" aria-label="Parâmetros de produção e demanda">
+              <div class="compact-field">
+                <label for="shiftStart">Seg a Qui · Entrada</label>
+                <input id="shiftStart" type="time" step="1" value="08:00:00" />
+              </div>
+
+              <div class="compact-field">
+                <label for="shiftEnd">Seg a Qui · Saída</label>
+                <input id="shiftEnd" type="time" step="1" value="16:00:00" />
+              </div>
+
+              <div class="compact-field">
+                <label for="fridayStart">Sex · Entrada</label>
+                <input id="fridayStart" type="time" step="1" value="08:00:00" />
+              </div>
+
+              <div class="compact-field">
+                <label for="fridayEnd">Sex · Saída</label>
+                <input id="fridayEnd" type="time" step="1" value="16:00:00" />
+              </div>
+
+              <div class="compact-field compact-field-short">
+                <label for="operatorCount">Operadores</label>
+                <input id="operatorCount" type="number" min="1" max="100000" step="1" />
+              </div>
+
+              <div class="compact-field">
+                <label for="monthlyDemand">Demanda mensal</label>
+                <div class="suffix-input">
+                  <input id="monthlyDemand" type="number" min="1" max="1000000000000" step="1" />
+                  <span aria-hidden="true">peças</span>
+                </div>
+              </div>
+
+              <div class="compact-field compact-field-short">
+                <label for="workingDays">Dias úteis/mês</label>
+                <input id="workingDays" type="number" min="1" max="31" step="1" value="22" />
+              </div>
+
+              <div class="compact-field compact-field-short">
+                <label for="shiftsPerDay">Turnos/dia</label>
+                <input id="shiftsPerDay" type="number" min="1" max="24" step="1" value="1" />
+              </div>
+
+              <div class="compact-field">
+                <label for="actualPieces">Peças produzidas no turno</label>
+                <div class="suffix-input">
+                  <input id="actualPieces" type="number" min="0" max="1000000000000" step="1" />
+                  <span aria-hidden="true">peças</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <section class="breaks-panel" aria-labelledby="breaksHeading">
+            <div class="breaks-heading">
+              <div>
+                <h2 id="breaksHeading">Intervalos do turno</h2>
+                <p>Cadastre almoço, lanches e outras paradas programadas. Intervalos sobrepostos são descontados uma só vez.</p>
+              </div>
+              <button class="button button-secondary button-compact" id="addBreakButton" type="button">
+                Adicionar intervalo
+              </button>
+            </div>
+            <p class="breaks-empty" id="breaksEmpty">Nenhum intervalo programado.</p>
+            <div class="break-list" id="breakList"></div>
+            <div class="availability-strip" aria-label="Resumo do tempo disponível">
+              <span><small>Bruto Seg a Qui</small><strong id="grossShiftSummary">08:00:00</strong></span>
+              <span><small>Bruto Sex</small><strong id="grossFridaySummary">08:00:00</strong></span>
+              <span><small>Intervalos</small><strong id="breakDurationSummary">00:00:00</strong></span>
+              <span
+                ><small>Tempo disponível · média/dia</small
+                ><strong id="availableShiftSummary">08:00:00</strong></span
+              >
+            </div>
+          </section>
+        </section>
+
+        <section class="view-bar" aria-label="Navegação entre cenários">
+          <div class="segmented-control" role="tablist" aria-label="Visualização">
+            <button
+              class="segment is-active"
+              id="tab-current"
+              type="button"
+              role="tab"
+              aria-selected="true"
+              aria-controls="workspace"
+              data-view="current"
+            >
+              Atual
+            </button>
+            <button
+              class="segment"
+              id="tab-proposed"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="workspace"
+              data-view="proposed"
+            >
+              Proposto
+            </button>
+            <button
+              class="segment"
+              id="tab-compare"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="workspace"
+              data-view="compare"
+            >
+              Comparar
+            </button>
+            <button
+              class="segment"
+              id="tab-videos"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="workspace"
+              data-view="videos"
+            >
+              Vídeos
+            </button>
+          </div>
+
+          <div class="view-actions">
+            <button class="button button-secondary button-compact" id="videoAnalysisButton" type="button">
+              Analisar vídeo
+            </button>
+            <button class="button button-secondary button-compact" id="copyScenarioButton" type="button">
+              Copiar Atual para Proposto
+            </button>
+            <button class="button button-secondary button-compact" id="exportButton" type="button">
+              Baixar estudo
+            </button>
+            <button class="button button-secondary button-compact" id="importButton" type="button">
+              Importar estudo
+            </button>
+            <button class="button button-secondary button-compact" id="mfvExportButton" type="button">
+              Baixar planilha MFV
+            </button>
+            <button class="button button-secondary button-compact" id="printButton" type="button">
+              Imprimir relatório
+            </button>
+          </div>
+        </section>
+
+        <section class="kpi-grid" aria-label="Indicadores principais">
+          <article class="kpi-card kpi-current">
+            <div class="kpi-label-row">
+              <span class="scenario-dot scenario-dot-current" aria-hidden="true"></span>
+              <span>Tempo de ciclo · Atual</span>
+            </div>
+            <strong id="kpiCurrentCycle">00:00:00</strong>
+            <small id="kpiCurrentActivities">0 atividades</small>
+          </article>
+
+          <article class="kpi-card kpi-proposed">
+            <div class="kpi-label-row">
+              <span class="scenario-dot scenario-dot-proposed" aria-hidden="true"></span>
+              <span>Tempo de ciclo · Proposto</span>
+            </div>
+            <strong id="kpiProposedCycle">00:00:00</strong>
+            <small id="kpiProposedActivities">0 atividades</small>
+          </article>
+
+          <article class="kpi-card kpi-takt" id="taktCard">
+            <span class="kpi-label">Takt time</span>
+            <strong id="kpiTakt">—</strong>
+            <small id="kpiTaktDetail">Informe a demanda mensal</small>
+          </article>
+
+          <article class="kpi-card" id="actualProductionCard">
+            <span class="kpi-label">Produção realizada no turno</span>
+            <strong id="kpiActualProduction">0 peças</strong>
+            <small id="kpiActualCoverage">Demanda por turno não informada</small>
+          </article>
+
+          <article class="kpi-card">
+            <span class="kpi-label">Produção por turno · Atual</span>
+            <strong id="kpiCurrentProduction">—</strong>
+            <small id="kpiCurrentPerCycle">1 un./ciclo</small>
+          </article>
+
+          <article class="kpi-card">
+            <span class="kpi-label">Produção por turno · Proposto</span>
+            <strong id="kpiProposedProduction">—</strong>
+            <small id="kpiProposedPerCycle">1 un./ciclo</small>
+          </article>
+
+          <article class="kpi-card" id="gainCard">
+            <span class="kpi-label">Ganho de produção</span>
+            <strong id="kpiGain">—</strong>
+            <small id="kpiGainPercent">Sem base para comparar</small>
+          </article>
+
+          <article class="kpi-card" id="cycleReductionCard">
+            <span class="kpi-label">Redução do ciclo</span>
+            <strong id="kpiCycleReduction">—</strong>
+            <small id="kpiCycleDelta">Sem base para comparar</small>
+          </article>
+        </section>
+
+        <section class="workspace" id="workspace" role="tabpanel" aria-labelledby="tab-current">
+          <aside class="editor-panel" id="editorPanel">
+            <div class="panel-heading">
+              <div>
+                <p class="section-kicker" id="scenarioKicker">CENÁRIO ATUAL</p>
+                <h2 id="scenarioTitle">Atividades do cenário</h2>
+              </div>
+              <button class="text-button danger-text" id="clearScenarioButton" type="button">
+                Limpar cenário
+              </button>
+            </div>
+
+            <div class="scenario-settings">
+              <div class="field-group">
+                <label for="unitsPerCycle">Produção por ciclo</label>
+                <div class="suffix-input">
+                  <input id="unitsPerCycle" type="number" min="0.01" max="1000000000" step="0.01" value="1" />
+                  <span>un.</span>
+                </div>
+              </div>
+              <div class="scenario-summary-mini">
+                <span>Tempo disponível</span>
+                <strong id="availableTimeMini">06:48:00</strong>
+              </div>
+            </div>
+
+            <form class="activity-form" id="activityForm" novalidate>
+              <div class="form-heading">
+                <div>
+                  <h3 id="formTitle">Nova atividade</h3>
+                  <p>Cadastre a atividade e informe seu intervalo na linha do tempo.</p>
+                </div>
+                <button class="text-button" id="cancelEditButton" type="button" hidden>Cancelar edição</button>
+              </div>
+
+              <div class="field-group field-span-2">
+                <label for="activityDescription">Descrição da atividade</label>
+                <input
+                  id="activityDescription"
+                  name="description"
+                  type="text"
+                  maxlength="180"
+                  autocomplete="off"
+                  placeholder="Ex.: Posicionar componente no dispositivo"
+                  aria-describedby="descriptionError"
+                  required
+                />
+                <span class="field-error" id="descriptionError" role="alert"></span>
+              </div>
+
+              <div class="form-grid form-grid-timing">
+                <div class="field-group">
+                  <label for="activityStart">Início</label>
+                  <input
+                    id="activityStart"
+                    name="start"
+                    class="time-input"
+                    type="text"
+                    inputmode="numeric"
+                    spellcheck="false"
+                    placeholder="00:00:00"
+                    value="00:00:00"
+                    aria-describedby="startHint startError"
+                    required
+                  />
+                  <span class="field-hint" id="startHint">HH:MM:SS</span>
+                  <span class="field-error" id="startError" role="alert"></span>
+                </div>
+
+                <div class="field-group">
+                  <label for="activityDuration">Duração</label>
+                  <input
+                    id="activityDuration"
+                    name="duration"
+                    class="time-input"
+                    type="text"
+                    inputmode="numeric"
+                    spellcheck="false"
+                    placeholder="00:01:30"
+                    value="00:01:00"
+                    aria-describedby="durationHint durationError"
+                    required
+                  />
+                  <span class="field-hint" id="durationHint">HH:MM:SS</span>
+                  <span class="video-duration-source" id="durationVideoSource" hidden></span>
+                  <span class="field-error" id="durationError" role="alert"></span>
+                </div>
+
+                <div class="field-group">
+                  <label for="activityEnd">Fim</label>
+                  <input
+                    id="activityEnd"
+                    name="end"
+                    class="time-input"
+                    type="text"
+                    inputmode="numeric"
+                    spellcheck="false"
+                    placeholder="00:01:00"
+                    value="00:01:00"
+                    aria-describedby="endHint endError"
+                    required
+                  />
+                  <span class="field-hint" id="endHint">HH:MM:SS</span>
+                  <span class="field-error" id="endError" role="alert"></span>
+                </div>
+              </div>
+
+              <div class="field-group classification-field">
+                <label for="activityClassification">Classificação</label>
+                <select id="activityClassification" name="classification">
+                  <option value="agrega">Agrega</option>
+                  <option value="semiagrega">Semiagrega</option>
+                  <option value="nao-agrega">Não agrega</option>
+                </select>
+              </div>
+
+              <div class="form-actions">
+                <button class="button button-primary" id="submitActivityButton" type="submit">
+                  Adicionar atividade
+                </button>
+                <span class="keyboard-hint">Enter para salvar · Esc para cancelar</span>
+              </div>
+            </form>
+
+            <div class="activity-list-heading">
+              <div>
+                <h3>Sequência de trabalho</h3>
+                <p id="activityListSummary">Nenhuma atividade cadastrada</p>
+              </div>
+              <div class="activity-list-actions">
+                <span class="list-tip">As setas alteram a ordem da lista</span>
+                <button
+                  class="button button-secondary button-compact"
+                  id="resequenceButton"
+                  type="button"
+                  aria-describedby="resequenceHint"
+                >
+                  Atualizar
+                </button>
+                <span class="visually-hidden" id="resequenceHint">
+                  Coloca as atividades em sequência na ordem da lista, uma começando quando a
+                  anterior termina. As durações não mudam.
+                </span>
+              </div>
+            </div>
+
+            <div class="empty-list" id="emptyList">
+              <div class="empty-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M4 6.5h16M4 12h16M4 17.5h10"></path>
+                  <circle cx="18" cy="17.5" r="2.5"></circle>
+                </svg>
+              </div>
+              <strong>Monte a sequência do processo</strong>
+              <p>Novas atividades seguem o ciclo atual; edite início e fim para criar sobreposições ou lacunas.</p>
+              <button class="button button-secondary button-compact" id="loadExampleButton" type="button">
+                Carregar exemplo
+              </button>
+            </div>
+
+            <ol class="activity-list" id="activityList" aria-label="Atividades ordenadas"></ol>
+          </aside>
+
+          <aside class="comparison-panel" id="comparisonPanel" hidden>
+            <div class="panel-heading">
+              <div>
+                <p class="section-kicker">COMPARAÇÃO</p>
+                <h2>Leitura dos cenários</h2>
+              </div>
+            </div>
+
+            <div class="comparison-callout" id="comparisonCallout">
+              <span class="comparison-icon" aria-hidden="true"></span>
+              <div>
+                <strong id="comparisonHeadline">Cadastre os dois cenários</strong>
+                <p id="comparisonDescription">A comparação será calculada automaticamente.</p>
+              </div>
+            </div>
+
+            <div class="comparison-table-wrap">
+              <table class="comparison-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Indicador</th>
+                    <th scope="col">Atual</th>
+                    <th scope="col">Proposto</th>
+                  </tr>
+                </thead>
+                <tbody id="comparisonTableBody"></tbody>
+              </table>
+            </div>
+
+            <div class="formula-note">
+              <h3>Leitura do ganho</h3>
+              <p>
+                A produção estimada considera o tempo disponível depois dos intervalos e a produção informada por
+                ciclo. Cenários vazios não entram no percentual.
+              </p>
+            </div>
+          </aside>
+
+          <section class="video-workspace" id="videoWorkspace" aria-labelledby="videoWorkspaceHeading" hidden>
+            <aside class="video-library" aria-labelledby="videoLibraryHeading">
+              <div class="panel-heading">
+                <div>
+                  <p class="section-kicker">CRONOANÁLISE</p>
+                  <h2 id="videoLibraryHeading">Meus vídeos</h2>
+                </div>
+              </div>
+              <p class="video-library-note">
+                Os arquivos ficam neste dispositivo e não são enviados nem gravados pela aplicação. Ao trocar de
+                vídeo, o ponto onde você parou fica guardado.
+              </p>
+              <input
+                id="videoInput"
+                type="file"
+                accept="video/mp4,video/webm,video/quicktime,video/*"
+                multiple
+                hidden
+              />
+              <button class="button button-primary button-compact" id="addVideosButton" type="button">
+                Adicionar vídeos
+              </button>
+              <p class="video-library-empty" id="videoLibraryEmpty">Nenhum vídeo adicionado ainda.</p>
+              <ul class="video-library-list" id="videoLibraryList" aria-label="Vídeos adicionados"></ul>
+            </aside>
+
+            <section class="video-stage" id="videoPlayerSection" aria-labelledby="videoWorkspaceHeading">
+              <div class="video-stage-heading">
+                <div>
+                  <h2 id="videoWorkspaceHeading">Análise por vídeo</h2>
+                  <p>Use o tempo de reprodução do arquivo para medir uma atividade quadro a quadro.</p>
+                </div>
+                <div class="video-destination-field">
+                  <label for="videoDestination">Enviar duração para</label>
+                  <select id="videoDestination">
+                    <option value="current">Cenário Atual</option>
+                    <option value="proposed">Cenário Proposto</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="video-empty-state" id="videoEmptyState">
+                <div class="video-empty-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <rect x="3" y="5" width="18" height="14" rx="3"></rect>
+                    <path d="m10 9 5 3-5 3V9Z"></path>
+                  </svg>
+                </div>
+                <strong>Selecione uma gravação do processo</strong>
+                <p>
+                  Adicione um ou mais arquivos e escolha qual quer assistir. Vídeos grandes não são copiados para o
+                  armazenamento local.
+                </p>
+                <button class="button button-primary" id="selectVideoButton" type="button">Selecionar vídeo</button>
+              </div>
+
+              <div class="video-loaded-state" id="videoLoadedState" hidden>
+                <div class="video-file-bar">
+                  <div>
+                    <strong id="videoFileName">Vídeo selecionado</strong>
+                    <span id="videoFileDetails">Aguardando metadados</span>
+                  </div>
+                  <div class="video-file-actions">
+                    <button class="text-button" id="changeVideoButton" type="button">Adicionar</button>
+                    <button class="text-button danger-text" id="removeVideoButton" type="button">Remover</button>
+                  </div>
+                </div>
+
+                <div
+                  class="video-frame"
+                  id="videoShortcutArea"
+                  role="group"
+                  tabindex="0"
+                  aria-label="Reprodutor e atalhos da análise de vídeo"
+                  aria-describedby="videoShortcutsHelp"
+                  aria-keyshortcuts="Space , . I O"
+                >
+                  <video id="videoPlayer" controls preload="metadata" playsinline></video>
+                </div>
+
+                <div class="video-clock-row" aria-live="off">
+                  <div class="video-clock-main">
+                    <span>Tempo do arquivo</span>
+                    <strong id="videoCurrentTime">00:00:00.000</strong>
+                  </div>
+                  <div class="video-clock-stat">
+                    <span>Duração</span>
+                    <strong id="videoDuration">00:00:00.000</strong>
+                  </div>
+                  <div class="video-clock-stat">
+                    <span>Quadro estimado</span>
+                    <strong id="videoFrameNumber">0</strong>
+                  </div>
+                </div>
+
+                <div class="video-navigation-row">
+                  <div class="frame-step-controls" role="group" aria-label="Navegação por quadros">
+                    <button class="button button-secondary" id="frameBackButton" type="button" aria-keyshortcuts=",">
+                      Quadro anterior
+                    </button>
+                    <button class="button button-secondary" id="frameForwardButton" type="button" aria-keyshortcuts=".">
+                      Próximo quadro
+                    </button>
+                  </div>
+                  <div class="fps-field">
+                    <label for="videoFps">FPS de análise (manual)</label>
+                    <input
+                      id="videoFps"
+                      type="number"
+                      min="1"
+                      max="240"
+                      step="0.001"
+                      value="30"
+                      aria-describedby="videoFpsHint videoFpsError"
+                    />
+                    <span class="field-hint" id="videoFpsHint">Informe a taxa do arquivo; ela define o passo dos botões.</span>
+                    <span class="field-error" id="videoFpsError" role="alert"></span>
+                  </div>
+                </div>
+                <div class="video-quick-marker-controls" role="group" aria-label="Marcação rápida no vídeo">
+                  <button class="button button-secondary" id="videoQuickStartButton" type="button" disabled>
+                    Marcar início no quadro
+                  </button>
+                  <button class="button button-secondary" id="videoQuickEndButton" type="button" disabled>
+                    Marcar fim no quadro
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <aside class="video-capture-panel" id="videoCapturePanel" aria-labelledby="videoCaptureHeading">
+              <div>
+                <p class="section-kicker">INTERVALO</p>
+                <h3 id="videoCaptureHeading">Marcar atividade</h3>
+                <p>Posicione o vídeo, marque o início e depois o fim da operação.</p>
+              </div>
+
+              <div class="video-marker-grid">
+                <div>
+                  <span>Início</span>
+                  <strong id="videoStartValue">—</strong>
+                </div>
+                <div>
+                  <span>Fim</span>
+                  <strong id="videoEndValue">—</strong>
+                </div>
+              </div>
+
+              <div class="video-interval-card">
+                <span>Duração exata</span>
+                <strong id="videoIntervalExact">—</strong>
+                <div>
+                  <span>Aplicada à atividade</span>
+                  <b id="videoIntervalRounded">—</b>
+                </div>
+              </div>
+
+              <div class="video-marker-actions">
+                <button class="button button-secondary" id="videoMarkStartButton" type="button" aria-keyshortcuts="I" disabled>
+                  Marcar início
+                </button>
+                <button class="button button-secondary" id="videoMarkEndButton" type="button" aria-keyshortcuts="O" disabled>
+                  Marcar fim
+                </button>
+              </div>
+
+              <button class="button button-primary video-use-button" id="videoUseIntervalButton" type="button" disabled>
+                Usar duração na atividade
+              </button>
+              <button class="text-button video-clear-button" id="videoClearMarksButton" type="button" disabled>
+                Limpar marcações
+              </button>
+
+              <p class="video-rounding-note">
+                O intervalo exato fica registrado na atividade. O diagrama mantém o formato HH:MM:SS e usa o segundo
+                inteiro mais próximo.
+              </p>
+              <p class="video-status" id="videoStatus" role="status" aria-live="polite">Selecione um vídeo para começar.</p>
+              <p class="video-error" id="videoError" role="alert"></p>
+
+              <div class="video-shortcuts-note" id="videoShortcutsHelp">
+                <strong>Atalhos no reprodutor</strong>
+                <span><kbd>Espaço</kbd> reproduzir/pausar · <kbd>,</kbd> anterior · <kbd>.</kbd> próximo · <kbd>I</kbd> início · <kbd>O</kbd> fim</span>
+              </div>
+            </aside>
+          </section>
+
+          <section class="timeline-panel" id="timelinePanel" aria-labelledby="timelineTitle">
+            <div class="timeline-header">
+              <div>
+                <p class="section-kicker" id="timelineKicker">CENÁRIO · ATUAL</p>
+                <h2 id="timelineTitle">Linha do tempo</h2>
+                <p id="timelineSubtitle">Os intervalos exibem sobreposições e lacunas com precisão.</p>
+              </div>
+              <div class="legend" aria-label="Classificações">
+                <span><i class="legend-swatch agrega" aria-hidden="true"></i>Agrega</span>
+                <span><i class="legend-swatch semiagrega" aria-hidden="true"></i>Semiagrega</span>
+                <span><i class="legend-swatch nao-agrega" aria-hidden="true"></i>Não agrega</span>
+              </div>
+            </div>
+
+            <div class="timeline-content" id="timelineContent"></div>
+            <div class="timeline-accessible-summary visually-hidden" id="timelineAccessibleSummary" aria-live="polite"></div>
+            <div class="classification-summary" id="classificationSummary"></div>
+          </section>
+        </section>
+
+        <section class="method-strip" aria-label="Lógica de cálculo">
+          <div>
+            <span class="method-index">01</span>
+            <p><strong>Início sugerido</strong><br />Cada nova atividade é posicionada após o ciclo atual.</p>
+          </div>
+          <div>
+            <span class="method-index">02</span>
+            <p><strong>Sobreposição livre</strong><br />Início e fim podem ser editados para representar atividades simultâneas.</p>
+          </div>
+          <div>
+            <span class="method-index">03</span>
+            <p><strong>Tempo disponível</strong><br />Turno menos intervalos, na média entre segunda a quinta e sexta.</p>
+          </div>
+          <div>
+            <span class="method-index">04</span>
+            <p><strong>Takt time</strong><br />Tempo disponível dividido pela demanda calculada para cada turno.</p>
+          </div>
+        </section>
+      </main>
+
+      <footer class="app-footer">
+        <span>Dados armazenados somente neste navegador.</span>
+        <span>Consultoria Lean Manufacturing</span>
+      </footer>
+    </div>
+
+    <section class="print-report" id="printReport" aria-label="Relatório do estudo">
+      <div class="print-report-content" id="printReportContent"></div>
+    </section>
+
+    <dialog class="print-dialog" id="printDialog" aria-labelledby="printDialogTitle">
+      <div class="dialog-header print-dialog-header">
+        <div>
+          <p class="section-kicker">RELATÓRIO</p>
+          <h2 id="printDialogTitle">Configurar impressão</h2>
+        </div>
+      </div>
+      <div class="print-dialog-content">
+        <fieldset class="print-paper-options">
+          <legend>Formato do papel</legend>
+          <label class="print-paper-option">
+            <input type="radio" name="printPaper" value="A4" checked />
+            <span>
+              <strong>A4 paisagem</strong>
+              <small>297 × 210 mm</small>
+            </span>
+          </label>
+          <label class="print-paper-option">
+            <input type="radio" name="printPaper" value="A3" />
+            <span>
+              <strong>A3 paisagem</strong>
+              <small>420 × 297 mm · mais espaço para atividades</small>
+            </span>
+          </label>
+        </fieldset>
+        <p class="print-dialog-note">
+          O relatório reúne os cenários Atual e Proposto em uma única página, com cores e escala ajustadas ao formato.
+        </p>
+      </div>
+      <div class="print-dialog-actions">
+        <button class="button button-secondary" id="cancelPrintButton" type="button">Cancelar</button>
+        <button class="button button-primary" id="confirmPrintButton" type="button">Imprimir relatório</button>
+      </div>
+    </dialog>
+
+    <dialog class="help-dialog" id="helpDialog" aria-labelledby="helpTitle">
+      <div class="dialog-header">
+        <div>
+          <p class="section-kicker">REFERÊNCIA DE USO</p>
+          <h2 id="helpTitle">Como os cálculos funcionam</h2>
+        </div>
+        <button class="icon-button" id="closeHelpButton" type="button" aria-label="Fechar ajuda">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="help-content">
+        <section>
+          <h3>Início, duração e fim</h3>
+          <p>
+            A aplicação sugere o início de uma nova atividade após o ciclo atual. Você pode editar o início ou o fim
+            para representar sobreposições, atividades simultâneas e períodos sem atividade. A duração permanece
+            consistente com o intervalo informado.
+          </p>
+        </section>
+        <section>
+          <h3>Tempo de ciclo</h3>
+          <p>É o maior tempo de término entre todas as atividades do cenário.</p>
+          <code>tempo de ciclo = máximo(início + duração)</code>
+        </section>
+        <section>
+          <h3>Atualizar a sequência</h3>
+          <p>
+            Como cada atividade guarda o próprio horário de início, excluir uma delas deixa uma lacuna no lugar: o
+            tempo de ciclo não cai sozinho. O botão <strong>Atualizar</strong>, acima da lista, reencadeia todas as
+            atividades na ordem em que aparecem — cada uma começa quando a anterior termina, e as durações não mudam.
+          </p>
+          <p>
+            É o passo que revela o ganho depois de eliminar um desperdício do cenário Proposto. Como a ação desfaz
+            sobreposições e paradas propositais, ela pede confirmação e oferece <strong>Desfazer</strong>.
+          </p>
+        </section>
+        <section>
+          <h3>Tempo disponível e produção</h3>
+          <p>
+            A jornada é informada em dois horários: de segunda a quinta e sexta. De cada um são descontados almoço,
+            lanches e demais intervalos. O tempo disponível do estudo é a média da semana — quatro dias de segunda a
+            quinta mais um de sexta —, o mesmo critério usado pela planilha MFV. Não existe fator de disponibilidade:
+            o tempo indisponível é exatamente o dos intervalos.
+          </p>
+          <code>dia = turno bruto − intervalos</code>
+          <code>tempo disponível = (Seg a Qui × 4 + Sex) ÷ 5</code>
+          <code>produção = (tempo disponível ÷ ciclo) × unidades por ciclo</code>
+        </section>
+        <section>
+          <h3>Demanda e takt time</h3>
+          <p>
+            A demanda mensal é distribuída pelos dias úteis e turnos por dia informados. O takt indica o tempo
+            disponível para produzir cada peça e a produção realizada é comparada com a meta daquele turno.
+          </p>
+          <code>demanda por turno = demanda mensal ÷ (dias úteis × turnos por dia)</code>
+          <code>takt time = tempo disponível ÷ demanda por turno</code>
+        </section>
+        <section>
+          <h3>Planilha MFV</h3>
+          <p>
+            <strong>Baixar planilha MFV</strong> gera uma cópia do modelo já preenchida. O cabeçalho da aba
+            <strong>EP</strong> recebe os dois turnos, as pausas, o almoço, a demanda mensal, os dias úteis e o
+            número de operadores. Bruto, Com Almoço, Segundos, Média, Peças/dia, Takt Time e os indicadores de
+            produtividade continuam sendo calculados pelas fórmulas da própria planilha.
+          </p>
+          <p>
+            As caixas de processo recebem <strong>apenas as operações que agregam valor</strong>, que é o que o mapa de
+            fluxo de valor representa. Semiagrega e Não agrega continuam no estudo, na linha do tempo e no relatório,
+            mas não viram caixas no MFV. O mapa comporta até 10 operações.
+          </p>
+          <p>Área, Família, Produto e Estoques continuam sendo preenchidos à mão na planilha.</p>
+        </section>
+        <section>
+          <h3>Vídeos</h3>
+          <p>
+            A aba <strong>Vídeos</strong> guarda vários arquivos ao mesmo tempo. Clique em um deles para assistir; ao
+            trocar, o ponto onde você parou fica registrado e é retomado quando você voltar — inclusive depois de
+            fechar e reabrir a aplicação, bastando escolher o mesmo arquivo de novo.
+          </p>
+          <p>
+            A medição usa o tempo de reprodução do próprio arquivo. Marque o início e o fim, confira o intervalo exato
+            e escolha em <strong>Enviar duração para</strong> se ela vai para o cenário Atual ou Proposto. Os vídeos
+            permanecem no dispositivo e não são salvos no navegador nem no backup.
+          </p>
+        </section>
+        <section>
+          <h3>Ganho</h3>
+          <p>A diferença compara a produção do cenário Proposto com a do cenário Atual.</p>
+          <code>ganho % = (proposto ÷ atual − 1) × 100</code>
+        </section>
+        <section class="help-storage-note">
+          <h3>Seus dados</h3>
+          <p>
+            O salvamento é automático e local. Use “Baixar estudo” para transportar ou preservar o arquivo fora deste
+            navegador e “Importar estudo” para retomá-lo depois.
+          </p>
+        </section>
+      </div>
+    </dialog>
+
+
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden>
+      <span class="toast-icon" aria-hidden="true"></span>
+      <span id="toastMessage"></span>
+      <button id="toastAction" type="button" hidden></button>
+    </div>
+  </body>
+</html>
