@@ -1,0 +1,237 @@
+From a454c7d82a82f4c3d07536baff6a6c23605b315b Mon Sep 17 00:00:00 2001
+From: Tiago Prado <otiagoprado@gmail.com>
+Date: Thu, 10 Sep 2026 12:06:37 -0300
+Subject: [PATCH] Gantt: linha do tempo ao lado das atividades e tema seguindo
+ o app
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+A linha do tempo tinha grid-column: 1 / -1, o que a jogava para uma linha
+inteira abaixo da lista e deixava a coluna da direita vazia. Agora ela ocupa
+a segunda coluna do workspace, ao lado das atividades. Abaixo de 1080px as
+duas colunas não cabem mais e ela volta a ficar embaixo, inteira.
+
+O .app-shell tinha max-width de 1680px, que deixava faixas vazias nas
+laterais em monitores largos; como o módulo já roda num iframe dimensionado
+pelo app pai, o limite saiu.
+
+Corrige também três chaves sem fechar no CSS: um bloco de tema escuro havia
+sido colado dentro de uma regra aberta, dentro do @media print, e por isso
+todo o tema escuro só valia na impressão e nunca na tela.
+
+Com o tema escuro voltando a funcionar, o app.js passa a espelhar a classe
+light/dark que o app pai grava no <html>, respeitando o seletor
+CLARO / AUTO / ESCURO em vez da preferência do sistema operacional. Fora do
+iframe, cai para a preferência do sistema.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+---
+ public/gantt/app.js     | 59 ++++++++++++++++++++++++++++
+ public/gantt/styles.css | 85 ++++++++++++++++++-----------------------
+ 2 files changed, 96 insertions(+), 48 deletions(-)
+
+diff --git a/public/gantt/app.js b/public/gantt/app.js
+index b1ea15c..f675684 100644
+--- a/public/gantt/app.js
++++ b/public/gantt/app.js
+@@ -229,7 +229,66 @@
+ 
+   init();
+ 
++  // ── Tema ───────────────────────────────────────────────────────────────────────
++  // O app pai (Central de Indicadores) resolve o seletor CLARO / AUTO / ESCURO e grava a
++  // classe "light" ou "dark" no <html> dele — o "AUTO" já chega resolvido. Como este
++  // módulo roda num iframe do mesmo domínio, dá para espelhar essa classe diretamente,
++  // sem precisar de mensagem nem de recarregar o iframe.
++  //
++  // Fora do iframe (abrindo o index.html direto) não há pai para consultar, e aí a
++  // preferência do sistema operacional é o melhor palpite disponível.
++  function parentThemeRoot() {
++    try {
++      if (window.parent === window) return null;
++      const root = window.parent.document.documentElement;
++      // Um pai de outra origem lança SecurityError antes de chegar aqui.
++      if (!root || !root.classList) return null;
++      // Se por algum motivo o "pai" for este mesmo documento, observar a própria raiz
++      // que estamos alterando criaria um laço. Melhor cair no palpite do sistema.
++      return root === document.documentElement ? null : root;
++    } catch (_error) {
++      return null;
++    }
++  }
++
++  function applyTheme(isDark) {
++    const root = document.documentElement;
++    root.classList.toggle("dark", isDark);
++    root.classList.toggle("light", !isDark);
++    // Alinha também os controles nativos do navegador: barras de rolagem, seletores de
++    // hora e o fundo padrão dos campos.
++    root.style.colorScheme = isDark ? "dark" : "light";
++  }
++
++  function syncThemeWithHost() {
++    const hostRoot = parentThemeRoot();
++
++    if (!hostRoot) {
++      const query = window.matchMedia("(prefers-color-scheme: dark)");
++      const applyFromSystem = () => applyTheme(query.matches);
++      applyFromSystem();
++      if (typeof query.addEventListener === "function") query.addEventListener("change", applyFromSystem);
++      else if (typeof query.addListener === "function") query.addListener(applyFromSystem);
++      return;
++    }
++
++    const applyFromHost = () => applyTheme(hostRoot.classList.contains("dark"));
++    applyFromHost();
++    // O pai troca a classe quando o usuário muda o seletor, e também sozinho quando está
++    // em AUTO e o sistema muda. Observar o atributo cobre os dois casos.
++    try {
++      new window.MutationObserver(applyFromHost).observe(hostRoot, {
++        attributes: true,
++        attributeFilter: ["class"],
++      });
++    } catch (_error) {
++      // Sem observer o tema inicial já foi aplicado; só não acompanha trocas.
++    }
++  }
++
+   function init() {
++    // Antes de qualquer render, para a tela não piscar no tema errado.
++    syncThemeWithHost();
+     bindEvents();
+     syncGlobalInputs();
+     renderVideoLibrary();
+diff --git a/public/gantt/styles.css b/public/gantt/styles.css
+index 6c4014c..d21a7e3 100644
+--- a/public/gantt/styles.css
++++ b/public/gantt/styles.css
+@@ -237,32 +237,6 @@ body {
+   line-height: 1.45;
+ }
+ 
+-/* ── Scrollbar estilo Apple ── */
+-::-webkit-scrollbar {
+-  width: 6px;
+-  height: 6px;
+-}
+-::-webkit-scrollbar-track {
+-  background: transparent;
+-}
+-::-webkit-scrollbar-thumb {
+-  background: var(--border);
+-  border-radius: 10px;
+-}
+-::-webkit-scrollbar-thumb:hover {
+-  background: var(--text-secondary);
+-}
+-
+-/* ── Remove setas nativas de inputs numéricos ── */
+-input::-webkit-outer-spin-button,
+-input::-webkit-inner-spin-button {
+-  -webkit-appearance: none;
+-  margin: 0;
+-}
+-input[type=number] {
+-  -moz-appearance: textfield;
+-}
+-
+ button,
+ input,
+ select {
+@@ -354,11 +328,12 @@ select[aria-invalid="true"] {
+   top: 12px;
+ }
+ 
++/* Sem limite de largura: o módulo roda dentro de um iframe que já ocupa a área útil da
++   tela, e travar em 1680px deixava faixas vazias nas laterais em monitores largos. */
+ .app-shell {
+-  width: auto;
+-  max-width: 1680px;
+-  margin: 0 auto;
+-  padding: 0 24px 96px; /* 96px = espaço para a FloatingNav do app pai */
++  width: 100%;
++  margin: 0;
++  padding: 0 24px;
+ }
+ 
+ .app-header {
+@@ -1271,11 +1246,12 @@ main {
+   color: #d92d20;
+ }
+ 
++/* A linha do tempo fica na segunda coluna, ao lado da lista de atividades. Antes ela
++   ocupava a largura inteira abaixo, o que deixava a coluna da direita vazia.
++   A divisória entre as duas colunas vem do border-right do painel da esquerda. */
+ .timeline-panel {
+-  grid-column: 1 / -1;
+   min-width: 0;
+   padding: 20px;
+-  border-top: 1px solid var(--border-light);
+   background: var(--surface);
+ }
+ 
+@@ -2521,6 +2497,28 @@ kbd {
+   }
+ }
+ 
++/* As duas colunas param de caber por volta de 1060px: os mínimos somam 1010px e o
++   workspace tem overflow:hidden, então a linha do tempo seria cortada à direita em vez
++   de encolher. Abaixo deste ponto ela volta a ficar embaixo da lista, inteira.
++   Precisa vir depois do bloco de 1280px, que também define as colunas. */
++@media (max-width: 1080px) {
++  .workspace {
++    grid-template-columns: 1fr;
++  }
++
++  /* Empilhado, a divisória passa a ser horizontal. */
++  .editor-panel,
++  .comparison-panel {
++    border-right: 0;
++  }
++
++  .timeline-panel {
++    border-top-width: 1px;
++    border-top-style: solid;
++    border-top-color: var(--border-light);
++  }
++}
++
+ @media (max-width: 980px) {
+   .app-shell {
+     padding: 0 16px;
+@@ -3445,24 +3443,15 @@ kbd {
+ 
+   body.print-paper-a3 #printReportContent.is-ultra-dense .print-report-table {
+     font-size: 7.5pt;
+-    /* Correção nativa para o modo escuro no iframe */
+-@media (prefers-color-scheme: dark) {
+-  body, .app-shell {
+-    background-color: #0A2347 !important;
+-    color: #f1f5f9 !important;
+-  }
+-  
+-  .app-header, .context-panel, .breaks-panel, .editor-panel, .comparison-panel, .video-workspace, .timeline-panel, .kpi-card, .activity-form {
+-    background-color: #001833 !important;
+-    color: #f1f5f9 !important;
+-    border-color: rgba(74, 111, 165, 0.3) !important;
+   }
++}
+ 
+-  input, select, textarea {
+-    background-color: #0A2347 !important;
+-    color: #f1f5f9 !important;
+-    border-color: rgba(74, 111, 165, 0.4) !important;
+-  }
++/* ── Tema escuro ──────────────────────────────────────────────────────────────────
++   A classe "dark" no <html> é a única chave do tema, e quem a define é o app pai:
++   ele resolve o seletor CLARO / AUTO / ESCURO e o app.js daqui espelha a decisão.
++   Não há regra por prefers-color-scheme de propósito — ela faria o sistema
++   operacional passar por cima de quem escolheu CLARO na Central de Indicadores.
++   Aberto fora do iframe, o app.js consulta o sistema e aplica a mesma classe. */
+ html.dark body, html.dark .app-shell {
+   background-color: #0A2347 !important;
+   color: #f1f5f9 !important;
+-- 
+2.55.0.windows.3
+
