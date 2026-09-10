@@ -15,6 +15,13 @@
 <script src="/gantt/mfv-export.js" defer></script>
 <script src="/gantt/app.js" defer></script>
   </head>
+  <script>
+  const savedTheme = localStorage.getItem("app-theme");
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (savedTheme === "dark" || (savedTheme === "system" && prefersDark)) {
+    document.documentElement.style.colorScheme = "dark";
+  }
+</script>
   <body>
     <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
 
