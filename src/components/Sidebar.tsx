@@ -32,10 +32,12 @@ export function Sidebar({ active, onSelect }: Props) {
 
   return (
     <aside 
-      className={`relative z-[100] transition-all duration-300 ease-in-out print:hidden flex flex-col h-screen bg-white/70 dark:bg-[#001833]/70 backdrop-blur-2xl border-r border-slate-200/40 dark:border-[#4A6FA5]/40 shadow-2xl shrink-0 ${
-        isExpanded ? "w-64" : "w-20"
-      }`}
-    >
+  className={`fixed left-0 top-0 bottom-0 z-[1000] print:hidden flex flex-col h-screen
+    bg-white/35 dark:bg-[#001833]/40 backdrop-blur-2xl backdrop-saturate-150
+    border-r border-white/50 dark:border-[#4A6FA5]/30 shadow-xl
+    transition-[width] duration-300 ease-in-out
+    ${isExpanded ? "w-64" : "w-[72px]"}`}
+>
       {/* Botão de Expansão/Contração no Topo (Estilo Gemini) */}
       <div className="flex items-center justify-between px-4 h-20 border-b border-slate-200/40 dark:border-[#4A6FA5]/30 shrink-0">
         {isExpanded && (
