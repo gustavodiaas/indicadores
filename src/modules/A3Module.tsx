@@ -27,7 +27,7 @@ function LocalInputField({ label, value, onChange, type = "text" }: { label: str
         type={type}
         value={value ?? ""}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full h-12 px-4 rounded-xl border border-slate-200 dark:border-[#4A6FA5]/40 bg-slate-50 dark:bg-[#0A2347] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
+        className="w-full h-10 px-3 rounded-lg border border-slate-200 dark:border-[#4A6FA5]/40 bg-slate-50 dark:bg-[#0A2347] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
       />
     </div>
   );
@@ -77,12 +77,12 @@ function CustomDatePicker({ label, value, onChange }: { label: string; value: st
       <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">{label}</label>
       <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>
-          <button type="button" className="w-full h-12 px-4 rounded-xl bg-slate-50 dark:bg-[#0A2347] text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between outline-none hover:bg-slate-100 dark:hover:bg-[#001833] transition-all focus:ring-2 focus:ring-[#FF6B00] border border-transparent text-left">
+          <button type="button" className="w-full h-10 px-3 rounded-lg bg-slate-50 dark:bg-[#0A2347] text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between outline-none hover:bg-slate-100 dark:hover:bg-[#001833] transition-all focus:ring-2 focus:ring-[#FF6B00] border border-transparent text-left">
             <span className={value ? "text-slate-700 dark:text-slate-200" : "text-slate-400 dark:text-slate-600"}>{formatDisplay(value)}</span>
             <CalendarIcon className="w-4 h-4 text-slate-400 shrink-0 ml-2" />
           </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="p-4 bg-white dark:bg-[#001833] border border-slate-100 dark:border-[#4A6FA5]/40 rounded-2xl shadow-xl z-[150] w-72">
+        <DropdownMenuContent align="start" className="p-4 bg-white dark:bg-[#001833] border border-slate-200 dark:border-[#4A6FA5]/40 rounded-lg shadow-md z-[150] w-72">
           <div className="flex items-center justify-between mb-4">
             <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); if (currentMonth === 0) { setCurrentMonth(11); setCurrentYear(y => y - 1); } else { setCurrentMonth(m => m - 1); } }} className="p-1.5 hover:bg-slate-50 dark:hover:bg-[#002D72]/30 rounded-lg text-slate-600 dark:text-slate-400 transition-all">
               <ChevronLeft className="w-4 h-4" />
@@ -118,7 +118,7 @@ const TextAreaBlock = ({ title, value, maxChars, onChangeField }: { title: strin
   const isOverLimit = currentChars > maxChars;
 
   return (
-    <div className="flex flex-col bg-white dark:bg-[#001833] rounded-xl border border-slate-100 dark:border-[#4A6FA5]/35 overflow-hidden shadow-sm shrink-0 min-h-[150px] flex-1 relative">
+    <div className="flex flex-col bg-white dark:bg-[#001833] rounded-xl border border-slate-200 dark:border-[#4A6FA5]/35 overflow-hidden shrink-0 min-h-[150px] flex-1 relative">
       <div className="bg-[#002D72] border-b border-[#001833] px-3 py-2 flex justify-between items-center">
         <h4 className="text-[10px] font-bold text-white uppercase tracking-widest">{title}</h4>
       </div>
@@ -170,16 +170,16 @@ export function A3Module({ data, onChange }: Props) {
       await workbook.xlsx.load(arrayBuffer);
       const ws = workbook.worksheets[0];
 
-      if (data.titulo) ws.getCell('I2').value = data.titulo;       
-      if (data.data) ws.getCell('BD2').value = formatBRDate(data.data);           
-      if (data.aprovacoes) ws.getCell('CB2').value = data.aprovacoes; 
+      if (data.titulo) ws.getCell('I2').value = data.titulo;
+      if (data.data) ws.getCell('BD2').value = formatBRDate(data.data);
+      if (data.aprovacoes) ws.getCell('CB2').value = data.aprovacoes;
       if (data.background) ws.getCell('A5').value = data.background;
       if (data.objetivos) ws.getCell('A16').value = data.objetivos;
       if (data.estadoAtual) ws.getCell('A24').value = data.estadoAtual;
       if (data.analise) ws.getCell('A37').value = data.analise;
       if (data.estadoFuturo) ws.getCell('AO5').value = data.estadoFuturo;
-      
-      let rowAcao = 18; 
+
+      let rowAcao = 18;
       listaPlanoAcao.forEach(acao => {
         ws.getCell(`AO${rowAcao}`).value = acao.oque;
         ws.getCell(`BD${rowAcao}`).value = acao.quem;
@@ -190,12 +190,12 @@ export function A3Module({ data, onChange }: Props) {
       let rowInd = 33;
       listaIndicadores.forEach(ind => {
         ws.getCell(`AO${rowInd}`).value = ind.indicador;
-        ws.getCell(`BD${rowInd}`).value = ind.meta;   
-        ws.getCell(`BK${rowInd}`).value = ind.status; 
+        ws.getCell(`BD${rowInd}`).value = ind.meta;
+        ws.getCell(`BK${rowInd}`).value = ind.status;
         rowInd++;
       });
 
-      if (data.observacoes) ws.getCell('A47').value = data.observacoes; 
+      if (data.observacoes) ws.getCell('A47').value = data.observacoes;
 
       const buffer = await workbook.xlsx.writeBuffer();
       const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
@@ -235,7 +235,7 @@ export function A3Module({ data, onChange }: Props) {
   return (
     <div className="flex flex-col gap-4 h-full pb-36 animate-in fade-in duration-500 overflow-y-auto pr-2">
       <Dialog open={deleteConfirm.open} onOpenChange={(o) => setDeleteConfirm(prev => ({ ...prev, open: o }))}>
-        <DialogContent className="bg-white dark:bg-[#001833] rounded-2xl border-none shadow-2xl p-8 max-w-sm mx-auto">
+        <DialogContent className="bg-white dark:bg-[#001833] rounded-xl border border-slate-200 dark:border-[#4A6FA5]/40 shadow-lg p-8 max-w-sm mx-auto">
           <div className="flex flex-col items-center text-center">
             <div className="w-16 h-16 bg-rose-50 dark:bg-rose-950/40 rounded-full flex items-center justify-center mb-4">
               <Trash2 className="h-8 w-8 text-rose-500" />
@@ -247,10 +247,10 @@ export function A3Module({ data, onChange }: Props) {
               </DialogDescription>
             </DialogHeader>
             <DialogFooter className="flex gap-3 w-full mt-8">
-              <Button variant="outline" className="flex-1 rounded-xl h-12 font-bold text-slate-500 dark:text-slate-400" onClick={() => setDeleteConfirm({ open: false, type: 'acao', id: null })}>
+              <Button variant="outline" className="flex-1 rounded-lg h-10 font-bold text-slate-500 dark:text-slate-400" onClick={() => setDeleteConfirm({ open: false, type: 'acao', id: null })}>
                 Cancelar
               </Button>
-              <Button className="flex-1 bg-rose-500 hover:bg-rose-600 text-white rounded-xl h-12 font-bold shadow-lg shadow-rose-100 dark:shadow-none" onClick={confirmDelete}>
+              <Button className="flex-1 bg-rose-500 hover:bg-rose-600 text-white rounded-lg h-10 font-bold shadow-rose-100 dark:shadow-none" onClick={confirmDelete}>
                 Excluir
               </Button>
             </DialogFooter>
@@ -258,8 +258,8 @@ export function A3Module({ data, onChange }: Props) {
         </DialogContent>
       </Dialog>
 
-      <div className="flex items-center justify-between border-b border-slate-100 dark:border-[#4A6FA5]/40 pb-4">
-        <h2 className="text-xl font-black text-slate-800 dark:text-slate-100 tracking-tight flex items-center gap-2">
+      <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#4A6FA5]/40 pb-4">
+        <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 tracking-tight flex items-center gap-2">
           <LayoutTemplate className="h-6 w-6 text-[#002D72]" /> RELATÓRIO A3 (TOYOTA)
         </h2>
         <button onClick={handleExportExcel} className="flex items-center gap-2 px-6 py-2.5 bg-[#FF6B00] text-white rounded-xl font-bold text-xs uppercase tracking-widest shadow-md hover:bg-[#E55A00] transition-all">
@@ -272,8 +272,8 @@ export function A3Module({ data, onChange }: Props) {
         <p className="text-xs text-amber-800 dark:text-amber-400 font-medium"><strong>Poder de Síntese:</strong> O layout do Excel possui áreas cravadas (máximo 13 linhas).</p>
       </div>
 
-      <div className="flex flex-col gap-4 bg-slate-50/50 dark:bg-transparent p-6 rounded-2xl border border-slate-100 dark:border-[#4A6FA5]/30">
-        <div className="grid grid-cols-1 md:grid-cols-6 gap-4 bg-white dark:bg-[#001833] p-4 rounded-xl border border-slate-100 dark:border-[#4A6FA5]/35 shadow-sm shrink-0 items-end">
+      <div className="flex flex-col gap-4 bg-slate-50/50 dark:bg-transparent p-5 rounded-xl border border-slate-200 dark:border-[#4A6FA5]/30">
+        <div className="grid grid-cols-1 md:grid-cols-6 gap-4 bg-white dark:bg-[#001833] p-4 rounded-xl border border-slate-200 dark:border-[#4A6FA5]/35 shrink-0 items-end">
           <div className="md:col-span-3"><LocalInputField label="Título / Tema" value={data.titulo || ""} onChange={v => onChange({ titulo: v })} /></div>
           <div className="md:col-span-1"><CustomDatePicker label="Data" value={data.data || ""} onChange={v => onChange({ data: v })} /></div>
           <div className="md:col-span-2"><LocalInputField label="Aprovações" value={data.aprovacoes || ""} onChange={v => onChange({ aprovacoes: v })} /></div>
@@ -289,8 +289,8 @@ export function A3Module({ data, onChange }: Props) {
 
           <div className="flex flex-col gap-4">
             <TextAreaBlock title="5. Estado Futuro / Recomendações" maxChars={600} value={data.estadoFuturo} onChangeField={v => onChange({ estadoFuturo: v })} />
-            
-            <div className="bg-white dark:bg-[#001833] rounded-xl border border-slate-100 dark:border-[#4A6FA5]/40 shadow-sm overflow-hidden flex flex-col shrink-0">
+
+            <div className="bg-white dark:bg-[#001833] rounded-xl border border-slate-200 dark:border-[#4A6FA5]/40 overflow-hidden flex flex-col shrink-0">
               <div className="bg-[#002D72] border-b border-[#001833] px-3 py-2 flex justify-between items-center text-white font-bold text-[10px] uppercase">
                 <div className="flex items-center gap-2">6. Plano de Ação <span className="bg-white/20 px-1.5 py-0.5 rounded-md">{listaPlanoAcao.length}/13</span></div>
                 <button onClick={() => onChange({ planoAcao: [...listaPlanoAcao, { id: generateId(), oque: "", quem: "", prazo: "" }] })} className="bg-white/20 hover:bg-white/30 rounded p-1"><Plus className="w-3 h-3" /></button>
@@ -308,7 +308,7 @@ export function A3Module({ data, onChange }: Props) {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-[#001833] rounded-xl border border-slate-100 dark:border-[#4A6FA5]/40 shadow-sm overflow-hidden flex flex-col shrink-0">
+            <div className="bg-white dark:bg-[#001833] rounded-xl border border-slate-200 dark:border-[#4A6FA5]/40 overflow-hidden flex flex-col shrink-0">
               <div className="bg-[#002D72] border-b border-[#001833] px-3 py-2 flex justify-between items-center text-white font-bold text-[10px] uppercase">
                 <div className="flex items-center gap-2">7. Acompanhamento <span className="bg-white/20 px-1.5 py-0.5 rounded-md">{listaIndicadores.length}/13</span></div>
                 <button onClick={() => onChange({ indicadores: [...listaIndicadores, { id: generateId(), indicador: "", meta: "", status: "" }] })} className="bg-white/20 hover:bg-white/30 rounded p-1"><Plus className="w-3 h-3" /></button>
@@ -327,7 +327,7 @@ export function A3Module({ data, onChange }: Props) {
                             <ChevronDown className="w-3 h-3 text-slate-400 shrink-0 ml-1" />
                           </button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-32 bg-white dark:bg-[#001833] border border-slate-100 dark:border-[#4A6FA5]/40 p-1.5 rounded-xl shadow-xl z-[150]">
+                        <DropdownMenuContent className="w-32 bg-white dark:bg-[#001833] border border-slate-200 dark:border-[#4A6FA5]/40 p-1.5 rounded-xl shadow-md z-[150]">
                           <DropdownMenuItem onClick={() => updateIndicador(i.id, "status", "")} className={`w-full text-left text-[11px] font-bold py-2 px-2.5 rounded-lg cursor-pointer transition-all ${!i.status ? "bg-[#FF6B00] text-white" : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#002D72]/30"}`}>Limpar</DropdownMenuItem>
                           <DropdownMenuItem onClick={() => updateIndicador(i.id, "status", "No Prazo")} className={`w-full text-left text-[11px] font-bold py-2 px-2.5 rounded-lg cursor-pointer transition-all ${i.status === "No Prazo" ? "bg-[#FF6B00] text-white" : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#002D72]/30"}`}>No Prazo</DropdownMenuItem>
                           <DropdownMenuItem onClick={() => updateIndicador(i.id, "status", "Atrasado")} className={`w-full text-left text-[11px] font-bold py-2 px-2.5 rounded-lg cursor-pointer transition-all ${i.status === "Atrasado" ? "bg-[#FF6B00] text-white" : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#002D72]/30"}`}>Atrasado</DropdownMenuItem>

@@ -18,7 +18,7 @@ function LocalInputField({ label, value, onChange, type = "number" }: { label: s
         type={type}
         value={value ?? ""}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full h-12 px-4 rounded-xl border border-slate-200 dark:border-[#4A6FA5]/40 bg-slate-50 dark:bg-[#0A2347] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
+        className="w-full h-10 px-3 rounded-lg border border-slate-200 dark:border-[#4A6FA5]/40 bg-slate-50 dark:bg-[#0A2347] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
       />
     </div>
   );
@@ -34,20 +34,20 @@ export function QualidadeModule({ data, onChange }: Props) {
   const laudo = `No estágio inicial, de um total de ${data.quantidadeT1} peças produzidas, identificou-se ${data.perdasT1} ${p1Txt}, resultando em um índice de conformidade de ${r.indiceT1.toFixed(1)}%. Após as melhorias, de um total de ${data.quantidadeT3} peças, identificou-se ${data.perdasT3} ${p3Txt}, elevando o índice para ${r.indiceT3.toFixed(1)}%, representando um aumento de ${r.aumento.toFixed(1)}% na conformidade.`;
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 h-full">
+    <div className="flex flex-col lg:flex-row gap-6 h-full">
       {/* COLUNA ESQUERDA: ENTRADA DE DADOS */}
       <div className="w-full lg:w-[60%] grid grid-cols-1 sm:grid-cols-2 gap-6 overflow-y-auto pr-2 pb-10">
-        
-        <div className="bg-white dark:bg-[#001833] p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-[#4A6FA5]/35 space-y-4 h-fit">
-          <h3 className="font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-[#4A6FA5]/40 pb-2 text-sm uppercase tracking-wide">
+
+        <div className="bg-white dark:bg-[#001833] p-5 rounded-xl border border-slate-200 dark:border-[#4A6FA5]/35 space-y-4 h-fit">
+          <h3 className="font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-[#4A6FA5]/40 pb-2 text-sm uppercase tracking-wide">
             T1 - Inicial
           </h3>
           <LocalInputField label="Qtd Produzida" value={data.quantidadeT1} onChange={v => onChange({ quantidadeT1: Number(v) || 0 })} />
           <LocalInputField label="Perdas (Peças)" value={data.perdasT1} onChange={v => onChange({ perdasT1: Number(v) || 0 })} />
         </div>
 
-        <div className="bg-white dark:bg-[#001833] p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-[#4A6FA5]/35 space-y-4 h-fit">
-          <h3 className="font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-[#4A6FA5]/40 pb-2 text-sm uppercase tracking-wide">
+        <div className="bg-white dark:bg-[#001833] p-5 rounded-xl border border-slate-200 dark:border-[#4A6FA5]/35 space-y-4 h-fit">
+          <h3 className="font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-[#4A6FA5]/40 pb-2 text-sm uppercase tracking-wide">
             T3 - Final
           </h3>
           <LocalInputField label="Qtd Produzida" value={data.quantidadeT3} onChange={v => onChange({ quantidadeT3: Number(v) || 0 })} />
@@ -59,10 +59,10 @@ export function QualidadeModule({ data, onChange }: Props) {
       {/* COLUNA DIREITA: KPIs E LAUDO (100% ADAPTADOS PARA MODO ESCURO) */}
       <div className="w-full lg:w-[40%] flex flex-col gap-4">
         <KpiCard label="Aumento de Qualidade" value={r.aumento.toFixed(1)} suffix="%" trend={r.aumento} />
-        
+
           <EditableLaudoCard title="Laudo de Qualidade" laudo={laudo} />
 
-        <div className="mt-auto pt-6 min-h-[250px] bg-white dark:bg-[#001833] rounded-2xl p-4 border border-slate-100 dark:border-[#4A6FA5]/30 shadow-sm">
+        <div className="mt-auto pt-6 min-h-[250px] bg-white dark:bg-[#001833] rounded-xl p-4 border border-slate-200 dark:border-[#4A6FA5]/30">
           <ComparisonChart data={chartData} title="Índice de Peças Boas" />
         </div>
       </div>

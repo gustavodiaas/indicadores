@@ -19,7 +19,7 @@ function LocalInputField({ label, value, onChange, suffix, type = "number" }: { 
           type={type}
           value={value ?? ""}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full h-12 px-4 pr-16 rounded-xl border border-slate-200 dark:border-[#4A6FA5]/40 bg-slate-50 dark:bg-[#0A2347] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
+          className="w-full h-10 px-3 pr-16 rounded-lg border border-slate-200 dark:border-[#4A6FA5]/40 bg-slate-50 dark:bg-[#0A2347] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
         />
         {suffix && (
           <span className="absolute right-4 text-xs font-bold text-slate-400 dark:text-slate-500 pointer-events-none">
@@ -38,22 +38,22 @@ export function AreaModule({ data, onChange }: Props) {
   const laudo = `A área ocupada inicial era de ${data.areaT1 || 0}m². Com o novo layout/otimização, reduziu-se para ${data.areaT3 || 0}m², liberando ${r.economiaM2.toFixed(1).replace(".", ",")}m² de área útil (${r.reducaoPercent.toFixed(1).replace(".", ",")}%), gerando uma economia imobiliária mensal de R$ ${r.economiaMensal.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}.`;
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 h-full animate-in fade-in duration-500">
+    <div className="flex flex-col lg:flex-row gap-6 h-full animate-in fade-in duration-500">
       {/* Coluna Esquerda: Cards Modernos */}
       <div className="w-full lg:w-[60%] flex flex-col gap-6 overflow-y-auto pr-2 pb-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div className="bg-white dark:bg-[#001833] p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-[#4A6FA5]/35 space-y-4">
-            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-100 dark:border-[#4A6FA5]/40 pb-2">Estado T1</h3>
+          <div className="bg-white dark:bg-[#001833] p-5 rounded-xl border border-slate-200 dark:border-[#4A6FA5]/35 space-y-4">
+            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-200 dark:border-[#4A6FA5]/40 pb-2">Estado T1</h3>
             <LocalInputField label="Área Ocupada" value={data.areaT1} onChange={v => onChange({ areaT1: Number(v) || 0 })} suffix="m²" />
           </div>
-          
-          <div className="bg-white dark:bg-[#001833] p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-[#4A6FA5]/35 space-y-4">
-            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-100 dark:border-[#4A6FA5]/40 pb-2">Estado T3</h3>
+
+          <div className="bg-white dark:bg-[#001833] p-5 rounded-xl border border-slate-200 dark:border-[#4A6FA5]/35 space-y-4">
+            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-200 dark:border-[#4A6FA5]/40 pb-2">Estado T3</h3>
             <LocalInputField label="Área Ocupada" value={data.areaT3} onChange={v => onChange({ areaT3: Number(v) || 0 })} suffix="m²" />
           </div>
         </div>
-        
-        <div className="bg-white dark:bg-[#001833] p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-[#4A6FA5]/35">
+
+        <div className="bg-white dark:bg-[#001833] p-5 rounded-xl border border-slate-200 dark:border-[#4A6FA5]/35">
           <LocalInputField label="Valor do Aluguel/m²" value={data.valorAluguel} onChange={v => onChange({ valorAluguel: Number(v) || 0 })} suffix="R$/m²" />
         </div>
       </div>
@@ -61,10 +61,10 @@ export function AreaModule({ data, onChange }: Props) {
       {/* Coluna Direita: Laudo e Gráfico */}
       <div className="w-full lg:w-[40%] flex flex-col gap-6">
         <KpiCard label="Redução de Área" value={r.reducaoPercent.toFixed(1).replace(".", ",")} suffix="%" trend={r.reducaoPercent} />
-        
+
           <EditableLaudoCard title="Impacto em Área" laudo={laudo} />
 
-        <div className="mt-auto min-h-[250px] bg-white dark:bg-[#001833] rounded-2xl p-4 border border-slate-100 dark:border-[#4A6FA5]/30 shadow-sm">
+        <div className="mt-auto min-h-[250px] bg-white dark:bg-[#001833] rounded-xl p-4 border border-slate-200 dark:border-[#4A6FA5]/30">
           <ComparisonChart data={chartData} title="Ocupação de Espaço" />
         </div>
       </div>
