@@ -446,20 +446,18 @@ const Index = () => {
   className={`flex-1 w-full min-w-0
     print:shadow-none print:border-none print:rounded-none print:p-0
     ${
-      activeModule === "home" ||
-      activeModule === "a3" ||
-      activeModule === "gantt"
+      activeModule === "home"
         ? "bg-transparent p-0"
-        : "bg-transparent px-5 pb-5 md:px-6 md:pb-6"
+        : "bg-transparent px-5 pt-5 pb-6 md:px-6 md:pt-6 md:pb-8"
     }`}
 >
           {activeModule === "home" && renderHome()}
           {activeModule !== "home" && activeModule !== "gbo" && (
-            <div key={activeModule} className="animate-in fade-in slide-in-from-bottom-2 duration-500 w-full h-full">
+            <div key={activeModule} className="module-shell animate-in fade-in slide-in-from-bottom-2 duration-500 w-full min-h-full">
               {renderPanelModules()}
             </div>
           )}
-          <div className={activeModule === "gbo" ? "animate-in fade-in slide-in-from-bottom-2 duration-500 block w-full h-full" : "hidden"}>
+          <div className={activeModule === "gbo" ? "module-shell animate-in fade-in slide-in-from-bottom-2 duration-500 block w-full min-h-full" : "hidden"}>
             <GBOAnalysis />
           </div>
         </div>

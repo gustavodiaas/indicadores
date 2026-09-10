@@ -70,7 +70,7 @@ export function EditableLaudoCard({ title, laudo, laudoWord }: EditableLaudoCard
   };
 
   return (
-    <div className="relative bg-white/90 dark:bg-[#1C1C1E] p-5 border border-black/[0.06] dark:border-white/10 rounded-2xl shadow-[0_8px_24px_rgba(15,23,42,0.05)]">
+    <div className="relative bg-white/80 dark:bg-[#1C1C1E]/90 p-5 md:p-6 border border-black/[0.04] dark:border-white/[0.07] rounded-[20px] shadow-[0_14px_38px_rgba(15,23,42,0.05)] backdrop-blur-xl">
       {/* Botões de ação */}
       <div className="absolute top-4 right-4 flex items-center gap-1.5">
         {override !== null && !editing && (

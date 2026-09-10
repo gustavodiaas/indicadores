@@ -355,17 +355,17 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
   };
 
   return (
-    <div className="flex flex-col gap-6 h-full pb-36 animate-in fade-in duration-500 overflow-y-auto pr-2">
+    <div className="flex flex-col gap-5 min-h-full pb-28 animate-in fade-in duration-500">
 
-      <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-4">
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 rounded-[22px] bg-gradient-to-r from-[#0A84FF]/[0.09] via-white/50 to-[#FF6B00]/[0.08] dark:from-[#0A84FF]/15 dark:via-[#1C1C1E]/60 dark:to-[#FF6B00]/10 px-5 py-4 border border-black/[0.04] dark:border-white/[0.07]">
         <div>
-          <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 tracking-tight flex items-center gap-2">
-            <CheckCircle className="h-6 w-6 text-[#002D72]" /> PLANO DE AÇÃO 5W2H
+          <h2 className="text-xl font-semibold text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
+            <span className="w-9 h-9 rounded-xl bg-[#0A84FF] text-white flex items-center justify-center shadow-[0_6px_16px_rgba(10,132,255,0.25)]"><CheckCircle className="h-5 w-5" /></span> Plano de Ação 5W2H
           </h2>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Gerenciamento tático e detalhamento das ações corretivas.</p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2">
           <input
             type="file"
             id="excel-5w2h-import"
@@ -375,29 +375,29 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
           />
           <button
             onClick={() => document.getElementById('excel-5w2h-import')?.click()}
-            className="flex items-center gap-2 px-5 py-2.5 bg-[#002D72]/5 dark:bg-white/[0.08] text-[#002D72] dark:text-slate-200 border border-[#002D72]/15 dark:border-white/10 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-[#002D72]/10 dark:hover:bg-white/10 transition-all active:scale-95"
+            className="flex items-center gap-2 px-4 py-2.5 bg-white/70 dark:bg-white/[0.08] text-[#0A84FF] dark:text-[#409CFF] border border-black/[0.05] dark:border-white/10 rounded-xl font-semibold text-xs hover:bg-white dark:hover:bg-white/10 transition-all active:scale-[0.98]"
           >
             <Upload className="h-4 w-4" /> Importar
           </button>
 
           <button
             onClick={handleDownloadModelo}
-            className="flex items-center gap-2 px-5 py-2.5 bg-slate-100 dark:bg-white/[0.08] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-white/10 transition-all active:scale-95"
+            className="flex items-center gap-2 px-4 py-2.5 bg-white/70 dark:bg-white/[0.08] text-slate-700 dark:text-slate-300 border border-black/[0.05] dark:border-white/10 rounded-xl font-semibold text-xs hover:bg-white dark:hover:bg-white/10 transition-all active:scale-[0.98]"
           >
             <FileText className="h-4 w-4" /> Baixar Modelo
           </button>
 
           <button
             onClick={handleExportExcel}
-            className="flex items-center gap-2 px-5 py-2.5 bg-[#FF6B00] text-white rounded-xl font-bold text-xs uppercase tracking-widest shadow-md hover:bg-[#E55A00] transition-all active:scale-95"
+            className="flex items-center gap-2 px-4 py-2.5 bg-[#FF6B00] text-white rounded-xl font-semibold text-xs shadow-[0_6px_16px_rgba(255,107,0,0.24)] hover:bg-[#E55A00] transition-all active:scale-[0.98]"
           >
             <Download className="h-4 w-4" /> Baixar Planilha
           </button>
         </div>
       </div>
 
-      <div className="bg-white dark:bg-[#1C1C1E] p-5 rounded-xl border border-slate-200 dark:border-white/10">
-        <h3 className="font-bold text-slate-800 dark:text-slate-100 uppercase text-[11px] tracking-widest mb-4 border-b border-slate-200 dark:border-white/10 pb-2">Metadados do Projeto</h3>
+      <div className="apple-panel p-5 md:p-6">
+        <h3 className="font-semibold text-slate-900 dark:text-white text-sm tracking-tight mb-5 flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-[#0A84FF]" />Metadados do projeto</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <CustomDatePicker label="Data de Criação" value={data.metadata.dataCriacao} onChange={v => updateMeta("dataCriacao", v)} />
           <InputField label="Responsável (Consultor/Empresário)" value={data.metadata.respCriacao} onChange={v => updateMeta("respCriacao", v)} />
@@ -410,11 +410,11 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
         </div>
       </div>
 
-      <div className="bg-white dark:bg-[#1C1C1E] p-5 rounded-xl border border-slate-200 dark:border-white/10 flex-1">
+      <div className="apple-panel p-5 md:p-6 flex-1">
         <div className="flex flex-col gap-4 mb-6">
-          <h3 className="font-bold text-slate-800 dark:text-slate-100 uppercase text-[11px] tracking-widest flex items-center gap-2">
-            Execução de Tarefas
-            <span className="bg-[#002D72]/10 text-[#002D72] px-2 py-0.5 rounded-full text-[10px]">{data.acoes.length}</span>
+          <h3 className="font-semibold text-slate-900 dark:text-white text-sm tracking-tight flex items-center gap-2">
+            Execução de tarefas
+            <span className="bg-[#0A84FF]/10 dark:bg-[#0A84FF]/20 text-[#0A84FF] dark:text-[#409CFF] px-2 py-0.5 rounded-full text-[10px]">{data.acoes.length}</span>
           </h3>
 
           <div className="flex gap-2 items-end">
@@ -423,7 +423,7 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
             </div>
             <button
               onClick={handleAddAcao}
-              className="h-10 px-4 bg-[#FF6B00] text-white rounded-xl font-bold text-xs uppercase shadow-md hover:bg-[#E55A00] transition-colors flex items-center gap-2"
+              className="h-10 px-4 bg-[#FF6B00] text-white rounded-xl font-semibold text-xs shadow-[0_6px_16px_rgba(255,107,0,0.22)] hover:bg-[#E55A00] transition-colors flex items-center gap-2"
             >
               <Plus className="h-4 w-4" /> Adicionar
             </button>
@@ -439,15 +439,15 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
           <div className="flex flex-col gap-3">
             {data.acoes.map(a => (
               // FIX: card wrapper precisa de dark:bg-[#1C1C1E] explícito
-              <div key={a.id} className="border border-slate-200 dark:border-white/10 rounded-xl bg-white dark:bg-[#1C1C1E] overflow-hidden transition-all duration-300">
+              <div key={a.id} className="border border-black/[0.05] dark:border-white/[0.07] rounded-2xl bg-white/75 dark:bg-[#242426]/80 overflow-hidden transition-all duration-300 shadow-[0_8px_24px_rgba(15,23,42,0.035)] hover:shadow-[0_12px_30px_rgba(15,23,42,0.065)]">
                 {/* FIX: header do card — bg-white sem dark estava causando manchas brancas */}
                 <div
-                  className="flex items-center justify-between p-4 bg-white dark:bg-[#1C1C1E] hover:bg-slate-50 dark:hover:bg-white/10/50 cursor-pointer select-none transition-colors border-b border-slate-200 dark:border-white/10"
+                  className="flex items-center justify-between p-4 bg-transparent hover:bg-black/[0.025] dark:hover:bg-white/[0.04] cursor-pointer select-none transition-colors"
                   onClick={() => setExpandedId(expandedId === a.id ? null : a.id)}
                 >
                   <div className="flex flex-col flex-1 pr-4">
                     <span className="text-sm font-semibold text-slate-800 dark:text-slate-100 truncate">{a.what}</span>
-                    <span className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">Status: <span className="text-[#002D72] font-bold">{a.status || "NÃO INICIADO"}</span> • Progresso: {a.percent || 0}%</span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1 flex items-center gap-1.5"><span className={`w-1.5 h-1.5 rounded-full ${a.status === "CONCLUIDO" ? "bg-[#30B76B]" : a.status === "REJEITADO" ? "bg-rose-500" : a.status === "EM ANDAMENTO" ? "bg-[#0A84FF]" : "bg-slate-300 dark:bg-slate-600"}`} />{a.status === "CONCLUIDO" ? "Concluído" : a.status === "EM ANDAMENTO" ? "Em andamento" : a.status === "INICIADO" ? "Iniciado" : a.status === "REJEITADO" ? "Rejeitado" : "Não iniciado"} <span className="text-slate-300 dark:text-slate-600">•</span> {a.percent || 0}%</span>
                   </div>
                   <div className="flex items-center gap-4">
                     {expandedId === a.id ? <ChevronUp className="h-5 w-5 text-slate-400 dark:text-slate-500" /> : <ChevronDown className="h-5 w-5 text-slate-400 dark:text-slate-500" />}

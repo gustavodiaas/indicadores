@@ -199,9 +199,9 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
     <>
       <div className="flex flex-col lg:flex-row gap-6 h-full">
         {/* COLUNA ESQUERDA: ENTRADA DE DADOS */}
-        <div className="w-full lg:w-[55%] flex flex-col gap-6 overflow-y-auto pr-2 pb-36">
+        <div className="w-full lg:w-[55%] flex flex-col gap-6 pb-28 bg-white/55 dark:bg-[#1C1C1E]/55 rounded-[22px] p-5 md:p-6 backdrop-blur-xl">
           <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-white/10">
-            <h3 className="font-bold text-[#0A1828] dark:text-slate-100 text-lg uppercase tracking-tight">Entrada de Dados</h3>
+            <h3 className="font-semibold text-[#0A1828] dark:text-slate-100 text-lg tracking-tight flex items-center gap-2.5"><span className="w-2.5 h-2.5 rounded-full bg-[#0A84FF] shadow-[0_0_0_5px_rgba(10,132,255,0.10)]" />Entrada de dados</h3>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setShowConfirmModal(true)}
@@ -237,7 +237,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
           </div>
 
           <div className="pt-4 border-t border-slate-200 dark:border-white/10 space-y-4">
-            <h4 className="text-sm font-bold text-[#0A1828] dark:text-slate-100 uppercase">Resumo das Ações</h4>
+            <h4 className="text-sm font-semibold text-[#0A1828] dark:text-slate-100">Resumo das ações</h4>
             <div className="flex gap-2 items-end">
               <div className="flex-1"><LocalInputField label="O que será feito?" value={newAcao} onChange={setNewAcao} /></div>
               <button onClick={handleAddAcao} className="h-10 px-4 bg-[#FF6B00] text-white rounded-xl font-bold text-xs uppercase shadow-md hover:bg-[#E55A00] transition-colors">Adicionar</button>
@@ -254,10 +254,10 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
         </div>
 
         {/* COLUNA DIREITA: CARDS DE VISUALIZAÇÃO DE TEXTO */}
-        <div className="w-full lg:w-[45%] flex flex-col gap-6 overflow-y-auto pb-36">
+        <div className="w-full lg:w-[45%] flex flex-col gap-6 pb-28">
           <EditableLaudoCard title="Descrição do Processo" laudo={descTexto} laudoWord={descTextoWord} />
 
-          <div className="relative bg-white dark:bg-[#1C1C1E] p-5 rounded-xl border border-slate-200 dark:border-white/10 flex flex-col">
+          <div className="relative apple-panel p-5 md:p-6 flex flex-col">
             {/* Botões de ação */}
             <div className="absolute top-4 right-4 flex items-center gap-1.5">
               {concOverride !== null && !editingConc && (

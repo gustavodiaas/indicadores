@@ -20,7 +20,7 @@ export function KpiCard({ label, value, suffix, trend }: Props) {
   const TrendIcon = isPositive ? TrendingUp : isNegative ? TrendingDown : Minus;
 
   return (
-    <div className="flex flex-col p-5 bg-white/90 dark:bg-[#1C1C1E] border border-black/[0.06] dark:border-white/10 rounded-2xl shadow-[0_8px_24px_rgba(15,23,42,0.05)] transition-colors duration-200 group">
+    <div className="relative overflow-hidden flex flex-col p-5 bg-white/80 dark:bg-[#1C1C1E]/90 border border-black/[0.04] dark:border-white/[0.07] rounded-[20px] shadow-[0_14px_38px_rgba(15,23,42,0.05)] backdrop-blur-xl transition-all duration-200 group before:absolute before:inset-x-0 before:top-0 before:h-1 before:bg-gradient-to-r before:from-[#0A84FF] before:via-[#30B76B] before:to-[#FF6B00]">
       <span className="text-[13px] font-medium text-slate-500 dark:text-slate-400">
         {label}
       </span>

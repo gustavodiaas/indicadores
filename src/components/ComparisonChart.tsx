@@ -33,7 +33,7 @@ export function ComparisonChart({ data, title }: Props) {
   if (!data || data.length === 0) return null;
 
   return (
-    <div className="flex flex-col h-full w-full bg-white/90 dark:bg-[#1C1C1E] p-5 border border-black/[0.06] dark:border-white/10 rounded-2xl shadow-[0_8px_24px_rgba(15,23,42,0.05)]">
+    <div className="flex flex-col h-full w-full bg-white/80 dark:bg-[#1C1C1E]/90 p-5 border border-black/[0.04] dark:border-white/[0.07] rounded-[20px] shadow-[0_14px_38px_rgba(15,23,42,0.05)] backdrop-blur-xl">
       <h4 className="text-sm font-semibold text-slate-900 dark:text-white mb-5 tracking-tight">{title}</h4>
       
       <ResponsiveContainer width="100%" height="100%" minHeight={250}>
@@ -55,12 +55,12 @@ export function ComparisonChart({ data, title }: Props) {
           <Tooltip cursor={{ fill: 'currentColor', className: 'text-slate-100/50 dark:text-slate-950/30' }} content={<CustomTooltip />} />
           <Legend wrapperStyle={{ paddingTop: '20px', fontSize: '12px', fontWeight: 500 }} iconType="circle" />
           
-          <Bar dataKey="T1" fill="currentColor" radius={[6, 6, 0, 0]} name="T1 (Inicial)" maxBarSize={60} className="text-slate-300 dark:text-white/20">
-            <LabelList dataKey="T1" position="top" fill="currentColor" fontSize={12} fontWeight="bold" className="text-slate-500 dark:text-slate-400" />
+          <Bar dataKey="T1" fill="currentColor" radius={[8, 8, 2, 2]} name="T1 (Inicial)" maxBarSize={54} className="text-[#0A84FF] dark:text-[#409CFF]">
+            <LabelList dataKey="T1" position="top" fill="currentColor" fontSize={12} fontWeight="600" className="text-[#0A84FF] dark:text-[#409CFF]" />
           </Bar>
           
-          <Bar dataKey="T3" fill="currentColor" radius={[6, 6, 0, 0]} name="T3 (Final)" maxBarSize={60} className="text-[#FF6B00] dark:text-[#FF8A3D]">
-            <LabelList dataKey="T3" position="top" fill="currentColor" fontSize={12} fontWeight="bold" className="text-[#002D72] dark:text-[#FF6B00]" />
+          <Bar dataKey="T3" fill="currentColor" radius={[8, 8, 2, 2]} name="T3 (Final)" maxBarSize={54} className="text-[#30B76B] dark:text-[#32D74B]">
+            <LabelList dataKey="T3" position="top" fill="currentColor" fontSize={12} fontWeight="600" className="text-[#30B76B] dark:text-[#32D74B]" />
           </Bar>
         </BarChart>
       </ResponsiveContainer>
