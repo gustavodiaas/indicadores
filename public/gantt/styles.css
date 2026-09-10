@@ -37,6 +37,21 @@
   text-rendering: optimizeLegibility;
 }
 
+html.dark {
+  --background: #001022;
+  --surface: #001833;
+  --surface-secondary: #0A2347;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --border: #1e3a5f;
+  --border-light: #0d1e36;
+  --success-soft: rgba(52, 199, 89, 0.15);
+  --warning-soft: rgba(255, 159, 10, 0.15);
+  --danger-soft: rgba(255, 59, 48, 0.15);
+  --blue-soft: rgba(0, 122, 255, 0.15);
+  --focus-ring: 0 0 0 3px rgba(255, 107, 0, 0.4);
+}
+
 * {
   box-sizing: border-box;
 }
