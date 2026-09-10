@@ -353,9 +353,9 @@ const Index = () => {
         <div className="w-full max-w-7xl flex flex-col lg:flex-row gap-12 items-start">
           
           {/* Lado Esquerdo: Painel Fixo de Contexto, Privacidade e Tema */}
-          <div className="w-full lg:w-[28%] space-y-6 lg:sticky lg:top-6 shrink-0">
-            <div className="bg-[#FF6B00] p-4 rounded-2xl shadow-lg inline-block">
-              <BarChart3 className="h-7 w-7 text-white" />
+          <div className="w-full lg:w-[28%] space-y-4 lg:sticky lg:top-6 shrink-0">
+            <div className="bg-[#FF6B00] p-3 rounded-xl shadow-md inline-block">
+              <BarChart3 className="h-6 w-6 text-white" />
             </div>
             <div>
               <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Olá!</h1>
@@ -364,13 +364,13 @@ const Index = () => {
               </p>
             </div>
 
-            <div className="flex items-start gap-3 text-[10px] font-bold text-slate-400 dark:text-slate-400 bg-white dark:bg-[#001833] p-4 rounded-2xl border border-slate-100 dark:border-[#4A6FA5]/40 shadow-sm uppercase tracking-widest leading-relaxed">
-              <Lock className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
+            <div className="flex items-start gap-2 text-[10px] font-bold text-slate-400 dark:text-slate-400 bg-white dark:bg-[#001833] p-3 rounded-xl border border-slate-100 dark:border-[#4A6FA5]/40 shadow-sm uppercase tracking-widest leading-relaxed">
+              <Lock className="w-3 h-3 text-slate-400 shrink-0 mt-0.5" />
               <span>Privacidade: Seus dados são salvos apenas localmente no seu navegador. Nenhuma informação é enviada.</span>
             </div>
 
             {/* PÍLULA INTEGRADA DE CONTROLE DE TEMA */}
-            <div className="flex flex-col gap-2 bg-white dark:bg-[#001833] p-4 rounded-2xl border border-slate-100 dark:border-[#4A6FA5]/40 shadow-sm">
+            <div className="flex flex-col gap-2 bg-white dark:bg-[#001833] p-3 rounded-xl border border-slate-100 dark:border-[#4A6FA5]/40 shadow-sm">
               <label className="text-[9px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-widest px-1">Aparência do Painel</label>
               <div className="grid grid-cols-3 bg-slate-100 dark:bg-[#0A2347] p-1 rounded-xl gap-1">
                 <button 
@@ -403,11 +403,11 @@ const Index = () => {
                 <button
                   key={m.key}
                   onClick={() => setActiveModule(m.key)}
-                  className="group flex flex-col justify-between p-6 bg-white dark:bg-[#001833] border border-slate-100 dark:border-[#4A6FA5]/35 hover:border-[#FF6B00]/50 dark:hover:border-[#FF6B00]/40 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 min-h-[150px] text-left"
+                  className="group flex flex-col justify-between p-4 bg-white dark:bg-[#001833] border border-slate-100 dark:border-[#4A6FA5]/35 hover:border-[#FF6B00]/50 dark:hover:border-[#FF6B00]/40 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 min-h-[120px] text-left"
                 >
-                  <div className="flex items-start justify-between w-full mb-4">
-                    <div className={`p-2.5 rounded-xl ${m.color} dark:bg-[#FF6B00]/10 dark:text-[#FF6B00] group-hover:scale-110 group-hover:bg-[#FF6B00] group-hover:text-white transition-all duration-300`}>
-                      <Icon className="w-5 h-5" />
+                  <div className="flex items-start justify-between w-full mb-3">
+                    <div className={`p-2 rounded-lg ${m.color} dark:bg-[#FF6B00]/10 dark:text-[#FF6B00] group-hover:scale-105 group-hover:bg-[#FF6B00] group-hover:text-white transition-all duration-300`}>
+                      <Icon className="w-4 h-4" />
                     </div>
                   </div>
                   <div>
@@ -439,13 +439,13 @@ const Index = () => {
           -moz-appearance: textfield;
         }
       ` }} />
-      <main className="flex-1 overflow-y-auto p-2 md:p-4 pb-32 print:p-0 print:overflow-visible">
+      <main className="flex-1 overflow-y-auto p-2 md:p-4 pb-20 print:p-0 print:overflow-visible">
         {!["home", "gbo", "planoAcao", "a3", "manual", "gantt"].includes(activeModule) && (
           <div className="print:hidden relative z-[100] mb-2 animate-in slide-in-from-top-2 duration-300">
             <Topbar onExportWord={handleExportWord} state={state} loadState={loadState} />
           </div>
         )}
-        <div className={`w-full transition-all min-h-full relative print:shadow-none print:border-none print:rounded-none print:p-0 ${activeModule === "home" || activeModule === "a3" || activeModule === "gantt" ? "bg-transparent p-0" : "bg-white dark:bg-[#001833] rounded-2xl shadow-sm border border-slate-200/50 dark:border-[#4A6FA5]/30 p-4 md:p-6"}`}>
+        <div className={`w-full transition-all min-h-full relative print:shadow-none print:border-none print:rounded-none print:p-0 ${activeModule === "home" || activeModule === "a3" || activeModule === "gantt" ? "bg-transparent p-0" : "bg-white dark:bg-[#001833] rounded-xl shadow-sm border border-slate-200/50 dark:border-[#4A6FA5]/30 p-3 md:p-5"}`}>
           {activeModule === "home" && renderHome()}
           {activeModule !== "home" && activeModule !== "gbo" && (
             <div key={activeModule} className="animate-in fade-in slide-in-from-bottom-2 duration-500 w-full h-full">
