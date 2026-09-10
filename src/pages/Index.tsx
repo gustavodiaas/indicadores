@@ -1,5 +1,5 @@
 import { useAppStore, calcProdutividade, calcPayback, calcMovimentacao, calcQualidade, calcDisponibilidade, calcLeadTime, calcArea, ModuleKey } from "@/store/useAppStore";
-import { FloatingNav } from "@/components/FloatingNav";
+import { Sidebar } from "@/components/Sidebar";
 import { Topbar } from "@/components/Topbar";
 import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } from "docx";
 import { 
@@ -27,6 +27,25 @@ type Theme = "light" | "dark" | "system";
 
 const Index = () => {
   const { state, activeModule, setActiveModule, updateModule, clearData, loadState } = useAppStore();
+
+  return (
+  <div className="flex h-screen w-full bg-[#F4F7FB] dark:bg-[#0A2347] text-[#0A1828] dark:text-slate-100 overflow-hidden font-inter">
+    {/* Barra lateral retrátil com efeito Apple Glassmorphism */}
+    <Sidebar active={activeModule} onSelect={setActiveModule} />
+
+    {/* Área de Conteúdo Principal */}
+    <main className="flex-1 flex flex-col h-screen overflow-y-auto">
+      {!["home", "gbo", "planoAcao", "a3", "manual", "gantt"].includes(activeModule) && (
+        <Topbar onExportWord={handleExportWord} state={state} loadState={loadState} />
+      )}
+      <div className="p-4 md:p-6 flex-1 w-full max-w-[1600px] mx-auto">
+        {activeModule === "home" && renderHome()}
+        {activeModule !== "home" && activeModule !== "gbo" && renderPanelModules()}
+        {activeModule === "gbo" && <GBOAnalysis />}
+      </div>
+    </main>
+  </div>
+);
   
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window !== "undefined") {
