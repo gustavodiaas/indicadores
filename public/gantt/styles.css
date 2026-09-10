@@ -237,6 +237,32 @@ body {
   line-height: 1.45;
 }
 
+/* ── Scrollbar estilo Apple ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* ── Remove setas nativas de inputs numéricos ── */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
 button,
 input,
 select {
@@ -332,7 +358,7 @@ select[aria-invalid="true"] {
   width: auto;
   max-width: 1680px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 24px 96px; /* 96px = espaço para a FloatingNav do app pai */
 }
 
 .app-header {
