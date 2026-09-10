@@ -422,7 +422,7 @@ const Index = () => {
   };
 
   return (
-    <div className="flex h-screen w-full bg-[#F4F7FB] dark:bg-[#0A2347] text-[#0A1828] dark:text-slate-100 overflow-hidden font-inter print:bg-white print:h-auto print:overflow-visible">
+    <div className="relative flex flex-col h-screen w-full bg-[#F4F7FB] dark:bg-[#0A2347] text-[#0A1828] dark:text-slate-100 overflow-hidden font-inter print:bg-white print:h-auto print:overflow-visible">
       <style dangerouslySetInnerHTML={{ __html: `
         @media print { @page { size: landscape; margin: 10mm; } }
         
@@ -435,10 +435,12 @@ const Index = () => {
           -moz-appearance: textfield;
         }
       ` }} />
-      <Sidebar active={activeModule} onSelect={setActiveModule} />
-      <main className="flex-1 flex flex-col h-screen overflow-y-auto">
+      <div className="absolute left-0 top-0 z-50 h-full print:hidden">
+        <Sidebar active={activeModule} onSelect={setActiveModule} />
+      </div>
+      <main className="flex-1 flex flex-col h-screen overflow-y-auto pl-16">
         {!["home", "gbo", "planoAcao", "a3", "manual", "gantt"].includes(activeModule) && (
-          <div className="print:hidden relative z-[100] mb-2 animate-in slide-in-from-top-2 duration-300">
+          <div className="print:hidden relative z-[40] mb-2 animate-in slide-in-from-top-2 duration-300 px-4 pt-4">
             <Topbar onExportWord={handleExportWord} state={state} loadState={loadState} />
           </div>
         )}
