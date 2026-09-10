@@ -440,13 +440,23 @@ const Index = () => {
           <Sidebar active={activeModule} onSelect={setActiveModule} />
         </div>
       </div>
-      <main className="flex-1 flex flex-col h-screen overflow-y-auto pl-16">
+      <main className="flex-1 min-w-0 flex flex-col h-screen overflow-y-auto pl-16">
         {!["home", "gbo", "planoAcao", "a3", "manual", "gantt"].includes(activeModule) && (
           <div className="print:hidden relative z-30 mb-2 animate-in slide-in-from-top-2 duration-300 px-4 pt-4">
             <Topbar onExportWord={handleExportWord} state={state} loadState={loadState} />
           </div>
         )}
-        <div className={`p-4 md:p-6 flex-1 w-full max-w-[1600px] mx-auto print:shadow-none print:border-none print:rounded-none print:p-0 ${activeModule === "home" || activeModule === "a3" || activeModule === "gantt" ? "bg-transparent p-0" : "bg-white dark:bg-[#001833] rounded-xl shadow-sm border border-slate-200/50 dark:border-[#4A6FA5]/30"}`}>
+        <div
+  className={`flex-1 w-full min-w-0
+    print:shadow-none print:border-none print:rounded-none print:p-0
+    ${
+      activeModule === "home" ||
+      activeModule === "a3" ||
+      activeModule === "gantt"
+        ? "bg-transparent p-0"
+        : "bg-transparent px-5 py-5 md:px-6 md:py-6"
+    }`}
+>
           {activeModule === "home" && renderHome()}
           {activeModule !== "home" && activeModule !== "gbo" && (
             <div key={activeModule} className="animate-in fade-in slide-in-from-bottom-2 duration-500 w-full h-full">
