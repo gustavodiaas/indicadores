@@ -1633,7 +1633,6 @@ main {
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  padding-bottom: 96px; /* espaço para a FloatingNav do app pai */
   border-top: 1px solid var(--border-light);
   color: var(--text-secondary);
   font-size: 10px;
