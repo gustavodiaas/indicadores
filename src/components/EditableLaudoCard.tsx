@@ -70,14 +70,14 @@ export function EditableLaudoCard({ title, laudo, laudoWord }: EditableLaudoCard
   };
 
   return (
-    <div className="relative bg-white dark:bg-[#001833] p-6 border border-slate-100 dark:border-[#4A6FA5]/40 rounded-2xl shadow-sm">
+    <div className="relative bg-white/90 dark:bg-[#1C1C1E] p-5 border border-black/[0.06] dark:border-white/10 rounded-2xl shadow-[0_8px_24px_rgba(15,23,42,0.05)]">
       {/* Botões de ação */}
       <div className="absolute top-4 right-4 flex items-center gap-1.5">
         {override !== null && !editing && (
           <button
             onClick={handleRestore}
             title="Restaurar texto original"
-            className="p-2 rounded-lg bg-amber-50 dark:bg-amber-950/30 text-amber-500 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-950/50 transition-all shadow-sm border border-amber-100 dark:border-amber-900/40 text-[10px] font-bold uppercase tracking-wider px-2.5"
+            className="p-2 rounded-[10px] bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-500/15 transition-colors border border-amber-100 dark:border-amber-500/20 text-xs font-medium px-2.5"
           >
             Restaurar
           </button>
@@ -86,7 +86,7 @@ export function EditableLaudoCard({ title, laudo, laudoWord }: EditableLaudoCard
           <button
             onClick={handleOpenEdit}
             title="Editar texto"
-            className="p-2 rounded-lg bg-slate-50 dark:bg-[#0A2347] text-slate-400 dark:text-slate-300 hover:bg-[#FF6B00] dark:hover:bg-[#FF6B00] hover:text-white transition-all shadow-sm border border-slate-100 dark:border-[#4A6FA5]/40"
+            className="p-2 rounded-[10px] bg-black/[0.035] dark:bg-white/[0.07] text-slate-500 dark:text-slate-400 hover:bg-black/[0.07] dark:hover:bg-white/[0.12] hover:text-slate-900 dark:hover:text-white transition-colors border border-black/[0.05] dark:border-white/10"
           >
             <Pencil className="h-4 w-4" />
           </button>
@@ -95,7 +95,7 @@ export function EditableLaudoCard({ title, laudo, laudoWord }: EditableLaudoCard
           <button
             onClick={handleCopy}
             title="Copiar texto"
-            className="p-2 rounded-lg bg-slate-50 dark:bg-[#0A2347] text-slate-400 dark:text-slate-300 hover:bg-[#FF6B00] dark:hover:bg-[#FF6B00] hover:text-white transition-all shadow-sm border border-slate-100 dark:border-[#4A6FA5]/40"
+            className="p-2 rounded-[10px] bg-black/[0.035] dark:bg-white/[0.07] text-slate-500 dark:text-slate-400 hover:bg-black/[0.07] dark:hover:bg-white/[0.12] hover:text-slate-900 dark:hover:text-white transition-colors border border-black/[0.05] dark:border-white/10"
           >
             {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
           </button>
@@ -103,7 +103,7 @@ export function EditableLaudoCard({ title, laudo, laudoWord }: EditableLaudoCard
       </div>
 
       {/* Título */}
-      <h4 className="text-[10px] font-bold text-[#002D72] dark:text-[#FF6B00] uppercase mb-4 tracking-widest border-b border-slate-100 dark:border-[#4A6FA5]/30 pb-2 pr-28">
+      <h4 className="text-sm font-semibold text-slate-900 dark:text-white mb-4 tracking-tight border-b border-black/[0.06] dark:border-white/10 pb-3 pr-28">
         {title}
         {override !== null && (
           <span className="ml-2 text-amber-500 font-bold">· editado</span>
@@ -112,7 +112,7 @@ export function EditableLaudoCard({ title, laudo, laudoWord }: EditableLaudoCard
 
       {/* Modo visualização */}
       {!editing && (
-        <p className="text-[13px] text-slate-700 dark:text-slate-100 leading-relaxed text-justify whitespace-pre-wrap">
+        <p className="text-[13px] text-slate-600 dark:text-slate-300 leading-6 whitespace-pre-wrap">
           {textoExibido}
         </p>
       )}
@@ -124,19 +124,19 @@ export function EditableLaudoCard({ title, laudo, laudoWord }: EditableLaudoCard
             ref={textareaRef}
             value={draft}
             onChange={e => setDraft(e.target.value)}
-            className="w-full min-h-[140px] px-4 py-3 rounded-xl border border-slate-200 dark:border-[#4A6FA5]/50 bg-slate-50 dark:bg-[#0A2347] text-slate-800 dark:text-white text-[13px] leading-relaxed outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all resize-y"
+            className="w-full min-h-[140px] px-4 py-3 rounded-xl border border-black/[0.08] dark:border-white/10 bg-[#F5F5F7] dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-[13px] leading-relaxed outline-none focus:ring-2 focus:ring-[#FF6B00]/30 focus:border-[#FF6B00] transition-colors resize-y"
             style={{ fieldSizing: "content" } as React.CSSProperties}
           />
           <div className="flex gap-2 justify-end">
             <button
               onClick={handleCancel}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-[#0A2347] text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#002D72]/30 transition-colors border border-slate-100 dark:border-[#4A6FA5]/40 text-[11px] font-bold uppercase tracking-wider"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-[10px] bg-black/[0.04] dark:bg-white/[0.07] text-slate-600 dark:text-slate-300 hover:bg-black/[0.07] dark:hover:bg-white/[0.12] transition-colors border border-black/[0.05] dark:border-white/10 text-xs font-medium"
             >
               <X className="h-3.5 w-3.5" /> Cancelar
             </button>
             <button
               onClick={handleSave}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-[#FF6B00] text-white hover:bg-[#E55A00] transition-colors text-[11px] font-bold uppercase tracking-wider shadow-md"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-[10px] bg-[#FF6B00] text-white hover:bg-[#E85F00] transition-colors text-xs font-semibold shadow-[0_4px_12px_rgba(255,107,0,0.20)]"
             >
               <Check className="h-3.5 w-3.5" /> Salvar
             </button>

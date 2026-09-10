@@ -51,24 +51,24 @@ export function LeadTimeModule({ data, onChange }: Props) {
       <div className="w-full lg:w-[60%] flex flex-col gap-6 overflow-y-auto pr-2 pb-36">
 
         {/* Configuração */}
-        <div className="bg-white dark:bg-[#001833] p-5 rounded-xl border border-slate-200 dark:border-[#4A6FA5]/35 flex items-center justify-between">
+        <div className="bg-white dark:bg-[#1C1C1E] p-5 rounded-xl border border-slate-200 dark:border-white/10 flex items-center justify-between">
           <div className="flex flex-col">
-            <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Configuração</span>
+            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Configuração</span>
             <span className="text-sm font-semibold tracking-wide text-slate-900 dark:text-slate-100">Unidade de Tempo</span>
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="h-10 px-3 rounded-lg bg-slate-50 dark:bg-[#0A2347] text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between gap-2 outline-none hover:bg-slate-100 dark:hover:bg-[#001833] transition-all focus:ring-2 focus:ring-[#FF6B00] border border-transparent dark:border-[#4A6FA5]/30">
+              <button className="h-10 px-3 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between gap-2 outline-none hover:bg-slate-100 dark:hover:bg-[#001833] transition-all focus:ring-2 focus:ring-[#FF6B00] border border-transparent dark:border-white/10">
                 {uBase === "minutos" ? "Minutos" : uBase === "horas" ? "Horas" : "Dias"}
                 <ChevronDown className="w-4 h-4 text-slate-400" />
               </button>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent className="w-48 bg-white dark:bg-[#001833] border border-slate-200 dark:border-[#4A6FA5]/40 p-2 rounded-lg shadow-md z-[150]">
+            <DropdownMenuContent className="w-48 bg-white dark:bg-[#1C1C1E] border border-slate-200 dark:border-white/10 p-2 rounded-lg shadow-md z-[150]">
               <DropdownMenuItem
                 onClick={() => onChange({ unidadeTempo: "minutos" })}
                 className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${
-                  uBase === "minutos" ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#002D72]/30"
+                  uBase === "minutos" ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"
                 }`}
               >
                 Minutos
@@ -76,7 +76,7 @@ export function LeadTimeModule({ data, onChange }: Props) {
               <DropdownMenuItem
                 onClick={() => onChange({ unidadeTempo: "horas" })}
                 className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${
-                  uBase === "horas" ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#002D72]/30"
+                  uBase === "horas" ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"
                 }`}
               >
                 Horas
@@ -84,7 +84,7 @@ export function LeadTimeModule({ data, onChange }: Props) {
               <DropdownMenuItem
                 onClick={() => onChange({ unidadeTempo: "dias" })}
                 className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${
-                  uBase === "dias" ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#002D72]/30"
+                  uBase === "dias" ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"
                 }`}
               >
                 Dias
@@ -94,13 +94,13 @@ export function LeadTimeModule({ data, onChange }: Props) {
         </div>
 
         {/* Contexto do Laudo */}
-        <div className="bg-white dark:bg-[#001833] p-5 rounded-xl border border-slate-200 dark:border-[#4A6FA5]/35 space-y-4">
-          <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-200 dark:border-[#4A6FA5]/40 pb-2">Contexto do Laudo</h3>
+        <div className="bg-white dark:bg-[#1C1C1E] p-5 rounded-xl border border-slate-200 dark:border-white/10 space-y-4">
+          <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-200 dark:border-white/10 pb-2">Contexto do Laudo</h3>
           <div>
             <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Melhorias Implementadas</label>
             <input
               type="text"
-              className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-[#4A6FA5]/30 bg-slate-50 dark:bg-[#0A2347] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
+              className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
               placeholder="Ex: do mapeamento do fluxo de valor..."
               value={data.melhorias || ""}
               onChange={e => onChange({ melhorias: e.target.value })}
@@ -110,7 +110,7 @@ export function LeadTimeModule({ data, onChange }: Props) {
             <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Como a redução foi obtida</label>
             <input
               type="text"
-              className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-[#4A6FA5]/30 bg-slate-50 dark:bg-[#0A2347] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
+              className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
               placeholder="Ex: com a eliminação de filas..."
               value={data.reducaoObtida || ""}
               onChange={e => onChange({ reducaoObtida: e.target.value })}
@@ -120,22 +120,22 @@ export function LeadTimeModule({ data, onChange }: Props) {
 
         {/* Estados */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div className="bg-white dark:bg-[#001833] p-5 rounded-xl border border-slate-200 dark:border-[#4A6FA5]/35 space-y-4">
-            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-200 dark:border-[#4A6FA5]/40 pb-2">Estado T1</h3>
+          <div className="bg-white dark:bg-[#1C1C1E] p-5 rounded-xl border border-slate-200 dark:border-white/10 space-y-4">
+            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-200 dark:border-white/10 pb-2">Estado T1</h3>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Tempo ({u})</label>
-              <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-[#4A6FA5]/30 bg-slate-50 dark:bg-[#0A2347] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
+              <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
                 defaultValue={tI ? tI.toString().replace(".", ",") : ""}
                 onBlur={e => onChange({ leadTimeT1: parseDecimal(e.target.value), tempoT1: parseDecimal(e.target.value) })}
                 placeholder="Ex: 12" />
             </div>
           </div>
 
-          <div className="bg-white dark:bg-[#001833] p-5 rounded-xl border border-slate-200 dark:border-[#4A6FA5]/35 space-y-4">
-            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-200 dark:border-[#4A6FA5]/40 pb-2">Estado T3</h3>
+          <div className="bg-white dark:bg-[#1C1C1E] p-5 rounded-xl border border-slate-200 dark:border-white/10 space-y-4">
+            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-200 dark:border-white/10 pb-2">Estado T3</h3>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Tempo ({u})</label>
-              <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-[#4A6FA5]/30 bg-slate-50 dark:bg-[#0A2347] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
+              <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
                 defaultValue={tF ? tF.toString().replace(".", ",") : ""}
                 onBlur={e => onChange({ leadTimeT3: parseDecimal(e.target.value), tempoT3: parseDecimal(e.target.value) })}
                 placeholder="Ex: 5" />
@@ -153,7 +153,7 @@ export function LeadTimeModule({ data, onChange }: Props) {
 
           <EditableLaudoCard title="Laudo de Lead Time" laudo={laudo} />
 
-        <div className="mt-auto min-h-[250px] bg-white dark:bg-[#001833] rounded-xl p-4 border border-slate-200 dark:border-[#4A6FA5]/30">
+        <div className="mt-auto min-h-[250px] bg-white dark:bg-[#1C1C1E] rounded-xl p-4 border border-slate-200 dark:border-white/10">
           <ComparisonChart data={chartData} title={`Evolução do Lead Time (${u})`} />
         </div>
       </div>

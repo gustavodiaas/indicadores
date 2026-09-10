@@ -30,7 +30,7 @@ export function FloatingNav({ active, onSelect }: Props) {
   return (
     <div className="fixed z-[100] transition-all duration-500 print:hidden left-1/2 -translate-x-1/2 bottom-6 w-[95%] md:w-max">
       {/* Efeito Glassmorphism adaptado para os dois modos */}
-      <div className="flex flex-row items-center bg-white/60 dark:bg-[#001833]/60 backdrop-blur-xl border border-slate-200/40 dark:border-[#4A6FA5]/40 shadow-2xl transition-all duration-500 overflow-x-auto [&::-webkit-scrollbar]:hidden px-3 py-3 rounded-[3rem] gap-1.5 md:gap-2">
+      <div className="flex flex-row items-center bg-white/60 dark:bg-[#1C1C1E]/60 backdrop-blur-xl border border-slate-200/40 dark:border-white/10 shadow-2xl transition-all duration-500 overflow-x-auto [&::-webkit-scrollbar]:hidden px-3 py-3 rounded-[3rem] gap-1.5 md:gap-2">
         {navItems.map((item) => {
           const isActive = active === item.key;
           const Icon = item.icon;
@@ -42,7 +42,7 @@ export function FloatingNav({ active, onSelect }: Props) {
                 group transition-all duration-300 flex flex-col items-center justify-center flex-shrink-0 gap-1.5 h-16 w-16 rounded-[2rem]
                 ${isActive 
                   ? "bg-[#FF6B00] text-white shadow-lg scale-105" 
-                  : "text-slate-500 dark:text-slate-400 hover:text-[#002D72] dark:hover:text-[#002D72] hover:bg-[#002D72]/10 dark:hover:bg-[#002D72]/30/50"
+                  : "text-slate-500 dark:text-slate-400 hover:text-[#002D72] dark:hover:text-[#002D72] hover:bg-[#002D72]/10 dark:hover:bg-white/10/50"
                 }
               `}
             >

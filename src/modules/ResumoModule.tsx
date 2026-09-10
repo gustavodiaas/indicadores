@@ -24,14 +24,14 @@ function LocalInputField({ label, value, onChange, type = "text" }: { label: str
 
   return (
     <div className="space-y-1.5 w-full">
-      <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-300 uppercase tracking-widest pl-1">
+      <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 pl-1">
         {label}
       </label>
       <input
         type={type}
         value={displayValue}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full h-10 px-3 rounded-lg border border-slate-200 dark:border-[#4A6FA5]/40 bg-slate-50 dark:bg-[#0A2347] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
+        className="w-full h-10 px-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
       />
     </div>
   );
@@ -200,7 +200,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
       <div className="flex flex-col lg:flex-row gap-6 h-full">
         {/* COLUNA ESQUERDA: ENTRADA DE DADOS */}
         <div className="w-full lg:w-[55%] flex flex-col gap-6 overflow-y-auto pr-2 pb-36">
-          <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-[#4A6FA5]/40">
+          <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-white/10">
             <h3 className="font-bold text-[#0A1828] dark:text-slate-100 text-lg uppercase tracking-tight">Entrada de Dados</h3>
             <div className="flex items-center gap-2">
               <button
@@ -221,7 +221,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
             <LocalInputField label="Turno(s)" value={data.turnos} onChange={v => onChange({ turnos: v === "" ? 0 : Number(v) })} type="number" />
           </div>
 
-          <div className="grid grid-cols-1 gap-4 pt-4 border-t border-slate-200 dark:border-[#4A6FA5]/40">
+          <div className="grid grid-cols-1 gap-4 pt-4 border-t border-slate-200 dark:border-white/10">
             <LocalInputField label="Processo Produtivo Mapeado" value={data.processos} onChange={v => onChange({ processos: v })} />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <LocalInputField label="Método (Puxada/Empurrada)" value={data.metodo} onChange={v => onChange({ metodo: v })} />
@@ -236,7 +236,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
             <LocalInputField label="Motivação da Escolha" value={data.motivacao} onChange={v => onChange({ motivacao: v })} />
           </div>
 
-          <div className="pt-4 border-t border-slate-200 dark:border-[#4A6FA5]/40 space-y-4">
+          <div className="pt-4 border-t border-slate-200 dark:border-white/10 space-y-4">
             <h4 className="text-sm font-bold text-[#0A1828] dark:text-slate-100 uppercase">Resumo das Ações</h4>
             <div className="flex gap-2 items-end">
               <div className="flex-1"><LocalInputField label="O que será feito?" value={newAcao} onChange={setNewAcao} /></div>
@@ -244,7 +244,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
             </div>
             <div className="flex flex-col gap-2 mt-4">
               {acoesVisiveis.map(a => (
-                <div key={a.id} className="flex items-center justify-between p-4 bg-slate-50 dark:bg-[#0A2347] border border-slate-200 dark:border-[#4A6FA5]/35 rounded-xl">
+                <div key={a.id} className="flex items-center justify-between p-4 bg-slate-50 dark:bg-[#2C2C2E] border border-slate-200 dark:border-white/10 rounded-xl">
                   <span className="text-xs font-bold text-slate-700 dark:text-slate-200 truncate pr-4 flex-1">{a.what}</span>
                   <button onClick={() => handleRemoveAcao(a.id)} className="p-1.5 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors text-rose-500"><Trash2 className="h-4 w-4" /></button>
                 </div>
@@ -257,7 +257,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
         <div className="w-full lg:w-[45%] flex flex-col gap-6 overflow-y-auto pb-36">
           <EditableLaudoCard title="Descrição do Processo" laudo={descTexto} laudoWord={descTextoWord} />
 
-          <div className="relative bg-white dark:bg-[#001833] p-5 rounded-xl border border-slate-200 dark:border-[#4A6FA5]/30 flex flex-col">
+          <div className="relative bg-white dark:bg-[#1C1C1E] p-5 rounded-xl border border-slate-200 dark:border-white/10 flex flex-col">
             {/* Botões de ação */}
             <div className="absolute top-4 right-4 flex items-center gap-1.5">
               {concOverride !== null && !editingConc && (
@@ -271,7 +271,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
               {!editingConc && (
                 <button
                   onClick={() => { setConcDraft(concOverride !== null ? concOverride : laudosSistemas.textoTela); setEditingConc(true); }}
-                  className="p-2 rounded-lg bg-slate-50 dark:bg-[#0A2347] text-slate-400 dark:text-slate-300 hover:bg-[#FF6B00] dark:hover:bg-[#FF6B00] hover:text-white transition-all border border-slate-200 dark:border-[#4A6FA5]/30"
+                  className="p-2 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-slate-400 dark:text-slate-300 hover:bg-[#FF6B00] dark:hover:bg-[#FF6B00] hover:text-white transition-all border border-slate-200 dark:border-white/10"
                   title="Editar texto"
                 >
                   <Pencil className="h-4 w-4" />
@@ -286,7 +286,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
                     navigator.clipboard.writeText(textoWord);
                     toast.success("Copiado com formatação estruturada!");
                   }}
-                  className="p-2 rounded-lg bg-slate-50 dark:bg-[#0A2347] text-slate-400 dark:text-slate-300 hover:bg-[#FF6B00] dark:hover:bg-[#FF6B00] hover:text-white transition-all border border-slate-200 dark:border-[#4A6FA5]/30"
+                  className="p-2 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-slate-400 dark:text-slate-300 hover:bg-[#FF6B00] dark:hover:bg-[#FF6B00] hover:text-white transition-all border border-slate-200 dark:border-white/10"
                   title="Copiar texto"
                 >
                   <Copy className="h-4 w-4" />
@@ -294,7 +294,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
               )}
             </div>
 
-            <h4 className="text-[10px] font-bold text-[#002D72] dark:text-[#FF6B00] uppercase tracking-widest mb-4 border-b border-slate-200 dark:border-[#4A6FA5]/30 pb-2 pr-28">
+            <h4 className="text-[10px] font-bold text-[#002D72] dark:text-[#FF6B00] uppercase tracking-widest mb-4 border-b border-slate-200 dark:border-white/10 pb-2 pr-28">
               Conclusão do Projeto
               {concOverride !== null && <span className="ml-2 text-amber-500 font-bold">· editado</span>}
             </h4>
@@ -304,7 +304,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
               <div className="text-[13px] text-slate-700 dark:text-white leading-relaxed text-justify space-y-6 flex-1">
                 <div className="whitespace-pre-wrap">{concOverride !== null ? concOverride : laudosSistemas.textoTela}</div>
                 {laudosSistemas.bulletPoints.length > 0 && (
-                  <div className="bg-slate-50 dark:bg-[#0A2347] p-5 space-y-3 rounded-xl mt-4 border border-slate-200 dark:border-[#4A6FA5]/40">
+                  <div className="bg-slate-50 dark:bg-[#2C2C2E] p-5 space-y-3 rounded-xl mt-4 border border-slate-200 dark:border-white/10">
                     {laudosSistemas.bulletPoints.map((point, index) => (
                       <p key={index} className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-tight">• {point}</p>
                     ))}
@@ -320,12 +320,12 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
                   autoFocus
                   value={concDraft}
                   onChange={e => setConcDraft(e.target.value)}
-                  className="w-full min-h-[200px] px-4 py-3 rounded-xl border border-slate-200 dark:border-[#4A6FA5]/50 bg-slate-50 dark:bg-[#0A2347] text-slate-800 dark:text-white text-[13px] leading-relaxed outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all resize-y"
+                  className="w-full min-h-[200px] px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-[13px] leading-relaxed outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all resize-y"
                 />
                 <div className="flex gap-2 justify-end">
                   <button
                     onClick={() => setEditingConc(false)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-[#0A2347] text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#002D72]/30 transition-colors border border-slate-200 dark:border-[#4A6FA5]/40 text-[11px] font-bold uppercase tracking-wider"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 transition-colors border border-slate-200 dark:border-white/10 text-[11px] font-bold uppercase tracking-wider"
                   >
                     Cancelar
                   </button>
@@ -339,7 +339,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
               </div>
             )}
 
-            <div className="mt-8 pt-4 border-t border-slate-200 dark:border-[#4A6FA5]/40">
+            <div className="mt-8 pt-4 border-t border-slate-200 dark:border-white/10">
               <h4 className="text-[10px] font-bold text-[#002D72] dark:text-[#FF6B00] uppercase tracking-widest mb-3">Indicadores</h4>
               <div className="flex flex-wrap gap-2">
                 {indicadoresList.map((ind) => {
@@ -348,7 +348,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
                     <button
                       key={ind.id}
                       onClick={() => toggleIndicador(ind.id)}
-                      className={`px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all border ${isActive ? "bg-[#FF6B00] text-white border-[#FF6B00] shadow-md" : "bg-slate-50 dark:bg-[#0A2347] text-slate-500 dark:text-slate-400 border-slate-200 dark:border-[#4A6FA5]/40 hover:bg-slate-100 dark:hover:bg-[#001833]"}`}
+                      className={`px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all border ${isActive ? "bg-[#FF6B00] text-white border-[#FF6B00] shadow-md" : "bg-slate-50 dark:bg-[#2C2C2E] text-slate-500 dark:text-slate-400 border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-[#001833]"}`}
                     >
                       {ind.label}
                     </button>
@@ -366,7 +366,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
             className="absolute inset-0 bg-black/30 backdrop-blur-sm"
             onClick={() => setShowConfirmModal(false)}
           />
-          <div className="relative bg-white dark:bg-[#001833] rounded-xl shadow-lg border border-slate-200 dark:border-[#4A6FA5]/40 p-8 w-full max-w-sm flex flex-col items-center text-center gap-4 animate-in zoom-in-95 fade-in duration-200">
+          <div className="relative bg-white dark:bg-[#1C1C1E] rounded-xl shadow-lg border border-slate-200 dark:border-white/10 p-8 w-full max-w-sm flex flex-col items-center text-center gap-4 animate-in zoom-in-95 fade-in duration-200">
             <div className="w-14 h-14 bg-rose-50 dark:bg-rose-950/40 rounded-full flex items-center justify-center">
               <Trash2 className="h-7 w-7 text-rose-500" />
             </div>

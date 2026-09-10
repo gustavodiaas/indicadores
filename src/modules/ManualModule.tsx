@@ -9,7 +9,7 @@ import {
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <h3 className="text-[15px] font-black text-slate-900 dark:text-slate-100 tracking-tight mb-3 mt-8 first:mt-0">
+    <h3 className="text-[15px] font-semibold text-slate-900 dark:text-slate-100 tracking-tight mb-3 mt-8 first:mt-0">
       {children}
     </h3>
   );
@@ -21,7 +21,7 @@ function P({ children }: { children: React.ReactNode }) {
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="py-2.5 border-b border-slate-100 dark:border-[#4A6FA5]/30 last:border-b-0">
+    <div className="py-2.5 border-b border-slate-100 dark:border-white/10 last:border-b-0">
       <span className="block text-[11px] font-bold text-[#002D72] dark:text-[#FF6B00] uppercase tracking-widest mb-0.5">{label}</span>
       <span className="text-[13px] text-slate-600 dark:text-slate-300 leading-relaxed">{children}</span>
     </div>
@@ -30,7 +30,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 function FieldGroup({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-slate-50 dark:bg-[#0A2347] rounded-xl p-4 border border-slate-100 dark:border-[#4A6FA5]/30 mb-4">
+    <div className="bg-slate-50 dark:bg-[#2C2C2E] rounded-xl p-4 border border-slate-100 dark:border-white/10 mb-4">
       {children}
     </div>
   );
@@ -46,7 +46,7 @@ function Formula({ children }: { children: React.ReactNode }) {
 
 function Tip({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex gap-3 bg-[#002D72]/5 dark:bg-[#002D72]/20 border border-[#002D72]/15 dark:border-[#4A6FA5]/40 rounded-xl p-4 mb-4">
+    <div className="flex gap-3 bg-[#002D72]/5 dark:bg-white/[0.08] border border-[#002D72]/15 dark:border-white/10 rounded-xl p-4 mb-4">
       <Info className="w-4 h-4 text-[#FF6B00] shrink-0 mt-0.5" />
       <span className="text-[12.5px] text-slate-700 dark:text-slate-300 leading-relaxed">{children}</span>
     </div>
@@ -431,7 +431,7 @@ export function ManualModule() {
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl text-left text-[12px] font-bold uppercase tracking-wider transition-all ${
                   isActive
                     ? "bg-[#FF6B00] text-white shadow-md"
-                    : "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-[#002D72]/30/60"
+                    : "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/10/60"
                 }`}
               >
                 <Icon className="w-4 h-4 shrink-0" />

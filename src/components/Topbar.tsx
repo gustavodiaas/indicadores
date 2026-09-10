@@ -75,39 +75,39 @@ export function Topbar({ onExportWord, state, loadState }: Props) {
   };
 
   return (
-    <div className="w-full z-[100] print:hidden mb-6 shrink-0">
+    <div className="w-full z-[100] print:hidden mb-4 shrink-0">
       
-      <header className="w-full h-20 bg-white dark:bg-[#001833] border-b border-slate-100 dark:border-[#4A6FA5]/35 px-10 flex items-center justify-between transition-all duration-500">
+      <header className="w-full min-h-16 bg-white/75 dark:bg-[#1C1C1E]/[0.78] backdrop-blur-2xl border border-black/[0.06] dark:border-white/10 px-5 py-3 flex flex-wrap items-center justify-between gap-3 rounded-2xl shadow-[0_8px_30px_rgba(15,23,42,0.06)] dark:shadow-[0_12px_36px_rgba(0,0,0,0.22)] transition-colors duration-300">
         
-        <div className="flex items-center gap-4">
-          <div className="bg-[#FF6B00] p-2 rounded-xl shadow-sm">
+        <div className="flex items-center gap-3">
+          <div className="bg-[#FF6B00] p-2 rounded-[10px] shadow-[0_4px_12px_rgba(255,107,0,0.24)]">
             <BarChart3 className="h-5 w-5 text-white" />
           </div>
-          <h1 className="text-[11px] font-black text-slate-800 dark:text-slate-200 uppercase tracking-[0.25em] leading-none">
+          <h1 className="text-[15px] font-semibold text-slate-900 dark:text-slate-100 tracking-tight leading-none">
             Central de Indicadores
           </h1>
         </div>
 
-        <div className="flex items-center gap-6">
+        <div className="flex flex-wrap items-center gap-2">
           
           <div className="relative group inline-block">
-            <div className="flex items-center gap-2 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 hover:text-[#002D72] dark:hover:text-[#002D72] cursor-help transition-colors rounded-full">
+            <div className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white cursor-help transition-colors rounded-[10px] hover:bg-black/[0.04] dark:hover:bg-white/10">
               <ShieldAlert className="w-4 h-4" />
               Privacidade
             </div>
             
-            <div className="absolute top-full right-0 mt-4 w-[340px] p-6 bg-[#001022] dark:bg-[#000814] text-slate-300 dark:text-slate-300 text-[11px] rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 border border-[#002D72]/40 dark:border-[#4A6FA5]/40 z-[110] pointer-events-none group-hover:pointer-events-auto">
-              <h4 className="font-bold text-white mb-3 uppercase tracking-widest text-[10px] border-b border-white/10 pb-2 text-left">Aviso de Privacidade</h4>
+            <div className="absolute top-full right-0 mt-3 w-[340px] p-5 bg-white/95 dark:bg-[#2C2C2E]/95 backdrop-blur-2xl text-slate-600 dark:text-slate-300 text-xs rounded-2xl shadow-[0_18px_50px_rgba(0,0,0,0.16)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 border border-black/[0.06] dark:border-white/10 z-[110] pointer-events-none group-hover:pointer-events-auto">
+              <h4 className="font-semibold text-slate-900 dark:text-white mb-3 text-sm border-b border-black/[0.06] dark:border-white/10 pb-2 text-left">Aviso de privacidade</h4>
               
               <div className="text-justify space-y-3 font-normal normal-case">
                 <p className="leading-relaxed">Esta aplicação realiza o processamento de dados de forma estritamente local. Os arquivos de exportação são lidos apenas na memória do seu navegador/computador para fins de cálculo e visualização.</p>
-                <p className="leading-relaxed text-[#002D72] font-bold">Nenhum dado pessoal ou empresarial é enviado, armazenado ou compartilhado com servidores externos.</p>
+                <p className="leading-relaxed text-[#FF6B00] font-semibold">Nenhum dado pessoal ou empresarial é enviado, armazenado ou compartilhado com servidores externos.</p>
                 <p className="leading-relaxed">Ao exportar arquivos, os dados são gerados diretamente no seu dispositivo. Você é o único responsável pela segurança e custódia dos documentos originais e gerados.</p>
               </div>
             </div>
           </div>
 
-          <div className="h-6 w-px bg-slate-100 dark:bg-[#002D72]/20" />
+          <div className="hidden lg:block h-6 w-px bg-black/[0.06] dark:bg-white/10 mx-1" />
 
           <input
             type="file"
@@ -119,7 +119,7 @@ export function Topbar({ onExportWord, state, loadState }: Props) {
 
           <button
             onClick={handleExportLean}
-            className="flex items-center gap-2 px-6 py-3 text-[10px] font-bold bg-slate-100 dark:bg-[#002D72]/20 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-[#002D72]/50 rounded-xl transition-all shadow-sm active:scale-95 uppercase tracking-widest"
+            className="flex items-center gap-2 px-4 py-2.5 text-xs font-medium bg-black/[0.04] dark:bg-white/[0.08] text-slate-700 dark:text-slate-200 hover:bg-black/[0.07] dark:hover:bg-white/[0.13] rounded-[10px] transition-colors active:scale-[0.98]"
           >
             <Download className="h-4 w-4" />
             Exportar Dados
@@ -127,7 +127,7 @@ export function Topbar({ onExportWord, state, loadState }: Props) {
 
           <button 
             onClick={handleImportClick} 
-            className="flex items-center gap-2 px-6 py-3 text-[10px] font-bold bg-slate-100 dark:bg-[#002D72]/20 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-[#002D72]/50 rounded-xl transition-all shadow-sm active:scale-95 uppercase tracking-widest"
+            className="flex items-center gap-2 px-4 py-2.5 text-xs font-medium bg-black/[0.04] dark:bg-white/[0.08] text-slate-700 dark:text-slate-200 hover:bg-black/[0.07] dark:hover:bg-white/[0.13] rounded-[10px] transition-colors active:scale-[0.98]"
           >
             <Upload className="h-4 w-4" /> 
             Importar Dados
@@ -135,7 +135,7 @@ export function Topbar({ onExportWord, state, loadState }: Props) {
 
           <button 
             onClick={onExportWord} 
-            className="flex items-center gap-2 px-8 py-3 text-[10px] font-bold bg-[#002D72] dark:bg-[#FF6B00] text-white dark:text-white hover:bg-[#E55A00] dark:hover:bg-[#E55A00] rounded-xl transition-all shadow-md active:scale-95 uppercase tracking-widest"
+            className="flex items-center gap-2 px-5 py-2.5 text-xs font-semibold bg-[#FF6B00] text-white hover:bg-[#E85F00] rounded-[10px] transition-colors shadow-[0_4px_14px_rgba(255,107,0,0.24)] active:scale-[0.98]"
           >
             <FileText className="h-4 w-4" /> 
             Baixar Word

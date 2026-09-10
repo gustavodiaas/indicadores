@@ -36,7 +36,7 @@ export function InputField({ label, value, onChange, type = "text", suffix, plac
 
   return (
     <div className="flex flex-col gap-1.5 w-full">
-      <Label className="text-[10px] font-bold text-slate-500 dark:text-slate-300 uppercase tracking-widest pl-1">
+      <Label className="text-xs font-medium text-slate-500 dark:text-slate-400 pl-0.5">
         {label}
       </Label>
       <div className="relative flex items-center">
@@ -47,13 +47,13 @@ export function InputField({ label, value, onChange, type = "text", suffix, plac
           onChange={handleChange}
           placeholder={placeholder}
           className={`
-            h-12 rounded-xl text-sm transition-all duration-300
-            bg-slate-50 dark:bg-[#0A2347]
-            border border-slate-200 dark:border-[#4A6FA5]/50
+            h-10 rounded-[10px] px-3 text-sm transition-colors duration-200
+            bg-[#F5F5F7] dark:bg-[#2C2C2E]
+            border border-black/[0.07] dark:border-white/10
             text-slate-800 dark:text-white
             placeholder:text-slate-400 dark:placeholder:text-slate-500
-            focus:bg-white dark:focus:bg-[#0D2B57]
-            focus:ring-2 focus:ring-[#FF6B00] focus:border-[#FF6B00] focus:shadow-md
+            focus:bg-white dark:focus:bg-[#333336]
+            focus:ring-2 focus:ring-[#FF6B00]/25 focus:border-[#FF6B00]
             ${suffix ? 'pr-12' : ''}
           `}
         />

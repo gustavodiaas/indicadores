@@ -60,44 +60,55 @@
     @apply border-border;
   }
 
+  html {
+    background: #F5F5F7;
+  }
+
+  html.dark {
+    background: #0B0B0F;
+  }
+
   body {
-  @apply bg-[#F4F7FB] dark:bg-[#001022] text-[#0A1828] dark:text-slate-100 antialiased;
+    @apply bg-[#F5F5F7] dark:bg-[#0B0B0F] text-[#1D1D1F] dark:text-[#F5F5F7] antialiased;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    letter-spacing: -0.01em;
+  }
 
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
-  font-size: 14px;
-  line-height: 1.45;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-}
-   button,
-input,
-select,
-textarea {
-  font: inherit;
-}
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
 
-button,
-select {
-  cursor: pointer;
-}
+  button,
+  select {
+    cursor: pointer;
+  }
 
-input,
-select,
-textarea {
-  border-radius: 8px;
-}
-   h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  letter-spacing: -0.02em;
-  font-weight: 700;
-}
-   ::selection {
-  background: rgba(0, 122, 255, 0.18);
-}
+  input,
+  select,
+  textarea {
+    border-radius: 10px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    letter-spacing: -0.025em;
+    font-weight: 600;
+  }
+
+  ::selection {
+    background: rgba(255, 107, 0, 0.2);
+  }
 }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }

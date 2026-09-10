@@ -92,7 +92,7 @@ export function DraggableOperationsList({
             onDragStart={() => handleDragStart(index)}
             onDragOver={(e) => handleDragOver(e, index)}
             onDragEnd={handleDragEnd}
-            className={`flex items-center gap-3 p-3 bg-white dark:bg-[#001833] border border-slate-100 dark:border-[#4A6FA5]/40 rounded-lg transition-all ${
+            className={`flex items-center gap-3 p-3 bg-white dark:bg-[#1C1C1E] border border-slate-100 dark:border-white/10 rounded-lg transition-all ${
               draggedIndex === index ? "opacity-50 border-[#002D72]" : "hover:border-slate-300 dark:hover:border-slate-600"
             }`}
           >
@@ -106,7 +106,7 @@ export function DraggableOperationsList({
                   <Input 
                     value={editName} 
                     onChange={(e) => setEditName(e.target.value)} 
-                    className="h-8 text-sm bg-white dark:bg-[#0A2347] border-slate-200 dark:border-[#4A6FA5]/40 text-slate-800 dark:text-slate-100" 
+                    className="h-8 text-sm bg-white dark:bg-[#2C2C2E] border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-100" 
                     placeholder="Nome"
                     autoFocus
                   />
@@ -116,7 +116,7 @@ export function DraggableOperationsList({
                     min="0"
                     value={editTime} 
                     onChange={(e) => setEditTime(e.target.value)} 
-                    className="h-8 w-20 text-sm bg-white dark:bg-[#0A2347] border-slate-200 dark:border-[#4A6FA5]/40 text-slate-800 dark:text-slate-100" 
+                    className="h-8 w-20 text-sm bg-white dark:bg-[#2C2C2E] border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-100" 
                     placeholder="Tempo"
                     onKeyDown={(e) => e.key === 'Enter' && saveEditing(op.id)}
                   />

@@ -57,20 +57,20 @@ function CustomDatePicker({ label, value, onChange }: { label: string; value: st
       <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">{label}</label>
       <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>
-          <button type="button" className="w-full h-10 px-3 rounded-lg bg-slate-50 dark:bg-[#0A2347] text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between outline-none hover:bg-slate-100 dark:hover:bg-[#001833] transition-all focus:bg-white dark:focus:bg-[#0D2B57] focus:ring-2 focus:ring-[#FF6B00] border border-transparent dark:border-[#4A6FA5]/40 text-left">
+          <button type="button" className="w-full h-10 px-3 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between outline-none hover:bg-slate-100 dark:hover:bg-[#001833] transition-all focus:bg-white dark:focus:bg-[#0D2B57] focus:ring-2 focus:ring-[#FF6B00] border border-transparent dark:border-white/10 text-left">
             <span className={value ? "text-slate-700 dark:text-slate-200" : "text-slate-400 dark:text-slate-500"}>{formatDisplay(value)}</span>
             <CalendarIcon className="w-4 h-4 text-slate-400 dark:text-slate-600 shrink-0 ml-2" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align="start"
-          className="p-4 bg-white dark:bg-[#001833] border border-slate-200 dark:border-[#4A6FA5]/40 rounded-lg shadow-md z-[150] w-72"
+          className="p-4 bg-white dark:bg-[#1C1C1E] border border-slate-200 dark:border-white/10 rounded-lg shadow-md z-[150] w-72"
         >
           <div className="flex items-center justify-between mb-4">
             <button
               type="button"
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); if (currentMonth === 0) { setCurrentMonth(11); setCurrentYear(y => y - 1); } else { setCurrentMonth(m => m - 1); } }}
-              className="p-1.5 hover:bg-slate-50 dark:hover:bg-[#002D72]/30 rounded-lg text-slate-600 dark:text-slate-300 transition-all"
+              className="p-1.5 hover:bg-slate-50 dark:hover:bg-white/10 rounded-lg text-slate-600 dark:text-slate-300 transition-all"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -80,7 +80,7 @@ function CustomDatePicker({ label, value, onChange }: { label: string; value: st
             <button
               type="button"
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); if (currentMonth === 11) { setCurrentMonth(0); setCurrentYear(y => y + 1); } else { setCurrentMonth(m => m + 1); } }}
-              className="p-1.5 hover:bg-slate-50 dark:hover:bg-[#002D72]/30 rounded-lg text-slate-600 dark:text-slate-300 transition-all"
+              className="p-1.5 hover:bg-slate-50 dark:hover:bg-white/10 rounded-lg text-slate-600 dark:text-slate-300 transition-all"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -101,7 +101,7 @@ function CustomDatePicker({ label, value, onChange }: { label: string; value: st
                   className={`h-8 w-8 text-xs font-semibold rounded-lg flex items-center justify-center transition-all ${
                     isSelected
                       ? "bg-[#FF6B00] text-white font-bold shadow-md shadow-[#FF6B00]/20"
-                      : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#002D72]/30"
+                      : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"
                   }`}
                 >
                   {day}
@@ -357,7 +357,7 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
   return (
     <div className="flex flex-col gap-6 h-full pb-36 animate-in fade-in duration-500 overflow-y-auto pr-2">
 
-      <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#4A6FA5]/40 pb-4">
+      <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-4">
         <div>
           <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 tracking-tight flex items-center gap-2">
             <CheckCircle className="h-6 w-6 text-[#002D72]" /> PLANO DE AÇÃO 5W2H
@@ -375,14 +375,14 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
           />
           <button
             onClick={() => document.getElementById('excel-5w2h-import')?.click()}
-            className="flex items-center gap-2 px-5 py-2.5 bg-[#002D72]/5 dark:bg-[#002D72]/20 text-[#002D72] dark:text-slate-200 border border-[#002D72]/15 dark:border-[#4A6FA5]/40 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-[#002D72]/10 dark:hover:bg-[#002D72]/30 transition-all active:scale-95"
+            className="flex items-center gap-2 px-5 py-2.5 bg-[#002D72]/5 dark:bg-white/[0.08] text-[#002D72] dark:text-slate-200 border border-[#002D72]/15 dark:border-white/10 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-[#002D72]/10 dark:hover:bg-white/10 transition-all active:scale-95"
           >
             <Upload className="h-4 w-4" /> Importar
           </button>
 
           <button
             onClick={handleDownloadModelo}
-            className="flex items-center gap-2 px-5 py-2.5 bg-slate-100 dark:bg-[#002D72]/20 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-[#4A6FA5]/40 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-[#002D72]/40 transition-all active:scale-95"
+            className="flex items-center gap-2 px-5 py-2.5 bg-slate-100 dark:bg-white/[0.08] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-white/10 transition-all active:scale-95"
           >
             <FileText className="h-4 w-4" /> Baixar Modelo
           </button>
@@ -396,8 +396,8 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
         </div>
       </div>
 
-      <div className="bg-white dark:bg-[#001833] p-5 rounded-xl border border-slate-200 dark:border-[#4A6FA5]/35">
-        <h3 className="font-bold text-slate-800 dark:text-slate-100 uppercase text-[11px] tracking-widest mb-4 border-b border-slate-200 dark:border-[#4A6FA5]/40 pb-2">Metadados do Projeto</h3>
+      <div className="bg-white dark:bg-[#1C1C1E] p-5 rounded-xl border border-slate-200 dark:border-white/10">
+        <h3 className="font-bold text-slate-800 dark:text-slate-100 uppercase text-[11px] tracking-widest mb-4 border-b border-slate-200 dark:border-white/10 pb-2">Metadados do Projeto</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <CustomDatePicker label="Data de Criação" value={data.metadata.dataCriacao} onChange={v => updateMeta("dataCriacao", v)} />
           <InputField label="Responsável (Consultor/Empresário)" value={data.metadata.respCriacao} onChange={v => updateMeta("respCriacao", v)} />
@@ -410,7 +410,7 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
         </div>
       </div>
 
-      <div className="bg-white dark:bg-[#001833] p-5 rounded-xl border border-slate-200 dark:border-[#4A6FA5]/35 flex-1">
+      <div className="bg-white dark:bg-[#1C1C1E] p-5 rounded-xl border border-slate-200 dark:border-white/10 flex-1">
         <div className="flex flex-col gap-4 mb-6">
           <h3 className="font-bold text-slate-800 dark:text-slate-100 uppercase text-[11px] tracking-widest flex items-center gap-2">
             Execução de Tarefas
@@ -431,18 +431,18 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
         </div>
 
         {data.acoes.length === 0 ? (
-           <div className="flex flex-col items-center justify-center p-12 text-slate-400 dark:text-slate-600 border-2 border-dashed border-slate-200 dark:border-[#4A6FA5]/40 rounded-xl bg-slate-50 dark:bg-[#0A2347]">
+           <div className="flex flex-col items-center justify-center p-12 text-slate-400 dark:text-slate-600 border-2 border-dashed border-slate-200 dark:border-white/10 rounded-xl bg-slate-50 dark:bg-[#2C2C2E]">
              <CheckCircle className="h-12 w-12 mb-4 text-slate-300 dark:text-slate-700" />
              <p className="text-sm font-bold text-slate-600 dark:text-slate-300">Nenhuma ação vinculada.</p>
            </div>
         ) : (
           <div className="flex flex-col gap-3">
             {data.acoes.map(a => (
-              // FIX: card wrapper precisa de dark:bg-[#001833] explícito
-              <div key={a.id} className="border border-slate-200 dark:border-[#4A6FA5]/40 rounded-xl bg-white dark:bg-[#001833] overflow-hidden transition-all duration-300">
+              // FIX: card wrapper precisa de dark:bg-[#1C1C1E] explícito
+              <div key={a.id} className="border border-slate-200 dark:border-white/10 rounded-xl bg-white dark:bg-[#1C1C1E] overflow-hidden transition-all duration-300">
                 {/* FIX: header do card — bg-white sem dark estava causando manchas brancas */}
                 <div
-                  className="flex items-center justify-between p-4 bg-white dark:bg-[#001833] hover:bg-slate-50 dark:hover:bg-[#002D72]/30/50 cursor-pointer select-none transition-colors border-b border-slate-200 dark:border-[#4A6FA5]/40"
+                  className="flex items-center justify-between p-4 bg-white dark:bg-[#1C1C1E] hover:bg-slate-50 dark:hover:bg-white/10/50 cursor-pointer select-none transition-colors border-b border-slate-200 dark:border-white/10"
                   onClick={() => setExpandedId(expandedId === a.id ? null : a.id)}
                 >
                   <div className="flex flex-col flex-1 pr-4">
@@ -457,7 +457,7 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
 
                 {expandedId === a.id && (
                   // FIX: painel expandido — bg-slate-50 sem dark estava completamente branco
-                  <div className="p-5 grid grid-cols-2 md:grid-cols-4 gap-4 bg-white dark:bg-[#001833] border-t border-slate-200 dark:border-[#4A6FA5]/40 animate-in fade-in slide-in-from-top-2 duration-300">
+                  <div className="p-5 grid grid-cols-2 md:grid-cols-4 gap-4 bg-white dark:bg-[#1C1C1E] border-t border-slate-200 dark:border-white/10 animate-in fade-in slide-in-from-top-2 duration-300">
                     <div className="md:col-span-4"><InputField label="O que será feito? (What)" value={a.what} onChange={v => updateAcao(a.id, "what", v)} /></div>
                     <div className="md:col-span-2"><InputField label="Como? (How)" value={a.how} onChange={v => updateAcao(a.id, "how", v)} /></div>
                     <InputField label="Por que? (Why)" value={a.why} onChange={v => updateAcao(a.id, "why", v)} />
@@ -469,18 +469,18 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
                     <InputField label="% Completo" value={a.percent} onChange={v => updateAcao(a.id, "percent", Number(v) || 0)} type="number" />
                     <div className="md:col-span-2"><InputField label="Observação" value={a.obs} onChange={v => updateAcao(a.id, "obs", v)} /></div>
                     <div>
-                      <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-300 uppercase tracking-widest mb-1.5 pl-1">Status</label>
+                      <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5 pl-1">Status</label>
                       <DropdownMenu>
-                        {/* FIX: trigger do status — bg-white sem dark:bg-[#001833] */}
+                        {/* FIX: trigger do status — bg-white sem dark:bg-[#1C1C1E] */}
                         <DropdownMenuTrigger asChild>
-                          <button className="w-full h-10 px-3 rounded-lg bg-white dark:bg-[#001833] border border-slate-200 dark:border-[#4A6FA5]/40 text-sm font-medium text-slate-700 dark:text-slate-200 flex items-center justify-between outline-none hover:bg-slate-50 dark:hover:bg-[#002D72]/30 transition-all focus:ring-2 focus:ring-[#FF6B00]">
+                          <button className="w-full h-10 px-3 rounded-lg bg-white dark:bg-[#1C1C1E] border border-slate-200 dark:border-white/10 text-sm font-medium text-slate-700 dark:text-slate-200 flex items-center justify-between outline-none hover:bg-slate-50 dark:hover:bg-white/10 transition-all focus:ring-2 focus:ring-[#FF6B00]">
                             {a.status === "INICIADO" ? "Iniciado" : a.status === "EM ANDAMENTO" ? "Em Andamento" : a.status === "REJEITADO" ? "Rejeitado" : a.status === "CONCLUIDO" ? "Concluído" : "Não Iniciado"}
                             <ChevronDown className="w-4 h-4 text-slate-400 dark:text-slate-500" />
                           </button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white dark:bg-[#001833] border border-slate-200 dark:border-[#4A6FA5]/40 p-2 rounded-lg shadow-md z-[150]">
+                        <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white dark:bg-[#1C1C1E] border border-slate-200 dark:border-white/10 p-2 rounded-lg shadow-md z-[150]">
                           {["NÃO INICIADO", "INICIADO", "EM ANDAMENTO", "REJEITADO", "CONCLUIDO"].map(s => (
-                            <DropdownMenuItem key={s} onClick={() => updateAcao(a.id, "status", s)} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${a.status === s ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#002D72]/30"}`}>
+                            <DropdownMenuItem key={s} onClick={() => updateAcao(a.id, "status", s)} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${a.status === s ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>
                               {s.charAt(0) + s.slice(1).toLowerCase()}
                             </DropdownMenuItem>
                           ))}
