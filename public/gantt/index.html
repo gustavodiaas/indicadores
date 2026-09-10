@@ -15,17 +15,20 @@
 <script src="/gantt/mfv-export.js" defer></script>
 <script src="/gantt/app.js" defer></script>
   </head>
-  <script>
-  const savedTheme = localStorage.getItem("app-theme");
-  const isDark = savedTheme === "dark" || (savedTheme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
-  if (isDark) {
-    document.documentElement.style.backgroundColor = "#0A2347";
-    document.documentElement.style.color = "#f1f5f9";
-    document.addEventListener("DOMContentLoaded", () => {
-      document.body.style.backgroundColor = "#0A2347";
-      document.body.style.color = "#f1f5f9";
-    });
+ <script>
+  function syncTheme() {
+    try {
+      const isDark = window.parent.document.documentElement.classList.contains('dark');
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    } catch (e) {}
   }
+  syncTheme();
+  const observer = new MutationObserver(syncTheme);
+  observer.observe(window.parent.document.documentElement, { attributes: true, attributeFilter: ['class'] });
 </script>
   <body>
     <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
