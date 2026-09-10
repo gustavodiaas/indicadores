@@ -3238,18 +3238,21 @@ kbd {
     font-size: 7.5pt;
     /* Correção nativa para o modo escuro no iframe */
 @media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
+  body, .app-shell {
+    background-color: #0A2347 !important;
+    color: #f1f5f9 !important;
   }
-}
+  
+  .app-header, .context-panel, .breaks-panel, .editor-panel, .comparison-panel, .video-workspace, .timeline-panel, .kpi-card, .activity-form {
+    background-color: #001833 !important;
+    color: #f1f5f9 !important;
+    border-color: rgba(74, 111, 165, 0.3) !important;
+  }
 
-html[data-theme="dark"], body.dark-mode, .dark-theme {
-  background-color: #0A2347 !important;
-  color: #f1f5f9 !important;
-}
-
-/* Se o script ler a classe ou atributo do tema */
-.app-shell {
-  background-color: inherit;
+  input, select, textarea {
+    background-color: #0A2347 !important;
+    color: #f1f5f9 !important;
+    border-color: rgba(74, 111, 165, 0.4) !important;
+  }
 }
      
