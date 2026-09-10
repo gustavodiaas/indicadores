@@ -17,9 +17,14 @@
   </head>
   <script>
   const savedTheme = localStorage.getItem("app-theme");
-  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  if (savedTheme === "dark" || (savedTheme === "system" && prefersDark)) {
-    document.documentElement.style.colorScheme = "dark";
+  const isDark = savedTheme === "dark" || (savedTheme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  if (isDark) {
+    document.documentElement.style.backgroundColor = "#0A2347";
+    document.documentElement.style.color = "#f1f5f9";
+    document.addEventListener("DOMContentLoaded", () => {
+      document.body.style.backgroundColor = "#0A2347";
+      document.body.style.color = "#f1f5f9";
+    });
   }
 </script>
   <body>
