@@ -3254,5 +3254,30 @@ kbd {
     color: #f1f5f9 !important;
     border-color: rgba(74, 111, 165, 0.4) !important;
   }
+html.dark body, html.dark .app-shell {
+  background-color: #0A2347 !important;
+  color: #f1f5f9 !important;
+}
+
+html.dark .app-header, 
+html.dark .context-panel, 
+html.dark .breaks-panel, 
+html.dark .editor-panel, 
+html.dark .comparison-panel, 
+html.dark .video-workspace, 
+html.dark .timeline-panel, 
+html.dark .kpi-card, 
+html.dark .activity-form {
+  background-color: #001833 !important;
+  color: #f1f5f9 !important;
+  border-color: rgba(74, 111, 165, 0.3) !important;
+}
+
+html.dark input, 
+html.dark select, 
+html.dark textarea {
+  background-color: #0A2347 !important;
+  color: #f1f5f9 !important;
+  border-color: rgba(74, 111, 165, 0.4) !important;
 }
      
