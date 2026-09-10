@@ -61,9 +61,43 @@
   }
 
   body {
-    @apply bg-[#F4F7FB] dark:bg-[#001022] text-[#0A1828] dark:text-slate-100 antialiased;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
-  }
+  @apply bg-[#F4F7FB] dark:bg-[#001022] text-[#0A1828] dark:text-slate-100 antialiased;
+
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+  font-size: 14px;
+  line-height: 1.45;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+   button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+select {
+  cursor: pointer;
+}
+
+input,
+select,
+textarea {
+  border-radius: 8px;
+}
+   h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+   ::selection {
+  background: rgba(0, 122, 255, 0.18);
+}
 }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
