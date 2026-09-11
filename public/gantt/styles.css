@@ -701,7 +701,7 @@ select[aria-invalid="true"] {
 
 .action-menu {
   position: absolute;
-  z-index: 50;
+  z-index: 210;
   top: calc(100% + 8px);
   right: 0;
   width: 220px;
@@ -3718,6 +3718,8 @@ html.dark .app-shell {
 
 .app-header,
 html.dark .app-header {
+  position: relative;
+  z-index: 200;
   min-height: 64px;
   padding: 0 18px;
   border: 1px solid var(--border-light) !important;
