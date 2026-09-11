@@ -224,6 +224,7 @@
   let activeVideoId = null;
   let videoResumeSeconds = 0;
   let videoDestination = "current";
+  const siteSelectControllers = new Map();
   let videoPositions = loadVideoPositions();
   let state = loadState();
 
@@ -289,6 +290,7 @@
   function init() {
     // Antes de qualquer render, para a tela não piscar no tema errado.
     syncThemeWithHost();
+    enhanceSiteSelects();
     bindEvents();
     syncGlobalInputs();
     renderVideoLibrary();
@@ -1454,7 +1456,7 @@
       const name = document.createElement("span");
       name.className = "video-item-name";
       name.textContent = entry.name;
-      name.title = entry.name;
+      name.dataset.siteTooltip = entry.name;
       const meta = document.createElement("span");
       meta.className = "video-item-meta";
       const time = document.createElement("b");
@@ -1467,7 +1469,7 @@
       remove.type = "button";
       remove.className = "row-action delete";
       remove.dataset.videoAction = "remove";
-      remove.title = `Remover ${entry.name} da lista`;
+      remove.dataset.siteTooltip = `Remover ${entry.name} da lista`;
       remove.setAttribute("aria-label", `Remover ${entry.name} da lista`);
       remove.innerHTML = ICONS.delete;
 
@@ -2104,6 +2106,7 @@
     elements.activityDuration.value = "00:01:00";
     elements.activityEnd.value = formatTime(defaultStart + 60);
     elements.activityClassification.value = "agrega";
+    syncSiteSelect(elements.activityClassification);
     renderPendingVideoSource();
     clearFormErrors();
   }
@@ -2156,6 +2159,7 @@
     elements.activityDuration.value = formatTime(activity.durationSeconds);
     elements.activityEnd.value = formatTime(activity.startSeconds + activity.durationSeconds);
     elements.activityClassification.value = activity.classification;
+    syncSiteSelect(elements.activityClassification);
     pendingVideoSource = activity.videoSource ? cloneData(activity.videoSource) : null;
     renderPendingVideoSource();
     clearFormErrors();
@@ -2602,7 +2606,7 @@
       remove.dataset.breakAction = "delete";
       remove.innerHTML = ICONS.delete;
       remove.setAttribute("aria-label", `Remover intervalo ${item.label}`);
-      remove.title = "Remover intervalo";
+      remove.dataset.siteTooltip = "Remover intervalo";
 
         row.append(nameField, startField, endField, duration, remove);
         elements.breakList.appendChild(row);
@@ -2613,7 +2617,7 @@
     elements.breakDurationSummary.textContent = formatTime(plan.breakSeconds);
     elements.availableShiftSummary.textContent = formatTime(plan.availableSeconds);
     elements.breakDurationSummary.closest("span").classList.toggle("has-overlap", plan.hasOverlappingBreaks);
-    elements.breakDurationSummary.title = plan.hasOverlappingBreaks
+    elements.breakDurationSummary.dataset.siteTooltip = plan.hasOverlappingBreaks
       ? "Existem intervalos sobrepostos; o período coincidente é descontado apenas uma vez."
       : "Soma dos intervalos programados.";
   }
@@ -2649,6 +2653,7 @@
     if (elements.mfvExportButton) elements.mfvExportButton.hidden = !scenarioView;
     elements.copyScenarioButton.hidden = !scenarioView;
     elements.videoDestination.value = videoDestination;
+    syncSiteSelect(elements.videoDestination);
   }
 
   function renderEditor() {
@@ -2686,7 +2691,7 @@
       const order = document.createElement("div");
       order.className = "activity-order";
       order.textContent = String(index + 1).padStart(2, "0");
-      order.title = "Arraste para reordenar a atividade; os horários não serão alterados";
+      order.dataset.siteTooltip = "Arraste para reordenar a atividade; os horários não serão alterados";
       order.setAttribute("aria-hidden", "true");
 
       const main = document.createElement("div");
@@ -2696,7 +2701,7 @@
       const name = document.createElement("span");
       name.className = "activity-name";
       name.textContent = activity.description;
-      name.title = activity.description;
+      name.dataset.siteTooltip = activity.description;
       const classChip = document.createElement("span");
       classChip.className = `class-chip ${activity.classification}`;
       classChip.textContent = CLASSIFICATIONS[activity.classification].label;
@@ -2725,7 +2730,7 @@
           activity.videoSource.exactDurationSeconds ??
             roundToMilliseconds(activity.videoSource.endSeconds - activity.videoSource.startSeconds),
         )}`;
-        videoChip.title = videoSourceDescription;
+        videoChip.dataset.siteTooltip = videoSourceDescription;
         videoChip.setAttribute("aria-label", `${videoChip.textContent}. ${videoSourceDescription}`);
         meta.appendChild(videoChip);
       }
@@ -2766,7 +2771,7 @@
     button.type = "button";
     button.dataset.action = action;
     button.setAttribute("aria-label", label);
-    button.title = label;
+    button.dataset.siteTooltip = label;
     button.disabled = disabled;
     button.innerHTML = ICONS[action];
     return button;
@@ -3175,7 +3180,7 @@
         value.textContent = `${formatTime(metricsByScenario.current.classSeconds[key])} → ${formatTime(
           metricsByScenario.proposed.classSeconds[key],
         )}`;
-        value.title = `Atual ${formatTime(metricsByScenario.current.classSeconds[key])}; Proposto ${formatTime(
+        value.dataset.siteTooltip = `Atual ${formatTime(metricsByScenario.current.classSeconds[key])}; Proposto ${formatTime(
           metricsByScenario.proposed.classSeconds[key],
         )}`;
       } else {
@@ -3775,6 +3780,108 @@
     };
 
     return { lunchSeconds: unionSeconds(groups.lunch), pauseSeconds: unionSeconds(groups.pause) };
+  }
+
+  function syncSiteSelect(select) {
+    const controller = siteSelectControllers.get(select);
+    if (!controller) return;
+    const selected = select.options[select.selectedIndex];
+    controller.buttonText.textContent = selected ? selected.textContent : "Selecionar";
+    controller.options.forEach((optionButton) => {
+      const active = optionButton.dataset.value === select.value;
+      optionButton.classList.toggle("is-selected", active);
+      optionButton.setAttribute("aria-selected", String(active));
+    });
+  }
+
+  function closeSiteSelects(exceptSelect = null) {
+    siteSelectControllers.forEach((controller, select) => {
+      if (select === exceptSelect) return;
+      controller.root.classList.remove("is-open");
+      controller.button.setAttribute("aria-expanded", "false");
+    });
+  }
+
+  function enhanceSiteSelects() {
+    document.querySelectorAll("select").forEach((select) => {
+      if (siteSelectControllers.has(select)) return;
+      const root = document.createElement("div");
+      root.className = "site-select";
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "site-select-trigger";
+      button.setAttribute("aria-haspopup", "listbox");
+      button.setAttribute("aria-expanded", "false");
+      const buttonText = document.createElement("span");
+      const chevron = document.createElement("span");
+      chevron.className = "site-select-chevron";
+      chevron.setAttribute("aria-hidden", "true");
+      button.append(buttonText, chevron);
+
+      const menu = document.createElement("div");
+      menu.className = "site-select-menu";
+      menu.setAttribute("role", "listbox");
+      const optionButtons = Array.from(select.options).map((option) => {
+        const optionButton = document.createElement("button");
+        optionButton.type = "button";
+        optionButton.className = "site-select-option";
+        optionButton.dataset.value = option.value;
+        optionButton.textContent = option.textContent;
+        optionButton.setAttribute("role", "option");
+        optionButton.addEventListener("click", () => {
+          select.value = option.value;
+          select.dispatchEvent(new Event("change", { bubbles: true }));
+          syncSiteSelect(select);
+          closeSiteSelects();
+          button.focus();
+        });
+        menu.appendChild(optionButton);
+        return optionButton;
+      });
+
+      select.parentNode.insertBefore(root, select);
+      root.append(select, button, menu);
+      select.classList.add("site-select-native");
+      select.tabIndex = -1;
+      select.setAttribute("aria-hidden", "true");
+      const label = select.id ? document.querySelector(`label[for="${select.id}"]`) : null;
+      if (label) {
+        button.id = `${select.id}Button`;
+        label.htmlFor = button.id;
+        button.setAttribute("aria-label", label.textContent.trim());
+      }
+      const controller = { root, button, buttonText, options: optionButtons };
+      siteSelectControllers.set(select, controller);
+      syncSiteSelect(select);
+
+      button.addEventListener("click", () => {
+        const willOpen = !root.classList.contains("is-open");
+        closeSiteSelects(willOpen ? select : null);
+        root.classList.toggle("is-open", willOpen);
+        button.setAttribute("aria-expanded", String(willOpen));
+        if (willOpen) optionButtons.find((item) => item.classList.contains("is-selected"))?.focus();
+      });
+      button.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+          event.preventDefault();
+          if (!root.classList.contains("is-open")) button.click();
+        }
+      });
+      menu.addEventListener("keydown", (event) => {
+        const currentIndex = optionButtons.indexOf(document.activeElement);
+        if (event.key === "Escape") {
+          closeSiteSelects();
+          button.focus();
+        } else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+          event.preventDefault();
+          const direction = event.key === "ArrowDown" ? 1 : -1;
+          optionButtons[(currentIndex + direction + optionButtons.length) % optionButtons.length].focus();
+        }
+      });
+    });
+    document.addEventListener("click", (event) => {
+      if (!(event.target instanceof Element) || !event.target.closest(".site-select")) closeSiteSelects();
+    });
   }
 
   // Texto exibido na última caixa quando o mapa MFV precisa consolidar operações.

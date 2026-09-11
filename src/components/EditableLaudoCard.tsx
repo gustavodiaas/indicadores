@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Copy, Check, Pencil, X } from "lucide-react";
 import { toast } from "sonner";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface EditableLaudoCardProps {
   title: string;
@@ -74,31 +75,34 @@ export function EditableLaudoCard({ title, laudo, laudoWord }: EditableLaudoCard
       {/* Botões de ação */}
       <div className="absolute top-4 right-4 flex items-center gap-1.5">
         {override !== null && !editing && (
-          <button
-            onClick={handleRestore}
-            title="Restaurar texto original"
-            className="p-2 rounded-[10px] bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-500/15 transition-colors border border-amber-100 dark:border-amber-500/20 text-xs font-medium px-2.5"
-          >
-            Restaurar
-          </button>
+          <Tooltip delayDuration={180}>
+            <TooltipTrigger asChild>
+              <button onClick={handleRestore} aria-label="Restaurar texto original" className="p-2 rounded-[10px] bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-500/15 transition-colors border border-amber-100 dark:border-amber-500/20 text-xs font-medium px-2.5">
+                Restaurar
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>Restaurar texto original</TooltipContent>
+          </Tooltip>
         )}
         {!editing && (
-          <button
-            onClick={handleOpenEdit}
-            title="Editar texto"
-            className="p-2 rounded-[10px] bg-black/[0.035] dark:bg-white/[0.07] text-slate-500 dark:text-slate-400 hover:bg-black/[0.07] dark:hover:bg-white/[0.12] hover:text-slate-900 dark:hover:text-white transition-colors border border-black/[0.05] dark:border-white/10"
-          >
-            <Pencil className="h-4 w-4" />
-          </button>
+          <Tooltip delayDuration={180}>
+            <TooltipTrigger asChild>
+              <button onClick={handleOpenEdit} aria-label="Editar texto" className="p-2 rounded-[10px] bg-black/[0.035] dark:bg-white/[0.07] text-slate-500 dark:text-slate-400 hover:bg-black/[0.07] dark:hover:bg-white/[0.12] hover:text-slate-900 dark:hover:text-white transition-colors border border-black/[0.05] dark:border-white/10">
+                <Pencil className="h-4 w-4" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>Editar texto</TooltipContent>
+          </Tooltip>
         )}
         {!editing && (
-          <button
-            onClick={handleCopy}
-            title="Copiar texto"
-            className="p-2 rounded-[10px] bg-black/[0.035] dark:bg-white/[0.07] text-slate-500 dark:text-slate-400 hover:bg-black/[0.07] dark:hover:bg-white/[0.12] hover:text-slate-900 dark:hover:text-white transition-colors border border-black/[0.05] dark:border-white/10"
-          >
-            {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-          </button>
+          <Tooltip delayDuration={180}>
+            <TooltipTrigger asChild>
+              <button onClick={handleCopy} aria-label={copied ? "Texto copiado" : "Copiar texto"} className="p-2 rounded-[10px] bg-black/[0.035] dark:bg-white/[0.07] text-slate-500 dark:text-slate-400 hover:bg-black/[0.07] dark:hover:bg-white/[0.12] hover:text-slate-900 dark:hover:text-white transition-colors border border-black/[0.05] dark:border-white/10">
+                {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>{copied ? "Texto copiado" : "Copiar texto"}</TooltipContent>
+          </Tooltip>
         )}
       </div>
 

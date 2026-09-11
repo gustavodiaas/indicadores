@@ -9,6 +9,7 @@ import { Trash2, Pencil, Copy } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { EditableLaudoCard } from "@/components/EditableLaudoCard";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface Props {
   data: ResumoData;
@@ -269,28 +270,38 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
                 </button>
               )}
               {!editingConc && (
-                <button
-                  onClick={() => { setConcDraft(concOverride !== null ? concOverride : laudosSistemas.textoTela); setEditingConc(true); }}
-                  className="p-2 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-slate-400 dark:text-slate-300 hover:bg-[#FF6B00] dark:hover:bg-[#FF6B00] hover:text-white transition-all border border-slate-200 dark:border-white/10"
-                  title="Editar texto"
-                >
-                  <Pencil className="h-4 w-4" />
-                </button>
+                <Tooltip delayDuration={180}>
+                  <TooltipTrigger asChild>
+                    <button
+                      onClick={() => { setConcDraft(concOverride !== null ? concOverride : laudosSistemas.textoTela); setEditingConc(true); }}
+                      aria-label="Editar texto"
+                      className="p-2 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-slate-400 dark:text-slate-300 hover:bg-[#FF6B00] dark:hover:bg-[#FF6B00] hover:text-white transition-all border border-slate-200 dark:border-white/10"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>Editar texto</TooltipContent>
+                </Tooltip>
               )}
               {!editingConc && (
-                <button
-                  onClick={() => {
-                    const textoWord = concOverride !== null
-                      ? laudosSistemas.textoWord.replace(laudosSistemas.textoTela, concOverride)
-                      : laudosSistemas.textoWord;
-                    navigator.clipboard.writeText(textoWord);
-                    toast.success("Copiado com formatação estruturada!");
-                  }}
-                  className="p-2 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-slate-400 dark:text-slate-300 hover:bg-[#FF6B00] dark:hover:bg-[#FF6B00] hover:text-white transition-all border border-slate-200 dark:border-white/10"
-                  title="Copiar texto"
-                >
-                  <Copy className="h-4 w-4" />
-                </button>
+                <Tooltip delayDuration={180}>
+                  <TooltipTrigger asChild>
+                    <button
+                      onClick={() => {
+                        const textoWord = concOverride !== null
+                          ? laudosSistemas.textoWord.replace(laudosSistemas.textoTela, concOverride)
+                          : laudosSistemas.textoWord;
+                        navigator.clipboard.writeText(textoWord);
+                        toast.success("Copiado com formatação estruturada!");
+                      }}
+                      aria-label="Copiar texto"
+                      className="p-2 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-slate-400 dark:text-slate-300 hover:bg-[#FF6B00] dark:hover:bg-[#FF6B00] hover:text-white transition-all border border-slate-200 dark:border-white/10"
+                    >
+                      <Copy className="h-4 w-4" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>Copiar texto</TooltipContent>
+                </Tooltip>
               )}
             </div>
 

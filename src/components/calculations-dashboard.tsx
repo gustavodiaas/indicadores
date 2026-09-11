@@ -3,6 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Clock, Layers, Activity, AlertTriangle, Timer } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
 interface Operation {
   id: string
@@ -112,9 +113,14 @@ export function CalculationsDashboard({
             <AlertTriangle className="h-4 w-4 text-rose-600" />
           </CardHeader>
           <CardContent className="relative z-10 w-full overflow-hidden">
-            <div className="text-xl md:text-2xl font-bold text-rose-600 dark:text-rose-400 drop-shadow-sm truncate max-w-full" title={bottleneck?.name}>
-              {bottleneck?.name || "-"}
-            </div>
+            <Tooltip delayDuration={180}>
+              <TooltipTrigger asChild>
+                <div className="text-xl md:text-2xl font-bold text-rose-600 dark:text-rose-400 drop-shadow-sm truncate max-w-full" tabIndex={0}>
+                  {bottleneck?.name || "-"}
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>{bottleneck?.name || "Sem gargalo"}</TooltipContent>
+            </Tooltip>
             <Badge variant="outline" className="mt-2 bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-900 text-[10px] uppercase tracking-wider">
               {formatNum(bottleneckTime)} {getPtUnit(timeUnit)}
             </Badge>

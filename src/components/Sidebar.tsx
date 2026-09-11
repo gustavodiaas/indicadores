@@ -4,6 +4,7 @@ import {
   FileText, GanttChartSquare, BarChart2, Calculator, 
   ArrowRightLeft, ShieldCheck, Clock, Timer, Square, Home, ClipboardList, LayoutTemplate, Calendar, BookOpen, PanelLeftClose, PanelLeftOpen
 } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface Props {
   active: ModuleKey;
@@ -48,16 +49,23 @@ export function Sidebar({ active, onSelect }: Props) {
             Navegação
           </span>
         )}
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="p-2 rounded-[10px] text-slate-500 dark:text-slate-400
+        <Tooltip delayDuration={180}>
+          <TooltipTrigger asChild>
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              aria-label={isExpanded ? "Recuar barra lateral" : "Expandir barra lateral"}
+              className="p-2 rounded-[10px] text-slate-500 dark:text-slate-400
 hover:text-slate-900 dark:hover:text-white
 hover:bg-black/[0.05] dark:hover:bg-white/10
 transition-colors duration-200 mx-auto"
-          title={isExpanded ? "Recuar barra lateral" : "Expandir barra lateral"}
-        >
-          {isExpanded ? <PanelLeftClose className="w-5 h-5" /> : <PanelLeftOpen className="w-5 h-5" />}
-        </button>
+            >
+              {isExpanded ? <PanelLeftClose className="w-5 h-5" /> : <PanelLeftOpen className="w-5 h-5" />}
+            </button>
+          </TooltipTrigger>
+          <TooltipContent side="right" sideOffset={10}>
+            {isExpanded ? "Recuar barra lateral" : "Expandir barra lateral"}
+          </TooltipContent>
+        </Tooltip>
       </div>
 
       {/* Lista de Módulos */}
@@ -66,10 +74,11 @@ transition-colors duration-200 mx-auto"
           const isActive = active === item.key;
           const Icon = item.icon;
           return (
-            <button
-              key={item.key}
-              onClick={() => onSelect(item.key)}
-              title={!isExpanded ? item.label : undefined}
+            <Tooltip key={item.key} delayDuration={180}>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => onSelect(item.key)}
+                  aria-label={item.label}
               className={`
   group w-full flex items-center gap-3
   px-2 py-2 rounded-[12px]
@@ -79,7 +88,7 @@ transition-colors duration-200 mx-auto"
     : "text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-black/[0.05] dark:hover:bg-white/10 font-medium"
   }
 `}
-            >
+                >
               <div className="shrink-0 flex items-center justify-center w-6 h-6">
                 <Icon className={`w-5 h-5 transition-transform duration-300 ${isActive ? "" : "group-hover:scale-110"}`} />
               </div>
@@ -89,7 +98,12 @@ transition-colors duration-200 mx-auto"
                   {item.label}
                 </span>
               )}
-            </button>
+                </button>
+              </TooltipTrigger>
+              {!isExpanded && (
+                <TooltipContent side="right" sideOffset={10}>{item.label}</TooltipContent>
+              )}
+            </Tooltip>
           );
         })}
       </nav>
