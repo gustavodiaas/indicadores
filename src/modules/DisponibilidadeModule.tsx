@@ -58,7 +58,7 @@ export function DisponibilidadeModule({ data, onChange }: Props) {
             </div>
             <div className="pt-4 border-t border-slate-200 dark:border-white/10">
               <span className="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Disponibilidade T1</span>
-              <span className="text-xl font-semibold text-[#002D72]">{r.indT1.toFixed(6).replace(".", ",")} %</span>
+              <span className="text-xl font-semibold text-[#7C3AED] dark:text-[#C084FC]">{r.indT1.toFixed(6).replace(".", ",")} %</span>
             </div>
           </div>
 
@@ -84,7 +84,7 @@ export function DisponibilidadeModule({ data, onChange }: Props) {
             </div>
             <div className="pt-4 border-t border-slate-200 dark:border-white/10">
               <span className="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Disponibilidade T3</span>
-              <span className="text-xl font-semibold text-[#002D72]">{r.indT3.toFixed(6).replace(".", ",")} %</span>
+              <span className="text-xl font-semibold text-[#7C3AED] dark:text-[#C084FC]">{r.indT3.toFixed(6).replace(".", ",")} %</span>
             </div>
           </div>
         </div>

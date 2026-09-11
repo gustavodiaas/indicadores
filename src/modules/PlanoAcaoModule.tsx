@@ -357,10 +357,10 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
   return (
     <div className="flex flex-col gap-5 min-h-full pb-28 animate-in fade-in duration-500">
 
-      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 rounded-[22px] bg-gradient-to-r from-[#0A84FF]/[0.09] via-white/50 to-[#FF6B00]/[0.08] dark:from-[#0A84FF]/15 dark:via-[#1C1C1E]/60 dark:to-[#FF6B00]/10 px-5 py-4 border border-black/[0.04] dark:border-white/[0.07]">
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 rounded-[22px] bg-gradient-to-r from-[#7C3AED]/[0.09] via-white/50 to-[#FF6B00]/[0.08] dark:from-[#C084FC]/15 dark:via-[#1C1C1E]/60 dark:to-[#FF6B00]/10 px-5 py-4 border border-black/[0.04] dark:border-white/[0.07]">
         <div>
           <h2 className="text-xl font-semibold text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
-            <span className="w-9 h-9 rounded-xl bg-[#0A84FF] text-white flex items-center justify-center shadow-[0_6px_16px_rgba(10,132,255,0.25)]"><CheckCircle className="h-5 w-5" /></span> Plano de Ação 5W2H
+            <span className="w-9 h-9 rounded-xl bg-[#7C3AED] dark:bg-[#9F67FF] text-white flex items-center justify-center shadow-[0_6px_16px_rgba(124,58,237,0.25)]"><CheckCircle className="h-5 w-5" /></span> Plano de Ação 5W2H
           </h2>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Gerenciamento tático e detalhamento das ações corretivas.</p>
         </div>
@@ -375,7 +375,7 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
           />
           <button
             onClick={() => document.getElementById('excel-5w2h-import')?.click()}
-            className="flex items-center gap-2 px-4 py-2.5 bg-white/70 dark:bg-white/[0.08] text-[#0A84FF] dark:text-[#409CFF] border border-black/[0.05] dark:border-white/10 rounded-xl font-semibold text-xs hover:bg-white dark:hover:bg-white/10 transition-all active:scale-[0.98]"
+            className="flex items-center gap-2 px-4 py-2.5 bg-white/70 dark:bg-white/[0.08] text-[#7C3AED] dark:text-[#C084FC] border border-black/[0.05] dark:border-white/10 rounded-xl font-semibold text-xs hover:bg-white dark:hover:bg-white/10 transition-all active:scale-[0.98]"
           >
             <Upload className="h-4 w-4" /> Importar
           </button>
@@ -397,7 +397,7 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
       </div>
 
       <div className="apple-panel p-5 md:p-6">
-        <h3 className="font-semibold text-slate-900 dark:text-white text-sm tracking-tight mb-5 flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-[#0A84FF]" />Metadados do projeto</h3>
+        <h3 className="font-semibold text-slate-900 dark:text-white text-sm tracking-tight mb-5 flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-[#7C3AED] dark:bg-[#C084FC]" />Metadados do projeto</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <CustomDatePicker label="Data de Criação" value={data.metadata.dataCriacao} onChange={v => updateMeta("dataCriacao", v)} />
           <InputField label="Responsável (Consultor/Empresário)" value={data.metadata.respCriacao} onChange={v => updateMeta("respCriacao", v)} />
@@ -414,7 +414,7 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
         <div className="flex flex-col gap-4 mb-6">
           <h3 className="font-semibold text-slate-900 dark:text-white text-sm tracking-tight flex items-center gap-2">
             Execução de tarefas
-            <span className="bg-[#0A84FF]/10 dark:bg-[#0A84FF]/20 text-[#0A84FF] dark:text-[#409CFF] px-2 py-0.5 rounded-full text-[10px]">{data.acoes.length}</span>
+            <span className="bg-[#7C3AED]/10 dark:bg-[#C084FC]/15 text-[#7C3AED] dark:text-[#C084FC] px-2 py-0.5 rounded-full text-[10px]">{data.acoes.length}</span>
           </h3>
 
           <div className="flex gap-2 items-end">
@@ -447,7 +447,7 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
                 >
                   <div className="flex flex-col flex-1 pr-4">
                     <span className="text-sm font-semibold text-slate-800 dark:text-slate-100 truncate">{a.what}</span>
-                    <span className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1 flex items-center gap-1.5"><span className={`w-1.5 h-1.5 rounded-full ${a.status === "CONCLUIDO" ? "bg-[#30B76B]" : a.status === "REJEITADO" ? "bg-rose-500" : a.status === "EM ANDAMENTO" ? "bg-[#0A84FF]" : "bg-slate-300 dark:bg-slate-600"}`} />{a.status === "CONCLUIDO" ? "Concluído" : a.status === "EM ANDAMENTO" ? "Em andamento" : a.status === "INICIADO" ? "Iniciado" : a.status === "REJEITADO" ? "Rejeitado" : "Não iniciado"} <span className="text-slate-300 dark:text-slate-600">•</span> {a.percent || 0}%</span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1 flex items-center gap-1.5"><span className={`w-1.5 h-1.5 rounded-full ${a.status === "CONCLUIDO" ? "bg-[#30B76B]" : a.status === "REJEITADO" ? "bg-rose-500" : a.status === "EM ANDAMENTO" ? "bg-[#7C3AED] dark:bg-[#C084FC]" : "bg-slate-300 dark:bg-slate-600"}`} />{a.status === "CONCLUIDO" ? "Concluído" : a.status === "EM ANDAMENTO" ? "Em andamento" : a.status === "INICIADO" ? "Iniciado" : a.status === "REJEITADO" ? "Rejeitado" : "Não iniciado"} <span className="text-slate-300 dark:text-slate-600">•</span> {a.percent || 0}%</span>
                   </div>
                   <div className="flex items-center gap-4">
                     {expandedId === a.id ? <ChevronUp className="h-5 w-5 text-slate-400 dark:text-slate-500" /> : <ChevronDown className="h-5 w-5 text-slate-400 dark:text-slate-500" />}

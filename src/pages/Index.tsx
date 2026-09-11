@@ -332,19 +332,19 @@ const Index = () => {
 
   const renderHome = () => {
     const modules: { key: ModuleKey; title: string; desc: string; icon: any; color: string }[] = [
-      { key: "resumo", title: "Resumo", desc: "Configurações gerais e laudo", icon: FileText, color: "text-[#002D72] bg-[#002D72]/5" },
-      { key: "gbo", title: "GBO", desc: "Balanceamento de Operações e Gargalos", icon: GanttChartSquare, color: "text-[#002D72] bg-[#002D72]/5" },
-      { key: "gantt", title: "Trabalho Padronizado", desc: "Gantt e análise de atividades", icon: Calendar, color: "text-[#002D72] bg-[#002D72]/5" },
-      { key: "produtividade", title: "Produtividade", desc: "Análise de peças por hora e eficiência", icon: BarChart2, color: "text-[#002D72] bg-[#002D72]/5" },
-      { key: "payback", title: "Payback", desc: "Retorno de Investimento (ROI)", icon: Calculator, color: "text-[#002D72] bg-[#002D72]/5" },
-      { key: "movimentacao", title: "Movimentação", desc: "Redução de tempos e distâncias", icon: ArrowRightLeft, color: "text-[#002D72] bg-[#002D72]/5" },
-      { key: "qualidade", title: "Qualidade", desc: "Controle de refugos e assertividade", icon: ShieldCheck, color: "text-[#002D72] bg-[#002D72]/5" },
-      { key: "disponibilidade", title: "Disponibilidade", desc: "Mapeamento de paradas de máquina", icon: Clock, color: "text-[#002D72] bg-[#002D72]/5" },
-      { key: "leadtime", title: "Lead Time", desc: "Redução no tempo de atravessamento", icon: Timer, color: "text-[#002D72] bg-[#002D72]/5" },
-      { key: "area", title: "Área de Trabalho", desc: "Otimização de layout e m²", icon: Square, color: "text-[#002D72] bg-[#002D72]/5" },
-      { key: "planoAcao", title: "Plano de Ação 5W2H", desc: "Gestão tática e exportação", icon: ClipboardList, color: "text-[#002D72] bg-[#002D72]/5" },
-      { key: "a3", title: "Modelo A3", desc: "Análise e Solução de Problemas", icon: LayoutTemplate, color: "text-[#002D72] bg-[#002D72]/5" },
-      { key: "manual", title: "Manual Técnico", desc: "Guia completo de uso de todas as abas", icon: BookOpen, color: "text-[#002D72] bg-[#002D72]/5" },
+      { key: "resumo", title: "Resumo", desc: "Configurações gerais e laudo", icon: FileText, color: "text-[#7C3AED] dark:text-[#C084FC] bg-[#7C3AED]/[0.07] dark:bg-[#C084FC]/10" },
+      { key: "gbo", title: "GBO", desc: "Balanceamento de Operações e Gargalos", icon: GanttChartSquare, color: "text-[#7C3AED] dark:text-[#C084FC] bg-[#7C3AED]/[0.07] dark:bg-[#C084FC]/10" },
+      { key: "gantt", title: "Trabalho Padronizado", desc: "Gantt e análise de atividades", icon: Calendar, color: "text-[#7C3AED] dark:text-[#C084FC] bg-[#7C3AED]/[0.07] dark:bg-[#C084FC]/10" },
+      { key: "produtividade", title: "Produtividade", desc: "Análise de peças por hora e eficiência", icon: BarChart2, color: "text-[#7C3AED] dark:text-[#C084FC] bg-[#7C3AED]/[0.07] dark:bg-[#C084FC]/10" },
+      { key: "payback", title: "Payback", desc: "Retorno de Investimento (ROI)", icon: Calculator, color: "text-[#7C3AED] dark:text-[#C084FC] bg-[#7C3AED]/[0.07] dark:bg-[#C084FC]/10" },
+      { key: "movimentacao", title: "Movimentação", desc: "Redução de tempos e distâncias", icon: ArrowRightLeft, color: "text-[#7C3AED] dark:text-[#C084FC] bg-[#7C3AED]/[0.07] dark:bg-[#C084FC]/10" },
+      { key: "qualidade", title: "Qualidade", desc: "Controle de refugos e assertividade", icon: ShieldCheck, color: "text-[#7C3AED] dark:text-[#C084FC] bg-[#7C3AED]/[0.07] dark:bg-[#C084FC]/10" },
+      { key: "disponibilidade", title: "Disponibilidade", desc: "Mapeamento de paradas de máquina", icon: Clock, color: "text-[#7C3AED] dark:text-[#C084FC] bg-[#7C3AED]/[0.07] dark:bg-[#C084FC]/10" },
+      { key: "leadtime", title: "Lead Time", desc: "Redução no tempo de atravessamento", icon: Timer, color: "text-[#7C3AED] dark:text-[#C084FC] bg-[#7C3AED]/[0.07] dark:bg-[#C084FC]/10" },
+      { key: "area", title: "Área de Trabalho", desc: "Otimização de layout e m²", icon: Square, color: "text-[#7C3AED] dark:text-[#C084FC] bg-[#7C3AED]/[0.07] dark:bg-[#C084FC]/10" },
+      { key: "planoAcao", title: "Plano de Ação 5W2H", desc: "Gestão tática e exportação", icon: ClipboardList, color: "text-[#7C3AED] dark:text-[#C084FC] bg-[#7C3AED]/[0.07] dark:bg-[#C084FC]/10" },
+      { key: "a3", title: "Modelo A3", desc: "Análise e Solução de Problemas", icon: LayoutTemplate, color: "text-[#7C3AED] dark:text-[#C084FC] bg-[#7C3AED]/[0.07] dark:bg-[#C084FC]/10" },
+      { key: "manual", title: "Manual Técnico", desc: "Guia completo de uso de todas as abas", icon: BookOpen, color: "text-[#7C3AED] dark:text-[#C084FC] bg-[#7C3AED]/[0.07] dark:bg-[#C084FC]/10" },
     ];
 
     return (

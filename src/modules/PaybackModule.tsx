@@ -110,7 +110,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
                   <input
                     type="text"
                     key={`encI-${data.tipoSalario}`}
-                    className="w-full h-10 px-3 rounded-lg border border-[#002D72]/30 bg-[#002D72]/5 dark:bg-white/[0.06] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
+                className="w-full h-10 px-3 rounded-lg border border-[#7C3AED]/20 bg-[#7C3AED]/[0.06] dark:bg-[#C084FC]/[0.08] dark:border-[#C084FC]/15 text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#7C3AED] dark:focus:ring-[#C084FC] transition-all"
                     defaultValue={formatDec(data.encargosInicial)}
                     onBlur={e => onChange({ encargosInicial: parseDecimal(e.target.value) })}
                     placeholder="Ex: 1,90"
@@ -158,7 +158,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
                   <input
                     type="text"
                     key={`encF-${data.tipoSalario}`}
-                    className="w-full h-10 px-3 rounded-lg border border-[#002D72]/30 bg-[#002D72]/5 dark:bg-white/[0.06] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
+                className="w-full h-10 px-3 rounded-lg border border-[#7C3AED]/20 bg-[#7C3AED]/[0.06] dark:bg-[#C084FC]/[0.08] dark:border-[#C084FC]/15 text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#7C3AED] dark:focus:ring-[#C084FC] transition-all"
                     defaultValue={formatDec(data.encargosFinal)}
                     onBlur={e => onChange({ encargosFinal: parseDecimal(e.target.value) })}
                     placeholder="Ex: 1,90"

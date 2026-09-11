@@ -6,7 +6,7 @@
 
 /* ============================================================
    PALETA RICO INVESTIMENTOS
-   Primária   : #002D72  (Navy Rico)
+   Informação : #7C3AED  (Roxo)
    Acento     : #FF6B00  (Laranja Rico)
    Hover      : #001E54  (Navy escuro)
    Hover acen.: #E55A00  (Laranja escuro)
@@ -19,7 +19,7 @@
     --foreground:   215 60% 10%;          /* #0A1828 azul quase preto */
     --card:         0 0% 100%;
     --card-foreground: 215 60% 10%;
-    --primary:      220 100% 33%;         /* #002D72 Navy Rico */
+    --primary:      262 83% 58%;          /* #7C3AED Roxo */
     --primary-foreground: 0 0% 100%;
     --secondary:    25 100% 40%;          /* #FF6B00 Laranja Rico */
     --secondary-foreground: 0 0% 100%;
@@ -41,7 +41,7 @@
     --foreground:   210 20% 95%;
     --card:         218 60% 11%;          /* #001833 cards */
     --card-foreground: 210 20% 95%;
-    --primary:      220 100% 33%;         /* Navy Rico mantido */
+    --primary:      270 95% 75%;          /* #C084FC Roxo claro */
     --primary-foreground: 0 0% 100%;
     --secondary:    25 100% 50%;
     --secondary-foreground: 0 0% 100%;
@@ -113,7 +113,7 @@
 
 @layer components {
   .module-shell {
-    --apple-blue: #0a84ff;
+    --apple-purple: #7c3aed;
     --apple-green: #30b76b;
     --apple-orange: #ff6b00;
   }

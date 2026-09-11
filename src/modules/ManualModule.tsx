@@ -22,7 +22,7 @@ function P({ children }: { children: React.ReactNode }) {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="py-2.5 border-b border-slate-100 dark:border-white/10 last:border-b-0">
-      <span className="block text-[11px] font-bold text-[#002D72] dark:text-[#FF6B00] uppercase tracking-widest mb-0.5">{label}</span>
+      <span className="block text-[11px] font-bold text-[#7C3AED] dark:text-[#C084FC] uppercase tracking-widest mb-0.5">{label}</span>
       <span className="text-[13px] text-slate-600 dark:text-slate-300 leading-relaxed">{children}</span>
     </div>
   );
@@ -46,7 +46,7 @@ function Formula({ children }: { children: React.ReactNode }) {
 
 function Tip({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex gap-3 bg-[#002D72]/5 dark:bg-white/[0.08] border border-[#002D72]/15 dark:border-white/10 rounded-xl p-4 mb-4">
+          <div className="flex gap-3 bg-[#7C3AED]/[0.07] dark:bg-[#C084FC]/10 border border-[#7C3AED]/15 dark:border-[#C084FC]/15 rounded-xl p-4 mb-4">
       <Info className="w-4 h-4 text-[#FF6B00] shrink-0 mt-0.5" />
       <span className="text-[12.5px] text-slate-700 dark:text-slate-300 leading-relaxed">{children}</span>
     </div>

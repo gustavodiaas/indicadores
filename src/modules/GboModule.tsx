@@ -291,13 +291,13 @@ export default function GBOAnalysis() {
           <div className="flex items-center gap-4">
             <Dialog>
               <DialogTrigger asChild>
-                <button className="h-9 w-9 flex items-center justify-center rounded-full text-[#0A1828] dark:text-slate-400 hover:text-[#002D72] hover:bg-[#002D72]/10 transition-colors">
+        <button className="h-9 w-9 flex items-center justify-center rounded-full text-[#0A1828] dark:text-slate-400 hover:text-[#7C3AED] dark:hover:text-[#C084FC] hover:bg-[#7C3AED]/10 dark:hover:bg-[#C084FC]/10 transition-colors">
                   <HelpCircle className="h-5 w-5" />
                 </button>
               </DialogTrigger>
               <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto rounded-xl border border-slate-200 dark:border-white/10 shadow-lg bg-white dark:bg-[#1C1C1E] text-[#0A1828] dark:text-slate-100">
                 <DialogHeader>
-                  <DialogTitle className="text-[#002D72] flex items-center gap-2 font-bold text-lg">
+          <DialogTitle className="text-[#7C3AED] dark:text-[#C084FC] flex items-center gap-2 font-bold text-lg">
                     <HelpCircle className="w-5 h-5" />
                     Manual Técnico GBO
                   </DialogTitle>
@@ -319,7 +319,7 @@ export default function GBOAnalysis() {
 
             <div className="bg-white dark:bg-[#1C1C1E] p-5 rounded-xl border border-slate-200 dark:border-white/10 space-y-4">
               <h3 className="font-bold text-[#0A1828] dark:text-slate-100 border-b border-slate-200 dark:border-white/10 pb-2 flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-[#002D72] animate-pulse"></div>
+        <div className="w-2 h-2 rounded-full bg-[#7C3AED] dark:bg-[#C084FC] animate-pulse"></div>
                 Cálculo do Takt Time
                 <div className="ml-auto flex items-center gap-1.5">
                   <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Demanda</span>
@@ -385,9 +385,9 @@ export default function GBOAnalysis() {
                 </div>
 
                 {calculateTaktTime() && (
-                  <div className="bg-[#002D72]/5 border border-[#002D72]/10 p-4 rounded-xl flex items-center gap-3 mt-4">
-                    <CheckCircle2 className="h-5 w-5 text-[#002D72]" />
-                    <p className="text-sm font-semibold text-[#002D72]">
+          <div className="bg-[#7C3AED]/[0.07] dark:bg-[#C084FC]/10 border border-[#7C3AED]/15 dark:border-[#C084FC]/15 p-4 rounded-xl flex items-center gap-3 mt-4">
+            <CheckCircle2 className="h-5 w-5 text-[#7C3AED] dark:text-[#C084FC]" />
+            <p className="text-sm font-semibold text-[#7C3AED] dark:text-[#C084FC]">
                       Takt Time: {timeUnitTakt === "hours" ? (calculateTaktTime()! / 3600).toFixed(2)
                         : timeUnitTakt === "minutes" ? (calculateTaktTime()! / 60).toFixed(2)
                         : calculateTaktTime()!.toFixed(2)} {timeUnitTakt === "hours" ? "h" : timeUnitTakt === "minutes" ? "min" : "seg"}/{demandUnit}

@@ -119,7 +119,7 @@ const TextAreaBlock = ({ title, value, maxChars, onChangeField }: { title: strin
 
   return (
     <div className="flex flex-col bg-white dark:bg-[#1C1C1E] rounded-xl border border-slate-200 dark:border-white/10 overflow-hidden shrink-0 min-h-[150px] flex-1 relative">
-      <div className="bg-[#002D72] border-b border-[#001833] px-3 py-2 flex justify-between items-center">
+    <div className="bg-[#7C3AED] dark:bg-[#6D28D9] border-b border-[#5B21B6] px-3 py-2 flex justify-between items-center">
         <h4 className="text-[10px] font-bold text-white uppercase tracking-widest">{title}</h4>
       </div>
       <textarea
@@ -260,7 +260,7 @@ export function A3Module({ data, onChange }: Props) {
 
       <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-4">
         <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 tracking-tight flex items-center gap-2">
-          <LayoutTemplate className="h-6 w-6 text-[#002D72]" /> RELATÓRIO A3 (TOYOTA)
+          <LayoutTemplate className="h-6 w-6 text-[#7C3AED] dark:text-[#C084FC]" /> RELATÓRIO A3 (TOYOTA)
         </h2>
         <button onClick={handleExportExcel} className="flex items-center gap-2 px-6 py-2.5 bg-[#FF6B00] text-white rounded-xl font-bold text-xs uppercase tracking-widest shadow-md hover:bg-[#E55A00] transition-all">
           <Download className="h-4 w-4" /> Baixar Excel
@@ -291,7 +291,7 @@ export function A3Module({ data, onChange }: Props) {
             <TextAreaBlock title="5. Estado Futuro / Recomendações" maxChars={600} value={data.estadoFuturo} onChangeField={v => onChange({ estadoFuturo: v })} />
 
             <div className="bg-white dark:bg-[#1C1C1E] rounded-xl border border-slate-200 dark:border-white/10 overflow-hidden flex flex-col shrink-0">
-              <div className="bg-[#002D72] border-b border-[#001833] px-3 py-2 flex justify-between items-center text-white font-bold text-[10px] uppercase">
+              <div className="bg-[#7C3AED] dark:bg-[#6D28D9] border-b border-[#5B21B6] px-3 py-2 flex justify-between items-center text-white font-bold text-[10px] uppercase">
                 <div className="flex items-center gap-2">6. Plano de Ação <span className="bg-white/20 px-1.5 py-0.5 rounded-md">{listaPlanoAcao.length}/13</span></div>
                 <button onClick={() => onChange({ planoAcao: [...listaPlanoAcao, { id: generateId(), oque: "", quem: "", prazo: "" }] })} className="bg-white/20 hover:bg-white/30 rounded p-1"><Plus className="w-3 h-3" /></button>
               </div>
@@ -299,9 +299,9 @@ export function A3Module({ data, onChange }: Props) {
                 {listaPlanoAcao.map((a) => (
                   <div key={a.id} className="grid grid-cols-12 gap-2 items-center">
                     <div className="col-span-1 flex justify-center"><Pencil className="w-3 h-3 text-slate-300 dark:text-slate-600" /></div>
-                    <div className="col-span-5"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1C1C1E] text-slate-800 dark:text-slate-100 outline-none focus:border-[#002D72] focus:ring-1 focus:ring-[#FF6B00]" value={a.oque} onChange={e => updatePlanoAcao(a.id, "oque", e.target.value)} placeholder="O que fazer?" /></div>
-                    <div className="col-span-3"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1C1C1E] text-slate-800 dark:text-slate-100 outline-none focus:border-[#002D72] focus:ring-1 focus:ring-[#FF6B00]" value={a.quem} onChange={e => updatePlanoAcao(a.id, "quem", e.target.value)} placeholder="Quem?" /></div>
-                    <div className="col-span-2"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1C1C1E] text-slate-800 dark:text-slate-100 outline-none focus:border-[#002D72] focus:ring-1 focus:ring-[#FF6B00]" value={a.prazo} onChange={e => updatePlanoAcao(a.id, "prazo", e.target.value)} placeholder="Prazo" /></div>
+                    <div className="col-span-5"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1C1C1E] text-slate-800 dark:text-slate-100 outline-none focus:border-[#7C3AED] dark:focus:border-[#C084FC] focus:ring-1 focus:ring-[#7C3AED]" value={a.oque} onChange={e => updatePlanoAcao(a.id, "oque", e.target.value)} placeholder="O que fazer?" /></div>
+                    <div className="col-span-3"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1C1C1E] text-slate-800 dark:text-slate-100 outline-none focus:border-[#7C3AED] dark:focus:border-[#C084FC] focus:ring-1 focus:ring-[#7C3AED]" value={a.quem} onChange={e => updatePlanoAcao(a.id, "quem", e.target.value)} placeholder="Quem?" /></div>
+                    <div className="col-span-2"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1C1C1E] text-slate-800 dark:text-slate-100 outline-none focus:border-[#7C3AED] dark:focus:border-[#C084FC] focus:ring-1 focus:ring-[#7C3AED]" value={a.prazo} onChange={e => updatePlanoAcao(a.id, "prazo", e.target.value)} placeholder="Prazo" /></div>
                     <div className="col-span-1 text-center"><button onClick={() => setDeleteConfirm({ open: true, type: 'acao', id: a.id })} className="text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 p-1.5 rounded-lg transition-colors"><Trash2 className="w-3.5 h-3.5" /></button></div>
                   </div>
                 ))}
@@ -309,7 +309,7 @@ export function A3Module({ data, onChange }: Props) {
             </div>
 
             <div className="bg-white dark:bg-[#1C1C1E] rounded-xl border border-slate-200 dark:border-white/10 overflow-hidden flex flex-col shrink-0">
-              <div className="bg-[#002D72] border-b border-[#001833] px-3 py-2 flex justify-between items-center text-white font-bold text-[10px] uppercase">
+              <div className="bg-[#7C3AED] dark:bg-[#6D28D9] border-b border-[#5B21B6] px-3 py-2 flex justify-between items-center text-white font-bold text-[10px] uppercase">
                 <div className="flex items-center gap-2">7. Acompanhamento <span className="bg-white/20 px-1.5 py-0.5 rounded-md">{listaIndicadores.length}/13</span></div>
                 <button onClick={() => onChange({ indicadores: [...listaIndicadores, { id: generateId(), indicador: "", meta: "", status: "" }] })} className="bg-white/20 hover:bg-white/30 rounded p-1"><Plus className="w-3 h-3" /></button>
               </div>
@@ -317,12 +317,12 @@ export function A3Module({ data, onChange }: Props) {
                 {listaIndicadores.map((i) => (
                   <div key={i.id} className="grid grid-cols-12 gap-2 items-center">
                     <div className="col-span-1 flex justify-center"><Pencil className="w-3 h-3 text-slate-300 dark:text-slate-600" /></div>
-                    <div className="col-span-5"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1C1C1E] text-slate-800 dark:text-slate-100 outline-none focus:border-[#002D72] focus:ring-1 focus:ring-[#FF6B00]" value={i.indicador} onChange={e => updateIndicador(i.id, "indicador", e.target.value)} placeholder="Indicador" /></div>
-                    <div className="col-span-3"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1C1C1E] text-slate-800 dark:text-slate-100 outline-none focus:border-[#002D72] focus:ring-1 focus:ring-[#FF6B00]" value={i.meta} onChange={e => updateIndicador(i.id, "meta", e.target.value)} placeholder="Meta" /></div>
+                    <div className="col-span-5"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1C1C1E] text-slate-800 dark:text-slate-100 outline-none focus:border-[#7C3AED] dark:focus:border-[#C084FC] focus:ring-1 focus:ring-[#7C3AED]" value={i.indicador} onChange={e => updateIndicador(i.id, "indicador", e.target.value)} placeholder="Indicador" /></div>
+                    <div className="col-span-3"><input type="text" className="w-full text-xs p-2 rounded-md border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1C1C1E] text-slate-800 dark:text-slate-100 outline-none focus:border-[#7C3AED] dark:focus:border-[#C084FC] focus:ring-1 focus:ring-[#7C3AED]" value={i.meta} onChange={e => updateIndicador(i.id, "meta", e.target.value)} placeholder="Meta" /></div>
                     <div className="col-span-2">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <button className="w-full h-8 px-2 rounded-md border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1C1C1E] text-[10px] font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between outline-none hover:bg-slate-50 dark:hover:bg-white/10 transition-all focus:ring-1 focus:ring-[#FF6B00] focus:border-[#002D72]">
+                          <button className="w-full h-8 px-2 rounded-md border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1C1C1E] text-[10px] font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between outline-none hover:bg-slate-50 dark:hover:bg-white/10 transition-all focus:ring-1 focus:ring-[#7C3AED] focus:border-[#7C3AED] dark:focus:border-[#C084FC]">
                             <span className="truncate">{i.status || "Status"}</span>
                             <ChevronDown className="w-3 h-3 text-slate-400 shrink-0 ml-1" />
                           </button>

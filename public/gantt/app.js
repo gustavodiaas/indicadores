@@ -37,7 +37,7 @@
 
   const SCENARIOS = Object.freeze({
     current: { label: "Atual", kicker: "CENÁRIO ATUAL", color: "#5E5CE6" },
-    proposed: { label: "Proposto", kicker: "CENÁRIO PROPOSTO", color: "#007AFF" },
+  proposed: { label: "Proposto", kicker: "CENÁRIO PROPOSTO", color: "#A855F7" },
   });
 
   const ICONS = Object.freeze({

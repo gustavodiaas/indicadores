@@ -6,9 +6,9 @@
 }
 
 :root {
-  --brand-primary: #007aff;
-  --brand-primary-hover: #0066cc;
-  --fiergs-blue: #1a4b9f;
+  --brand-primary: #7c3aed;
+  --brand-primary-hover: #6d28d9;
+  --fiergs-blue: #7c3aed;
   --background: #f5f5f7;
   --surface: #ffffff;
   --surface-secondary: #f9f9fb;
@@ -20,12 +20,12 @@
   --semiagrega: #ff9f0a;
   --nao-agrega: #ff3b30;
   --current: #5e5ce6;
-  --proposed: #007aff;
+  --proposed: #a855f7;
   --success-soft: #ecf9ef;
   --warning-soft: #fff7e8;
   --danger-soft: #fff0ef;
-  --blue-soft: #edf6ff;
-  --focus-ring: 0 0 0 3px rgba(0, 122, 255, 0.2);
+  --blue-soft: #f5efff;
+  --focus-ring: 0 0 0 3px rgba(124, 58, 237, 0.2);
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
@@ -48,7 +48,7 @@ html.dark {
   --success-soft: rgba(52, 199, 89, 0.15);
   --warning-soft: rgba(255, 159, 10, 0.15);
   --danger-soft: rgba(255, 59, 48, 0.15);
-  --blue-soft: rgba(0, 122, 255, 0.15);
+  --blue-soft: rgba(192, 132, 252, 0.15);
   --shadow-menu: 0 12px 36px rgba(0, 0, 0, 0.45);
   --focus-ring: 0 0 0 3px rgba(255, 107, 0, 0.4);
 }
@@ -80,7 +80,7 @@ html.dark .empty-list {
 
 html.dark input:hover,
 html.dark select:hover {
-  border-color: rgba(10, 132, 255, 0.4);
+  border-color: rgba(192, 132, 252, 0.44);
 }
 
 html.dark .availability-strip .has-overlap strong {
@@ -103,8 +103,8 @@ html.dark .button-secondary {
 }
 
 html.dark .button-secondary:hover {
-  border-color: rgba(10, 132, 255, 0.28);
-  background: rgba(10, 132, 255, 0.14);
+  border-color: rgba(192, 132, 252, 0.3);
+  background: rgba(192, 132, 252, 0.14);
 }
 
 html.dark .icon-button {
@@ -113,7 +113,7 @@ html.dark .icon-button {
 }
 
 html.dark .icon-button:hover {
-  background: rgba(10, 132, 255, 0.14);
+  background: rgba(192, 132, 252, 0.14);
 }
 
 html.dark .action-menu {
@@ -205,8 +205,8 @@ html.dark .print-paper-option {
 }
 
 html.dark .print-paper-option:has(:checked) {
-  border-color: #3b82f6;
-  background: rgba(59, 130, 246, 0.1);
+  border-color: #a855f7;
+  background: rgba(168, 85, 247, 0.1);
 }
 
 /* Timeline SVG dark mode via CSS custom properties injetadas */
@@ -2158,7 +2158,7 @@ main {
   gap: 12px;
   margin-top: 12px;
   padding-top: 10px;
-  border-top: 1px solid rgba(0, 122, 255, 0.14);
+  border-top: 1px solid rgba(124, 58, 237, 0.14);
 }
 
 .video-marker-actions {
@@ -2311,7 +2311,7 @@ kbd {
 .print-paper-option:has(input:checked) {
   border-color: var(--brand-primary);
   background: var(--blue-soft);
-  box-shadow: 0 0 0 1px rgba(0, 122, 255, 0.08);
+  box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.08);
 }
 
 .print-paper-option input {
@@ -2981,7 +2981,7 @@ kbd {
   .print-brand-title {
     display: block;
     margin: 0 0 0.7mm;
-    color: #1a4b9f;
+  color: #7c3aed;
     font-size: 8pt;
     font-weight: 700;
     letter-spacing: 0.04em;
@@ -3069,7 +3069,7 @@ kbd {
 
   .print-report-comparison {
     padding: 1.6mm 2mm;
-    border-left: 1mm solid #007aff;
+    border-left: 1mm solid #7c3aed;
     border-radius: 0 1.2mm 1.2mm 0;
     background: #edf6ff;
   }
@@ -3130,7 +3130,7 @@ kbd {
   }
 
   .print-report-scenario.print-proposed {
-    border-top: 0.75mm solid #007aff;
+    border-top: 0.75mm solid #7c3aed;
   }
 
   .print-report-scenario-header {
@@ -3272,7 +3272,7 @@ kbd {
   }
 
   .print-report-timeline .print-cycle-line {
-    stroke: #007aff;
+    stroke: #7c3aed;
     stroke-width: 2;
     stroke-dasharray: 5 4;
   }
@@ -3521,7 +3521,7 @@ html.dark {
   --text-secondary: #a1a1aa;
   --border: rgba(255, 255, 255, 0.11);
   --border-light: rgba(255, 255, 255, 0.07);
-  --blue-soft: rgba(10, 132, 255, 0.14);
+  --blue-soft: rgba(192, 132, 252, 0.15);
   --shadow-menu: 0 20px 55px rgba(0, 0, 0, 0.42);
 }
 
@@ -3606,7 +3606,7 @@ input:hover,
 select:hover,
 html.dark input:hover,
 html.dark select:hover {
-  border-color: rgba(10, 132, 255, 0.35) !important;
+  border-color: rgba(192, 132, 252, 0.4) !important;
 }
 
 .button,
@@ -3631,7 +3631,7 @@ html.dark .icon-button {
 .icon-button:hover,
 html.dark .button-secondary:hover,
 html.dark .icon-button:hover {
-  border-color: rgba(10, 132, 255, 0.22);
+  border-color: rgba(192, 132, 252, 0.26);
   background: var(--blue-soft);
 }
 
@@ -3732,8 +3732,8 @@ html.dark .video-workspace {
 html.dark .timeline-empty {
   border-radius: 14px;
   background-color: #f7f7fa;
-  background-image: linear-gradient(to right, rgba(10, 132, 255, 0.08) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(10, 132, 255, 0.08) 1px, transparent 1px);
+  background-image: linear-gradient(to right, rgba(124, 58, 237, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(124, 58, 237, 0.08) 1px, transparent 1px);
 }
 
 html.dark .timeline-empty {

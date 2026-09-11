@@ -28,7 +28,7 @@ export function AppSidebar({ active, onSelect }: Props) {
       
       {/* Header */}
       <div className="px-6 py-8 border-b border-slate-50 flex items-center gap-3">
-        <div className="bg-[#0057FF] p-2.5 rounded-xl shadow-sm">
+        <div className="bg-[#7C3AED] p-2.5 rounded-xl shadow-sm">
           <Factory className="h-5 w-5 text-white" />
         </div>
         <div className="flex flex-col">
@@ -55,8 +55,8 @@ export function AppSidebar({ active, onSelect }: Props) {
               onClick={() => onSelect(m.key)}
               className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
                 isActive
-                  ? "bg-[#0057FF] text-white shadow-md shadow-blue-200"
-                  : "text-slate-500 hover:bg-slate-50 hover:text-[#0057FF]"
+                  ? "bg-[#7C3AED] text-white shadow-md shadow-purple-200"
+                  : "text-slate-500 hover:bg-slate-50 hover:text-[#7C3AED]"
               }`}
             >
               <m.icon className={`h-4 w-4 shrink-0 ${isActive ? "text-white" : "text-slate-400"}`} />

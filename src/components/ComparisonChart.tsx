@@ -55,8 +55,8 @@ export function ComparisonChart({ data, title }: Props) {
           <Tooltip cursor={{ fill: 'currentColor', className: 'text-slate-100/50 dark:text-slate-950/30' }} content={<CustomTooltip />} />
           <Legend wrapperStyle={{ paddingTop: '20px', fontSize: '12px', fontWeight: 500 }} iconType="circle" />
           
-          <Bar dataKey="T1" fill="currentColor" radius={[8, 8, 2, 2]} name="T1 (Inicial)" maxBarSize={54} className="text-[#0A84FF] dark:text-[#409CFF]">
-            <LabelList dataKey="T1" position="top" fill="currentColor" fontSize={12} fontWeight="600" className="text-[#0A84FF] dark:text-[#409CFF]" />
+          <Bar dataKey="T1" fill="currentColor" radius={[8, 8, 2, 2]} name="T1 (Inicial)" maxBarSize={54} className="text-[#7C3AED] dark:text-[#C084FC]">
+            <LabelList dataKey="T1" position="top" fill="currentColor" fontSize={12} fontWeight="600" className="text-[#7C3AED] dark:text-[#C084FC]" />
           </Bar>
           
           <Bar dataKey="T3" fill="currentColor" radius={[8, 8, 2, 2]} name="T3 (Final)" maxBarSize={54} className="text-[#30B76B] dark:text-[#32D74B]">

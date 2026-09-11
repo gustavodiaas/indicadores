@@ -42,7 +42,7 @@ export function FloatingNav({ active, onSelect }: Props) {
                 group transition-all duration-300 flex flex-col items-center justify-center flex-shrink-0 gap-1.5 h-16 w-16 rounded-[2rem]
                 ${isActive 
                   ? "bg-[#FF6B00] text-white shadow-lg scale-105" 
-                  : "text-slate-500 dark:text-slate-400 hover:text-[#002D72] dark:hover:text-[#002D72] hover:bg-[#002D72]/10 dark:hover:bg-white/10/50"
+              : "text-slate-500 dark:text-slate-400 hover:text-[#7C3AED] dark:hover:text-[#C084FC] hover:bg-[#7C3AED]/10 dark:hover:bg-[#C084FC]/10"
                 }
               `}
             >

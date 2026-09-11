@@ -201,7 +201,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
         {/* COLUNA ESQUERDA: ENTRADA DE DADOS */}
         <div className="w-full lg:w-[55%] flex flex-col gap-6 pb-28 bg-white/55 dark:bg-[#1C1C1E]/55 rounded-[22px] p-5 md:p-6 backdrop-blur-xl">
           <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-white/10">
-            <h3 className="font-semibold text-[#0A1828] dark:text-slate-100 text-lg tracking-tight flex items-center gap-2.5"><span className="w-2.5 h-2.5 rounded-full bg-[#0A84FF] shadow-[0_0_0_5px_rgba(10,132,255,0.10)]" />Entrada de dados</h3>
+            <h3 className="font-semibold text-[#0A1828] dark:text-slate-100 text-lg tracking-tight flex items-center gap-2.5"><span className="w-2.5 h-2.5 rounded-full bg-[#7C3AED] dark:bg-[#C084FC] shadow-[0_0_0_5px_rgba(124,58,237,0.10)]" />Entrada de dados</h3>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setShowConfirmModal(true)}
@@ -294,7 +294,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
               )}
             </div>
 
-            <h4 className="text-[10px] font-bold text-[#002D72] dark:text-[#FF6B00] uppercase tracking-widest mb-4 border-b border-slate-200 dark:border-white/10 pb-2 pr-28">
+            <h4 className="text-[10px] font-bold text-[#7C3AED] dark:text-[#C084FC] uppercase tracking-widest mb-4 border-b border-slate-200 dark:border-white/10 pb-2 pr-28">
               Conclusão do Projeto
               {concOverride !== null && <span className="ml-2 text-amber-500 font-bold">· editado</span>}
             </h4>
@@ -340,7 +340,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
             )}
 
             <div className="mt-8 pt-4 border-t border-slate-200 dark:border-white/10">
-              <h4 className="text-[10px] font-bold text-[#002D72] dark:text-[#FF6B00] uppercase tracking-widest mb-3">Indicadores</h4>
+              <h4 className="text-[10px] font-bold text-[#7C3AED] dark:text-[#C084FC] uppercase tracking-widest mb-3">Indicadores</h4>
               <div className="flex flex-wrap gap-2">
                 {indicadoresList.map((ind) => {
                   const isActive = selectedIndicadores.includes(ind.id);

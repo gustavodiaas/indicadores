@@ -93,7 +93,7 @@ export function DraggableOperationsList({
             onDragOver={(e) => handleDragOver(e, index)}
             onDragEnd={handleDragEnd}
             className={`flex items-center gap-3 p-3 bg-white dark:bg-[#1C1C1E] border border-slate-100 dark:border-white/10 rounded-lg transition-all ${
-              draggedIndex === index ? "opacity-50 border-[#002D72]" : "hover:border-slate-300 dark:hover:border-slate-600"
+              draggedIndex === index ? "opacity-50 border-[#7C3AED] dark:border-[#C084FC]" : "hover:border-slate-300 dark:hover:border-slate-600"
             }`}
           >
             <div className={`p-1 text-slate-400 dark:text-slate-600 ${editingId === op.id ? "opacity-30" : "cursor-grab active:cursor-grabbing hover:text-slate-600 dark:hover:text-slate-400"}`}>
@@ -142,7 +142,7 @@ export function DraggableOperationsList({
                   </>
                 ) : (
                   <>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 dark:text-slate-400 hover:text-[#002D72] hover:bg-[#002D72]/10" onClick={() => startEditing(op)}>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 dark:text-slate-400 hover:text-[#7C3AED] dark:hover:text-[#C084FC] hover:bg-[#7C3AED]/10 dark:hover:bg-[#C084FC]/10" onClick={() => startEditing(op)}>
                       <Pencil className="h-4 w-4" />
                     </Button>
                     <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 dark:text-slate-400 hover:text-rose-500 hover:bg-rose-500/10" onClick={() => onRemove(op.id)}>
