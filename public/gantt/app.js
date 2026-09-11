@@ -3777,6 +3777,26 @@
     return { lunchSeconds: unionSeconds(groups.lunch), pauseSeconds: unionSeconds(groups.pause) };
   }
 
+  // Texto exibido na última caixa quando o mapa MFV precisa consolidar operações.
+  // Mantido em um único ponto para facilitar uma eventual troca de nomenclatura.
+  function groupedMfvActivityLabel(firstPosition, lastPosition) {
+    return `Operações ${firstPosition} a ${lastPosition}`;
+  }
+
+  function consolidateValueAddingForMfv(activities, maxActivities) {
+    if (activities.length <= maxActivities) return activities;
+
+    const individualCount = maxActivities - 1;
+    const groupedActivities = activities.slice(individualCount);
+    return [
+      ...activities.slice(0, individualCount),
+      {
+        description: groupedMfvActivityLabel(individualCount + 1, activities.length),
+        durationSeconds: groupedActivities.reduce((total, activity) => total + activity.durationSeconds, 0),
+      },
+    ];
+  }
+
   async function exportMfvWorkbook() {
     if (!isScenarioView()) {
       showToast("Abra o cenário Atual ou Proposto para escolher qual será enviado à planilha MFV.", {
@@ -3802,26 +3822,21 @@
       );
       return;
     }
-    // O limite vem do próprio exportador: é a quantidade de caixas de processo que o mapa
-    // da aba "MFV EP" consegue desenhar.
-    const mfvLimit = (window.MfvExporter && window.MfvExporter.maxActivities) || 9;
-    if (valueAdding.length > mfvLimit) {
-      showToast(
-        `O mapa da planilha MFV desenha no máximo ${mfvLimit} operações que agregam valor, e o cenário tem ${valueAdding.length}.`,
-        { error: true, duration: 7500 },
-      );
-      return;
-    }
     if (!window.MfvExporter || typeof window.MfvExporter.download !== "function") {
       showToast("O gerador da planilha MFV não pôde ser carregado.", { error: true, duration: 7000 });
       return;
     }
+    // O mapa possui dez caixas. Quando há excedente, preserva as nove primeiras e
+    // consolida todas as demais na última, sem alterar o Gantt exibido na tela.
+    const mfvLimit = window.MfvExporter.maxActivities || 10;
+    const mfvActivities = consolidateValueAddingForMfv(valueAdding, mfvLimit);
+    const groupedCount = valueAdding.length - mfvActivities.length + 1;
     try {
       const breakSplit = splitBreakSecondsForMfv();
       await window.MfvExporter.download({
         projectName: state.projectName,
         scenarioLabel: SCENARIOS[activeView].label,
-        activities: cloneData(valueAdding),
+        activities: cloneData(mfvActivities),
         shift: {
           startSeconds: state.settings.shiftStartSeconds,
           endSeconds: state.settings.shiftEndSeconds,
@@ -3840,8 +3855,11 @@
       const left = excluded
         ? ` ${excluded} ${excluded === 1 ? "atividade ficou" : "atividades ficaram"} fora do mapa por não agregar valor.`
         : "";
-      showToast(`Planilha MFV do cenário ${SCENARIOS[activeView].label} gerada com ${sent}.${left}`, {
-        duration: excluded ? 7500 : 5000,
+      const grouped = groupedCount > 1
+        ? ` As operações ${mfvLimit} a ${valueAdding.length} foram consolidadas na última caixa.`
+        : "";
+      showToast(`Planilha MFV do cenário ${SCENARIOS[activeView].label} gerada com ${sent}.${grouped}${left}`, {
+        duration: excluded || grouped ? 7500 : 5000,
       });
     } catch (error) {
       const message = error instanceof Error ? error.message : "Falha ao gerar a planilha.";
