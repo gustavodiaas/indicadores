@@ -2902,6 +2902,24 @@
   function createTimelineFigure(scenarioKey, metrics, scaleSeconds) {
     const scroll = document.createElement("div");
     scroll.className = "timeline-scroll";
+    // A linha do tempo só possui rolagem horizontal. Sem esta separação, Chromium pode
+    // capturar a roda sobre o SVG e deixar a rolagem vertical da página aparentemente
+    // travada. Gestos predominantemente verticais continuam pertencendo ao documento;
+    // trackpads horizontais e Shift + roda continuam movendo a linha do tempo.
+    scroll.addEventListener(
+      "wheel",
+      (event) => {
+        if (event.ctrlKey || event.shiftKey || Math.abs(event.deltaX) >= Math.abs(event.deltaY)) return;
+        event.preventDefault();
+        const deltaMultiplier = event.deltaMode === WheelEvent.DOM_DELTA_LINE
+          ? 16
+          : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
+            ? window.innerHeight
+            : 1;
+        window.scrollBy({ top: event.deltaY * deltaMultiplier, left: 0, behavior: "auto" });
+      },
+      { passive: false },
+    );
     const schedule = metrics.schedule;
     const width = 1000;
     const left = 252;

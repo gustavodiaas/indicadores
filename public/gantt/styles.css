@@ -1493,6 +1493,10 @@ main {
 .timeline-scroll {
   width: 100%;
   overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: auto;
+  touch-action: pan-x pan-y;
   border: 1px solid var(--border-light);
   border-radius: var(--radius-md);
   background: var(--surface-secondary);
