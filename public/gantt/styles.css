@@ -2156,6 +2156,15 @@ main {
   min-height: 0;
 }
 
+/* A aba de vídeo cresce com o conteúdo e usa a rolagem única da página. Painéis internos
+   roláveis criavam zonas onde a roda do mouse parava ou movia uma coluna diferente. */
+.video-workspace > .video-library,
+.video-workspace > .video-stage,
+.video-workspace > .video-capture-panel {
+  overflow: visible;
+  overscroll-behavior: auto;
+}
+
 .video-library {
   display: flex;
   flex-direction: column;
