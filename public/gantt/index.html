@@ -510,8 +510,8 @@
                 </div>
               </div>
               <p class="video-library-note">
-                Os arquivos ficam neste dispositivo e não são enviados nem gravados pela aplicação. Ao trocar de
-                vídeo, o ponto onde você parou fica guardado.
+                Os arquivos ficam guardados somente neste navegador e não são enviados. Os vídeos e o ponto onde
+                você parou continuam disponíveis depois de atualizar a página.
               </p>
               <input
                 id="videoInput"
@@ -520,9 +520,14 @@
                 multiple
                 hidden
               />
-              <button class="button button-primary button-compact" id="addVideosButton" type="button">
-                Adicionar vídeos
-              </button>
+              <div class="video-library-actions">
+                <button class="button button-primary button-compact" id="addVideosButton" type="button">
+                  Adicionar vídeos
+                </button>
+                <button class="button button-secondary button-compact danger-text" id="clearVideosButton" type="button" hidden>
+                  Apagar todos
+                </button>
+              </div>
               <p class="video-library-empty" id="videoLibraryEmpty">Nenhum vídeo adicionado ainda.</p>
               <ul class="video-library-list" id="videoLibraryList" aria-label="Vídeos adicionados"></ul>
             </aside>

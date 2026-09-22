@@ -3697,6 +3697,16 @@ input[type=number], input[type=time] {
   background: rgba(74, 111, 165, 0.7);
 }
 
+.video-library-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.video-library-actions .button {
+  min-width: 0;
+}
+
 /* ── Acabamento visual integrado à Central de Indicadores ─────────────── */
 :root {
   --border: rgba(15, 23, 42, 0.09);

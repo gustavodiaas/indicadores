@@ -3,6 +3,9 @@
 
   const STORAGE_KEY = "exata.trabalhoPadronizado.v1";
   const VIDEO_POSITIONS_KEY = "exata.trabalhoPadronizado.videoPositions";
+  const ACTIVE_VIDEO_KEY = "exata.trabalhoPadronizado.activeVideo";
+  const VIDEO_DATABASE_NAME = "exata.trabalhoPadronizado.videos";
+  const VIDEO_DATABASE_STORE = "videos";
   const MAX_VIDEOS = 30;
   const SCHEMA_VERSION = 4;
   const SVG_NS = "http://www.w3.org/2000/svg";
@@ -162,6 +165,7 @@
     videoLibraryList: document.getElementById("videoLibraryList"),
     videoLibraryEmpty: document.getElementById("videoLibraryEmpty"),
     addVideosButton: document.getElementById("addVideosButton"),
+    clearVideosButton: document.getElementById("clearVideosButton"),
     videoDestination: document.getElementById("videoDestination"),
     videoPlayerSection: document.getElementById("videoPlayerSection"),
     videoCapturePanel: document.getElementById("videoCapturePanel"),
@@ -218,8 +222,8 @@
   let videoLoadPending = false;
   let videoLoadGeneration = 0;
   let videoIntervalTransferred = false;
-  // Biblioteca de vídeos da sessão. Os arquivos não podem ser gravados pelo navegador, mas
-  // a posição de cada um fica registrada e é reencontrada pelo nome, tamanho e data.
+  // A biblioteca é espelhada no IndexedDB para sobreviver a atualizações da página. Os
+  // arquivos continuam locais ao navegador e nunca são enviados pela aplicação.
   let videoLibrary = [];
   let activeVideoId = null;
   let videoResumeSeconds = 0;
@@ -300,6 +304,7 @@
     resetForm();
     exposeTestApi();
     registerWebMcpTools();
+    void restorePersistedVideoLibrary();
 
     if (!storageAvailable) {
       setSaveStatus("error", "Sessão sem salvamento");
@@ -1043,6 +1048,7 @@
     elements.selectVideoButton.addEventListener("click", selectVideoFile);
     elements.changeVideoButton.addEventListener("click", selectVideoFile);
     elements.addVideosButton.addEventListener("click", selectVideoFile);
+    elements.clearVideosButton.addEventListener("click", clearVideoLibrary);
     elements.videoInput.addEventListener("change", handleVideoFileSelection);
     elements.videoLibraryList.addEventListener("click", handleVideoLibraryClick);
     elements.videoDestination.addEventListener("change", () => {
@@ -1426,6 +1432,130 @@
     return `${file.name}|${file.size}|${file.lastModified || 0}`;
   }
 
+  function openVideoDatabase() {
+    return new Promise((resolve, reject) => {
+      if (!window.indexedDB) {
+        reject(new Error("Este navegador não permite guardar vídeos localmente."));
+        return;
+      }
+      const request = window.indexedDB.open(VIDEO_DATABASE_NAME, 1);
+      request.addEventListener("upgradeneeded", () => {
+        const database = request.result;
+        if (!database.objectStoreNames.contains(VIDEO_DATABASE_STORE)) {
+          database.createObjectStore(VIDEO_DATABASE_STORE, { keyPath: "key" });
+        }
+      });
+      request.addEventListener("success", () => resolve(request.result), { once: true });
+      request.addEventListener("error", () => reject(request.error || new Error("Falha ao abrir o armazenamento de vídeos.")), {
+        once: true,
+      });
+      request.addEventListener("blocked", () => reject(new Error("O armazenamento de vídeos está aberto em outra aba.")), {
+        once: true,
+      });
+    });
+  }
+
+  async function readPersistedVideos() {
+    const database = await openVideoDatabase();
+    try {
+      return await new Promise((resolve, reject) => {
+        const transaction = database.transaction(VIDEO_DATABASE_STORE, "readonly");
+        const request = transaction.objectStore(VIDEO_DATABASE_STORE).getAll();
+        request.addEventListener("success", () => resolve(request.result || []), { once: true });
+        request.addEventListener("error", () => reject(request.error || transaction.error), { once: true });
+      });
+    } finally {
+      database.close();
+    }
+  }
+
+  async function persistVideoEntry(entry) {
+    const database = await openVideoDatabase();
+    try {
+      await new Promise((resolve, reject) => {
+        const transaction = database.transaction(VIDEO_DATABASE_STORE, "readwrite");
+        transaction.objectStore(VIDEO_DATABASE_STORE).put({
+          key: entry.key,
+          name: entry.name,
+          size: entry.size,
+          type: entry.file.type || "video/mp4",
+          lastModified: entry.file.lastModified || 0,
+          file: entry.file,
+          savedAt: Date.now(),
+        });
+        transaction.addEventListener("complete", resolve, { once: true });
+        transaction.addEventListener("abort", () => reject(transaction.error), { once: true });
+        transaction.addEventListener("error", () => reject(transaction.error), { once: true });
+      });
+    } finally {
+      database.close();
+    }
+  }
+
+  async function deletePersistedVideo(key) {
+    const database = await openVideoDatabase();
+    try {
+      await new Promise((resolve, reject) => {
+        const transaction = database.transaction(VIDEO_DATABASE_STORE, "readwrite");
+        transaction.objectStore(VIDEO_DATABASE_STORE).delete(key);
+        transaction.addEventListener("complete", resolve, { once: true });
+        transaction.addEventListener("abort", () => reject(transaction.error), { once: true });
+        transaction.addEventListener("error", () => reject(transaction.error), { once: true });
+      });
+    } finally {
+      database.close();
+    }
+  }
+
+  async function clearPersistedVideos() {
+    const database = await openVideoDatabase();
+    try {
+      await new Promise((resolve, reject) => {
+        const transaction = database.transaction(VIDEO_DATABASE_STORE, "readwrite");
+        transaction.objectStore(VIDEO_DATABASE_STORE).clear();
+        transaction.addEventListener("complete", resolve, { once: true });
+        transaction.addEventListener("abort", () => reject(transaction.error), { once: true });
+        transaction.addEventListener("error", () => reject(transaction.error), { once: true });
+      });
+    } finally {
+      database.close();
+    }
+  }
+
+  async function restorePersistedVideoLibrary() {
+    try {
+      const records = (await readPersistedVideos())
+        .sort((a, b) => Number(a.savedAt || 0) - Number(b.savedAt || 0))
+        .slice(0, MAX_VIDEOS);
+      records.forEach((record) => {
+        if (!record || !record.key || !record.file || videoLibrary.some((entry) => entry.key === record.key)) return;
+        const file = record.file instanceof File
+          ? record.file
+          : new File([record.file], record.name || "video", {
+              type: record.type || record.file.type || "video/mp4",
+              lastModified: Number(record.lastModified) || 0,
+            });
+        videoLibrary.push({
+          id: generateId(),
+          key: record.key,
+          file,
+          name: record.name || file.name,
+          size: Number(record.size) || file.size,
+          positionSeconds: Number(videoPositions[record.key]) || 0,
+        });
+      });
+      renderVideoLibrary();
+      if (!videoLibrary.length) return;
+      const preferredKey = getActiveVideoKey();
+      const preferred = videoLibrary.find((entry) => entry.key === preferredKey) || videoLibrary[0];
+      await activateVideo(preferred.id);
+      setVideoStatus(`Vídeos restaurados. Retomando ${preferred.name}.`);
+    } catch (_error) {
+      // Navegação privada, bloqueio de armazenamento ou navegador antigo: a análise
+      // continua funcionando na sessão atual e informamos apenas quando o usuário salva.
+    }
+  }
+
   function loadVideoPositions() {
     try {
       const raw = window.localStorage.getItem(VIDEO_POSITIONS_KEY);
@@ -1460,6 +1590,7 @@
   function renderVideoLibrary() {
     elements.videoLibraryEmpty.hidden = videoLibrary.length > 0;
     elements.videoLibraryList.hidden = videoLibrary.length === 0;
+    elements.clearVideosButton.hidden = videoLibrary.length === 0;
     elements.videoLibraryList.replaceChildren();
     videoLibrary.forEach((entry) => {
       const item = document.createElement("li");
@@ -1516,7 +1647,13 @@
       releaseVideoObjectUrl();
       activeVideoId = null;
     }
-    videoLibrary.splice(index, 1);
+    const [removed] = videoLibrary.splice(index, 1);
+    delete videoPositions[removed.key];
+    persistVideoPositions();
+    void deletePersistedVideo(removed.key).catch(() => {
+      setVideoError("O vídeo saiu da lista, mas o navegador não conseguiu apagar a cópia armazenada.");
+    });
+    if (getActiveVideoKey() === removed.key) persistActiveVideoKey("");
     renderVideoLibrary();
     setVideoStatus(
       videoLibrary.length ? "Vídeo removido da lista." : "Adicione um vídeo para começar a cronoanálise.",
@@ -1548,6 +1685,7 @@
       videoObjectUrl = candidateUrl;
       videoFile = entry.file;
       activeVideoId = entry.id;
+      persistActiveVideoKey(entry.key);
       videoReady = false;
       videoResumeSeconds = Math.min(entry.positionSeconds || 0, Math.max(0, (metadata.duration || 0) - 0.05));
       clearVideoMarks();
@@ -1588,6 +1726,7 @@
     clearVideoError();
 
     const rejected = [];
+    const entriesToPersist = [];
     let firstAdded = null;
     let duplicates = 0;
     files.forEach((file) => {
@@ -1604,6 +1743,7 @@
       if (existing) {
         // O mesmo arquivo escolhido de novo renova a referência, que pode ter expirado.
         existing.file = file;
+        entriesToPersist.push(existing);
         duplicates += 1;
         if (!firstAdded) firstAdded = existing;
         return;
@@ -1617,10 +1757,19 @@
         positionSeconds: Number(videoPositions[key]) || 0,
       };
       videoLibrary.push(entry);
+      entriesToPersist.push(entry);
       if (!firstAdded) firstAdded = entry;
     });
 
     renderVideoLibrary();
+    if (entriesToPersist.length) {
+      const persistenceResults = await Promise.allSettled(entriesToPersist.map((entry) => persistVideoEntry(entry)));
+      if (persistenceResults.some((result) => result.status === "rejected")) {
+        setVideoError(
+          "O vídeo funciona nesta sessão, mas não coube no armazenamento do navegador. Libere espaço ou use um arquivo menor.",
+        );
+      }
+    }
     if (rejected.length) {
       setVideoError(
         videoLibrary.length >= MAX_VIDEOS
@@ -1643,6 +1792,7 @@
     elements.selectVideoButton.disabled = isLoading;
     elements.changeVideoButton.disabled = isLoading;
     elements.removeVideoButton.disabled = isLoading;
+    elements.clearVideosButton.disabled = isLoading;
     elements.videoPlayer.controls = !isLoading;
     if (isLoading) elements.videoPlayer.pause();
     updateVideoControls();
@@ -1745,6 +1895,44 @@
     elements.addVideosButton.focus();
   }
 
+  function getActiveVideoKey() {
+    try {
+      return window.localStorage.getItem(ACTIVE_VIDEO_KEY) || "";
+    } catch (_error) {
+      return "";
+    }
+  }
+
+  function persistActiveVideoKey(key) {
+    try {
+      if (key) window.localStorage.setItem(ACTIVE_VIDEO_KEY, key);
+      else window.localStorage.removeItem(ACTIVE_VIDEO_KEY);
+    } catch (_error) {
+      // O vídeo ainda funciona nesta sessão quando o armazenamento está bloqueado.
+    }
+  }
+
+  async function clearVideoLibrary() {
+    if (!videoLibrary.length) return;
+    if (!window.confirm("Apagar todos os vídeos guardados neste navegador? As atividades do estudo serão preservadas.")) {
+      return;
+    }
+    rememberVideoPosition();
+    releaseVideoObjectUrl();
+    videoLibrary = [];
+    videoPositions = {};
+    persistVideoPositions();
+    persistActiveVideoKey("");
+    renderVideoLibrary();
+    try {
+      await clearPersistedVideos();
+      setVideoStatus("Todos os vídeos foram apagados. As atividades do estudo foram preservadas.");
+    } catch (_error) {
+      setVideoError("A lista foi limpa, mas o navegador não conseguiu apagar o armazenamento local.");
+    }
+    elements.addVideosButton.focus();
+  }
+
   function releaseVideoObjectUrl() {
     videoLoadGeneration += 1;
     videoLoadPending = false;
@@ -1763,6 +1951,7 @@
     elements.selectVideoButton.disabled = false;
     elements.changeVideoButton.disabled = false;
     elements.removeVideoButton.disabled = false;
+    elements.clearVideosButton.disabled = false;
     elements.videoPlayer.controls = true;
     clearVideoMarks();
     elements.videoFileName.textContent = "Vídeo selecionado";
