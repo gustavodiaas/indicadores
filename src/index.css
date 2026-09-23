@@ -384,15 +384,12 @@
   backdrop-filter: none;
 }
 .module-shell .subtle-panel { padding: 20px; min-width: 0; }
-.analysis-results > .report-surface { order: 2; }
-.analysis-results > .analysis-chart { order: 1; }
 @media (min-width: 1280px) {
   .analysis-layout { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; }
   .balance-layout { grid-template-columns: minmax(320px, .7fr) minmax(0, 1.3fr); }
 }
 @media print {
   .analysis-layout, .balance-layout { display: block; }
-  .analysis-results > .report-surface, .analysis-results > .analysis-chart { order: initial; }
 }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
