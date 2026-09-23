@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { ModuleKey } from "@/store/useAppStore";
-import { 
-  FileText, GanttChartSquare, BarChart2, Calculator, 
-  ArrowRightLeft, ShieldCheck, Clock, Timer, Square, Home, ClipboardList, LayoutTemplate, Calendar, BookOpen, PanelLeftClose, PanelLeftOpen
-} from "lucide-react";
+import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { navigationModules } from "@/lib/module-navigation";
 
 interface Props {
   active: ModuleKey;
@@ -16,22 +14,7 @@ export function Sidebar({ active, onSelect }: Props) {
   const [keyboardFocus, setKeyboardFocus] = useState(false);
   const expanded = isExpanded || isHovered || keyboardFocus;
 
-  const navItems: { key: ModuleKey; icon: any; label: string }[] = [
-    { key: "home", icon: Home, label: "Home" },
-    { key: "resumo", icon: FileText, label: "Resumo" },
-    { key: "gbo", icon: GanttChartSquare, label: "GBO" },
-    { key: "produtividade", icon: BarChart2, label: "Produtividade" },
-    { key: "payback", icon: Calculator, label: "Payback" },
-    { key: "movimentacao", icon: ArrowRightLeft, label: "Movimentação" },
-    { key: "qualidade", icon: ShieldCheck, label: "Qualidade" },
-    { key: "disponibilidade", icon: Clock, label: "Disp." },
-    { key: "leadtime", icon: Timer, label: "Lead Time" },
-    { key: "area", icon: Square, label: "Área" },
-    { key: "planoAcao", icon: ClipboardList, label: "5W2H" },
-    { key: "a3", icon: LayoutTemplate, label: "A3" },
-    { key: "gantt", icon: Calendar, label: "Gantt" },
-    { key: "manual", icon: BookOpen, label: "Manual" },
-  ];
+  const navItems = navigationModules;
 
   return (
     <aside
