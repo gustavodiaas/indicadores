@@ -28,6 +28,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { DialogTrigger } from "@radix-ui/react-dialog"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { useAppStore } from "@/store/useAppStore"
 
 interface Operation {
@@ -290,11 +291,20 @@ export default function GBOAnalysis() {
 
           <div className="flex items-center gap-4">
             <Dialog>
+              <Tooltip delayDuration={180}>
+                <TooltipTrigger asChild>
               <DialogTrigger asChild>
-        <button className="h-9 w-9 flex items-center justify-center rounded-full text-[#0A1828] dark:text-slate-400 hover:text-[#7C3AED] dark:hover:text-[#C084FC] hover:bg-[#7C3AED]/10 dark:hover:bg-[#C084FC]/10 transition-colors">
+        <button type="button" aria-label="Ajuda sobre o GBO" className="h-9 w-9 flex items-center justify-center rounded-full text-[#0A1828] dark:text-slate-400 hover:text-[#7C3AED] dark:hover:text-[#C084FC] hover:bg-[#7C3AED]/10 dark:hover:bg-[#C084FC]/10 transition-colors">
                   <HelpCircle className="h-5 w-5" />
                 </button>
               </DialogTrigger>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" align="end" sideOffset={8} className="max-w-sm space-y-3 p-4 text-sm font-normal leading-relaxed">
+                  <p className="font-semibold">Manual Técnico GBO</p>
+                  <p>O <strong>GBO (Gráfico de Balanceamento de Operações)</strong> é uma ferramenta analítica de fluxo. Ele plota os tempos de ciclo individuais de cada operação em relação ao Takt Time estabelecido.</p>
+                  <p><strong>Objetivo:</strong> Identificar restrições sistêmicas (gargalos) e fornecer uma base de dados limpa para o nivelamento da capacidade produtiva.</p>
+                </TooltipContent>
+              </Tooltip>
               <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto rounded-xl border border-slate-200 dark:border-white/10 shadow-lg bg-white dark:bg-[#1C1C1E] text-[#0A1828] dark:text-slate-100">
                 <DialogHeader>
           <DialogTitle className="text-[#7C3AED] dark:text-[#C084FC] flex items-center gap-2 font-bold text-lg">
