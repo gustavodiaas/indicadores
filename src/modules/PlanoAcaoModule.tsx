@@ -396,7 +396,7 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
         </div>
       </div>
 
-      <div className="border-b border-border/60 pb-6">
+      <div className="subtle-panel">
         <h3 className="font-semibold text-slate-900 dark:text-white text-sm tracking-tight mb-5 flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-[#7C3AED] dark:bg-[#C084FC]" />Metadados do projeto</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
           <CustomDatePicker label="Data de Criação" value={data.metadata.dataCriacao} onChange={v => updateMeta("dataCriacao", v)} />
@@ -410,7 +410,7 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
         </div>
       </div>
 
-      <div className="min-w-0">
+      <div className="subtle-panel">
         <div className="flex flex-col gap-4 mb-6">
           <h3 className="font-semibold text-slate-900 dark:text-white text-sm tracking-tight flex items-center gap-2">
             Execução de tarefas

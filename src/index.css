@@ -306,7 +306,9 @@
   .dark .liquid-glass-sidebar { background: #1c1c1e; }
 }
 
-/* Workspace layouts: one page scroll, open input sections, distinct results. */
+/* A single quiet card material for forms, metrics, charts and reports. */
+.module-shell { --module-surface: rgba(255, 255, 255, .54); --module-edge: rgba(29, 29, 31, .07); }
+.dark .module-shell { --module-surface: rgba(255, 255, 255, .035); --module-edge: rgba(255, 255, 255, .075); }
 .analysis-layout, .balance-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -316,11 +318,10 @@
 }
 .analysis-inputs { min-width: 0; }
 .module-shell .input-section {
-  background: transparent;
-  border: 0;
-  border-bottom: 1px solid hsl(var(--border) / .7);
-  border-radius: 0;
-  padding: 0 0 24px;
+  background: var(--module-surface);
+  border: 1px solid var(--module-edge);
+  border-radius: 18px;
+  padding: 20px;
   box-shadow: none;
 }
 .module-shell .input-section h3 {
@@ -339,34 +340,50 @@
 }
 .analysis-results > * { min-width: 0; }
 .analysis-chart { min-width: 0; }
-.module-shell .comparison-surface {
-  background: hsl(var(--card));
-  border: 1px solid hsl(var(--border) / .55);
+.module-shell .comparison-surface,
+.dark .module-shell .comparison-surface {
+  background: var(--module-surface);
+  border: 1px solid var(--module-edge);
   box-shadow: none;
   backdrop-filter: none;
   height: auto;
   min-width: 0;
-  padding: 24px;
+  padding: 20px;
+  border-radius: 18px;
 }
-.module-shell .metric-surface {
-  background: hsl(var(--primary) / .055);
+.module-shell .metric-surface,
+.dark .module-shell .metric-surface {
+  background: var(--module-surface);
   box-shadow: none;
-  border: 1px solid hsl(var(--primary) / .12);
+  border: 1px solid var(--module-edge);
+  border-radius: 18px;
   backdrop-filter: none;
 }
 .module-shell .metric-surface::before { display: none; }
 .module-shell .metric-surface > div { flex-wrap: wrap; }
 .module-shell .metric-surface span { overflow-wrap: anywhere; }
-.module-shell .report-surface {
-  background: transparent;
-  border: 0;
-  border-top: 1px solid hsl(var(--border) / .7);
-  border-radius: 0;
+.module-shell .report-surface,
+.dark .module-shell .report-surface {
+  background: var(--module-surface);
+  border: 1px solid var(--module-edge);
+  border-radius: 18px;
   box-shadow: none;
   backdrop-filter: none;
-  padding: 24px 0;
+  padding: 20px;
 }
-.module-shell .report-surface > div.absolute { right: 0; }
+.module-shell .report-surface > div.absolute { right: 16px; }
+.module-shell .subtle-panel,
+.module-shell .apple-panel,
+.module-shell .rounded-xl.border.border-slate-200.bg-white,
+.dark .module-shell .apple-panel,
+.dark .module-shell .rounded-xl.border.border-slate-200.bg-white {
+  background: var(--module-surface);
+  border: 1px solid var(--module-edge);
+  border-radius: 18px;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+.module-shell .subtle-panel { padding: 20px; min-width: 0; }
 .analysis-results > .report-surface { order: 2; }
 .analysis-results > .analysis-chart { order: 1; }
 @media (min-width: 1280px) {

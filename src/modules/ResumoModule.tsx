@@ -200,7 +200,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
     <>
       <div className="analysis-layout">
         {/* COLUNA ESQUERDA: ENTRADA DE DADOS */}
-        <div className="analysis-inputs flex flex-col gap-6">
+        <div className="subtle-panel analysis-inputs flex flex-col gap-6">
           <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-white/10">
             <h3 className="font-semibold text-[#0A1828] dark:text-slate-100 text-lg tracking-tight flex items-center gap-2.5"><span className="w-2.5 h-2.5 rounded-full bg-[#7C3AED] dark:bg-[#C084FC] shadow-[0_0_0_5px_rgba(124,58,237,0.10)]" />Entrada de dados</h3>
             <div className="flex items-center gap-2">
