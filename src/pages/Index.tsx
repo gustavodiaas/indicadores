@@ -1,5 +1,6 @@
 import { useAppStore, calcProdutividade, calcPayback, calcMovimentacao, calcQualidade, calcDisponibilidade, calcLeadTime, calcArea, ModuleKey } from "@/store/useAppStore";
 import { Sidebar } from "@/components/Sidebar";
+import { navigationModules } from "@/lib/module-navigation";
 import { Topbar } from "@/components/Topbar";
 import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } from "docx";
 import { HomeDashboard } from "@/components/HomeDashboard";
@@ -327,6 +328,8 @@ const Index = () => {
   };
 
   const renderHome = () => <HomeDashboard onSelect={setActiveModule} theme={theme} onThemeChange={setTheme} />;
+
+  const currentModule = navigationModules.find(module => module.key === activeModule);
   return (
     <div className="relative flex flex-col h-screen w-full bg-[#F5F5F7] dark:bg-[#0B0B0F] text-[#1D1D1F] dark:text-[#F5F5F7] overflow-hidden print:bg-white print:h-auto print:overflow-visible">
       <style dangerouslySetInnerHTML={{ __html: `
@@ -360,6 +363,12 @@ const Index = () => {
           {activeModule === "home" && renderHome()}
           {activeModule !== "home" && activeModule !== "gbo" && activeModule !== "gantt" && (
             <div key={activeModule} className="module-shell animate-in fade-in slide-in-from-bottom-2 duration-500 w-full min-h-full">
+              {currentModule && !["planoAcao", "a3", "manual"].includes(activeModule) && (
+                <header className="mb-8 border-b border-border/60 pb-5">
+                  <h1 className="text-2xl font-semibold tracking-tight">{currentModule.title}</h1>
+                  <p className="mt-1.5 text-sm text-muted-foreground">{currentModule.description}</p>
+                </header>
+              )}
               {renderPanelModules()}
             </div>
           )}

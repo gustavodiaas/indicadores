@@ -233,7 +233,7 @@ export function A3Module({ data, onChange }: Props) {
   };
 
   return (
-    <div className="flex flex-col gap-4 h-full pb-36 animate-in fade-in duration-500 overflow-y-auto pr-2">
+    <div className="flex flex-col gap-6 pb-8">
       <Dialog open={deleteConfirm.open} onOpenChange={(o) => setDeleteConfirm(prev => ({ ...prev, open: o }))}>
         <DialogContent className="bg-white dark:bg-[#1C1C1E] rounded-xl border border-slate-200 dark:border-white/10 shadow-lg p-8 max-w-sm mx-auto">
           <div className="flex flex-col items-center text-center">
@@ -272,7 +272,7 @@ export function A3Module({ data, onChange }: Props) {
         <p className="text-xs text-amber-800 dark:text-amber-400 font-medium"><strong>Poder de Síntese:</strong> O layout do Excel possui áreas cravadas (máximo 13 linhas).</p>
       </div>
 
-      <div className="flex flex-col gap-4 bg-slate-50/50 dark:bg-transparent p-5 rounded-xl border border-slate-200 dark:border-white/10">
+      <div className="flex flex-col gap-6">
         <div className="grid grid-cols-1 md:grid-cols-6 gap-4 bg-white dark:bg-[#1C1C1E] p-4 rounded-xl border border-slate-200 dark:border-white/10 shrink-0 items-end">
           <div className="md:col-span-3"><LocalInputField label="Título / Tema" value={data.titulo || ""} onChange={v => onChange({ titulo: v })} /></div>
           <div className="md:col-span-1"><CustomDatePicker label="Data" value={data.data || ""} onChange={v => onChange({ data: v })} /></div>

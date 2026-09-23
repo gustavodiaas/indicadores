@@ -45,10 +45,10 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
   const isUnitario = data.modoInsercaoSalario === "unitario";
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 h-full animate-in fade-in duration-500">
-      <div className="w-full lg:w-[60%] flex flex-col gap-6 overflow-y-auto pr-2 pb-36">
+    <div className="analysis-layout">
+      <div className="analysis-inputs flex flex-col gap-6">
 
-        <div className="bg-white dark:bg-[#1C1C1E] p-5 rounded-xl border border-slate-200 dark:border-white/10 flex items-center justify-between">
+        <div className="input-section  flex items-center justify-between">
           <div className="flex flex-col">
             <span className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Configuração</span>
             <span className="text-sm font-semibold tracking-wide text-slate-900 dark:text-slate-100">Modelo de Cálculo</span>
@@ -68,7 +68,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
         </div>
 
         <div className="grid grid-cols-1 gap-6">
-          <div className="bg-white dark:bg-[#1C1C1E] p-5 rounded-xl border border-slate-200 dark:border-white/10 space-y-4">
+          <div className="input-section  space-y-4">
             <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-200 dark:border-white/10 pb-2">Estado Inicial (T1)</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
@@ -120,7 +120,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-[#1C1C1E] p-5 rounded-xl border border-slate-200 dark:border-white/10 space-y-4">
+          <div className="input-section  space-y-4">
             <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-200 dark:border-white/10 pb-2">Estado Final (T3)</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
@@ -169,7 +169,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#1C1C1E] p-5 rounded-xl border border-slate-200 dark:border-white/10 space-y-4">
+        <div className="input-section  space-y-4">
           <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-200 dark:border-white/10 pb-2">Investimentos</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
@@ -208,7 +208,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
         </div>
       </div>
 
-      <div className="w-full lg:w-[40%] flex flex-col gap-6">
+      <div className="analysis-results">
         <div className="grid grid-cols-2 gap-3">
           <KpiCard label="Custo Inicial" value={formatBRL(r.custoI)} />
           <KpiCard label="Custo Final" value={formatBRL(r.custoF)} />
@@ -218,7 +218,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
 
           <EditableLaudoCard title="Laudo de Payback" laudo={laudo} />
 
-        <div className="mt-auto min-h-[250px] bg-white dark:bg-[#1C1C1E] rounded-xl p-4 border border-slate-200 dark:border-white/10">
+        <div className="analysis-chart">
           <ComparisonChart data={chartData} title={`Evolução do Custo por ${u.slice(0, -1)}`} />
         </div>
       </div>

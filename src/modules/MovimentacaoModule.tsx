@@ -70,13 +70,13 @@ export function MovimentacaoModule({ data, onChange }: Props) {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 h-full animate-in fade-in duration-500">
+    <div className="analysis-layout">
       {/* COLUNA ESQUERDA: CONFIGURAÇÕES E ENTRADA DE DADOS */}
-      <div className="w-full lg:w-[60%] flex flex-col gap-6 overflow-y-auto pr-2 pb-36">
+      <div className="analysis-inputs flex flex-col gap-6">
 
         {/* Configurações */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div className="bg-white dark:bg-[#1C1C1E] p-5 rounded-xl border border-slate-200 dark:border-white/10">
+          <div className="input-section ">
             <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-3 pl-1">Unidade de Tempo</label>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -93,7 +93,7 @@ export function MovimentacaoModule({ data, onChange }: Props) {
             </DropdownMenu>
           </div>
 
-          <div className="bg-white dark:bg-[#1C1C1E] p-5 rounded-xl border border-slate-200 dark:border-white/10">
+          <div className="input-section ">
             <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-3 pl-1">Exibir no Laudo</label>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -112,7 +112,7 @@ export function MovimentacaoModule({ data, onChange }: Props) {
         </div>
 
         {/* Contexto */}
-        <div className="bg-white dark:bg-[#1C1C1E] p-5 rounded-xl border border-slate-200 dark:border-white/10 space-y-4">
+        <div className="input-section  space-y-4">
           <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-200 dark:border-white/10 pb-2">Contexto do Laudo</h3>
           <div>
             <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Ferramenta Utilizada</label>
@@ -126,7 +126,7 @@ export function MovimentacaoModule({ data, onChange }: Props) {
 
         {/* Estados */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div className="bg-white dark:bg-[#1C1C1E] p-5 rounded-xl border border-slate-200 dark:border-white/10 space-y-4">
+          <div className="input-section  space-y-4">
             <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-200 dark:border-white/10 pb-2">Estado T1</h3>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Distância (m)</label>
@@ -138,7 +138,7 @@ export function MovimentacaoModule({ data, onChange }: Props) {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-[#1C1C1E] p-5 rounded-xl border border-slate-200 dark:border-white/10 space-y-4">
+          <div className="input-section  space-y-4">
             <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-200 dark:border-white/10 pb-2">Estado T3</h3>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Distância (m)</label>
@@ -153,7 +153,7 @@ export function MovimentacaoModule({ data, onChange }: Props) {
       </div>
 
       {/* COLUNA DIREITA: KPIs E LAUDO */}
-      <div className="w-full lg:w-[40%] flex flex-col gap-6">
+      <div className="analysis-results">
         <div className="grid grid-cols-2 gap-3">
           <KpiCard label="Redução Dist." value={redD} suffix="%" trend={r.reducaoDist} />
           <KpiCard label="Redução Tempo" value={redT} suffix="%" trend={r.reducaoTempo} />
@@ -161,7 +161,7 @@ export function MovimentacaoModule({ data, onChange }: Props) {
 
           <EditableLaudoCard title="Laudo de Movimentação" laudo={laudo} />
 
-        <div className="mt-auto min-h-[250px] bg-white dark:bg-[#1C1C1E] rounded-xl p-4 border border-slate-200 dark:border-white/10">
+        <div className="analysis-chart">
           <ComparisonChart data={chartData} title="Comparativo T1 vs T3" />
         </div>
       </div>

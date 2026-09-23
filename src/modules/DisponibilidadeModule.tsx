@@ -30,13 +30,13 @@ export function DisponibilidadeModule({ data, onChange }: Props) {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 h-full animate-in fade-in duration-500">
+    <div className="analysis-layout">
       {/* COLUNA ESQUERDA: ENTRADA DE DADOS */}
-      <div className="w-full lg:w-[60%] flex flex-col gap-6 overflow-y-auto pr-2 pb-36">
+      <div className="analysis-inputs flex flex-col gap-6">
 
         {/* Bloco T1 e T3 Modernizados */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div className="bg-white dark:bg-[#1C1C1E] p-5 rounded-xl border border-slate-200 dark:border-white/10 space-y-4">
+          <div className="input-section  space-y-4">
             <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-200 dark:border-white/10 pb-2">Estado T1 (Inicial)</h3>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Tempo Total</label>
@@ -62,7 +62,7 @@ export function DisponibilidadeModule({ data, onChange }: Props) {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-[#1C1C1E] p-5 rounded-xl border border-slate-200 dark:border-white/10 space-y-4">
+          <div className="input-section  space-y-4">
             <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-200 dark:border-white/10 pb-2">Estado T3 (Final)</h3>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Tempo Total</label>
@@ -130,12 +130,12 @@ export function DisponibilidadeModule({ data, onChange }: Props) {
       </div>
 
       {/* COLUNA DIREITA: KPIs E LAUDO */}
-      <div className="w-full lg:w-[40%] flex flex-col gap-6">
+      <div className="analysis-results">
         <KpiCard label="Aumento de Disponibilidade" value={r.aumento.toFixed(6).replace(".", ",")} suffix="%" trend={r.aumento} />
 
         <EditableLaudoCard title="Laudo de Disponibilidade" laudo={laudo} />
 
-        <div className="mt-auto min-h-[250px] bg-white dark:bg-[#1C1C1E] rounded-xl p-4 border border-slate-200 dark:border-white/10">
+        <div className="analysis-chart">
           <ComparisonChart data={chartData} title="Evolução da Disponibilidade" />
         </div>
       </div>

@@ -306,6 +306,78 @@
   .dark .liquid-glass-sidebar { background: #1c1c1e; }
 }
 
+/* Workspace layouts: one page scroll, open input sections, distinct results. */
+.analysis-layout, .balance-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 32px;
+  align-items: start;
+  padding-bottom: 32px;
+}
+.analysis-inputs { min-width: 0; }
+.module-shell .input-section {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid hsl(var(--border) / .7);
+  border-radius: 0;
+  padding: 0 0 24px;
+  box-shadow: none;
+}
+.module-shell .input-section h3 {
+  text-transform: none;
+  letter-spacing: -.02em;
+  font-size: 15px;
+  font-weight: 600;
+  border: 0;
+}
+.analysis-results {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: 20px;
+  min-width: 0;
+}
+.analysis-results > * { min-width: 0; }
+.analysis-chart { min-width: 0; }
+.module-shell .comparison-surface {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border) / .55);
+  box-shadow: none;
+  backdrop-filter: none;
+  height: auto;
+  min-width: 0;
+  padding: 24px;
+}
+.module-shell .metric-surface {
+  background: hsl(var(--primary) / .055);
+  box-shadow: none;
+  border: 1px solid hsl(var(--primary) / .12);
+  backdrop-filter: none;
+}
+.module-shell .metric-surface::before { display: none; }
+.module-shell .metric-surface > div { flex-wrap: wrap; }
+.module-shell .metric-surface span { overflow-wrap: anywhere; }
+.module-shell .report-surface {
+  background: transparent;
+  border: 0;
+  border-top: 1px solid hsl(var(--border) / .7);
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  padding: 24px 0;
+}
+.module-shell .report-surface > div.absolute { right: 0; }
+.analysis-results > .report-surface { order: 2; }
+.analysis-results > .analysis-chart { order: 1; }
+@media (min-width: 1280px) {
+  .analysis-layout { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; }
+  .balance-layout { grid-template-columns: minmax(320px, .7fr) minmax(0, 1.3fr); }
+}
+@media print {
+  .analysis-layout, .balance-layout { display: block; }
+  .analysis-results > .report-surface, .analysis-results > .analysis-chart { order: initial; }
+}
+
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #C4CEDC; border-radius: 10px; }

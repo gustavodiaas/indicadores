@@ -355,7 +355,7 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
   };
 
   return (
-    <div className="flex flex-col gap-5 min-h-full pb-28 animate-in fade-in duration-500">
+    <div className="flex flex-col gap-6 min-h-full pb-8 animate-in fade-in duration-500">
 
       <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 rounded-[22px] bg-gradient-to-r from-[#7C3AED]/[0.09] via-white/50 to-[#FF6B00]/[0.08] dark:from-[#C084FC]/15 dark:via-[#1C1C1E]/60 dark:to-[#FF6B00]/10 px-5 py-4 border border-black/[0.04] dark:border-white/[0.07]">
         <div>
@@ -396,9 +396,9 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
         </div>
       </div>
 
-      <div className="apple-panel p-5 md:p-6">
+      <div className="border-b border-border/60 pb-6">
         <h3 className="font-semibold text-slate-900 dark:text-white text-sm tracking-tight mb-5 flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-[#7C3AED] dark:bg-[#C084FC]" />Metadados do projeto</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
           <CustomDatePicker label="Data de Criação" value={data.metadata.dataCriacao} onChange={v => updateMeta("dataCriacao", v)} />
           <InputField label="Responsável (Consultor/Empresário)" value={data.metadata.respCriacao} onChange={v => updateMeta("respCriacao", v)} />
           <InputField label="Objetivo" value={data.metadata.objetivo} onChange={v => updateMeta("objetivo", v)} />
@@ -410,7 +410,7 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
         </div>
       </div>
 
-      <div className="apple-panel p-5 md:p-6 flex-1">
+      <div className="min-w-0">
         <div className="flex flex-col gap-4 mb-6">
           <h3 className="font-semibold text-slate-900 dark:text-white text-sm tracking-tight flex items-center gap-2">
             Execução de tarefas
@@ -457,7 +457,7 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
 
                 {expandedId === a.id && (
                   // FIX: painel expandido — bg-slate-50 sem dark estava completamente branco
-                  <div className="p-5 grid grid-cols-2 md:grid-cols-4 gap-4 bg-white dark:bg-[#1C1C1E] border-t border-slate-200 dark:border-white/10 animate-in fade-in slide-in-from-top-2 duration-300">
+                  <div className="p-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 bg-white dark:bg-[#1C1C1E] border-t border-slate-200 dark:border-white/10 animate-in fade-in slide-in-from-top-2 duration-300">
                     <div className="md:col-span-4"><InputField label="O que será feito? (What)" value={a.what} onChange={v => updateAcao(a.id, "what", v)} /></div>
                     <div className="md:col-span-2"><InputField label="Como? (How)" value={a.how} onChange={v => updateAcao(a.id, "how", v)} /></div>
                     <InputField label="Por que? (Why)" value={a.why} onChange={v => updateAcao(a.id, "why", v)} />

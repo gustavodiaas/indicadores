@@ -312,12 +312,12 @@ export default function GBOAnalysis() {
           </div>
         </div>
 
-        <div className="flex flex-col xl:flex-row gap-6 pb-12 print:p-12">
+        <div className="balance-layout print:p-12">
 
           {/* COLUNA ESQUERDA: FOMULÁRIOS */}
-          <div className="xl:w-[40%] flex flex-col gap-6 print:hidden">
+          <div className="analysis-inputs flex flex-col gap-6 print:hidden">
 
-            <div className="bg-white dark:bg-[#1C1C1E] p-5 rounded-xl border border-slate-200 dark:border-white/10 space-y-4">
+            <div className="input-section  space-y-4">
               <h3 className="font-bold text-[#0A1828] dark:text-slate-100 border-b border-slate-200 dark:border-white/10 pb-2 flex items-center gap-2">
         <div className="w-2 h-2 rounded-full bg-[#7C3AED] dark:bg-[#C084FC] animate-pulse"></div>
                 Cálculo do Takt Time
@@ -397,7 +397,7 @@ export default function GBOAnalysis() {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-[#1C1C1E] p-5 rounded-xl border border-slate-200 dark:border-white/10 space-y-4">
+            <div className="input-section  space-y-4">
               <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-2">
                 <h3 className="font-bold text-[#0A1828] dark:text-slate-100 text-sm tracking-wide uppercase">Nova Operação</h3>
                 <DropdownMenu>
@@ -462,7 +462,7 @@ export default function GBOAnalysis() {
           </div>
 
           {/* COLUNA DIREITA: GRÁFICOS */}
-          <div className="xl:w-[60%] flex flex-col gap-6 print:w-full">
+          <div className="min-w-0 flex flex-col gap-6 print:w-full">
             {operations.length > 0 ? (
               <>
                 <div className="print:hidden">

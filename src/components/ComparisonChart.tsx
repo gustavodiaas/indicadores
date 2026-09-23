@@ -33,7 +33,7 @@ export function ComparisonChart({ data, title }: Props) {
   if (!data || data.length === 0) return null;
 
   return (
-    <div className="flex flex-col h-full w-full bg-white/80 dark:bg-[#1C1C1E]/90 p-5 border border-black/[0.04] dark:border-white/[0.07] rounded-[20px] shadow-[0_14px_38px_rgba(15,23,42,0.05)] backdrop-blur-xl">
+    <div className="comparison-surface flex flex-col h-full w-full bg-white/80 dark:bg-[#1C1C1E]/90 p-5 border border-black/[0.04] dark:border-white/[0.07] rounded-[20px] shadow-[0_14px_38px_rgba(15,23,42,0.05)] backdrop-blur-xl">
       <h4 className="text-sm font-semibold text-slate-900 dark:text-white mb-5 tracking-tight">{title}</h4>
       
       <ResponsiveContainer width="100%" height="100%" minHeight={250}>

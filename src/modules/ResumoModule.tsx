@@ -198,9 +198,9 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
 
   return (
     <>
-      <div className="flex flex-col lg:flex-row gap-6 h-full">
+      <div className="analysis-layout">
         {/* COLUNA ESQUERDA: ENTRADA DE DADOS */}
-        <div className="w-full lg:w-[55%] flex flex-col gap-6 pb-28 bg-white/55 dark:bg-[#1C1C1E]/55 rounded-[22px] p-5 md:p-6 backdrop-blur-xl">
+        <div className="analysis-inputs flex flex-col gap-6">
           <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-white/10">
             <h3 className="font-semibold text-[#0A1828] dark:text-slate-100 text-lg tracking-tight flex items-center gap-2.5"><span className="w-2.5 h-2.5 rounded-full bg-[#7C3AED] dark:bg-[#C084FC] shadow-[0_0_0_5px_rgba(124,58,237,0.10)]" />Entrada de dados</h3>
             <div className="flex items-center gap-2">
@@ -255,7 +255,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
         </div>
 
         {/* COLUNA DIREITA: CARDS DE VISUALIZAÇÃO DE TEXTO */}
-        <div className="w-full lg:w-[45%] flex flex-col gap-6 pb-28">
+        <div className="min-w-0 flex flex-col gap-6">
           <EditableLaudoCard title="Descrição do Processo" laudo={descTexto} laudoWord={descTextoWord} />
 
           <div className="relative apple-panel p-5 md:p-6 flex flex-col">

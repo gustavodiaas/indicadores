@@ -34,11 +34,11 @@ export function QualidadeModule({ data, onChange }: Props) {
   const laudo = `No estágio inicial, de um total de ${data.quantidadeT1} peças produzidas, identificou-se ${data.perdasT1} ${p1Txt}, resultando em um índice de conformidade de ${r.indiceT1.toFixed(1)}%. Após as melhorias, de um total de ${data.quantidadeT3} peças, identificou-se ${data.perdasT3} ${p3Txt}, elevando o índice para ${r.indiceT3.toFixed(1)}%, representando um aumento de ${r.aumento.toFixed(1)}% na conformidade.`;
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 h-full">
+    <div className="analysis-layout">
       {/* COLUNA ESQUERDA: ENTRADA DE DADOS */}
-      <div className="w-full lg:w-[60%] grid grid-cols-1 sm:grid-cols-2 gap-6 overflow-y-auto pr-2 pb-10">
+      <div className="analysis-inputs grid grid-cols-1 sm:grid-cols-2 gap-6">
 
-        <div className="bg-white dark:bg-[#1C1C1E] p-5 rounded-xl border border-slate-200 dark:border-white/10 space-y-4 h-fit">
+        <div className="input-section  space-y-4 h-fit">
           <h3 className="font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-white/10 pb-2 text-sm uppercase tracking-wide">
             T1 - Inicial
           </h3>
@@ -46,7 +46,7 @@ export function QualidadeModule({ data, onChange }: Props) {
           <LocalInputField label="Perdas (Peças)" value={data.perdasT1} onChange={v => onChange({ perdasT1: Number(v) || 0 })} />
         </div>
 
-        <div className="bg-white dark:bg-[#1C1C1E] p-5 rounded-xl border border-slate-200 dark:border-white/10 space-y-4 h-fit">
+        <div className="input-section  space-y-4 h-fit">
           <h3 className="font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-white/10 pb-2 text-sm uppercase tracking-wide">
             T3 - Final
           </h3>
@@ -57,12 +57,12 @@ export function QualidadeModule({ data, onChange }: Props) {
       </div>
 
       {/* COLUNA DIREITA: KPIs E LAUDO (100% ADAPTADOS PARA MODO ESCURO) */}
-      <div className="w-full lg:w-[40%] flex flex-col gap-4">
+      <div className="analysis-results">
         <KpiCard label="Aumento de Qualidade" value={r.aumento.toFixed(1)} suffix="%" trend={r.aumento} />
 
           <EditableLaudoCard title="Laudo de Qualidade" laudo={laudo} />
 
-        <div className="mt-auto pt-6 min-h-[250px] bg-white dark:bg-[#1C1C1E] rounded-xl p-4 border border-slate-200 dark:border-white/10">
+        <div className="analysis-chart">
           <ComparisonChart data={chartData} title="Índice de Peças Boas" />
         </div>
       </div>

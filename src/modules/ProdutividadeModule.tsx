@@ -27,10 +27,10 @@ export function ProdutividadeModule({ data, onChange }: Props) {
   const laudo = `No estágio inicial, a produtividade era de ${r.pphT1.toFixed(6).replace(".", ",")} ${u}/h/op, produzindo ${data.volumeT1 || 0} ${u} com ${data.operadoresT1 || 0} ${opTxt1} em ${data.horasT1 || 0}h. Após as melhorias, a produtividade subiu para ${r.pphT3.toFixed(6).replace(".", ",")} ${u}/h/op, produzindo ${data.volumeT3 || 0} ${u} com ${data.operadoresT3 || 0} ${opTxt3} em ${data.horasT3 || 0}h. Isso representa um ganho direto de ${r.ganho.toFixed(6).replace(".", ",")}% na eficiência operacional da célula.`;
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 h-full animate-in fade-in duration-500">
-      <div className="w-full lg:w-[60%] flex flex-col gap-6 overflow-y-auto pr-2 pb-10">
+    <div className="analysis-layout">
+      <div className="analysis-inputs flex flex-col gap-6">
 
-        <div className="bg-white dark:bg-[#1C1C1E] p-5 rounded-xl border border-slate-200 dark:border-white/10 flex items-center justify-between">
+        <div className="input-section  flex items-center justify-between">
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
               <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Calculado com 21 dias úteis</span>
@@ -48,7 +48,7 @@ export function ProdutividadeModule({ data, onChange }: Props) {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div className="bg-white dark:bg-[#1C1C1E] p-5 rounded-xl border border-slate-200 dark:border-white/10 space-y-4">
+          <div className="input-section  space-y-4">
             <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-200 dark:border-white/10 pb-2">
               T1 - Inicial
             </h3>
@@ -71,7 +71,7 @@ export function ProdutividadeModule({ data, onChange }: Props) {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-[#1C1C1E] p-5 rounded-xl border border-slate-200 dark:border-white/10 space-y-4">
+          <div className="input-section  space-y-4">
             <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-200 dark:border-white/10 pb-2">
               T3 - Final
             </h3>
@@ -96,12 +96,12 @@ export function ProdutividadeModule({ data, onChange }: Props) {
         </div>
       </div>
 
-      <div className="w-full lg:w-[40%] flex flex-col gap-6">
+      <div className="analysis-results">
         <KpiCard label="Ganho de Produtividade" value={r.ganho.toFixed(6).replace(".", ",")} suffix="%" trend={r.ganho} />
 
         <EditableLaudoCard title="Laudo Operacional" laudo={laudo} />
 
-        <div className="mt-auto min-h-[250px] bg-white dark:bg-[#1C1C1E] rounded-xl p-4 border border-slate-200 dark:border-white/10">
+        <div className="analysis-chart">
           <ComparisonChart data={chartData} title={`Evolução (${u}/h/op)`} />
         </div>
       </div>
