@@ -11,6 +11,9 @@ export default {
       screens: { "2xl": "1400px" },
     },
     extend: {
+      fontFamily: {
+        sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Text"', '"SF Pro Display"', '"Segoe UI"', 'sans-serif'],
+      },
       colors: {
         /* ── PALETA RICO INVESTIMENTOS ───────────────────────── */
         rico: {

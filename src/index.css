@@ -229,6 +229,85 @@
   }
 }
 
+/* Shared system materials apply to every module and portalled control. */
+@layer base {
+  :root {
+    --background: 240 11% 96%;
+    --foreground: 240 3% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 3% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 3% 12%;
+    --secondary: 240 5% 93%;
+    --secondary-foreground: 240 3% 20%;
+    --muted: 240 5% 93%;
+    --muted-foreground: 240 3% 43%;
+    --accent: 240 5% 92%;
+    --accent-foreground: 240 3% 12%;
+    --border: 240 5% 88%;
+    --input: 240 5% 88%;
+    --radius: 1rem;
+  }
+  .dark {
+    --background: 240 6% 6%;
+    --foreground: 240 11% 96%;
+    --card: 240 4% 12%;
+    --card-foreground: 240 11% 96%;
+    --popover: 240 3% 17%;
+    --popover-foreground: 240 11% 96%;
+    --secondary: 240 3% 20%;
+    --secondary-foreground: 240 11% 96%;
+    --muted: 240 3% 17%;
+    --muted-foreground: 240 5% 68%;
+    --accent: 240 3% 24%;
+    --accent-foreground: 240 11% 96%;
+    --border: 240 3% 24%;
+    --input: 240 3% 24%;
+  }
+  :focus-visible { outline: 3px solid hsl(var(--primary) / .45); outline-offset: 3px; }
+  button { -webkit-tap-highlight-color: transparent; }
+}
+
+@layer components {
+  .liquid-glass-sidebar { transition: width 260ms cubic-bezier(.22, 1, .36, 1); }
+  .liquid-glass-sidebar nav { overflow-x: hidden; }
+  .sidebar-label { transition: opacity 180ms ease; white-space: nowrap; }
+  .liquid-glass-sidebar[data-expanded="true"] {
+    background-color: rgba(255,255,255,.48);
+    box-shadow: 0 20px 64px rgba(29,29,31,.16), inset 0 1px 0 rgba(255,255,255,.9);
+  }
+  .dark .liquid-glass-sidebar[data-expanded="true"] { background-color: rgba(28,28,30,.64); }
+  .module-shell h1, .module-shell h2 { font-weight: 650; letter-spacing: -.035em; }
+  .module-shell input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
+  .module-shell textarea {
+    background-color: hsl(var(--muted) / .65);
+    border-color: transparent;
+    border-radius: 12px;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.025);
+    transition: background-color 160ms ease, box-shadow 160ms ease;
+  }
+  .module-shell input:focus, .module-shell textarea:focus {
+    background-color: hsl(var(--card));
+    box-shadow: 0 0 0 3px hsl(var(--primary) / .18);
+  }
+  .module-shell button { letter-spacing: -.01em; }
+  [role="dialog"], [role="alertdialog"], [role="menu"], [role="listbox"] {
+    border-color: hsl(var(--border) / .7);
+    border-radius: 18px;
+    background-color: hsl(var(--popover) / .94);
+    backdrop-filter: blur(24px) saturate(160%);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
+@supports not (backdrop-filter: blur(1px)) {
+  .liquid-glass-sidebar { background: #f5f5f7; }
+  .dark .liquid-glass-sidebar { background: #1c1c1e; }
+}
+
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #C4CEDC; border-radius: 10px; }

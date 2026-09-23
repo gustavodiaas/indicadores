@@ -13,6 +13,9 @@ interface Props {
 
 export function Sidebar({ active, onSelect }: Props) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [keyboardFocus, setKeyboardFocus] = useState(false);
+  const expanded = isExpanded || isHovered || keyboardFocus;
 
   const navItems: { key: ModuleKey; icon: any; label: string }[] = [
     { key: "home", icon: Home, label: "Home" },
@@ -33,17 +36,24 @@ export function Sidebar({ active, onSelect }: Props) {
 
   return (
     <aside
+      aria-label="Navegação principal"
+      data-expanded={expanded}
+      onPointerEnter={(event) => { if (event.pointerType === "mouse") setIsHovered(true); }}
+      onPointerLeave={() => { setIsHovered(false); setIsExpanded(false); }}
+      onFocusCapture={(event) => { if (event.target.matches(":focus-visible")) setKeyboardFocus(true); }}
+      onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setKeyboardFocus(false); }}
+      onKeyDown={(event) => { if (event.key === "Escape") { setIsExpanded(false); setIsHovered(false); setKeyboardFocus(false); } }}
       className={`liquid-glass-sidebar fixed left-3 top-3 bottom-3 z-[1000] print:hidden flex flex-col isolate
         h-[calc(100vh-24px)]
         rounded-[24px]
         transition-[width] duration-300 ease-out
-        ${isExpanded ? "w-60" : "w-[60px]"}`}
+        ${expanded ? "w-60" : "w-[60px]"}`}
     >
       <div className="liquid-glass-surface" aria-hidden="true" />
       <div className="liquid-glass-refraction" aria-hidden="true" />
-      {/* Botão de Expansão/Contração no Topo (Estilo Gemini) */}
+      {/* Hover no desktop; botão para telas de toque. */}
       <div className="relative z-10 flex items-center justify-between px-3 h-16 border-b border-black/[0.055] dark:border-white/[0.09] shrink-0">
-        {isExpanded && (
+        {expanded && (
           <span className="text-sm font-semibold tracking-tight text-slate-800 dark:text-slate-100 truncate">
             Navegação
           </span>
@@ -51,18 +61,23 @@ export function Sidebar({ active, onSelect }: Props) {
         <Tooltip delayDuration={180}>
           <TooltipTrigger asChild>
             <button
-              onClick={() => setIsExpanded(!isExpanded)}
-              aria-label={isExpanded ? "Recuar barra lateral" : "Expandir barra lateral"}
+              onClick={() => {
+                setIsExpanded(!expanded);
+                setIsHovered(false);
+                setKeyboardFocus(false);
+              }}
+              aria-expanded={expanded}
+              aria-label={expanded ? "Recuar barra lateral" : "Expandir barra lateral"}
               className="p-2 rounded-[10px] text-slate-500 dark:text-slate-400
 hover:text-slate-900 dark:hover:text-white
 hover:bg-black/[0.05] dark:hover:bg-white/10
 transition-colors duration-200 mx-auto"
             >
-              {isExpanded ? <PanelLeftClose className="w-5 h-5" /> : <PanelLeftOpen className="w-5 h-5" />}
+              {expanded ? <PanelLeftClose className="w-5 h-5" /> : <PanelLeftOpen className="w-5 h-5" />}
             </button>
           </TooltipTrigger>
           <TooltipContent side="right" sideOffset={10}>
-            {isExpanded ? "Recuar barra lateral" : "Expandir barra lateral"}
+            {expanded ? "Recuar barra lateral" : "Expandir barra lateral"}
           </TooltipContent>
         </Tooltip>
       </div>
@@ -76,7 +91,8 @@ transition-colors duration-200 mx-auto"
             <Tooltip key={item.key} delayDuration={180}>
               <TooltipTrigger asChild>
                 <button
-                  onClick={() => onSelect(item.key)}
+                  onClick={() => { onSelect(item.key); setIsExpanded(false); }}
+                  aria-current={isActive ? "page" : undefined}
                   aria-label={item.label}
               className={`
   group w-full flex items-center gap-3
@@ -92,14 +108,12 @@ transition-colors duration-200 mx-auto"
                 <Icon className={`w-5 h-5 transition-transform duration-300 ${isActive ? "" : "group-hover:scale-110"}`} />
               </div>
               
-              {isExpanded && (
-                <span className="text-[13px] truncate tracking-tight text-left">
+              <span aria-hidden={!expanded} className={`sidebar-label text-[13px] truncate tracking-tight text-left ${expanded ? "opacity-100" : "opacity-0 w-0"}`}>
                   {item.label}
                 </span>
-              )}
                 </button>
               </TooltipTrigger>
-              {!isExpanded && (
+              {!expanded && (
                 <TooltipContent side="right" sideOffset={10}>{item.label}</TooltipContent>
               )}
             </Tooltip>
