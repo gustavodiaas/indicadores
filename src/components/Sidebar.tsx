@@ -4,7 +4,6 @@ import {
   FileText, GanttChartSquare, BarChart2, Calculator, 
   ArrowRightLeft, ShieldCheck, Clock, Timer, Square, Home, ClipboardList, LayoutTemplate, Calendar, BookOpen, PanelLeftClose, PanelLeftOpen
 } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface Props {
   active: ModuleKey;
@@ -58,8 +57,6 @@ export function Sidebar({ active, onSelect }: Props) {
             Navegação
           </span>
         )}
-        <Tooltip delayDuration={180}>
-          <TooltipTrigger asChild>
             <button
               onClick={() => {
                 setIsExpanded(!expanded);
@@ -75,11 +72,6 @@ transition-colors duration-200 mx-auto"
             >
               {expanded ? <PanelLeftClose className="w-5 h-5" /> : <PanelLeftOpen className="w-5 h-5" />}
             </button>
-          </TooltipTrigger>
-          <TooltipContent side="right" sideOffset={10}>
-            {expanded ? "Recuar barra lateral" : "Expandir barra lateral"}
-          </TooltipContent>
-        </Tooltip>
       </div>
 
       {/* Lista de Módulos */}
@@ -88,9 +80,8 @@ transition-colors duration-200 mx-auto"
           const isActive = active === item.key;
           const Icon = item.icon;
           return (
-            <Tooltip key={item.key} delayDuration={180}>
-              <TooltipTrigger asChild>
                 <button
+                  key={item.key}
                   onClick={() => { onSelect(item.key); setIsExpanded(false); }}
                   aria-current={isActive ? "page" : undefined}
                   aria-label={item.label}
@@ -112,11 +103,6 @@ transition-colors duration-200 mx-auto"
                   {item.label}
                 </span>
                 </button>
-              </TooltipTrigger>
-              {!expanded && (
-                <TooltipContent side="right" sideOffset={10}>{item.label}</TooltipContent>
-              )}
-            </Tooltip>
           );
         })}
       </nav>

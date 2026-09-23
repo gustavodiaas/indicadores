@@ -18,6 +18,19 @@ function pointer(target: HTMLElement, type: string, pointerType: string) {
 }
 
 describe("Sidebar expansion", () => {
+  it("keeps module names inside the sidebar without floating tooltip triggers", () => {
+    const { sidebar } = setup();
+    for (const button of sidebar.querySelectorAll("button")) {
+      pointer(button, "pointerover", "mouse");
+      pointer(button, "pointerout", "mouse");
+      expect(button).not.toHaveAttribute("data-state");
+      expect(button).not.toHaveAttribute("aria-describedby");
+      expect(button).not.toHaveAttribute("title");
+    }
+    expect(document.querySelector('[role="tooltip"]')).toBeNull();
+    expect(screen.getByRole("button", { name: "Gantt" })).toBeInTheDocument();
+  });
+
   it("expands on mouse entry and collapses on exit", () => {
     const { sidebar } = setup();
     expect(sidebar).toHaveAttribute("data-expanded", "false");
