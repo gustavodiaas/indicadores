@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
+import { emptyProposta, type PropostaData } from "@/lib/proposta-parser";
 
-export type ModuleKey = "home" | "resumo" | "produtividade" | "payback" | "movimentacao" | "qualidade" | "disponibilidade" | "leadtime" | "area" | "gbo" | "planoAcao" | "a3" | "gantt" | "mfv" | "manual";
+export type ModuleKey = "home" | "resumo" | "produtividade" | "payback" | "movimentacao" | "qualidade" | "disponibilidade" | "leadtime" | "area" | "gbo" | "planoAcao" | "a3" | "gantt" | "mfv" | "proposta" | "manual";
 
 export interface ProdutividadeData { 
   volumeT1: number; volumeT3: number; 
@@ -76,7 +77,7 @@ export interface A3Data {
 export interface AppState { 
   produtividade: ProdutividadeData; payback: PaybackData; movimentacao: MovimentacaoData; 
   qualidade: QualidadeData; disponibilidade: DisponibilidadeData; leadtime: LeadTimeData; 
-  area: AreaData; resumo: ResumoData; gbo: GboData; planoAcao: PlanoAcaoData; a3: A3Data; 
+  area: AreaData; resumo: ResumoData; gbo: GboData; planoAcao: PlanoAcaoData; a3: A3Data; proposta: PropostaData;
 }
 
 const defaultState: AppState = {
@@ -90,7 +91,8 @@ const defaultState: AppState = {
   resumo: { nomeEmpresa: "", cidade: "", ramo: "", especialista: "", totalColaboradores: 0, turnos: 1, processos: "", metodo: "", origem: "", oportunidades: "", problemas: "", atuacao: "", motivacao: "", ferramentas: "", indicadoresConclusao: ["produtividade", "payback"] }, 
   gbo: { turnoTempo: 0, turnoUnidade: "hours", demanda: 0, demandaUnidade: "peças", tempoUnidade: "seconds", operacoes: [], tituloGrafico: "Gráfico de Balanceamento de Operações (GBO)" },
   planoAcao: { metadata: { dataCriacao: "", respCriacao: "", objetivo: "", meta: "", dataRevisao: "", respRevisao: "", indicador: "" }, acoes: [] },
-  a3: { titulo: "", data: "", aprovacoes: "", background: "", objetivos: "", estadoAtual: "", analise: "", estadoFuturo: "", planoAcao: [], indicadores: [], observacoes: "" }
+  a3: { titulo: "", data: "", aprovacoes: "", background: "", objetivos: "", estadoAtual: "", analise: "", estadoFuturo: "", planoAcao: [], indicadores: [], observacoes: "" },
+  proposta: emptyProposta
 };
 
 const mergeDeep = (target: any, source: any) => {

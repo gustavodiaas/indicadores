@@ -1,4 +1,4 @@
-import { Home, FileText, ChartNoAxesColumnIncreasing, ChartGantt, Workflow, TrendingUp, Coins, Route, BadgeCheck, Cog, Timer, Ruler, ClipboardList, PanelsTopLeft, BookOpen, type LucideIcon } from "lucide-react";
+import { Home, FileText, FileUp, ChartNoAxesColumnIncreasing, ChartGantt, Workflow, TrendingUp, Coins, Route, BadgeCheck, Cog, Timer, Ruler, ClipboardList, PanelsTopLeft, BookOpen, type LucideIcon } from "lucide-react";
 import type { ModuleKey } from "@/store/useAppStore";
 
 export const moduleGroups = [
@@ -19,6 +19,7 @@ type NavigationModule = {
 // One icon and label source for the sidebar and Home.
 export const navigationModules: NavigationModule[] = [
   { key: "home", label: "Home", title: "Home", description: "Visão geral dos módulos", icon: Home },
+  { key: "proposta", label: "Proposta", title: "Proposta comercial", description: "Importe o PDF da proposta e preencha os módulos automaticamente.", icon: FileUp, group: "project" },
   { key: "resumo", label: "Resumo", title: "Resumo do projeto", description: "Dados da empresa, contexto e laudo técnico.", icon: FileText, group: "project" },
   { key: "gbo", label: "GBO", title: "GBO", description: "Balanceamento de operações e identificação de processos restritivos.", icon: ChartNoAxesColumnIncreasing, group: "process" },
   { key: "produtividade", label: "Produtividade", title: "Produtividade", description: "Produção por hora e ganhos de produtividade.", icon: TrendingUp, group: "results" },

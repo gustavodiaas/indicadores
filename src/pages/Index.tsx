@@ -19,6 +19,7 @@ import { A3Module } from "@/modules/A3Module";
 import { ManualModule } from "@/modules/ManualModule";
 import { GanttModule } from "@/modules/GanttModule";
 import { MfvModule } from "@/modules/MfvModule";
+import { PropostaModule } from "@/modules/PropostaModule";
 import GBOAnalysis from "@/modules/GboModule"; 
 
 type Theme = "light" | "dark" | "system";
@@ -323,6 +324,7 @@ const Index = () => {
       case "area": return <AreaModule data={state.area} onChange={d => updateModule("area", d)} />;
       case "planoAcao": return <PlanoAcaoModule data={state.planoAcao} onChange={d => updateModule("planoAcao", d)} />;
       case "a3": return <A3Module data={state.a3} onChange={d => updateModule("a3", d)} />;
+      case "proposta": return <PropostaModule data={state.proposta} state={state} onChange={d => updateModule("proposta", d)} onApply={patches => (Object.keys(patches) as (keyof typeof patches)[]).forEach(k => updateModule(k, patches[k] as any))} />;
       case "manual": return <ManualModule />;
       default: return null;
     }
@@ -347,7 +349,7 @@ const Index = () => {
       ` }} />
       <Sidebar active={activeModule} onSelect={setActiveModule} />
       <main className="flex-1 min-w-0 flex flex-col h-screen overflow-y-auto pl-[72px]">
-        {!["home", "gbo", "planoAcao", "a3", "manual", "gantt", "mfv"].includes(activeModule) && (
+        {!["home", "gbo", "planoAcao", "a3", "manual", "gantt", "mfv", "proposta"].includes(activeModule) && (
           <div className="print:hidden relative z-30 animate-in slide-in-from-top-2 duration-300 px-5 pt-5">
             <Topbar onExportWord={handleExportWord} state={state} loadState={loadState} />
           </div>
