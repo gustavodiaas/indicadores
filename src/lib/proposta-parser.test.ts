@@ -1,5 +1,17 @@
 import { describe, expect, it } from "vitest";
-import { camposEncontrados, parseProposta } from "./proposta-parser";
+import { camposEncontrados, parseProposta, whatsappUrl } from "./proposta-parser";
+
+describe("whatsappUrl", () => {
+  it("adds Brazil's code to local numbers", () => {
+    expect(whatsappUrl("(54) 96666-3333")).toBe("https://wa.me/5554966663333");
+    expect(whatsappUrl("(54) 3333-4444")).toBe("https://wa.me/555433334444");
+    expect(whatsappUrl("+55 54 96666-3333")).toBe("https://wa.me/5554966663333");
+  });
+  it("rejects incomplete numbers", () => {
+    expect(whatsappUrl("")).toBeNull();
+    expect(whatsappUrl("9666-3333")).toBeNull();
+  });
+});
 import { buildFillItems, buildPatches, defaultSelection } from "./proposta-fill";
 
 // Texto no mesmo formato que o pdf.js extrai da Proposta Comercial do Brasil Mais Produtivo (dados fictícios).

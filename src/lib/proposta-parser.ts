@@ -150,3 +150,11 @@ export async function extractPdfText(file: ArrayBuffer): Promise<string> {
   await doc.destroy();
   return pages.join("\n");
 }
+
+/** Link do WhatsApp para um telefone brasileiro, ou null se o número não for válido. */
+export function whatsappUrl(phone: string): string | null {
+  let digits = phone.replace(/\D/g, "");
+  if (digits.length === 10 || digits.length === 11) digits = `55${digits}`;
+  if (!/^55\d{10,11}$/.test(digits)) return null;
+  return `https://wa.me/${digits}`;
+}

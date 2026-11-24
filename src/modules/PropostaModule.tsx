@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from "react";
-import { CheckCircle2, FileUp, Loader2, AlertTriangle, ShieldCheck, Wand2 } from "lucide-react";
+import { CheckCircle2, FileUp, Loader2, AlertTriangle, MessageCircle, ShieldCheck, Wand2 } from "lucide-react";
 import type { AppState } from "@/store/useAppStore";
-import { camposEncontrados, emptyProposta, extractPdfText, parseProposta, type PropostaData } from "@/lib/proposta-parser";
+import { camposEncontrados, emptyProposta, extractPdfText, parseProposta, whatsappUrl, type PropostaData } from "@/lib/proposta-parser";
 import { buildFillItems, buildPatches, defaultSelection, type FillModule } from "@/lib/proposta-fill";
 
 interface Props {
@@ -20,6 +20,17 @@ function Info({ label, value }: { label: string; value: string | number }) {
       <dt className="text-[11px] font-medium uppercase tracking-wide text-slate-400 dark:text-slate-500">{label}</dt>
       <dd className="mt-0.5 text-sm text-slate-800 dark:text-slate-100 break-words">{value || "—"}</dd>
     </div>
+  );
+}
+
+function WhatsAppButton({ phone, name }: { phone: string; name: string }) {
+  const url = whatsappUrl(phone);
+  if (!url) return null;
+  return (
+    <a href={url} target="_blank" rel="noopener noreferrer" aria-label={`Abrir conversa no WhatsApp com ${name || phone}`}
+      className="mt-2 inline-flex items-center gap-1.5 h-8 px-3 rounded-lg bg-[#25D366] text-white text-xs font-semibold hover:bg-[#1ebe5b] transition-colors">
+      <MessageCircle className="h-3.5 w-3.5" /> Abrir no WhatsApp
+    </a>
   );
 }
 
@@ -202,7 +213,10 @@ export function PropostaModule({ data, state, onChange, onApply }: Props) {
             <Section title="Acompanhamento do atendimento">
               <Info label="Nome" value={data.acompanhamentoNome} />
               <Info label="Setor" value={data.acompanhamentoSetor} />
-              <Info label="Telefone" value={data.acompanhamentoTelefone} />
+              <div className="min-w-0">
+                <Info label="Telefone" value={data.acompanhamentoTelefone} />
+                <WhatsAppButton phone={data.acompanhamentoTelefone} name={data.acompanhamentoNome} />
+              </div>
               <Info label="E-mail" value={data.acompanhamentoEmail} />
             </Section>
           </div>
