@@ -302,7 +302,7 @@ export default function GBOAnalysis() {
                 <TooltipContent side="bottom" align="end" sideOffset={8} className="max-w-sm space-y-3 p-4 text-sm font-normal leading-relaxed">
                   <p className="font-semibold">Manual Técnico GBO</p>
                   <p>O <strong>GBO (Gráfico de Balanceamento de Operações)</strong> é uma ferramenta analítica de fluxo. Ele plota os tempos de ciclo individuais de cada operação em relação ao Takt Time estabelecido.</p>
-                  <p><strong>Objetivo:</strong> Identificar restrições sistêmicas (gargalos) e fornecer uma base de dados limpa para o nivelamento da capacidade produtiva.</p>
+                  <p><strong>Objetivo:</strong> Identificar restrições sistêmicas (processos restritivos) e fornecer uma base de dados limpa para o nivelamento da capacidade produtiva.</p>
                 </TooltipContent>
               </Tooltip>
               <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto rounded-xl border border-slate-200 dark:border-white/10 shadow-lg bg-white dark:bg-[#1C1C1E] text-[#0A1828] dark:text-slate-100">
@@ -315,7 +315,7 @@ export default function GBOAnalysis() {
                 </DialogHeader>
                 <div className="space-y-4 text-sm mt-4 leading-relaxed text-justify">
                   <p>O <strong>GBO (Gráfico de Balanceamento de Operações)</strong> é uma ferramenta analítica de fluxo. Ele plota os tempos de ciclo individuais de cada operação em relação ao Takt Time estabelecido.</p>
-                  <p><strong>Objetivo:</strong> Identificar restrições sistêmicas (gargalos) e fornecer uma base de dados limpa para o nivelamento da capacidade produtiva.</p>
+                  <p><strong>Objetivo:</strong> Identificar restrições sistêmicas (processos restritivos) e fornecer uma base de dados limpa para o nivelamento da capacidade produtiva.</p>
                 </div>
               </DialogContent>
             </Dialog>

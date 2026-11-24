@@ -19,4 +19,13 @@ export default defineConfig(({ mode }) => ({
     },
     dedupe: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime", "@tanstack/react-query", "@tanstack/query-core"],
   },
+  build: {
+    rollupOptions: {
+      // O MFV é uma página própria, carregada num iframe, para manter o CSS dele isolado.
+      input: {
+        main: path.resolve(__dirname, "index.html"),
+        mfv: path.resolve(__dirname, "mfv/index.html"),
+      },
+    },
+  },
 }));

@@ -1,4 +1,4 @@
-import { Home, FileText, ChartNoAxesColumnIncreasing, ChartGantt, TrendingUp, Coins, Route, BadgeCheck, Cog, Timer, Ruler, ClipboardList, PanelsTopLeft, BookOpen, type LucideIcon } from "lucide-react";
+import { Home, FileText, ChartNoAxesColumnIncreasing, ChartGantt, Workflow, TrendingUp, Coins, Route, BadgeCheck, Cog, Timer, Ruler, ClipboardList, PanelsTopLeft, BookOpen, type LucideIcon } from "lucide-react";
 import type { ModuleKey } from "@/store/useAppStore";
 
 export const moduleGroups = [
@@ -20,8 +20,8 @@ type NavigationModule = {
 export const navigationModules: NavigationModule[] = [
   { key: "home", label: "Home", title: "Home", description: "Visão geral dos módulos", icon: Home },
   { key: "resumo", label: "Resumo", title: "Resumo do projeto", description: "Dados da empresa, contexto e laudo técnico.", icon: FileText, group: "project" },
-  { key: "gbo", label: "GBO", title: "GBO", description: "Balanceamento de operações e identificação de gargalos.", icon: ChartNoAxesColumnIncreasing, group: "process" },
-  { key: "produtividade", label: "Produtividade", title: "Produtividade", description: "Produção por hora e ganhos de eficiência.", icon: TrendingUp, group: "results" },
+  { key: "gbo", label: "GBO", title: "GBO", description: "Balanceamento de operações e identificação de processos restritivos.", icon: ChartNoAxesColumnIncreasing, group: "process" },
+  { key: "produtividade", label: "Produtividade", title: "Produtividade", description: "Produção por hora e ganhos de produtividade.", icon: TrendingUp, group: "results" },
   { key: "payback", label: "Payback", title: "Payback", description: "Investimento, economia e prazo de retorno.", icon: Coins, group: "results" },
   { key: "movimentacao", label: "Movimentação", title: "Movimentação", description: "Percursos, distâncias e tempos de transporte.", icon: Route, group: "process" },
   { key: "qualidade", label: "Qualidade", title: "Qualidade", description: "Peças conformes, perdas e redução de refugos.", icon: BadgeCheck, group: "results" },
@@ -31,5 +31,6 @@ export const navigationModules: NavigationModule[] = [
   { key: "planoAcao", label: "5W2H", title: "Plano de ação 5W2H", description: "Ações, responsáveis e prazos de execução.", icon: ClipboardList, group: "project" },
   { key: "a3", label: "A3", title: "Modelo A3", description: "Análise estruturada e solução de problemas.", icon: PanelsTopLeft, group: "project" },
   { key: "gantt", label: "Gantt", title: "Gantt · Trabalho padronizado", description: "Linha do tempo, atividades e análise de vídeos.", icon: ChartGantt, group: "process" },
+  { key: "mfv", label: "MFV", title: "MFV · Mapeamento de Fluxo de Valor", description: "Estado atual, estados futuros e simulação do fluxo.", icon: Workflow, group: "process" },
   { key: "manual", label: "Manual", title: "Manual técnico", description: "Orientações para usar cada módulo.", icon: BookOpen },
 ];

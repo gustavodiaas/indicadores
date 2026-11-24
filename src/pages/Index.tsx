@@ -18,6 +18,7 @@ import { PlanoAcaoModule } from "@/modules/PlanoAcaoModule";
 import { A3Module } from "@/modules/A3Module";
 import { ManualModule } from "@/modules/ManualModule";
 import { GanttModule } from "@/modules/GanttModule";
+import { MfvModule } from "@/modules/MfvModule";
 import GBOAnalysis from "@/modules/GboModule"; 
 
 type Theme = "light" | "dark" | "system";
@@ -125,7 +126,7 @@ const Index = () => {
 
     if (selectedIndicadores.includes("produtividade")) {
       conclusaoParagraphs.push(createJustified([
-        tr("• Produtividade: ", true), tr(`No estágio inicial, a produtividade era de ${prod.pphT1.toFixed(6).replace(".", ",")} ${u}/h/op. Após as melhorias, a produtividade subiu para ${prod.pphT3.toFixed(6).replace(".", ",")} ${u}/h/op, representando um ganho direto de ${prod.ganho.toFixed(6).replace(".", ",")}% na eficiência operacional da célula.`)
+        tr("• Produtividade: ", true), tr(`No estágio inicial, a produtividade era de ${prod.pphT1.toFixed(6).replace(".", ",")} ${u}/h/op. Após as melhorias, a produtividade subiu para ${prod.pphT3.toFixed(6).replace(".", ",")} ${u}/h/op, representando um ganho direto de ${prod.ganho.toFixed(6).replace(".", ",")}% na produtividade operacional da célula.`)
       ]));
     }
     if (selectedIndicadores.includes("payback")) {
@@ -217,7 +218,7 @@ const Index = () => {
             tr(produtividade.operadoresT3 === 1 ? " operador" : " operadores"),
             tr(" em "), tr(`${produtividade.horasT3 || 0}h`, true),
             tr(". Isso representa um ganho direto de "), tr(`${prod.ganho.toFixed(6).replace(".", ",")}%`, true),
-            tr(" na eficiência operacional da célula.")
+            tr(" na produtividade operacional da célula.")
           ]),
           createHeading("3. Laudo de Payback"),
           createJustified([
@@ -346,7 +347,7 @@ const Index = () => {
       ` }} />
       <Sidebar active={activeModule} onSelect={setActiveModule} />
       <main className="flex-1 min-w-0 flex flex-col h-screen overflow-y-auto pl-[72px]">
-        {!["home", "gbo", "planoAcao", "a3", "manual", "gantt"].includes(activeModule) && (
+        {!["home", "gbo", "planoAcao", "a3", "manual", "gantt", "mfv"].includes(activeModule) && (
           <div className="print:hidden relative z-30 animate-in slide-in-from-top-2 duration-300 px-5 pt-5">
             <Topbar onExportWord={handleExportWord} state={state} loadState={loadState} />
           </div>
@@ -361,7 +362,7 @@ const Index = () => {
     }`}
 >
           {activeModule === "home" && renderHome()}
-          {activeModule !== "home" && activeModule !== "gbo" && activeModule !== "gantt" && (
+          {activeModule !== "home" && activeModule !== "gbo" && activeModule !== "gantt" && activeModule !== "mfv" && (
             <div key={activeModule} className="module-shell animate-in fade-in slide-in-from-bottom-2 duration-500 w-full min-h-full">
               {currentModule && !["planoAcao", "a3", "manual"].includes(activeModule) && (
                 <header className="mb-8 border-b border-border/60 pb-5">
@@ -377,6 +378,7 @@ const Index = () => {
           </div>
         </div>
         <GanttModule active={activeModule === "gantt"} />
+        <MfvModule active={activeModule === "mfv"} />
       </main>
     </div>
   );

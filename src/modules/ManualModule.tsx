@@ -200,7 +200,7 @@ function renderContent(id: SectionId) {
         <>
           <P>
             Gráfico de Balanceamento de Operações. Mostra o tempo de cada operação da célula comparado ao takt time,
-            revelando gargalos e ociosidade.
+            revelando processos restritivos e ociosidade.
           </P>
 
           <SectionTitle>Configuração do Takt Time</SectionTitle>
@@ -214,7 +214,7 @@ function renderContent(id: SectionId) {
           <P>
             Cadastre cada operação da célula com nome e tempo de execução (em segundos ou minutos). A lista pode ser
             reordenada por arraste. O gráfico é atualizado automaticamente e mostra quais operações ultrapassam o takt
-            time (gargalo).
+            time (processo restritivo).
           </P>
 
           <SectionTitle>Exportar / Importar</SectionTitle>

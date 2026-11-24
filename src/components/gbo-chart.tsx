@@ -104,7 +104,7 @@ export function GBOChart({ operations, timeUnit, taktTime, taktTimeUnit, demandU
               Original: {formatNum(operations.find((op) => op.name === data.name)?.time || 0)} {getPtUnit(data.originalUnit)}
             </p>
           )}
-          {data.isBottleneck && <p className="text-xs font-medium mt-1" style={{ color: "#EF4444" }}>🔴 Operação Gargalo</p>}
+          {data.isBottleneck && <p className="text-xs font-medium mt-1" style={{ color: "#EF4444" }}>🔴 Processo Restritivo</p>}
         </div>
       )
     }

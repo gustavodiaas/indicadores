@@ -105,11 +105,11 @@ export function CalculationsDashboard({
           </CardContent>
         </Card>
 
-        {/* Operação Gargalo */}
+        {/* Processo Restritivo */}
         <Card className="bg-white dark:bg-[#1C1C1E] border-rose-200 dark:border-rose-900/50 relative overflow-hidden group">
           <div className="absolute inset-0 bg-rose-500/5 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 relative z-10">
-            <CardTitle className="text-xs font-bold text-rose-600 dark:text-rose-400 uppercase tracking-wider animate-pulse">Gargalo</CardTitle>
+            <CardTitle className="text-xs font-bold text-rose-600 dark:text-rose-400 uppercase tracking-wider animate-pulse">Processo Restritivo</CardTitle>
             <AlertTriangle className="h-4 w-4 text-rose-600" />
           </CardHeader>
           <CardContent className="relative z-10 w-full overflow-hidden">
@@ -119,7 +119,7 @@ export function CalculationsDashboard({
                   {bottleneck?.name || "-"}
                 </div>
               </TooltipTrigger>
-              <TooltipContent>{bottleneck?.name || "Sem gargalo"}</TooltipContent>
+              <TooltipContent>{bottleneck?.name || "Sem processo restritivo"}</TooltipContent>
             </Tooltip>
             <Badge variant="outline" className="mt-2 bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-900 text-[10px] uppercase tracking-wider">
               {formatNum(bottleneckTime)} {getPtUnit(timeUnit)}
