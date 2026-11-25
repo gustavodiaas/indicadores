@@ -112,7 +112,7 @@ function locate(cells: Cell[], t: RelatorioTarget): { el: Element; ref: string; 
   if (t.kind === "label") {
     const anchor = t.after ? findLabel(cells, t.after) : undefined;
     if (t.after && !anchor) return [];
-    const lab = findLabel(cells, t.label, anchor?.row ?? 0);
+    const lab = findLabel(cells, t.label, anchor ? anchor.row + 1 : 0); // abaixo do título da seção
     const target = lab && creamInRow(cells, lab.row, lab.col)[0];
     return target ? [{ el: target.el, ref: target.ref, value: t.value }] : [];
   }

@@ -55,6 +55,12 @@ const DG = "DADOS GERAIS";
 const RES = "RESUMO";
 const REL = "RELATÓRIO";
 
+/** Cidade e estado do SENAI/DR: o atendimento é sempre pelo SENAI-RS, em Porto Alegre. */
+export const SENAI_DR = { cidade: "Porto Alegre", estado: "RS" } as const;
+
+/** UO que realiza a consultoria (aba Resumo, "Nome UO"). */
+export const NOME_UO = "IST - Mecatrônica";
+
 const porteTexto = { micro: "MICRO EMPRESA", pequena: "PEQUENA EMPRESA", "": "" } as const;
 
 /** "RUA DAS FLORES, 100, CENTRO, 95000000" → rua, número e bairro (só quando o formato é claro). */
@@ -112,6 +118,8 @@ export function buildRelatorioTargets(s: AppState): RelatorioTarget[] {
     { id: "rua", sheet: DG, label: "Rua", after: "Endereço da empresa", value: end?.rua, campo: "Rua", origem: "Proposta" },
     { id: "numero", sheet: DG, label: "Nº", after: "Endereço da empresa", value: end?.numero, campo: "Número", origem: "Proposta" },
     { id: "bairro", sheet: DG, label: "Bairro", after: "Endereço da empresa", value: end?.bairro, campo: "Bairro", origem: "Proposta" },
+    { id: "senaiCidade", sheet: DG, label: "Cidade", after: "Cidade e estado do SENAI", value: SENAI_DR.cidade, campo: "Cidade do SENAI/DR", origem: "Fixo" },
+    { id: "senaiEstado", sheet: DG, label: "Estado", after: "Cidade e estado do SENAI", value: SENAI_DR.estado, campo: "Estado do SENAI/DR", origem: "Fixo" },
     { id: "empresario", sheet: DG, label: "Empresário(a)", value: p?.responsavelLegal, campo: "Empresário(a)", origem: "Proposta" },
     { id: "proposta", sheet: RES, label: "Número da proposta comercial", value: p?.numero, campo: "Número da proposta comercial", origem: "Proposta" },
 
@@ -128,6 +136,8 @@ export function buildRelatorioTargets(s: AppState): RelatorioTarget[] {
   const targets: RelatorioTarget[] = labels
     .filter(t => has(t.value))
     .map(t => ({ ...t, kind: "label", value: t.value as CellValue }));
+
+  targets.push({ kind: "block", id: "nomeUO", sheet: RES, label: "Nome UO", value: NOME_UO, campo: "Nome UO", origem: "Fixo" });
 
   // Textos do Resumo (o editado na tela, se houver).
   const resumoPreenchido = Boolean(r.nomeEmpresa?.trim() || r.processos?.trim());

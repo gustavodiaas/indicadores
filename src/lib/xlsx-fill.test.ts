@@ -52,6 +52,8 @@ async function fakeTemplate() {
   rel.getCell("C339").fill = CREAM; rel.getCell("C339").value = "Gastos utilizados (Capex)";
   // Rótulo sem célula creme ao lado: não pode ser escrito.
   rel.getCell("C330").value = "Somatório de Investimento em Ações"; rel.getCell("E330").fill = BLUE;
+  const res = wb.addWorksheet("RESUMO");
+  res.getCell("B11").value = "Nome UO"; for (const r of [12, 13, 14]) res.getCell(`B${r}`).fill = CREAM;
   const conc = wb.addWorksheet("CONCLUSÃO");
   conc.getCell("B2").value = "5 - CONCLUSÃO"; conc.getCell("B4").fill = CREAM;
   return new Uint8Array(await wb.xlsx.writeBuffer());
@@ -86,7 +88,9 @@ describe("Relatório de atendimento", () => {
     expect(dg.getCell("D6").value).toBe("Empresa Fictícia Ltda");
     expect(dg.getCell("D10").value).toBe("MICRO EMPRESA");
     expect(dg.getCell("D14").value).toBe("Cidade Exemplo"); // cidade da empresa, não a do SENAI
-    expect(dg.getCell("D24").value).toBeNull();
+    expect(dg.getCell("D24").value).toBe("Porto Alegre"); // SENAI/DR, sempre Porto Alegre - RS
+    expect(wb.getWorksheet("RESUMO")!.getCell("B12").value).toBe("IST - Mecatrônica");
+    expect(wb.getWorksheet("RESUMO")!.getCell("B13").value).toBeNull();
     expect(dg.getCell("D28").value).toBeNull(); // "Especialista em" é a especialidade da empresa, não o consultor
     expect(dg.getCell("D29").value).toBeNull();
     expect((dg.getCell("D11").value as ExcelJS.CellFormulaValue).formula).toContain("MICRO EMPRESA");
@@ -140,7 +144,7 @@ describe("Relatório de atendimento", () => {
   });
 
   it("skips empty data and splits clear addresses only", () => {
-    expect(buildRelatorioTargets(structuredClone(defaultState))).toEqual([]);
+    expect(buildRelatorioTargets(structuredClone(defaultState)).map(t => t.id)).toEqual(["senaiCidade", "senaiEstado", "nomeUO"]);
     expect(splitEndereco("RUA DAS FLORES, 100, CENTRO, 95000000")).toEqual({ rua: "RUA DAS FLORES", numero: "100", bairro: "CENTRO" });
     expect(splitEndereco("Rodovia sem número")).toBeNull();
   });
