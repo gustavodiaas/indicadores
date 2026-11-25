@@ -330,7 +330,7 @@ const Index = () => {
     }
   };
 
-  const renderHome = () => <HomeDashboard onSelect={setActiveModule} theme={theme} onThemeChange={setTheme} />;
+  const renderHome = () => <HomeDashboard onSelect={setActiveModule} theme={theme} onThemeChange={setTheme} state={state} />;
 
   const currentModule = navigationModules.find(module => module.key === activeModule);
   return (

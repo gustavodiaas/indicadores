@@ -294,7 +294,7 @@ export default function GBOAnalysis() {
               <Tooltip delayDuration={180}>
                 <TooltipTrigger asChild>
               <DialogTrigger asChild>
-        <button type="button" aria-label="Ajuda sobre o GBO" className="h-9 w-9 flex items-center justify-center rounded-full text-[#0A1828] dark:text-slate-400 hover:text-[#7C3AED] dark:hover:text-[#C084FC] hover:bg-[#7C3AED]/10 dark:hover:bg-[#C084FC]/10 transition-colors">
+        <button type="button" aria-label="Ajuda sobre o GBO" className="h-9 w-9 flex items-center justify-center rounded-full text-[#0A1828] dark:text-slate-400 hover:text-[#1E3A8A] dark:hover:text-[#93C5FD] hover:bg-[#1E3A8A]/10 dark:hover:bg-[#93C5FD]/10 transition-colors">
                   <HelpCircle className="h-5 w-5" />
                 </button>
               </DialogTrigger>
@@ -307,7 +307,7 @@ export default function GBOAnalysis() {
               </Tooltip>
               <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto rounded-xl border border-slate-200 dark:border-white/10 shadow-lg bg-white dark:bg-[#1C1C1E] text-[#0A1828] dark:text-slate-100">
                 <DialogHeader>
-          <DialogTitle className="text-[#7C3AED] dark:text-[#C084FC] flex items-center gap-2 font-bold text-lg">
+          <DialogTitle className="text-[#1E3A8A] dark:text-[#93C5FD] flex items-center gap-2 font-bold text-lg">
                     <HelpCircle className="w-5 h-5" />
                     Manual Técnico GBO
                   </DialogTitle>
@@ -329,20 +329,20 @@ export default function GBOAnalysis() {
 
             <div className="input-section  space-y-4">
               <h3 className="font-bold text-[#0A1828] dark:text-slate-100 border-b border-slate-200 dark:border-white/10 pb-2 flex items-center gap-2">
-        <div className="w-2 h-2 rounded-full bg-[#7C3AED] dark:bg-[#C084FC] animate-pulse"></div>
+        <div className="w-2 h-2 rounded-full bg-[#1E3A8A] dark:bg-[#93C5FD] animate-pulse"></div>
                 Cálculo do Takt Time
                 <div className="ml-auto flex items-center gap-1.5">
                   <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Demanda</span>
                   <div className="flex rounded-lg overflow-hidden border border-slate-200 dark:border-white/10">
                     <button
                       onClick={() => setDemandPeriod("dia")}
-                      className={`px-3 py-1 text-xs font-medium transition-all ${demandPeriod === "dia" ? "bg-[#FF6B00] text-white" : "bg-slate-50 dark:bg-[#2C2C2E] text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#001833]"}`}
+                      className={`px-3 py-1 text-xs font-medium transition-all ${demandPeriod === "dia" ? "bg-[#1D4ED8] text-white" : "bg-slate-50 dark:bg-[#2C2C2E] text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#001833]"}`}
                     >
                       Dia
                     </button>
                     <button
                       onClick={() => setDemandPeriod("mes")}
-                      className={`px-3 py-1 text-xs font-medium transition-all ${demandPeriod === "mes" ? "bg-[#FF6B00] text-white" : "bg-slate-50 dark:bg-[#2C2C2E] text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#001833]"}`}
+                      className={`px-3 py-1 text-xs font-medium transition-all ${demandPeriod === "mes" ? "bg-[#1D4ED8] text-white" : "bg-slate-50 dark:bg-[#2C2C2E] text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#001833]"}`}
                     >
                       Mês
                     </button>
@@ -356,22 +356,22 @@ export default function GBOAnalysis() {
                     <label className="text-xs font-medium text-slate-500 dark:text-slate-400 pl-1">Tempo do Turno</label>
                     <input type="number" step="0.1" min="0" placeholder="8.0" value={workShiftTime}
                       onChange={(e) => { updateModule("gbo", { turnoTempo: Number(e.target.value) }); validateTaktFields(); }} onBlur={validateTaktFields}
-                      className={`w-full h-10 px-3 rounded-lg border-none bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all ${errors.workShiftTime ? "ring-2 ring-rose-500" : ""}`}
+                      className={`w-full h-10 px-3 rounded-lg border-none bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all ${errors.workShiftTime ? "ring-2 ring-rose-500" : ""}`}
                     />
                   </div>
                   <div className="space-y-1">
                     <label className="text-xs font-medium text-slate-500 dark:text-slate-400 pl-1">Unidade</label>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <button className="w-full h-10 px-3 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between outline-none hover:bg-slate-100 dark:hover:bg-[#001833] transition-all focus:bg-white dark:focus:bg-[#0D2B57] focus:ring-2 focus:ring-[#FF6B00]">
+                        <button className="w-full h-10 px-3 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between outline-none hover:bg-slate-100 dark:hover:bg-[#001833] transition-all focus:bg-white dark:focus:bg-[#0D2B57] focus:ring-2 focus:ring-[#1D4ED8]">
                           {timeUnitTakt === "minutes" ? "Minutos" : timeUnitTakt === "hours" ? "Horas" : "Segundos"}
                           <ChevronDown className="w-4 h-4 text-slate-400" />
                         </button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white dark:bg-[#1C1C1E] border border-slate-200 dark:border-white/10 p-2 rounded-lg shadow-md z-[150]">
-                        <DropdownMenuItem onClick={() => updateModule("gbo", { turnoUnidade: "minutes" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${timeUnitTakt === "minutes" ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Minutos</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => updateModule("gbo", { turnoUnidade: "hours" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${timeUnitTakt === "hours" ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Horas</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => updateModule("gbo", { turnoUnidade: "seconds" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${timeUnitTakt === "seconds" ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Segundos</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => updateModule("gbo", { turnoUnidade: "minutes" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${timeUnitTakt === "minutes" ? "bg-[#1D4ED8] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Minutos</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => updateModule("gbo", { turnoUnidade: "hours" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${timeUnitTakt === "hours" ? "bg-[#1D4ED8] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Horas</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => updateModule("gbo", { turnoUnidade: "seconds" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${timeUnitTakt === "seconds" ? "bg-[#1D4ED8] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Segundos</DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
@@ -382,22 +382,22 @@ export default function GBOAnalysis() {
                   <div className="grid grid-cols-2 gap-4">
                     <input type="number" step="1" min="0" placeholder="100" value={dailyDemand}
                       onChange={(e) => { updateModule("gbo", { demanda: Number(e.target.value) }); validateTaktFields(); }} onBlur={validateTaktFields}
-                      className={`w-full h-10 px-3 rounded-lg border-none bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all ${errors.dailyDemand ? "ring-2 ring-rose-500" : ""}`}
+                      className={`w-full h-10 px-3 rounded-lg border-none bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all ${errors.dailyDemand ? "ring-2 ring-rose-500" : ""}`}
                     />
                     <input
                       type="text"
                       placeholder="Ex: caixas"
                       value={demandUnit}
                       onChange={(e) => updateModule("gbo", { demandaUnidade: e.target.value })}
-                      className="w-full h-10 px-3 rounded-lg border-none bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
+                      className="w-full h-10 px-3 rounded-lg border-none bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all"
                     />
                   </div>
                 </div>
 
                 {calculateTaktTime() && (
-          <div className="bg-[#7C3AED]/[0.07] dark:bg-[#C084FC]/10 border border-[#7C3AED]/15 dark:border-[#C084FC]/15 p-4 rounded-xl flex items-center gap-3 mt-4">
-            <CheckCircle2 className="h-5 w-5 text-[#7C3AED] dark:text-[#C084FC]" />
-            <p className="text-sm font-semibold text-[#7C3AED] dark:text-[#C084FC]">
+          <div className="bg-[#1E3A8A]/[0.07] dark:bg-[#93C5FD]/10 border border-[#1E3A8A]/15 dark:border-[#93C5FD]/15 p-4 rounded-xl flex items-center gap-3 mt-4">
+            <CheckCircle2 className="h-5 w-5 text-[#1E3A8A] dark:text-[#93C5FD]" />
+            <p className="text-sm font-semibold text-[#1E3A8A] dark:text-[#93C5FD]">
                       Takt Time: {timeUnitTakt === "hours" ? (calculateTaktTime()! / 3600).toFixed(2)
                         : timeUnitTakt === "minutes" ? (calculateTaktTime()! / 60).toFixed(2)
                         : calculateTaktTime()!.toFixed(2)} {timeUnitTakt === "hours" ? "h" : timeUnitTakt === "minutes" ? "min" : "seg"}/{demandUnit}
@@ -412,14 +412,14 @@ export default function GBOAnalysis() {
                 <h3 className="font-bold text-[#0A1828] dark:text-slate-100 text-sm tracking-wide uppercase">Nova Operação</h3>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="h-8 px-3 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-[10px] font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1 outline-none hover:bg-slate-100 dark:hover:bg-[#001833] transition-all focus:bg-white dark:focus:bg-[#0D2B57] focus:ring-2 focus:ring-[#FF6B00]">
+                    <button className="h-8 px-3 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-[10px] font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1 outline-none hover:bg-slate-100 dark:hover:bg-[#001833] transition-all focus:bg-white dark:focus:bg-[#0D2B57] focus:ring-2 focus:ring-[#1D4ED8]">
                       {timeUnit === "minutes" ? "Minutos" : "Segundos"}
                       <ChevronDown className="w-3 h-3 text-slate-400" />
                     </button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-32 bg-white dark:bg-[#1C1C1E] border border-slate-200 dark:border-white/10 p-1.5 rounded-xl shadow-md z-[150]">
-                    <DropdownMenuItem onClick={() => updateModule("gbo", { tempoUnidade: "minutes" })} className={`w-full text-left text-[10px] font-bold py-2 px-2.5 rounded-lg cursor-pointer transition-all ${timeUnit === "minutes" ? "bg-[#FF6B00] text-white" : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Minutos</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => updateModule("gbo", { tempoUnidade: "seconds" })} className={`w-full text-left text-[10px] font-bold py-2 px-2.5 rounded-lg cursor-pointer transition-all ${timeUnit === "seconds" ? "bg-[#FF6B00] text-white" : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Segundos</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => updateModule("gbo", { tempoUnidade: "minutes" })} className={`w-full text-left text-[10px] font-bold py-2 px-2.5 rounded-lg cursor-pointer transition-all ${timeUnit === "minutes" ? "bg-[#1D4ED8] text-white" : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Minutos</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => updateModule("gbo", { tempoUnidade: "seconds" })} className={`w-full text-left text-[10px] font-bold py-2 px-2.5 rounded-lg cursor-pointer transition-all ${timeUnit === "seconds" ? "bg-[#1D4ED8] text-white" : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Segundos</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
@@ -427,15 +427,15 @@ export default function GBOAnalysis() {
               <div className="space-y-3">
                 <input placeholder="Nome da Operação" value={newOperationName} onKeyPress={handleKeyPress}
                   onChange={(e) => { setNewOperationName(e.target.value); if (errors.operationName) setErrors((prev) => ({ ...prev, operationName: undefined })); }}
-                  className="w-full h-10 px-3 rounded-lg border-none bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
+                  className="w-full h-10 px-3 rounded-lg border-none bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all"
                 />
                 <input type="number" step="0.01" min="0" placeholder="Tempo" value={newOperationTime} onKeyPress={handleKeyPress}
                   onChange={(e) => { setNewOperationTime(e.target.value); if (errors.operationTime) setErrors((prev) => ({ ...prev, operationTime: undefined })); }}
-                  className="w-full h-10 px-3 rounded-lg border-none bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
+                  className="w-full h-10 px-3 rounded-lg border-none bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all"
                 />
                 <button
                   onClick={addOperation} disabled={!newOperationName.trim() || !newOperationTime.trim() || isLoading}
-                  className="w-full h-10 flex items-center justify-center bg-[#FF6B00] text-white rounded-xl font-bold text-xs uppercase tracking-widest shadow-md hover:bg-[#E55A00] transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+                  className="w-full h-10 flex items-center justify-center bg-[#1D4ED8] text-white rounded-xl font-bold text-xs uppercase tracking-widest shadow-md hover:bg-[#E55A00] transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2"
                 >
                   <Plus className="h-4 w-4 mr-2" /> Adicionar
                 </button>
@@ -457,13 +457,13 @@ export default function GBOAnalysis() {
                     <FileImage className="h-4 w-4 mr-2 text-rose-500" /> Exportar Gráfico (PDF)
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleExportExcel} disabled={operations.length === 0} className="cursor-pointer text-sm font-medium py-2 px-3 rounded-lg hover:bg-slate-50 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300">
-                    <FileSpreadsheet className="h-4 w-4 mr-2 text-[#FF6B00]" /> Exportar Dados (Excel)
+                    <FileSpreadsheet className="h-4 w-4 mr-2 text-[#1D4ED8] dark:text-[#60A5FA]" /> Exportar Dados (Excel)
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
             <button onClick={downloadTemplate} disabled={isLoading} className="w-full h-10 flex items-center justify-center bg-white dark:bg-[#1C1C1E] border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400 font-bold text-xs rounded-xl hover:bg-slate-50 dark:hover:bg-white/10 transition-colors">
-              <FileSpreadsheet className="h-4 w-4 mr-2 text-[#FF6B00]" /> Baixar Modelo Padrão (Excel)
+              <FileSpreadsheet className="h-4 w-4 mr-2 text-[#1D4ED8] dark:text-[#60A5FA]" /> Baixar Modelo Padrão (Excel)
             </button>
 
             <div className="bg-white dark:bg-[#1C1C1E] border border-slate-200 dark:border-white/10 rounded-xl p-5">

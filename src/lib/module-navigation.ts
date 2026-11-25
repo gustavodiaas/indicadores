@@ -2,8 +2,8 @@ import { Home, FileText, FileUp, ChartNoAxesColumnIncreasing, ChartGantt, Workfl
 import type { ModuleKey } from "@/store/useAppStore";
 
 export const moduleGroups = [
-  { id: "project", title: "Projeto e planejamento", description: "Organize o contexto, as ações e a solução de problemas.", color: "bg-orange-500/10 text-orange-700 dark:text-orange-300" },
-  { id: "process", title: "Processos e operação", description: "Entenda o fluxo, os tempos e o uso dos recursos.", color: "bg-violet-500/10 text-violet-700 dark:text-violet-300" },
+  { id: "project", title: "Projeto e planejamento", description: "Organize o contexto, as ações e a solução de problemas.", color: "bg-blue-500/10 text-blue-700 dark:text-blue-300" },
+  { id: "process", title: "Processos e operação", description: "Entenda o fluxo, os tempos e o uso dos recursos.", color: "bg-blue-500/10 text-blue-700 dark:text-blue-300" },
   { id: "results", title: "Resultados e desempenho", description: "Compare os indicadores e avalie o impacto das melhorias.", color: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300" },
 ] as const;
 

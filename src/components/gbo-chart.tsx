@@ -188,7 +188,7 @@ export function GBOChart({ operations, timeUnit, taktTime, taktTimeUnit, demandU
               {chartData.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={entry.exceedsTakt ? "#EF4444" : "#FF6B00"}
+                  fill={entry.exceedsTakt ? "#EF4444" : "#1D4ED8"}
                   className="transition-all duration-300 hover:opacity-80"
                 />
               ))}
@@ -199,7 +199,7 @@ export function GBOChart({ operations, timeUnit, taktTime, taktTimeUnit, demandU
 
       <div className="flex items-center justify-center gap-6 mt-2 text-xs flex-wrap font-medium text-muted-foreground">
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-sm bg-[#FF6B00]"></div>
+          <div className="w-3 h-3 rounded-sm bg-[#1D4ED8]"></div>
           <span>Operação Normal</span>
         </div>
         <div className="flex items-center gap-2">

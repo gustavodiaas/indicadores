@@ -19,7 +19,7 @@ function LocalInputField({ label, value, onChange, suffix, type = "number" }: { 
           type={type}
           value={value ?? ""}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full h-10 px-3 pr-16 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
+          className="w-full h-10 px-3 pr-16 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all"
         />
         {suffix && (
           <span className="absolute right-4 text-xs font-bold text-slate-400 dark:text-slate-500 pointer-events-none">

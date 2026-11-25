@@ -128,7 +128,7 @@ export function EditableLaudoCard({ title, laudo, laudoWord }: EditableLaudoCard
             ref={textareaRef}
             value={draft}
             onChange={e => setDraft(e.target.value)}
-            className="w-full min-h-[140px] px-4 py-3 rounded-xl border border-black/[0.08] dark:border-white/10 bg-[#F5F5F7] dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-[13px] leading-relaxed outline-none focus:ring-2 focus:ring-[#FF6B00]/30 focus:border-[#FF6B00] transition-colors resize-y"
+            className="w-full min-h-[140px] px-4 py-3 rounded-xl border border-black/[0.08] dark:border-white/10 bg-[#F5F5F7] dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-[13px] leading-relaxed outline-none focus:ring-2 focus:ring-[#1D4ED8]/30 focus:border-[#1D4ED8] transition-colors resize-y"
             style={{ fieldSizing: "content" } as React.CSSProperties}
           />
           <div className="flex gap-2 justify-end">
@@ -140,7 +140,7 @@ export function EditableLaudoCard({ title, laudo, laudoWord }: EditableLaudoCard
             </button>
             <button
               onClick={handleSave}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-[10px] bg-[#FF6B00] text-white hover:bg-[#E85F00] transition-colors text-xs font-semibold shadow-[0_4px_12px_rgba(255,107,0,0.20)]"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-[10px] bg-[#1D4ED8] text-white hover:bg-[#1E40AF] transition-colors text-xs font-semibold shadow-[0_4px_12px_rgba(29, 78, 216,0.20)]"
             >
               <Check className="h-3.5 w-3.5" /> Salvar
             </button>

@@ -98,9 +98,9 @@ export function PropostaModule({ data, state, onChange, onApply }: Props) {
         onDragOver={e => { e.preventDefault(); setDragging(true); }}
         onDragLeave={() => setDragging(false)}
         onDrop={e => { e.preventDefault(); setDragging(false); const f = e.dataTransfer.files?.[0]; if (f) readFile(f); }}
-        className={`input-section flex flex-col items-center justify-center gap-3 text-center py-10 border-2 border-dashed transition-colors ${dragging ? "border-[#FF6B00] bg-orange-50/60 dark:bg-orange-500/10" : "border-slate-200 dark:border-white/10"}`}
+        className={`input-section flex flex-col items-center justify-center gap-3 text-center py-10 border-2 border-dashed transition-colors ${dragging ? "border-[#1D4ED8] bg-blue-50/60 dark:bg-blue-500/10" : "border-slate-200 dark:border-white/10"}`}
       >
-        {status === "reading" ? <Loader2 className="h-9 w-9 animate-spin text-[#FF6B00]" /> : <FileUp className="h-9 w-9 text-[#FF6B00]" />}
+        {status === "reading" ? <Loader2 className="h-9 w-9 animate-spin text-[#1D4ED8] dark:text-[#60A5FA]" /> : <FileUp className="h-9 w-9 text-[#1D4ED8] dark:text-[#60A5FA]" />}
         <div>
           <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
             {status === "reading" ? "Lendo a proposta…" : hasData ? "Enviar outra proposta" : "Arraste aqui o PDF da Proposta Comercial"}
@@ -111,7 +111,7 @@ export function PropostaModule({ data, state, onChange, onApply }: Props) {
           type="button"
           onClick={() => inputRef.current?.click()}
           disabled={status === "reading"}
-          className="h-9 px-4 rounded-lg bg-[#FF6B00] text-white text-sm font-semibold hover:bg-[#e65f00] disabled:opacity-60 transition-colors"
+          className="h-9 px-4 rounded-lg bg-[#1D4ED8] text-white text-sm font-semibold hover:bg-[#1E40AF] disabled:opacity-60 transition-colors"
         >
           Selecionar PDF
         </button>
@@ -156,7 +156,7 @@ export function PropostaModule({ data, state, onChange, onApply }: Props) {
                       <tr key={item.id} className="border-t border-slate-100 dark:border-white/5 align-top">
                         <td className="py-2.5">
                           <input type="checkbox" checked={selected.has(item.id)} onChange={() => toggle(item.id)}
-                            aria-label={`Preencher ${item.campo} (${item.moduloLabel})`} className="h-4 w-4 accent-[#FF6B00]" />
+                            aria-label={`Preencher ${item.campo} (${item.moduloLabel})`} className="h-4 w-4 accent-[#1D4ED8]" />
                         </td>
                         <td className="py-2.5 pr-3 whitespace-nowrap font-medium text-slate-700 dark:text-slate-200">{item.moduloLabel}</td>
                         <td className="py-2.5 pr-3 whitespace-nowrap text-slate-600 dark:text-slate-300">{item.campo}</td>
@@ -172,7 +172,7 @@ export function PropostaModule({ data, state, onChange, onApply }: Props) {
             </div>
             <div className="flex flex-wrap items-center gap-3 pt-1">
               <button type="button" onClick={apply} disabled={selected.size === 0}
-                className="inline-flex items-center gap-2 h-10 px-4 rounded-lg bg-[#FF6B00] text-white text-sm font-semibold hover:bg-[#e65f00] disabled:opacity-50 transition-colors">
+                className="inline-flex items-center gap-2 h-10 px-4 rounded-lg bg-[#1D4ED8] text-white text-sm font-semibold hover:bg-[#1E40AF] disabled:opacity-50 transition-colors">
                 <Wand2 className="h-4 w-4" /> Preencher {selected.size} {selected.size === 1 ? "campo" : "campos"}
               </button>
               {applied > 0 && (

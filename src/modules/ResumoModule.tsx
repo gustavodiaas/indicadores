@@ -32,7 +32,7 @@ function LocalInputField({ label, value, onChange, type = "text" }: { label: str
         type={type}
         value={displayValue}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full h-10 px-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
+        className="w-full h-10 px-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all"
       />
     </div>
   );
@@ -202,7 +202,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
         {/* COLUNA ESQUERDA: ENTRADA DE DADOS */}
         <div className="subtle-panel analysis-inputs flex flex-col gap-6">
           <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-white/10">
-            <h3 className="font-semibold text-[#0A1828] dark:text-slate-100 text-lg tracking-tight flex items-center gap-2.5"><span className="w-2.5 h-2.5 rounded-full bg-[#7C3AED] dark:bg-[#C084FC] shadow-[0_0_0_5px_rgba(124,58,237,0.10)]" />Entrada de dados</h3>
+            <h3 className="font-semibold text-[#0A1828] dark:text-slate-100 text-lg tracking-tight flex items-center gap-2.5"><span className="w-2.5 h-2.5 rounded-full bg-[#1E3A8A] dark:bg-[#93C5FD] shadow-[0_0_0_5px_rgba(124,58,237,0.10)]" />Entrada de dados</h3>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setShowConfirmModal(true)}
@@ -241,7 +241,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
             <h4 className="text-sm font-semibold text-[#0A1828] dark:text-slate-100">Resumo das ações</h4>
             <div className="flex gap-2 items-end">
               <div className="flex-1"><LocalInputField label="O que será feito?" value={newAcao} onChange={setNewAcao} /></div>
-              <button onClick={handleAddAcao} className="h-10 px-4 bg-[#FF6B00] text-white rounded-xl font-bold text-xs uppercase shadow-md hover:bg-[#E55A00] transition-colors">Adicionar</button>
+              <button onClick={handleAddAcao} className="h-10 px-4 bg-[#1D4ED8] text-white rounded-xl font-bold text-xs uppercase shadow-md hover:bg-[#E55A00] transition-colors">Adicionar</button>
             </div>
             <div className="flex flex-col gap-2 mt-4">
               {acoesVisiveis.map(a => (
@@ -275,7 +275,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
                     <button
                       onClick={() => { setConcDraft(concOverride !== null ? concOverride : laudosSistemas.textoTela); setEditingConc(true); }}
                       aria-label="Editar texto"
-                      className="p-2 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-slate-400 dark:text-slate-300 hover:bg-[#FF6B00] dark:hover:bg-[#FF6B00] hover:text-white transition-all border border-slate-200 dark:border-white/10"
+                      className="p-2 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-slate-400 dark:text-slate-300 hover:bg-[#1D4ED8] dark:hover:bg-[#1D4ED8] hover:text-white transition-all border border-slate-200 dark:border-white/10"
                     >
                       <Pencil className="h-4 w-4" />
                     </button>
@@ -295,7 +295,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
                         toast.success("Copiado com formatação estruturada!");
                       }}
                       aria-label="Copiar texto"
-                      className="p-2 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-slate-400 dark:text-slate-300 hover:bg-[#FF6B00] dark:hover:bg-[#FF6B00] hover:text-white transition-all border border-slate-200 dark:border-white/10"
+                      className="p-2 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-slate-400 dark:text-slate-300 hover:bg-[#1D4ED8] dark:hover:bg-[#1D4ED8] hover:text-white transition-all border border-slate-200 dark:border-white/10"
                     >
                       <Copy className="h-4 w-4" />
                     </button>
@@ -305,7 +305,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
               )}
             </div>
 
-            <h4 className="text-[10px] font-bold text-[#7C3AED] dark:text-[#C084FC] uppercase tracking-widest mb-4 border-b border-slate-200 dark:border-white/10 pb-2 pr-28">
+            <h4 className="text-[10px] font-bold text-[#1E3A8A] dark:text-[#93C5FD] uppercase tracking-widest mb-4 border-b border-slate-200 dark:border-white/10 pb-2 pr-28">
               Conclusão do Projeto
               {concOverride !== null && <span className="ml-2 text-amber-500 font-bold">· editado</span>}
             </h4>
@@ -331,7 +331,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
                   autoFocus
                   value={concDraft}
                   onChange={e => setConcDraft(e.target.value)}
-                  className="w-full min-h-[200px] px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-[13px] leading-relaxed outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all resize-y"
+                  className="w-full min-h-[200px] px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-[13px] leading-relaxed outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all resize-y"
                 />
                 <div className="flex gap-2 justify-end">
                   <button
@@ -342,7 +342,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
                   </button>
                   <button
                     onClick={() => { setConcOverride(concDraft); setEditingConc(false); toast.success("Texto salvo!"); }}
-                    className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-[#FF6B00] text-white hover:bg-[#E55A00] transition-colors text-[11px] font-bold uppercase tracking-wider shadow-md"
+                    className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-[#1D4ED8] text-white hover:bg-[#E55A00] transition-colors text-[11px] font-bold uppercase tracking-wider shadow-md"
                   >
                     Salvar
                   </button>
@@ -351,7 +351,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
             )}
 
             <div className="mt-8 pt-4 border-t border-slate-200 dark:border-white/10">
-              <h4 className="text-[10px] font-bold text-[#7C3AED] dark:text-[#C084FC] uppercase tracking-widest mb-3">Indicadores</h4>
+              <h4 className="text-[10px] font-bold text-[#1E3A8A] dark:text-[#93C5FD] uppercase tracking-widest mb-3">Indicadores</h4>
               <div className="flex flex-wrap gap-2">
                 {indicadoresList.map((ind) => {
                   const isActive = selectedIndicadores.includes(ind.id);
@@ -359,7 +359,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
                     <button
                       key={ind.id}
                       onClick={() => toggleIndicador(ind.id)}
-                      className={`px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all border ${isActive ? "bg-[#FF6B00] text-white border-[#FF6B00] shadow-md" : "bg-slate-50 dark:bg-[#2C2C2E] text-slate-500 dark:text-slate-400 border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-[#001833]"}`}
+                      className={`px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all border ${isActive ? "bg-[#1D4ED8] text-white border-[#1D4ED8] shadow-md" : "bg-slate-50 dark:bg-[#2C2C2E] text-slate-500 dark:text-slate-400 border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-[#001833]"}`}
                     >
                       {ind.label}
                     </button>

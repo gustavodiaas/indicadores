@@ -57,7 +57,7 @@ function CustomDatePicker({ label, value, onChange }: { label: string; value: st
       <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">{label}</label>
       <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>
-          <button type="button" className="w-full h-10 px-3 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between outline-none hover:bg-slate-100 dark:hover:bg-[#001833] transition-all focus:bg-white dark:focus:bg-[#0D2B57] focus:ring-2 focus:ring-[#FF6B00] border border-transparent dark:border-white/10 text-left">
+          <button type="button" className="w-full h-10 px-3 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between outline-none hover:bg-slate-100 dark:hover:bg-[#001833] transition-all focus:bg-white dark:focus:bg-[#0D2B57] focus:ring-2 focus:ring-[#1D4ED8] border border-transparent dark:border-white/10 text-left">
             <span className={value ? "text-slate-700 dark:text-slate-200" : "text-slate-400 dark:text-slate-500"}>{formatDisplay(value)}</span>
             <CalendarIcon className="w-4 h-4 text-slate-400 dark:text-slate-600 shrink-0 ml-2" />
           </button>
@@ -100,7 +100,7 @@ function CustomDatePicker({ label, value, onChange }: { label: string; value: st
                   onClick={(e) => { e.preventDefault(); e.stopPropagation(); const m = String(currentMonth + 1).padStart(2, '0'); const d = String(day).padStart(2, '0'); onChange(`${currentYear}-${m}-${d}`); setIsOpen(false); }}
                   className={`h-8 w-8 text-xs font-semibold rounded-lg flex items-center justify-center transition-all ${
                     isSelected
-                      ? "bg-[#FF6B00] text-white font-bold shadow-md shadow-[#FF6B00]/20"
+                      ? "bg-[#1D4ED8] text-white font-bold shadow-md shadow-[#1D4ED8]/20"
                       : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"
                   }`}
                 >
@@ -357,10 +357,10 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
   return (
     <div className="flex flex-col gap-6 min-h-full pb-8 animate-in fade-in duration-500">
 
-      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 rounded-[22px] bg-gradient-to-r from-[#7C3AED]/[0.09] via-white/50 to-[#FF6B00]/[0.08] dark:from-[#C084FC]/15 dark:via-[#1C1C1E]/60 dark:to-[#FF6B00]/10 px-5 py-4 border border-black/[0.04] dark:border-white/[0.07]">
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 rounded-[22px] bg-gradient-to-r from-[#1E3A8A]/[0.09] via-white/50 to-[#1D4ED8]/[0.08] dark:from-[#93C5FD]/15 dark:via-[#1C1C1E]/60 dark:to-[#1D4ED8]/10 px-5 py-4 border border-black/[0.04] dark:border-white/[0.07]">
         <div>
           <h2 className="text-xl font-semibold text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
-            <span className="w-9 h-9 rounded-xl bg-[#7C3AED] dark:bg-[#9F67FF] text-white flex items-center justify-center shadow-[0_6px_16px_rgba(124,58,237,0.25)]"><CheckCircle className="h-5 w-5" /></span> Plano de Ação 5W2H
+            <span className="w-9 h-9 rounded-xl bg-[#1E3A8A] dark:bg-[#9F67FF] text-white flex items-center justify-center shadow-[0_6px_16px_rgba(124,58,237,0.25)]"><CheckCircle className="h-5 w-5" /></span> Plano de Ação 5W2H
           </h2>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Gerenciamento tático e detalhamento das ações corretivas.</p>
         </div>
@@ -375,7 +375,7 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
           />
           <button
             onClick={() => document.getElementById('excel-5w2h-import')?.click()}
-            className="flex items-center gap-2 px-4 py-2.5 bg-white/70 dark:bg-white/[0.08] text-[#7C3AED] dark:text-[#C084FC] border border-black/[0.05] dark:border-white/10 rounded-xl font-semibold text-xs hover:bg-white dark:hover:bg-white/10 transition-all active:scale-[0.98]"
+            className="flex items-center gap-2 px-4 py-2.5 bg-white/70 dark:bg-white/[0.08] text-[#1E3A8A] dark:text-[#93C5FD] border border-black/[0.05] dark:border-white/10 rounded-xl font-semibold text-xs hover:bg-white dark:hover:bg-white/10 transition-all active:scale-[0.98]"
           >
             <Upload className="h-4 w-4" /> Importar
           </button>
@@ -389,7 +389,7 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
 
           <button
             onClick={handleExportExcel}
-            className="flex items-center gap-2 px-4 py-2.5 bg-[#FF6B00] text-white rounded-xl font-semibold text-xs shadow-[0_6px_16px_rgba(255,107,0,0.24)] hover:bg-[#E55A00] transition-all active:scale-[0.98]"
+            className="flex items-center gap-2 px-4 py-2.5 bg-[#1D4ED8] text-white rounded-xl font-semibold text-xs shadow-[0_6px_16px_rgba(29, 78, 216,0.24)] hover:bg-[#E55A00] transition-all active:scale-[0.98]"
           >
             <Download className="h-4 w-4" /> Baixar Planilha
           </button>
@@ -397,7 +397,7 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
       </div>
 
       <div className="subtle-panel">
-        <h3 className="font-semibold text-slate-900 dark:text-white text-sm tracking-tight mb-5 flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-[#7C3AED] dark:bg-[#C084FC]" />Metadados do projeto</h3>
+        <h3 className="font-semibold text-slate-900 dark:text-white text-sm tracking-tight mb-5 flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-[#1E3A8A] dark:bg-[#93C5FD]" />Metadados do projeto</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
           <CustomDatePicker label="Data de Criação" value={data.metadata.dataCriacao} onChange={v => updateMeta("dataCriacao", v)} />
           <InputField label="Responsável (Consultor/Empresário)" value={data.metadata.respCriacao} onChange={v => updateMeta("respCriacao", v)} />
@@ -414,7 +414,7 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
         <div className="flex flex-col gap-4 mb-6">
           <h3 className="font-semibold text-slate-900 dark:text-white text-sm tracking-tight flex items-center gap-2">
             Execução de tarefas
-            <span className="bg-[#7C3AED]/10 dark:bg-[#C084FC]/15 text-[#7C3AED] dark:text-[#C084FC] px-2 py-0.5 rounded-full text-[10px]">{data.acoes.length}</span>
+            <span className="bg-[#1E3A8A]/10 dark:bg-[#93C5FD]/15 text-[#1E3A8A] dark:text-[#93C5FD] px-2 py-0.5 rounded-full text-[10px]">{data.acoes.length}</span>
           </h3>
 
           <div className="flex gap-2 items-end">
@@ -423,7 +423,7 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
             </div>
             <button
               onClick={handleAddAcao}
-              className="h-10 px-4 bg-[#FF6B00] text-white rounded-xl font-semibold text-xs shadow-[0_6px_16px_rgba(255,107,0,0.22)] hover:bg-[#E55A00] transition-colors flex items-center gap-2"
+              className="h-10 px-4 bg-[#1D4ED8] text-white rounded-xl font-semibold text-xs shadow-[0_6px_16px_rgba(29, 78, 216,0.22)] hover:bg-[#E55A00] transition-colors flex items-center gap-2"
             >
               <Plus className="h-4 w-4" /> Adicionar
             </button>
@@ -447,7 +447,7 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
                 >
                   <div className="flex flex-col flex-1 pr-4">
                     <span className="text-sm font-semibold text-slate-800 dark:text-slate-100 truncate">{a.what}</span>
-                    <span className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1 flex items-center gap-1.5"><span className={`w-1.5 h-1.5 rounded-full ${a.status === "CONCLUIDO" ? "bg-[#30B76B]" : a.status === "REJEITADO" ? "bg-rose-500" : a.status === "EM ANDAMENTO" ? "bg-[#7C3AED] dark:bg-[#C084FC]" : "bg-slate-300 dark:bg-slate-600"}`} />{a.status === "CONCLUIDO" ? "Concluído" : a.status === "EM ANDAMENTO" ? "Em andamento" : a.status === "INICIADO" ? "Iniciado" : a.status === "REJEITADO" ? "Rejeitado" : "Não iniciado"} <span className="text-slate-300 dark:text-slate-600">•</span> {a.percent || 0}%</span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1 flex items-center gap-1.5"><span className={`w-1.5 h-1.5 rounded-full ${a.status === "CONCLUIDO" ? "bg-[#3B82F6]" : a.status === "REJEITADO" ? "bg-rose-500" : a.status === "EM ANDAMENTO" ? "bg-[#1E3A8A] dark:bg-[#93C5FD]" : "bg-slate-300 dark:bg-slate-600"}`} />{a.status === "CONCLUIDO" ? "Concluído" : a.status === "EM ANDAMENTO" ? "Em andamento" : a.status === "INICIADO" ? "Iniciado" : a.status === "REJEITADO" ? "Rejeitado" : "Não iniciado"} <span className="text-slate-300 dark:text-slate-600">•</span> {a.percent || 0}%</span>
                   </div>
                   <div className="flex items-center gap-4">
                     {expandedId === a.id ? <ChevronUp className="h-5 w-5 text-slate-400 dark:text-slate-500" /> : <ChevronDown className="h-5 w-5 text-slate-400 dark:text-slate-500" />}
@@ -473,14 +473,14 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
                       <DropdownMenu>
                         {/* FIX: trigger do status — bg-white sem dark:bg-[#1C1C1E] */}
                         <DropdownMenuTrigger asChild>
-                          <button className="w-full h-10 px-3 rounded-lg bg-white dark:bg-[#1C1C1E] border border-slate-200 dark:border-white/10 text-sm font-medium text-slate-700 dark:text-slate-200 flex items-center justify-between outline-none hover:bg-slate-50 dark:hover:bg-white/10 transition-all focus:ring-2 focus:ring-[#FF6B00]">
+                          <button className="w-full h-10 px-3 rounded-lg bg-white dark:bg-[#1C1C1E] border border-slate-200 dark:border-white/10 text-sm font-medium text-slate-700 dark:text-slate-200 flex items-center justify-between outline-none hover:bg-slate-50 dark:hover:bg-white/10 transition-all focus:ring-2 focus:ring-[#1D4ED8]">
                             {a.status === "INICIADO" ? "Iniciado" : a.status === "EM ANDAMENTO" ? "Em Andamento" : a.status === "REJEITADO" ? "Rejeitado" : a.status === "CONCLUIDO" ? "Concluído" : "Não Iniciado"}
                             <ChevronDown className="w-4 h-4 text-slate-400 dark:text-slate-500" />
                           </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white dark:bg-[#1C1C1E] border border-slate-200 dark:border-white/10 p-2 rounded-lg shadow-md z-[150]">
                           {["NÃO INICIADO", "INICIADO", "EM ANDAMENTO", "REJEITADO", "CONCLUIDO"].map(s => (
-                            <DropdownMenuItem key={s} onClick={() => updateAcao(a.id, "status", s)} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${a.status === s ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>
+                            <DropdownMenuItem key={s} onClick={() => updateAcao(a.id, "status", s)} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${a.status === s ? "bg-[#1D4ED8] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>
                               {s.charAt(0) + s.slice(1).toLowerCase()}
                             </DropdownMenuItem>
                           ))}

@@ -40,25 +40,25 @@ export function DisponibilidadeModule({ data, onChange }: Props) {
             <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-200 dark:border-white/10 pb-2">Estado T1 (Inicial)</h3>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Tempo Total</label>
-              <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
+              <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all"
                 defaultValue={data.tempoTotalT1 !== undefined ? data.tempoTotalT1.toString().replace(".", ",") : "0"}
                 onBlur={e => onChange({ tempoTotalT1: parseDecimal(e.target.value) || 0 })} />
             </div>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Paradas Planejadas</label>
-              <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
+              <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all"
                 defaultValue={data.paradasPlanT1 !== undefined ? data.paradasPlanT1.toString().replace(".", ",") : "0"}
                 onBlur={e => onChange({ paradasPlanT1: parseDecimal(e.target.value) || 0 })} />
             </div>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Paradas Não Planejadas</label>
-              <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
+              <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all"
                 defaultValue={data.paradasNaoPlanT1 !== undefined ? data.paradasNaoPlanT1.toString().replace(".", ",") : "0"}
                 onBlur={e => onChange({ paradasNaoPlanT1: parseDecimal(e.target.value) || 0 })} />
             </div>
             <div className="pt-4 border-t border-slate-200 dark:border-white/10">
               <span className="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Disponibilidade T1</span>
-              <span className="text-xl font-semibold text-[#7C3AED] dark:text-[#C084FC]">{r.indT1.toFixed(6).replace(".", ",")} %</span>
+              <span className="text-xl font-semibold text-[#1E3A8A] dark:text-[#93C5FD]">{r.indT1.toFixed(6).replace(".", ",")} %</span>
             </div>
           </div>
 
@@ -66,25 +66,25 @@ export function DisponibilidadeModule({ data, onChange }: Props) {
             <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-200 dark:border-white/10 pb-2">Estado T3 (Final)</h3>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Tempo Total</label>
-              <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
+              <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all"
                 defaultValue={data.tempoTotalT3 !== undefined ? data.tempoTotalT3.toString().replace(".", ",") : "0"}
                 onBlur={e => onChange({ tempoTotalT3: parseDecimal(e.target.value) || 0 })} />
             </div>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Paradas Planejadas</label>
-              <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
+              <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all"
                 defaultValue={data.paradasPlanT3 !== undefined ? data.paradasPlanT3.toString().replace(".", ",") : "0"}
                 onBlur={e => onChange({ paradasPlanT3: parseDecimal(e.target.value) || 0 })} />
             </div>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Paradas Não Planejadas</label>
-              <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
+              <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all"
                 defaultValue={data.paradasNaoPlanT3 !== undefined ? data.paradasNaoPlanT3.toString().replace(".", ",") : "0"}
                 onBlur={e => onChange({ paradasNaoPlanT3: parseDecimal(e.target.value) || 0 })} />
             </div>
             <div className="pt-4 border-t border-slate-200 dark:border-white/10">
               <span className="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Disponibilidade T3</span>
-              <span className="text-xl font-semibold text-[#7C3AED] dark:text-[#C084FC]">{r.indT3.toFixed(6).replace(".", ",")} %</span>
+              <span className="text-xl font-semibold text-[#1E3A8A] dark:text-[#93C5FD]">{r.indT3.toFixed(6).replace(".", ",")} %</span>
             </div>
           </div>
         </div>
@@ -93,7 +93,7 @@ export function DisponibilidadeModule({ data, onChange }: Props) {
           <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-3 pl-1">Unidade de Tempo</label>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="w-full h-10 px-3 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between outline-none hover:bg-slate-100 dark:hover:bg-[#001833] transition-all focus:ring-2 focus:ring-[#FF6B00] border border-transparent dark:border-white/10">
+              <button className="w-full h-10 px-3 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between outline-none hover:bg-slate-100 dark:hover:bg-[#001833] transition-all focus:ring-2 focus:ring-[#1D4ED8] border border-transparent dark:border-white/10">
                 {u === "segundos" ? "Segundos" : u === "horas" ? "Horas" : "Minutos"}
                 <ChevronDown className="w-4 h-4 text-slate-400" />
               </button>
@@ -103,7 +103,7 @@ export function DisponibilidadeModule({ data, onChange }: Props) {
               <DropdownMenuItem
                 onClick={() => onChange({ unidadeTempo: "segundos" })}
                 className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${
-                  u === "segundos" ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"
+                  u === "segundos" ? "bg-[#1D4ED8] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"
                 }`}
               >
                 Segundos
@@ -111,7 +111,7 @@ export function DisponibilidadeModule({ data, onChange }: Props) {
               <DropdownMenuItem
                 onClick={() => onChange({ unidadeTempo: "minutos" })}
                 className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${
-                  u === "minutos" ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"
+                  u === "minutos" ? "bg-[#1D4ED8] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"
                 }`}
               >
                 Minutos
@@ -119,7 +119,7 @@ export function DisponibilidadeModule({ data, onChange }: Props) {
               <DropdownMenuItem
                 onClick={() => onChange({ unidadeTempo: "horas" })}
                 className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${
-                  u === "horas" ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"
+                  u === "horas" ? "bg-[#1D4ED8] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"
                 }`}
               >
                 Horas

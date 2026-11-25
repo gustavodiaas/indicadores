@@ -80,15 +80,15 @@ export function MovimentacaoModule({ data, onChange }: Props) {
             <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-3 pl-1">Unidade de Tempo</label>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="w-full h-10 px-3 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between outline-none hover:bg-slate-100 dark:hover:bg-[#001833] transition-all focus:ring-2 focus:ring-[#FF6B00] border border-transparent dark:border-white/10">
+                <button className="w-full h-10 px-3 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between outline-none hover:bg-slate-100 dark:hover:bg-[#001833] transition-all focus:ring-2 focus:ring-[#1D4ED8] border border-transparent dark:border-white/10">
                   {uBase === "segundos" ? "Segundos" : uBase === "horas" ? "Horas" : "Minutos"}
                   <ChevronDown className="w-4 h-4 text-slate-400" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white dark:bg-[#1C1C1E] border border-slate-200 dark:border-white/10 p-2 rounded-lg shadow-md z-[150]">
-                <DropdownMenuItem onClick={() => onChange({ unidadeTempo: "segundos" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${uBase === "segundos" ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Segundos</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => onChange({ unidadeTempo: "minutos" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${uBase === "minutos" ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Minutos</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => onChange({ unidadeTempo: "horas" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${uBase === "horas" ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Horas</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onChange({ unidadeTempo: "segundos" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${uBase === "segundos" ? "bg-[#1D4ED8] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Segundos</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onChange({ unidadeTempo: "minutos" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${uBase === "minutos" ? "bg-[#1D4ED8] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Minutos</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onChange({ unidadeTempo: "horas" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${uBase === "horas" ? "bg-[#1D4ED8] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Horas</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -97,15 +97,15 @@ export function MovimentacaoModule({ data, onChange }: Props) {
             <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-3 pl-1">Exibir no Laudo</label>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="w-full h-10 px-3 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between outline-none hover:bg-slate-100 dark:hover:bg-[#001833] transition-all focus:ring-2 focus:ring-[#FF6B00] border border-transparent dark:border-white/10">
+                <button className="w-full h-10 px-3 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between outline-none hover:bg-slate-100 dark:hover:bg-[#001833] transition-all focus:ring-2 focus:ring-[#1D4ED8] border border-transparent dark:border-white/10">
                   {exibir === "distancia" ? "Apenas Distância" : exibir === "tempo" ? "Apenas Tempo" : "Distância e Tempo"}
                   <ChevronDown className="w-4 h-4 text-slate-400" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white dark:bg-[#1C1C1E] border border-slate-200 dark:border-white/10 p-2 rounded-lg shadow-md z-[150]">
-                <DropdownMenuItem onClick={() => onChange({ exibirNoLaudo: "ambos" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${exibir === "ambos" ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Distância e Tempo</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => onChange({ exibirNoLaudo: "distancia" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${exibir === "distancia" ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Apenas Distância</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => onChange({ exibirNoLaudo: "tempo" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${exibir === "tempo" ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Apenas Tempo</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onChange({ exibirNoLaudo: "ambos" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${exibir === "ambos" ? "bg-[#1D4ED8] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Distância e Tempo</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onChange({ exibirNoLaudo: "distancia" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${exibir === "distancia" ? "bg-[#1D4ED8] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Apenas Distância</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onChange({ exibirNoLaudo: "tempo" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${exibir === "tempo" ? "bg-[#1D4ED8] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Apenas Tempo</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -116,11 +116,11 @@ export function MovimentacaoModule({ data, onChange }: Props) {
           <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-200 dark:border-white/10 pb-2">Contexto do Laudo</h3>
           <div>
             <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Ferramenta Utilizada</label>
-            <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all" value={data.ferramentaUtilizada || ""} onChange={e => onChange({ ferramentaUtilizada: e.target.value })} />
+            <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all" value={data.ferramentaUtilizada || ""} onChange={e => onChange({ ferramentaUtilizada: e.target.value })} />
           </div>
           <div>
             <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Ação / Melhoria Realizada</label>
-            <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all" value={data.acaoMelhoria || ""} onChange={e => onChange({ acaoMelhoria: e.target.value })} />
+            <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all" value={data.acaoMelhoria || ""} onChange={e => onChange({ acaoMelhoria: e.target.value })} />
           </div>
         </div>
 
@@ -130,11 +130,11 @@ export function MovimentacaoModule({ data, onChange }: Props) {
             <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-200 dark:border-white/10 pb-2">Estado T1</h3>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Distância (m)</label>
-              <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all" defaultValue={data.distanciaT1 ? data.distanciaT1.toString().replace(".", ",") : ""} onBlur={e => onChange({ distanciaT1: parseDecimal(e.target.value) })} />
+              <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all" defaultValue={data.distanciaT1 ? data.distanciaT1.toString().replace(".", ",") : ""} onBlur={e => onChange({ distanciaT1: parseDecimal(e.target.value) })} />
             </div>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Tempo ({u})</label>
-              <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all" defaultValue={data.tempoT1 ? data.tempoT1.toString().replace(".", ",") : ""} onBlur={e => onChange({ tempoT1: parseDecimal(e.target.value) })} />
+              <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all" defaultValue={data.tempoT1 ? data.tempoT1.toString().replace(".", ",") : ""} onBlur={e => onChange({ tempoT1: parseDecimal(e.target.value) })} />
             </div>
           </div>
 
@@ -142,11 +142,11 @@ export function MovimentacaoModule({ data, onChange }: Props) {
             <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm tracking-wide uppercase border-b border-slate-200 dark:border-white/10 pb-2">Estado T3</h3>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Distância (m)</label>
-              <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all" defaultValue={data.distanciaT3 ? data.distanciaT3.toString().replace(".", ",") : ""} onBlur={e => onChange({ distanciaT3: parseDecimal(e.target.value) })} />
+              <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all" defaultValue={data.distanciaT3 ? data.distanciaT3.toString().replace(".", ",") : ""} onBlur={e => onChange({ distanciaT3: parseDecimal(e.target.value) })} />
             </div>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Tempo ({u})</label>
-              <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all" defaultValue={data.tempoT3 ? data.tempoT3.toString().replace(".", ",") : ""} onBlur={e => onChange({ tempoT3: parseDecimal(e.target.value) })} />
+              <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all" defaultValue={data.tempoT3 ? data.tempoT3.toString().replace(".", ",") : ""} onBlur={e => onChange({ tempoT3: parseDecimal(e.target.value) })} />
             </div>
           </div>
         </div>

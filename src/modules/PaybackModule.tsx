@@ -29,6 +29,8 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
   const op1 = prodData.operadoresT1 || 0;
   const op3 = prodData.operadoresT3 || 0;
   const u = prodData.unidade || "peças";
+  // Rótulo dos cartões de custo: "peças" -> "peça", "unidades" -> "unidade"; unidades como "kg" ficam iguais.
+  const unidadeSingular = /[^s]s$/i.test(u.trim()) ? u.trim().slice(0, -1) : u.trim();
 
   const colabTxt1 = op1 === 1 ? "colaborador" : "colaboradores";
   const colabTxt3 = op3 === 1 ? "colaborador" : "colaboradores";
@@ -55,14 +57,14 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="h-10 px-3 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between gap-2 outline-none hover:bg-slate-100 dark:hover:bg-[#001833] transition-all focus:ring-2 focus:ring-[#FF6B00] border border-transparent dark:border-white/10">
+              <button className="h-10 px-3 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between gap-2 outline-none hover:bg-slate-100 dark:hover:bg-[#001833] transition-all focus:ring-2 focus:ring-[#1D4ED8] border border-transparent dark:border-white/10">
                 {data.tipoSalario === "encargos" ? "Salário + Encargos" : "Salário Bruto"}
                 <ChevronDown className="w-4 h-4 text-slate-400" />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-48 bg-white dark:bg-[#1C1C1E] border border-slate-200 dark:border-white/10 p-2 rounded-lg shadow-md z-[150]">
-              <DropdownMenuItem onClick={() => onChange({ tipoSalario: "bruto" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.tipoSalario === "bruto" || !data.tipoSalario ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Salário Bruto</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onChange({ tipoSalario: "encargos" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.tipoSalario === "encargos" ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Salário + Encargos</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onChange({ tipoSalario: "bruto" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.tipoSalario === "bruto" || !data.tipoSalario ? "bg-[#1D4ED8] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Salário Bruto</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onChange({ tipoSalario: "encargos" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.tipoSalario === "encargos" ? "bg-[#1D4ED8] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Salário + Encargos</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -75,7 +77,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
                 <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">
                   {isUnitario ? "Salário Base (Por Operador R$)" : "Salário Base (Total R$)"}
                 </label>
-                <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
+                <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all"
                   defaultValue={formatDec(data.salarioBaseInicial)}
                   onBlur={e => onChange({ salarioBaseInicial: parseDecimal(e.target.value) })} placeholder="Ex: 2500,00" />
               </div>
@@ -87,20 +89,20 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
                 <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Modo de Inserção</label>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="w-full h-10 px-3 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between outline-none hover:bg-slate-100 dark:hover:bg-[#001833] transition-all focus:ring-2 focus:ring-[#FF6B00] border border-transparent dark:border-white/10">
+                    <button className="w-full h-10 px-3 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between outline-none hover:bg-slate-100 dark:hover:bg-[#001833] transition-all focus:ring-2 focus:ring-[#1D4ED8] border border-transparent dark:border-white/10">
                       {data.modoInsercaoSalario === "unitario" ? "Modo: Por Operador" : "Modo: Total da Equipe"}
                       <ChevronDown className="w-4 h-4 text-slate-400" />
                     </button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white dark:bg-[#1C1C1E] border border-slate-200 dark:border-white/10 p-2 rounded-lg shadow-md z-[150]">
-                    <DropdownMenuItem onClick={() => onChange({ modoInsercaoSalario: "total" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.modoInsercaoSalario === "total" || !data.modoInsercaoSalario ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Modo: Total da Equipe</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => onChange({ modoInsercaoSalario: "unitario" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.modoInsercaoSalario === "unitario" ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Modo: Por Operador</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onChange({ modoInsercaoSalario: "total" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.modoInsercaoSalario === "total" || !data.modoInsercaoSalario ? "bg-[#1D4ED8] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Modo: Total da Equipe</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onChange({ modoInsercaoSalario: "unitario" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.modoInsercaoSalario === "unitario" ? "bg-[#1D4ED8] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Modo: Por Operador</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
               <div>
                 <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Dedicação (%)</label>
-                <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all" defaultValue={formatDec(data.dedicacaoInicial) || "100,00"} onBlur={e => onChange({ dedicacaoInicial: parseDecimal(e.target.value) || 100 })} placeholder="Ex: 100,00" />
+                <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all" defaultValue={formatDec(data.dedicacaoInicial) || "100,00"} onBlur={e => onChange({ dedicacaoInicial: parseDecimal(e.target.value) || 100 })} placeholder="Ex: 100,00" />
               </div>
               {data.tipoSalario === "encargos" && (
                 <div className="sm:col-span-2">
@@ -110,7 +112,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
                   <input
                     type="text"
                     key={`encI-${data.tipoSalario}`}
-                className="w-full h-10 px-3 rounded-lg border border-[#7C3AED]/20 bg-[#7C3AED]/[0.06] dark:bg-[#C084FC]/[0.08] dark:border-[#C084FC]/15 text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#7C3AED] dark:focus:ring-[#C084FC] transition-all"
+                className="w-full h-10 px-3 rounded-lg border border-[#1E3A8A]/20 bg-[#1E3A8A]/[0.06] dark:bg-[#93C5FD]/[0.08] dark:border-[#93C5FD]/15 text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1E3A8A] dark:focus:ring-[#93C5FD] transition-all"
                     defaultValue={formatDec(data.encargosInicial)}
                     onBlur={e => onChange({ encargosInicial: parseDecimal(e.target.value) })}
                     placeholder="Ex: 1,90"
@@ -125,7 +127,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
                 <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Salário Base</label>
-                <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all" defaultValue={formatDec(data.salarioBaseFinal)} onBlur={e => onChange({ salarioBaseFinal: parseDecimal(e.target.value) })} placeholder="Ex: 2500,00" />
+                <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all" defaultValue={formatDec(data.salarioBaseFinal)} onBlur={e => onChange({ salarioBaseFinal: parseDecimal(e.target.value) })} placeholder="Ex: 2500,00" />
               </div>
               <div>
                 <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Colaboradores</label>
@@ -135,20 +137,20 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
                 <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Modo de Inserção</label>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="w-full h-10 px-3 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between outline-none hover:bg-slate-100 dark:hover:bg-[#001833] transition-all focus:ring-2 focus:ring-[#FF6B00] border border-transparent dark:border-white/10">
+                    <button className="w-full h-10 px-3 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between outline-none hover:bg-slate-100 dark:hover:bg-[#001833] transition-all focus:ring-2 focus:ring-[#1D4ED8] border border-transparent dark:border-white/10">
                       {data.modoInsercaoSalario === "unitario" ? "Modo: Por Operador" : "Modo: Total da Equipe"}
                       <ChevronDown className="w-4 h-4 text-slate-400" />
                     </button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white dark:bg-[#1C1C1E] border border-slate-200 dark:border-white/10 p-2 rounded-lg shadow-md z-[150]">
-                    <DropdownMenuItem onClick={() => onChange({ modoInsercaoSalario: "total" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.modoInsercaoSalario === "total" || !data.modoInsercaoSalario ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Modo: Total da Equipe</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => onChange({ modoInsercaoSalario: "unitario" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.modoInsercaoSalario === "unitario" ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Modo: Por Operador</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onChange({ modoInsercaoSalario: "total" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.modoInsercaoSalario === "total" || !data.modoInsercaoSalario ? "bg-[#1D4ED8] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Modo: Total da Equipe</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onChange({ modoInsercaoSalario: "unitario" })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.modoInsercaoSalario === "unitario" ? "bg-[#1D4ED8] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Modo: Por Operador</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
               <div>
                 <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Dedicação (%)</label>
-                <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all" defaultValue={formatDec(data.dedicacaoFinal) || "100,00"} onBlur={e => onChange({ dedicacaoFinal: parseDecimal(e.target.value) || 100 })} placeholder="Ex: 100,00" />
+                <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all" defaultValue={formatDec(data.dedicacaoFinal) || "100,00"} onBlur={e => onChange({ dedicacaoFinal: parseDecimal(e.target.value) || 100 })} placeholder="Ex: 100,00" />
               </div>
               {data.tipoSalario === "encargos" && (
                 <div className="sm:col-span-2">
@@ -158,7 +160,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
                   <input
                     type="text"
                     key={`encF-${data.tipoSalario}`}
-                className="w-full h-10 px-3 rounded-lg border border-[#7C3AED]/20 bg-[#7C3AED]/[0.06] dark:bg-[#C084FC]/[0.08] dark:border-[#C084FC]/15 text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#7C3AED] dark:focus:ring-[#C084FC] transition-all"
+                className="w-full h-10 px-3 rounded-lg border border-[#1E3A8A]/20 bg-[#1E3A8A]/[0.06] dark:bg-[#93C5FD]/[0.08] dark:border-[#93C5FD]/15 text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1E3A8A] dark:focus:ring-[#93C5FD] transition-all"
                     defaultValue={formatDec(data.encargosFinal)}
                     onBlur={e => onChange({ encargosFinal: parseDecimal(e.target.value) })}
                     placeholder="Ex: 1,90"
@@ -178,7 +180,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
               </label>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="w-full h-10 px-3 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between gap-2 outline-none hover:bg-slate-100 dark:hover:bg-[#001833] transition-all focus:ring-2 focus:ring-[#FF6B00] border border-transparent dark:border-white/10">
+                  <button className="w-full h-10 px-3 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between gap-2 outline-none hover:bg-slate-100 dark:hover:bg-[#001833] transition-all focus:ring-2 focus:ring-[#1D4ED8] border border-transparent dark:border-white/10">
                     {data.valorConsultoria === VALORES_CONSULTORIA.micro ? "Micro Empresa" :
                      data.valorConsultoria === VALORES_CONSULTORIA.pequena ? "Pequena Empresa" :
                      data.valorConsultoria === VALORES_CONSULTORIA.media ? "Média Empresa" : "Selecione o porte da empresa"}
@@ -186,10 +188,10 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white dark:bg-[#1C1C1E] border border-slate-200 dark:border-white/10 p-2 rounded-lg shadow-md z-[150]">
-                  <DropdownMenuItem onClick={() => onChange({ valorConsultoria: 0 })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.valorConsultoria === 0 || !data.valorConsultoria ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Selecione o porte da empresa</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onChange({ valorConsultoria: VALORES_CONSULTORIA.micro })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.valorConsultoria === VALORES_CONSULTORIA.micro ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Micro Empresa</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onChange({ valorConsultoria: VALORES_CONSULTORIA.pequena })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.valorConsultoria === VALORES_CONSULTORIA.pequena ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Pequena Empresa</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onChange({ valorConsultoria: VALORES_CONSULTORIA.media })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.valorConsultoria === VALORES_CONSULTORIA.media ? "bg-[#FF6B00] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Média Empresa</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => onChange({ valorConsultoria: 0 })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.valorConsultoria === 0 || !data.valorConsultoria ? "bg-[#1D4ED8] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Selecione o porte da empresa</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => onChange({ valorConsultoria: VALORES_CONSULTORIA.micro })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.valorConsultoria === VALORES_CONSULTORIA.micro ? "bg-[#1D4ED8] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Micro Empresa</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => onChange({ valorConsultoria: VALORES_CONSULTORIA.pequena })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.valorConsultoria === VALORES_CONSULTORIA.pequena ? "bg-[#1D4ED8] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Pequena Empresa</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => onChange({ valorConsultoria: VALORES_CONSULTORIA.media })} className={`w-full text-left text-sm font-bold py-2.5 px-3 rounded-xl cursor-pointer transition-all ${data.valorConsultoria === VALORES_CONSULTORIA.media ? "bg-[#1D4ED8] text-white" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10"}`}>Média Empresa</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
               {data.valorConsultoria > 0 && (
@@ -202,7 +204,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">
                 Investimentos Adicionais
               </label>
-              <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all" defaultValue={formatDec(data.investimentoExtra)} onBlur={e => onChange({ investimentoExtra: parseDecimal(e.target.value) })} placeholder="Investimento Extra (R$)" />
+              <input type="text" className="w-full h-10 px-3 rounded-lg border border-transparent dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all" defaultValue={formatDec(data.investimentoExtra)} onBlur={e => onChange({ investimentoExtra: parseDecimal(e.target.value) })} placeholder="Investimento Extra (R$)" />
             </div>
           </div>
         </div>
@@ -210,8 +212,8 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
 
       <div className="analysis-results">
         <div className="grid grid-cols-2 gap-3">
-          <KpiCard label="Custo Inicial" value={formatBRL(r.custoI)} />
-          <KpiCard label="Custo Final" value={formatBRL(r.custoF)} />
+          <KpiCard label={`Custo Inicial por ${unidadeSingular}`} value={formatBRL(r.custoI)} />
+          <KpiCard label={`Custo Final por ${unidadeSingular}`} value={formatBRL(r.custoF)} />
           <KpiCard label="Redução Mensal" value={formatBRL(r.reducaoMensal)} />
           <KpiCard label="Payback" value={r.paybackMeses > 0 ? r.paybackMeses.toFixed(2).replace(".", ",") : "0,00"} suffix={r.paybackMeses === 1 ? "mês" : "meses"} />
         </div>

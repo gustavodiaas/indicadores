@@ -27,6 +27,7 @@ export function Topbar({ onExportWord, state, loadState }: Props) {
         disponibilidade: state.disponibilidade,
         qualidade: state.qualidade,
         leadtime: state.leadtime,
+        proposta: state.proposta,
       };
 
       const json = JSON.stringify(exportData, null, 2);
@@ -62,6 +63,7 @@ export function Topbar({ onExportWord, state, loadState }: Props) {
         disponibilidade: { ...state.disponibilidade, ...(parsedData?.disponibilidade || {}) },
         leadtime: { ...state.leadtime, ...(parsedData?.leadtime || {}) },
         area: { ...state.area, ...(parsedData?.area || {}) },
+        proposta: { ...state.proposta, ...(parsedData?.proposta || {}) },
       };
 
       loadState(newState as AppState);
@@ -80,12 +82,21 @@ export function Topbar({ onExportWord, state, loadState }: Props) {
       <header className="w-full min-h-16 bg-white/75 dark:bg-[#1C1C1E]/[0.78] backdrop-blur-2xl border border-black/[0.06] dark:border-white/10 px-5 py-3 flex flex-wrap items-center justify-between gap-3 rounded-2xl shadow-[0_8px_30px_rgba(15,23,42,0.06)] dark:shadow-[0_12px_36px_rgba(0,0,0,0.22)] transition-colors duration-300">
         
         <div className="flex items-center gap-3">
-          <div className="bg-[#FF6B00] p-2 rounded-[10px] shadow-[0_4px_12px_rgba(255,107,0,0.24)]">
+          <div className="bg-[#1D4ED8] p-2 rounded-[10px] shadow-[0_4px_12px_rgba(29, 78, 216,0.24)]">
             <BarChart3 className="h-5 w-5 text-white" />
           </div>
-          <h1 className="text-[15px] font-semibold text-slate-900 dark:text-slate-100 tracking-tight leading-none">
-            Central de Indicadores
-          </h1>
+          {state.resumo?.nomeEmpresa?.trim() ? (
+            <div className="min-w-0">
+              <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400 leading-none mb-1">Central de Indicadores</p>
+              <h1 className="text-[15px] font-semibold text-slate-900 dark:text-slate-100 tracking-tight leading-tight truncate max-w-[42ch]" title={state.resumo.nomeEmpresa}>
+                {state.resumo.nomeEmpresa}
+              </h1>
+            </div>
+          ) : (
+            <h1 className="text-[15px] font-semibold text-slate-900 dark:text-slate-100 tracking-tight leading-none">
+              Central de Indicadores
+            </h1>
+          )}
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -101,7 +112,7 @@ export function Topbar({ onExportWord, state, loadState }: Props) {
               
               <div className="text-justify space-y-3 font-normal normal-case">
                 <p className="leading-relaxed">Esta aplicação realiza o processamento de dados de forma estritamente local. Os arquivos de exportação são lidos apenas na memória do seu navegador/computador para fins de cálculo e visualização.</p>
-                <p className="leading-relaxed text-[#FF6B00] font-semibold">Nenhum dado pessoal ou empresarial é enviado, armazenado ou compartilhado com servidores externos.</p>
+                <p className="leading-relaxed text-[#1D4ED8] dark:text-[#60A5FA] font-semibold">Nenhum dado pessoal ou empresarial é enviado, armazenado ou compartilhado com servidores externos.</p>
                 <p className="leading-relaxed">Ao exportar arquivos, os dados são gerados diretamente no seu dispositivo. Você é o único responsável pela segurança e custódia dos documentos originais e gerados.</p>
               </div>
             </div>
@@ -119,23 +130,25 @@ export function Topbar({ onExportWord, state, loadState }: Props) {
 
           <button
             onClick={handleExportLean}
+            title="Salvar uma cópia do projeto em arquivo .lean"
             className="flex items-center gap-2 px-4 py-2.5 text-xs font-medium bg-black/[0.04] dark:bg-white/[0.08] text-slate-700 dark:text-slate-200 hover:bg-black/[0.07] dark:hover:bg-white/[0.13] rounded-[10px] transition-colors active:scale-[0.98]"
           >
             <Download className="h-4 w-4" />
-            Exportar Dados
+            Salvar
           </button>
 
           <button 
-            onClick={handleImportClick} 
+            onClick={handleImportClick}
+            title="Abrir um projeto salvo em arquivo .lean"
             className="flex items-center gap-2 px-4 py-2.5 text-xs font-medium bg-black/[0.04] dark:bg-white/[0.08] text-slate-700 dark:text-slate-200 hover:bg-black/[0.07] dark:hover:bg-white/[0.13] rounded-[10px] transition-colors active:scale-[0.98]"
           >
             <Upload className="h-4 w-4" /> 
-            Importar Dados
+            Abrir
           </button>
 
           <button 
             onClick={onExportWord} 
-            className="flex items-center gap-2 px-5 py-2.5 text-xs font-semibold bg-[#FF6B00] text-white hover:bg-[#E85F00] rounded-[10px] transition-colors shadow-[0_4px_14px_rgba(255,107,0,0.24)] active:scale-[0.98]"
+            className="flex items-center gap-2 px-5 py-2.5 text-xs font-semibold bg-[#1D4ED8] text-white hover:bg-[#1E40AF] rounded-[10px] transition-colors shadow-[0_4px_14px_rgba(29, 78, 216,0.24)] active:scale-[0.98]"
           >
             <FileText className="h-4 w-4" /> 
             Baixar Word

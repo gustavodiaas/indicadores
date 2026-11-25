@@ -36,7 +36,7 @@ export function ProdutividadeModule({ data, onChange }: Props) {
             <span className="text-sm font-semibold tracking-wide text-slate-900 dark:text-slate-100">Medidor de Produtividade</span>
               <Tooltip delayDuration={180}>
                 <TooltipTrigger asChild>
-                  <button type="button" aria-label="Informações sobre o cálculo" className="shrink-0 text-slate-400 dark:text-slate-500 cursor-help hover:text-[#7C3AED] dark:hover:text-[#C084FC]">
+                  <button type="button" aria-label="Informações sobre o cálculo" className="shrink-0 text-slate-400 dark:text-slate-500 cursor-help hover:text-[#1E3A8A] dark:hover:text-[#93C5FD]">
                     <Info className="w-3.5 h-3.5" aria-hidden="true" />
                   </button>
                 </TooltipTrigger>
@@ -45,7 +45,7 @@ export function ProdutividadeModule({ data, onChange }: Props) {
           </div>
           <input
             type="text"
-            className="h-10 w-40 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white rounded-xl border border-transparent dark:border-white/10 text-sm font-medium outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all px-4"
+            className="h-10 w-40 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white rounded-xl border border-transparent dark:border-white/10 text-sm font-medium outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all px-4"
             value={data.unidade}
             onChange={e => onChange({ unidade: e.target.value })}
             placeholder="Ex: peças, kg..."
@@ -59,19 +59,19 @@ export function ProdutividadeModule({ data, onChange }: Props) {
             </h3>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Volume ({u})</label>
-              <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
+              <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all"
                 defaultValue={data.volumeT1?.toString().replace(".", ",")}
                 onBlur={e => onChange({ volumeT1: parseDecimal(e.target.value) })} />
             </div>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Horas</label>
-              <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
+              <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all"
                 defaultValue={data.horasT1?.toString().replace(".", ",")}
                 onBlur={e => onChange({ horasT1: parseDecimal(e.target.value) })} />
             </div>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Operadores</label>
-              <input type="number" className="w-full h-10 px-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
+              <input type="number" className="w-full h-10 px-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all"
                 value={data.operadoresT1 ?? ""} onChange={e => onChange({ operadoresT1: Number(e.target.value) })} />
             </div>
           </div>
@@ -82,19 +82,19 @@ export function ProdutividadeModule({ data, onChange }: Props) {
             </h3>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Volume ({u})</label>
-              <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
+              <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all"
                 defaultValue={data.volumeT3?.toString().replace(".", ",")}
                 onBlur={e => onChange({ volumeT3: parseDecimal(e.target.value) })} />
             </div>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Horas</label>
-              <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
+              <input type="text" className="w-full h-10 px-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all"
                 defaultValue={data.horasT3?.toString().replace(".", ",")}
                 onBlur={e => onChange({ horasT3: parseDecimal(e.target.value) })} />
             </div>
             <div>
               <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-widest pl-1">Operadores</label>
-              <input type="number" className="w-full h-10 px-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#FF6B00] transition-all"
+              <input type="number" className="w-full h-10 px-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all"
                 value={data.operadoresT3 ?? ""} onChange={e => onChange({ operadoresT3: Number(e.target.value) })} />
             </div>
           </div>

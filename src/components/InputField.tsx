@@ -53,7 +53,7 @@ export function InputField({ label, value, onChange, type = "text", suffix, plac
             text-slate-800 dark:text-white
             placeholder:text-slate-400 dark:placeholder:text-slate-500
             focus:bg-white dark:focus:bg-[#333336]
-            focus:ring-2 focus:ring-[#FF6B00]/25 focus:border-[#FF6B00]
+            focus:ring-2 focus:ring-[#1D4ED8]/25 focus:border-[#1D4ED8]
             ${suffix ? 'pr-12' : ''}
           `}
         />

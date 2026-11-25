@@ -5,11 +5,11 @@
 @tailwind utilities;
 
 /* ============================================================
-   PALETA RICO INVESTIMENTOS
-   Informação : #7C3AED  (Roxo)
-   Acento     : #FF6B00  (Laranja Rico)
-   Hover      : #001E54  (Navy escuro)
-   Hover acen.: #E55A00  (Laranja escuro)
+   PALETA AZUL CORPORATIVO
+   Informação : #1E3A8A  (Azul marinho)
+   Acento     : #1D4ED8  (Azul corporativo)
+   Hover acen.: #1E40AF  (Azul escuro)
+   Modo escuro: #60A5FA / #93C5FD (azuis claros, para contraste)
    ============================================================ */
 
 @layer base {
@@ -19,19 +19,19 @@
     --foreground:   215 60% 10%;          /* #0A1828 azul quase preto */
     --card:         0 0% 100%;
     --card-foreground: 215 60% 10%;
-    --primary:      262 83% 58%;          /* #7C3AED Roxo */
+    --primary:      224 76% 48%;          /* #1D4ED8 Azul corporativo */
     --primary-foreground: 0 0% 100%;
-    --secondary:    25 100% 40%;          /* #FF6B00 Laranja Rico */
+    --secondary:    226 71% 40%;          /* #1E40AF Azul escuro */
     --secondary-foreground: 0 0% 100%;
     --muted:        210 20% 94%;
     --muted-foreground: 215 20% 45%;
-    --accent:       25 100% 50%;
+    --accent:       224 76% 48%;
     --accent-foreground: 0 0% 100%;
     --destructive:  0 84% 60%;
     --destructive-foreground: 0 0% 100%;
     --border:       215 20% 87%;
     --input:        215 20% 87%;
-    --ring:         25 100% 50%;          /* foco = laranja */
+    --ring:         224 76% 48%;          /* foco = azul */
     --radius: 0.75rem;
   }
 
@@ -41,19 +41,19 @@
     --foreground:   210 20% 95%;
     --card:         218 60% 11%;          /* #001833 cards */
     --card-foreground: 210 20% 95%;
-    --primary:      270 95% 75%;          /* #C084FC Roxo claro */
+    --primary:      213 94% 68%;          /* #60A5FA Azul claro */
     --primary-foreground: 0 0% 100%;
-    --secondary:    25 100% 50%;
+    --secondary:    217 91% 60%;
     --secondary-foreground: 0 0% 100%;
     --muted:        218 45% 15%;
     --muted-foreground: 215 15% 60%;
-    --accent:       25 100% 50%;
+    --accent:       217 91% 60%;
     --accent-foreground: 0 0% 100%;
     --destructive:  0 62% 55%;
     --destructive-foreground: 0 0% 100%;
     --border:       218 40% 18%;
     --input:        218 40% 18%;
-    --ring:         25 100% 50%;
+    --ring:         217 91% 60%;
   }
 
   * {
@@ -107,7 +107,7 @@
   }
 
   ::selection {
-    background: rgba(255, 107, 0, 0.2);
+    background: rgba(29, 78, 216, 0.2);
   }
 }
 
@@ -171,7 +171,7 @@
     opacity: 0.18;
     background:
       radial-gradient(130% 32% at 8% 0%, rgba(255, 255, 255, 0.42), transparent 58%),
-      radial-gradient(100% 26% at 110% 22%, rgba(192, 132, 252, 0.2), transparent 68%),
+      radial-gradient(100% 26% at 110% 22%, rgba(96, 165, 250, 0.2), transparent 68%),
       radial-gradient(100% 30% at -10% 82%, rgba(56, 189, 248, 0.11), transparent 70%),
       linear-gradient(90deg, rgba(255, 255, 255, 0.14), transparent 22%, transparent 80%, rgba(255, 255, 255, 0.06));
   }
@@ -179,26 +179,26 @@
   .liquid-glass-active {
     border: 1px solid rgba(255, 255, 255, 0.42);
     background:
-      linear-gradient(145deg, rgba(255, 139, 55, 0.98), rgba(255, 92, 0, 0.96));
+      linear-gradient(145deg, rgba(59, 130, 246, 0.98), rgba(29, 78, 216, 0.96));
     box-shadow:
-      0 7px 20px rgba(255, 107, 0, 0.28),
+      0 7px 20px rgba(29, 78, 216, 0.28),
       inset 0 1px 0 rgba(255, 255, 255, 0.46),
-      inset 0 -1px 0 rgba(130, 42, 0, 0.2);
+      inset 0 -1px 0 rgba(30, 58, 138, 0.25);
   }
 
   .dark .liquid-glass-active {
     border-color: rgba(255, 255, 255, 0.32);
     box-shadow:
-      0 8px 24px rgba(255, 107, 0, 0.34),
-      0 0 20px rgba(255, 107, 0, 0.12),
+      0 8px 24px rgba(29, 78, 216, 0.34),
+      0 0 20px rgba(29, 78, 216, 0.12),
       inset 0 1px 0 rgba(255, 255, 255, 0.42),
       inset 0 -1px 0 rgba(112, 36, 0, 0.28);
   }
 
   .module-shell {
-    --apple-purple: #7c3aed;
-    --apple-green: #30b76b;
-    --apple-orange: #ff6b00;
+    --apple-purple: #1E3A8A;
+    --apple-green: #3B82F6;
+    --brand-blue: #1d4ed8;
   }
 
   .module-shell .rounded-xl.border.border-slate-200.bg-white {

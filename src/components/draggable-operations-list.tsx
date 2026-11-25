@@ -93,7 +93,7 @@ export function DraggableOperationsList({
             onDragOver={(e) => handleDragOver(e, index)}
             onDragEnd={handleDragEnd}
             className={`flex items-center gap-3 p-3 bg-white dark:bg-[#1C1C1E] border border-slate-100 dark:border-white/10 rounded-lg transition-all ${
-              draggedIndex === index ? "opacity-50 border-[#7C3AED] dark:border-[#C084FC]" : "hover:border-slate-300 dark:hover:border-slate-600"
+              draggedIndex === index ? "opacity-50 border-[#1E3A8A] dark:border-[#93C5FD]" : "hover:border-slate-300 dark:hover:border-slate-600"
             }`}
           >
             <div className={`p-1 text-slate-400 dark:text-slate-600 ${editingId === op.id ? "opacity-30" : "cursor-grab active:cursor-grabbing hover:text-slate-600 dark:hover:text-slate-400"}`}>
@@ -133,7 +133,7 @@ export function DraggableOperationsList({
               <div className="flex items-center gap-1 ml-2">
                 {editingId === op.id ? (
                   <>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-[#FF6B00] hover:text-[#FF6B00] hover:bg-[#FF6B00]/10" onClick={() => saveEditing(op.id)}>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-[#1D4ED8] dark:text-[#60A5FA] hover:text-[#1D4ED8] hover:bg-[#1D4ED8]/10" onClick={() => saveEditing(op.id)}>
                       <Check className="h-4 w-4" />
                     </Button>
                     <Button variant="ghost" size="icon" className="h-8 w-8 text-rose-500 hover:text-rose-500 hover:bg-rose-500/10" onClick={cancelEditing}>
@@ -142,7 +142,7 @@ export function DraggableOperationsList({
                   </>
                 ) : (
                   <>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 dark:text-slate-400 hover:text-[#7C3AED] dark:hover:text-[#C084FC] hover:bg-[#7C3AED]/10 dark:hover:bg-[#C084FC]/10" onClick={() => startEditing(op)}>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 dark:text-slate-400 hover:text-[#1E3A8A] dark:hover:text-[#93C5FD] hover:bg-[#1E3A8A]/10 dark:hover:bg-[#93C5FD]/10" onClick={() => startEditing(op)}>
                       <Pencil className="h-4 w-4" />
                     </Button>
                     <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 dark:text-slate-400 hover:text-rose-500 hover:bg-rose-500/10" onClick={() => onRemove(op.id)}>

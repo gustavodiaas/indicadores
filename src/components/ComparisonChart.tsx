@@ -55,12 +55,12 @@ export function ComparisonChart({ data, title }: Props) {
           <Tooltip cursor={{ fill: 'currentColor', className: 'text-slate-100/50 dark:text-slate-950/30' }} content={<CustomTooltip />} />
           <Legend wrapperStyle={{ paddingTop: '20px', fontSize: '12px', fontWeight: 500 }} iconType="circle" />
           
-          <Bar dataKey="T1" fill="currentColor" radius={[8, 8, 2, 2]} name="T1 (Inicial)" maxBarSize={54} className="text-[#7C3AED] dark:text-[#C084FC]">
-            <LabelList dataKey="T1" position="top" fill="currentColor" fontSize={12} fontWeight="600" className="text-[#7C3AED] dark:text-[#C084FC]" />
+          <Bar dataKey="T1" fill="currentColor" radius={[8, 8, 2, 2]} name="T1 (Inicial)" maxBarSize={54} className="text-[#1E3A8A] dark:text-[#93C5FD]">
+            <LabelList dataKey="T1" position="top" fill="currentColor" fontSize={12} fontWeight="600" className="text-[#1E3A8A] dark:text-[#93C5FD]" />
           </Bar>
           
-          <Bar dataKey="T3" fill="currentColor" radius={[8, 8, 2, 2]} name="T3 (Final)" maxBarSize={54} className="text-[#30B76B] dark:text-[#32D74B]">
-            <LabelList dataKey="T3" position="top" fill="currentColor" fontSize={12} fontWeight="600" className="text-[#30B76B] dark:text-[#32D74B]" />
+          <Bar dataKey="T3" fill="currentColor" radius={[8, 8, 2, 2]} name="T3 (Final)" maxBarSize={54} className="text-[#3B82F6] dark:text-[#60A5FA]">
+            <LabelList dataKey="T3" position="top" fill="currentColor" fontSize={12} fontWeight="600" className="text-[#3B82F6] dark:text-[#60A5FA]" />
           </Bar>
         </BarChart>
       </ResponsiveContainer>
