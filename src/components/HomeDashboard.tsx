@@ -65,7 +65,7 @@ function ProjectPanel({ state, onSelect }: { state: AppState; onSelect: Props["o
               <h2 className="mt-2 text-xl font-semibold tracking-tight">Comece pela proposta comercial</h2>
               <p className="mt-1.5 text-sm text-muted-foreground">Importe o PDF e os dados do cliente são preenchidos automaticamente.</p>
             </div>
-            <button onClick={() => onSelect("proposta")} className="self-start md:self-auto inline-flex items-center gap-2 h-10 px-4 rounded-xl bg-[#1D4ED8] text-white text-sm font-semibold hover:bg-[#1E40AF] transition-colors shadow-[0_4px_14px_rgba(29, 78, 216,0.24)]">
+            <button onClick={() => onSelect("proposta")} className="self-start md:self-auto inline-flex items-center gap-2 h-10 px-4 rounded-xl bg-[#1D4ED8] text-white text-sm font-semibold hover:bg-[#1E40AF] transition-colors shadow-[0_4px_14px_rgba(29,78,216,0.24)]">
               <FileUp aria-hidden="true" className="h-4 w-4" /> Importar proposta
             </button>
           </div>

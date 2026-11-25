@@ -140,7 +140,7 @@ export function EditableLaudoCard({ title, laudo, laudoWord }: EditableLaudoCard
             </button>
             <button
               onClick={handleSave}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-[10px] bg-[#1D4ED8] text-white hover:bg-[#1E40AF] transition-colors text-xs font-semibold shadow-[0_4px_12px_rgba(29, 78, 216,0.20)]"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-[10px] bg-[#1D4ED8] text-white hover:bg-[#1E40AF] transition-colors text-xs font-semibold shadow-[0_4px_12px_rgba(29,78,216,0.20)]"
             >
               <Check className="h-3.5 w-3.5" /> Salvar
             </button>

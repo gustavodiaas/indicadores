@@ -82,7 +82,7 @@ export function Topbar({ onExportWord, state, loadState }: Props) {
       <header className="w-full min-h-16 bg-white/75 dark:bg-[#1C1C1E]/[0.78] backdrop-blur-2xl border border-black/[0.06] dark:border-white/10 px-5 py-3 flex flex-wrap items-center justify-between gap-3 rounded-2xl shadow-[0_8px_30px_rgba(15,23,42,0.06)] dark:shadow-[0_12px_36px_rgba(0,0,0,0.22)] transition-colors duration-300">
         
         <div className="flex items-center gap-3">
-          <div className="bg-[#1D4ED8] p-2 rounded-[10px] shadow-[0_4px_12px_rgba(29, 78, 216,0.24)]">
+          <div className="bg-[#1D4ED8] p-2 rounded-[10px] shadow-[0_4px_12px_rgba(29,78,216,0.24)]">
             <BarChart3 className="h-5 w-5 text-white" />
           </div>
           {state.resumo?.nomeEmpresa?.trim() ? (
@@ -148,7 +148,7 @@ export function Topbar({ onExportWord, state, loadState }: Props) {
 
           <button 
             onClick={onExportWord} 
-            className="flex items-center gap-2 px-5 py-2.5 text-xs font-semibold bg-[#1D4ED8] text-white hover:bg-[#1E40AF] rounded-[10px] transition-colors shadow-[0_4px_14px_rgba(29, 78, 216,0.24)] active:scale-[0.98]"
+            className="flex items-center gap-2 px-5 py-2.5 text-xs font-semibold bg-[#1D4ED8] text-white hover:bg-[#1E40AF] rounded-[10px] transition-colors shadow-[0_4px_14px_rgba(29,78,216,0.24)] active:scale-[0.98]"
           >
             <FileText className="h-4 w-4" /> 
             Baixar Word

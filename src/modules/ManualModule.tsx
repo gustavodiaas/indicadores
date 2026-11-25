@@ -121,7 +121,7 @@ function renderContent(id: SectionId) {
           <Tip>
             Tudo é salvo apenas no navegador do computador em que você está trabalhando (armazenamento local). Nada é
             enviado para nenhum servidor. Isso significa que os dados não sincronizam entre computadores e podem ser
-            perdidos se você limpar o cache do navegador. Use "Exportar Dados" com frequência para não perder o trabalho.
+            perdidos se você limpar o cache do navegador. Use "Salvar" com frequência para não perder o trabalho.
           </Tip>
         </>
       );
@@ -130,16 +130,16 @@ function renderContent(id: SectionId) {
       return (
         <>
           <P>
-            A barra superior aparece na maioria das abas (some em Home, GBO, 5W2H e A3, que têm seus próprios controles).
+            A barra superior aparece em todas as abas, exceto Home, Gantt e MFV. Ela mostra o nome do cliente em andamento.
             Ela tem três funções:
           </P>
           <FieldGroup>
-            <Field label="Exportar Dados">Baixa um arquivo .lean (formato JSON) com os dados de Resumo, Produtividade, Payback, Movimentação, Qualidade, Disponibilidade, Lead Time e Área. Serve como backup do projeto.</Field>
-            <Field label="Importar Dados">Carrega um arquivo .lean exportado anteriormente e preenche essas mesmas abas automaticamente.</Field>
+            <Field label="Salvar">Baixa um arquivo .lean (formato JSON) com os dados de Proposta, Resumo, Produtividade, Payback, Movimentação, Qualidade, Disponibilidade, Lead Time e Área. Serve como backup do projeto.</Field>
+            <Field label="Abrir">Carrega um arquivo .lean salvo anteriormente e preenche essas mesmas abas automaticamente.</Field>
             <Field label="Baixar Word">Gera o laudo técnico completo em .docx, já formatado, com introdução, plano de ação, resultados de cada indicador selecionado e conclusão.</Field>
           </FieldGroup>
           <Warn>
-            O Exportar/Importar Dados NÃO inclui GBO, Plano de Ação 5W2H e Modelo A3. Esses três módulos têm exportação
+            O Salvar/Abrir NÃO inclui GBO, Plano de Ação 5W2H e Modelo A3. Esses três módulos têm exportação
             própria (em Excel), explicada nas seções respectivas.
           </Warn>
         </>
@@ -223,7 +223,7 @@ function renderContent(id: SectionId) {
             <Field label="Importar Excel">Carrega uma planilha de operações já preenchida.</Field>
             <Field label="Exportar Gráfico em PDF">Salva a imagem do gráfico de balanceamento.</Field>
           </FieldGroup>
-          <Tip>O GBO não entra no laudo Word automático nem no Exportar Dados (.lean). Guarde o Excel e o PDF separadamente.</Tip>
+          <Tip>O GBO não entra no laudo Word automático nem no Salvar (.lean). Guarde o Excel e o PDF separadamente.</Tip>
         </>
       );
 
@@ -386,7 +386,7 @@ function renderContent(id: SectionId) {
       return (
         <>
           <SectionTitle>Recomendado</SectionTitle>
-          <DoDont can>Exportar Dados (.lean) ao final de cada sessão de trabalho, como backup.</DoDont>
+          <DoDont can>Salvar (.lean) ao final de cada sessão de trabalho, como backup.</DoDont>
           <DoDont can>Preencher Resumo antes dos demais módulos, pois ele consolida os resultados.</DoDont>
           <DoDont can>Conferir os Indicadores marcados no Resumo antes de baixar o Word.</DoDont>
           <DoDont can>Preencher a aba Produtividade antes de conferir o Payback (um depende do outro).</DoDont>

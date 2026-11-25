@@ -2,6 +2,7 @@ import { useAppStore, calcProdutividade, calcPayback, calcMovimentacao, calcQual
 import { Sidebar } from "@/components/Sidebar";
 import { navigationModules } from "@/lib/module-navigation";
 import { Topbar } from "@/components/Topbar";
+import { ModuleHeader } from "@/components/ModuleHeader";
 import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } from "docx";
 import { HomeDashboard } from "@/components/HomeDashboard";
 import { useState, useEffect } from "react";
@@ -349,7 +350,7 @@ const Index = () => {
       ` }} />
       <Sidebar active={activeModule} onSelect={setActiveModule} />
       <main className="flex-1 min-w-0 flex flex-col h-screen overflow-y-auto pl-[72px]">
-        {!["home", "gbo", "planoAcao", "a3", "manual", "gantt", "mfv", "proposta"].includes(activeModule) && (
+        {!["home", "gantt", "mfv"].includes(activeModule) && (
           <div className="print:hidden relative z-30 animate-in slide-in-from-top-2 duration-300 px-5 pt-5">
             <Topbar onExportWord={handleExportWord} state={state} loadState={loadState} />
           </div>
@@ -366,12 +367,8 @@ const Index = () => {
           {activeModule === "home" && renderHome()}
           {activeModule !== "home" && activeModule !== "gbo" && activeModule !== "gantt" && activeModule !== "mfv" && (
             <div key={activeModule} className="module-shell animate-in fade-in slide-in-from-bottom-2 duration-500 w-full min-h-full">
-              {currentModule && !["planoAcao", "a3", "manual"].includes(activeModule) && (
-                <header className="mb-8 border-b border-border/60 pb-5">
-                  <h1 className="text-2xl font-semibold tracking-tight">{currentModule.title}</h1>
-                  <p className="mt-1.5 text-sm text-muted-foreground">{currentModule.description}</p>
-                </header>
-              )}
+              {/* 5W2H e A3 mostram o mesmo cabeçalho por conta própria, com os botões de planilha. */}
+              {currentModule && !["planoAcao", "a3"].includes(activeModule) && <ModuleHeader moduleKey={activeModule} />}
               {renderPanelModules()}
             </div>
           )}

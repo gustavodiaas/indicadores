@@ -202,7 +202,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
         {/* COLUNA ESQUERDA: ENTRADA DE DADOS */}
         <div className="subtle-panel analysis-inputs flex flex-col gap-6">
           <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-white/10">
-            <h3 className="font-semibold text-[#0A1828] dark:text-slate-100 text-lg tracking-tight flex items-center gap-2.5"><span className="w-2.5 h-2.5 rounded-full bg-[#1E3A8A] dark:bg-[#93C5FD] shadow-[0_0_0_5px_rgba(124,58,237,0.10)]" />Entrada de dados</h3>
+            <h3 className="font-semibold text-[#0A1828] dark:text-slate-100 text-lg tracking-tight flex items-center gap-2.5"><span className="w-2.5 h-2.5 rounded-full bg-[#1E3A8A] dark:bg-[#93C5FD] shadow-[0_0_0_5px_rgba(30,58,138,0.10)]" />Entrada de dados</h3>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setShowConfirmModal(true)}
@@ -241,7 +241,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
             <h4 className="text-sm font-semibold text-[#0A1828] dark:text-slate-100">Resumo das ações</h4>
             <div className="flex gap-2 items-end">
               <div className="flex-1"><LocalInputField label="O que será feito?" value={newAcao} onChange={setNewAcao} /></div>
-              <button onClick={handleAddAcao} className="h-10 px-4 bg-[#1D4ED8] text-white rounded-xl font-bold text-xs uppercase shadow-md hover:bg-[#E55A00] transition-colors">Adicionar</button>
+              <button onClick={handleAddAcao} className="h-10 px-4 bg-[#1D4ED8] text-white rounded-xl font-bold text-xs uppercase shadow-md hover:bg-[#1E40AF] transition-colors">Adicionar</button>
             </div>
             <div className="flex flex-col gap-2 mt-4">
               {acoesVisiveis.map(a => (
@@ -342,7 +342,7 @@ export function ResumoModule({ data, state, onChange, onUpdatePlanoAcao, onClear
                   </button>
                   <button
                     onClick={() => { setConcOverride(concDraft); setEditingConc(false); toast.success("Texto salvo!"); }}
-                    className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-[#1D4ED8] text-white hover:bg-[#E55A00] transition-colors text-[11px] font-bold uppercase tracking-wider shadow-md"
+                    className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-[#1D4ED8] text-white hover:bg-[#1E40AF] transition-colors text-[11px] font-bold uppercase tracking-wider shadow-md"
                   >
                     Salvar
                   </button>

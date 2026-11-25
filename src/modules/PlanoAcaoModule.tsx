@@ -1,3 +1,5 @@
+import { ModuleHeader } from "@/components/ModuleHeader";
+import { actionButton } from "@/lib/ui-classes";
 import { type PlanoAcaoData, type PlanoAcaoItem } from "@/store/useAppStore";
 import { InputField } from "@/components/InputField";
 import { Trash2, Download, CheckCircle, ChevronDown, ChevronUp, Plus, Calendar as CalendarIcon, ChevronLeft, ChevronRight, Upload, FileText, Pencil } from "lucide-react";
@@ -357,44 +359,22 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
   return (
     <div className="flex flex-col gap-6 min-h-full pb-8 animate-in fade-in duration-500">
 
-      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 rounded-[22px] bg-gradient-to-r from-[#1E3A8A]/[0.09] via-white/50 to-[#1D4ED8]/[0.08] dark:from-[#93C5FD]/15 dark:via-[#1C1C1E]/60 dark:to-[#1D4ED8]/10 px-5 py-4 border border-black/[0.04] dark:border-white/[0.07]">
-        <div>
-          <h2 className="text-xl font-semibold text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
-            <span className="w-9 h-9 rounded-xl bg-[#1E3A8A] dark:bg-[#9F67FF] text-white flex items-center justify-center shadow-[0_6px_16px_rgba(124,58,237,0.25)]"><CheckCircle className="h-5 w-5" /></span> Plano de Ação 5W2H
-          </h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Gerenciamento tático e detalhamento das ações corretivas.</p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <input
-            type="file"
-            id="excel-5w2h-import"
-            accept=".xlsx"
-            className="hidden"
-            onChange={handleImportExcel}
-          />
-          <button
-            onClick={() => document.getElementById('excel-5w2h-import')?.click()}
-            className="flex items-center gap-2 px-4 py-2.5 bg-white/70 dark:bg-white/[0.08] text-[#1E3A8A] dark:text-[#93C5FD] border border-black/[0.05] dark:border-white/10 rounded-xl font-semibold text-xs hover:bg-white dark:hover:bg-white/10 transition-all active:scale-[0.98]"
-          >
+      <ModuleHeader
+        moduleKey="planoAcao"
+        spacing="compact"
+        actions={<>
+          <input type="file" id="excel-5w2h-import" accept=".xlsx" className="hidden" onChange={handleImportExcel} />
+          <button onClick={() => document.getElementById('excel-5w2h-import')?.click()} className={actionButton.secondary}>
             <Upload className="h-4 w-4" /> Importar
           </button>
-
-          <button
-            onClick={handleDownloadModelo}
-            className="flex items-center gap-2 px-4 py-2.5 bg-white/70 dark:bg-white/[0.08] text-slate-700 dark:text-slate-300 border border-black/[0.05] dark:border-white/10 rounded-xl font-semibold text-xs hover:bg-white dark:hover:bg-white/10 transition-all active:scale-[0.98]"
-          >
-            <FileText className="h-4 w-4" /> Baixar Modelo
+          <button onClick={handleDownloadModelo} className={actionButton.secondary}>
+            <FileText className="h-4 w-4" /> Baixar modelo
           </button>
-
-          <button
-            onClick={handleExportExcel}
-            className="flex items-center gap-2 px-4 py-2.5 bg-[#1D4ED8] text-white rounded-xl font-semibold text-xs shadow-[0_6px_16px_rgba(29, 78, 216,0.24)] hover:bg-[#E55A00] transition-all active:scale-[0.98]"
-          >
-            <Download className="h-4 w-4" /> Baixar Planilha
+          <button onClick={handleExportExcel} className={actionButton.primary}>
+            <Download className="h-4 w-4" /> Baixar planilha
           </button>
-        </div>
-      </div>
+        </>}
+      />
 
       <div className="subtle-panel">
         <h3 className="font-semibold text-slate-900 dark:text-white text-sm tracking-tight mb-5 flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-[#1E3A8A] dark:bg-[#93C5FD]" />Metadados do projeto</h3>
@@ -423,7 +403,7 @@ export function PlanoAcaoModule({ data, onChange }: Props) {
             </div>
             <button
               onClick={handleAddAcao}
-              className="h-10 px-4 bg-[#1D4ED8] text-white rounded-xl font-semibold text-xs shadow-[0_6px_16px_rgba(29, 78, 216,0.22)] hover:bg-[#E55A00] transition-colors flex items-center gap-2"
+              className="h-10 px-4 bg-[#1D4ED8] text-white rounded-xl font-semibold text-xs shadow-[0_6px_16px_rgba(29,78,216,0.22)] hover:bg-[#1E40AF] transition-colors flex items-center gap-2"
             >
               <Plus className="h-4 w-4" /> Adicionar
             </button>

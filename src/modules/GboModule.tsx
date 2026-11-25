@@ -1,5 +1,6 @@
 "use client"
 
+import { navigationModules } from "@/lib/module-navigation";
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
 import jsPDF from "jspdf"
@@ -54,6 +55,7 @@ const validateText = (value: string): { isValid: boolean; error?: string } => {
 
 export default function GBOAnalysis() {
   const { state, updateModule } = useAppStore()
+  const gboModule = navigationModules.find(m => m.key === "gbo")
   const gboData = state.gbo
 
   const operations = gboData.operacoes as Operation[]
@@ -282,11 +284,11 @@ export default function GBOAnalysis() {
       <div className="h-full relative print:min-h-0 print:bg-transparent flex flex-col gap-6 animate-in fade-in duration-500">
         <input ref={fileInputRef} type="file" accept=".xlsx,.xls" onChange={handleFileChange} className="hidden" />
 
-        <div className="pt-2 pb-4 w-full flex justify-between items-center z-50 print:hidden border-b border-slate-200 dark:border-white/10">
-          <div className="flex items-center gap-4">
-            <h1 className="text-xl font-bold tracking-tight text-[#0A1828] dark:text-slate-100">
-              Gráfico de Balanceamento de Operações (GBO)
-            </h1>
+        {/* Mesmo cabeçalho dos outros módulos (ver ModuleHeader), com o botão de ajuda à direita. */}
+        <header className="border-b border-border/60 pb-5 flex flex-col gap-4 md:flex-row md:items-end md:justify-between z-50 print:hidden">
+          <div className="min-w-0">
+            <h1 className="text-2xl font-semibold tracking-tight">{gboModule?.title}</h1>
+            <p className="mt-1.5 text-sm text-muted-foreground">{gboModule?.description}</p>
           </div>
 
           <div className="flex items-center gap-4">
@@ -320,7 +322,7 @@ export default function GBOAnalysis() {
               </DialogContent>
             </Dialog>
           </div>
-        </div>
+        </header>
 
         <div className="balance-layout print:p-12">
 
@@ -435,7 +437,7 @@ export default function GBOAnalysis() {
                 />
                 <button
                   onClick={addOperation} disabled={!newOperationName.trim() || !newOperationTime.trim() || isLoading}
-                  className="w-full h-10 flex items-center justify-center bg-[#1D4ED8] text-white rounded-xl font-bold text-xs uppercase tracking-widest shadow-md hover:bg-[#E55A00] transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+                  className="w-full h-10 flex items-center justify-center bg-[#1D4ED8] text-white rounded-xl font-bold text-xs uppercase tracking-widest shadow-md hover:bg-[#1E40AF] transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2"
                 >
                   <Plus className="h-4 w-4 mr-2" /> Adicionar
                 </button>
