@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { emptyProposta, type PropostaData } from "@/lib/proposta-parser";
 
-export type ModuleKey = "home" | "resumo" | "produtividade" | "payback" | "movimentacao" | "qualidade" | "disponibilidade" | "leadtime" | "area" | "gbo" | "planoAcao" | "a3" | "gantt" | "mfv" | "proposta" | "manual";
+export type ModuleKey = "home" | "resumo" | "produtividade" | "payback" | "movimentacao" | "qualidade" | "disponibilidade" | "leadtime" | "area" | "gbo" | "planoAcao" | "a3" | "gantt" | "mfv" | "proposta" | "relatorio" | "manual";
 
 export interface ProdutividadeData { 
   volumeT1: number; volumeT3: number; 
@@ -80,7 +80,7 @@ export interface AppState {
   area: AreaData; resumo: ResumoData; gbo: GboData; planoAcao: PlanoAcaoData; a3: A3Data; proposta: PropostaData;
 }
 
-const defaultState: AppState = {
+export const defaultState: AppState = {
   produtividade: { volumeT1: 0, volumeT3: 0, horasT1: 8, horasT3: 8, operadoresT1: 1, operadoresT3: 1, unidade: "peças" },
   payback: { tipoSalario: "bruto", modoInsercaoSalario: "total", salarioBaseInicial: 0, encargosInicial: 0, dedicacaoInicial: 100, salarioBaseFinal: 0, encargosFinal: 0, dedicacaoFinal: 100, valorConsultoria: 0, investimentoExtra: 0 },
   movimentacao: { distanciaT1: 0, distanciaT3: 0, tempoT1: 0, tempoT3: 0, unidadeTempo: "minutos", ferramentaUtilizada: "", acaoMelhoria: "", exibirNoLaudo: "ambos" },
