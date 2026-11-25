@@ -33,7 +33,7 @@ const textOf = (el: Element) => byTag(el, "t").map(t => t.textContent ?? "").joi
 interface Cell { el: Element; ref: string; row: number; col: number; text: string; cream: boolean }
 
 /** Nome da aba → caminho do XML dentro do pacote. */
-async function sheetPaths(zip: JSZip): Promise<Map<string, string>> {
+async function sheetPaths(zip: JSZip): Promise<Map<string, { name: string; path: string }>> {
   const wb = parse(await zip.file("xl/workbook.xml")!.async("string"));
   const rels = parse(await zip.file("xl/_rels/workbook.xml.rels")!.async("string"));
   const targets = new Map<string, string>();
@@ -41,10 +41,11 @@ async function sheetPaths(zip: JSZip): Promise<Map<string, string>> {
     const t = r.getAttribute("Target") ?? "";
     targets.set(r.getAttribute("Id") ?? "", t.startsWith("/") ? t.slice(1) : `xl/${t}`);
   }
-  const out = new Map<string, string>();
+  const out = new Map<string, { name: string; path: string }>();
   for (const s of byTag(wb, "sheet")) {
     const path = targets.get(s.getAttributeNS(REL_NS, "id") ?? "");
-    if (path) out.set(normalize(s.getAttribute("name") ?? ""), path);
+    const name = s.getAttribute("name") ?? "";
+    if (path) out.set(normalize(name), { name, path });
   }
   return out;
 }
@@ -140,35 +141,59 @@ function locate(cells: Cell[], t: RelatorioTarget): { el: Element; ref: string; 
 }
 
 /**
+ * Textos de instrução que o próprio modelo traz nas células creme ("Descreva…", "Inserir imagem…").
+ * Ficam na planilha; algumas fórmulas dependem deles (ex.: "Indicar Unidade Aqui").
+ */
+const INSTRUCTION = /^(descreva|desceva|descrever|inserir|indicar unidade|aten[cç][aã]o|local em que|figura \d|nome da ferramenta|indicadores afetados|realizar a descri|gastos utilizados)/i;
+
+export const isInstruction = (text: string) => INSTRUCTION.test(text.trim());
+
+export interface ClearedCell { sheet: string; ref: string; text: string }
+
+function clearCell(el: Element) {
+  while (el.firstChild) el.removeChild(el.firstChild);
+  el.removeAttribute("t");
+}
+
+/**
  * Escreve os valores no modelo e devolve o novo arquivo e onde cada valor foi parar.
+ * As demais células creme com dados (de um atendimento anterior) são limpas;
+ * os textos de instrução do modelo são mantidos.
  * Com `dryRun`, só localiza (para mostrar a prévia na tela).
  */
 export async function fillWorkbook(data: ArrayBuffer | Uint8Array, targets: RelatorioTarget[], dryRun = false) {
   const zip = await JSZip.loadAsync(data);
   const [paths, cream, strings] = await Promise.all([sheetPaths(zip), creamStyles(zip), sharedStrings(zip)]);
   const results: FillResult[] = targets.map(target => ({ target, cells: [] }));
+  const cleared: ClearedCell[] = [];
 
-  const bySheet = new Map<string, FillResult[]>();
-  for (const r of results) {
-    const key = normalize(r.target.sheet);
-    bySheet.set(key, [...(bySheet.get(key) ?? []), r]);
-  }
-
-  for (const [sheet, items] of bySheet) {
-    const path = paths.get(sheet);
-    if (!path || !zip.file(path)) continue;
+  for (const [sheet, { name, path }] of paths) {
+    if (!zip.file(path)) continue;
     const doc = parse(await zip.file(path)!.async("string"));
     const cells = readCells(doc, strings, cream);
+    const written = new Set<string>();
     let changed = false;
-    for (const r of items) {
+
+    for (const r of results.filter(x => normalize(x.target.sheet) === sheet)) {
       const spots = locate(cells, r.target);
       r.cells = spots.map(s => s.ref);
-      if (!dryRun) spots.forEach(s => { writeCell(doc, s.el, s.value); changed = true; });
+      spots.forEach(s => {
+        written.add(s.ref);
+        if (!dryRun) { writeCell(doc, s.el, s.value); changed = true; }
+      });
     }
+
+    for (const c of cells) {
+      if (!c.cream || written.has(c.ref) || !c.text.trim() || isInstruction(c.text)) continue;
+      if (byTag(c.el, "f").length) continue; // nunca mexe em fórmula
+      cleared.push({ sheet: name, ref: c.ref, text: c.text });
+      if (!dryRun) { clearCell(c.el); changed = true; }
+    }
+
     if (changed) zip.file(path, serialize(doc));
   }
 
-  if (dryRun) return { results, file: null as Uint8Array | null };
+  if (dryRun) return { results, cleared, file: null as Uint8Array | null };
 
   // Pede ao Excel para recalcular as fórmulas ao abrir (produtividade, resultados, SGT…).
   const wbPath = "xl/workbook.xml";
@@ -177,5 +202,5 @@ export async function fillWorkbook(data: ArrayBuffer | Uint8Array, targets: Rela
   if (calc) { calc.setAttribute("fullCalcOnLoad", "1"); zip.file(wbPath, serialize(wb)); }
 
   const file = await zip.generateAsync({ type: "uint8array", compression: "DEFLATE" });
-  return { results, file };
+  return { results, cleared, file };
 }

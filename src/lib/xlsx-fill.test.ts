@@ -23,10 +23,16 @@ async function fakeTemplate() {
   dg.getCell("B24").value = "Cidade:"; dg.getCell("D24").fill = CREAM;
   dg.getCell("B28").value = "Consultor(a) SENAI:"; dg.getCell("D28").fill = CREAM;
   dg.getCell("B29").value = "Consultor(a) SENAI (se aplicável):"; dg.getCell("D29").fill = CREAM;
+  // Dados de um atendimento anterior e textos de instrução do modelo.
+  dg.getCell("B9").value = "Família de produto:"; dg.getCell("D9").fill = GOLD; dg.getCell("D9").value = "PRODUTO ANTIGO";
+  dg.getCell("D28").value = "CONSULTOR ANTIGO";
+  dg.getCell("B30").value = "Total"; dg.getCell("D30").fill = CREAM; dg.getCell("D30").value = { formula: "1+1" };
 
   const rel = wb.addWorksheet("RELATÓRIO");
   rel.getCell("B4").value = "3.1"; rel.getCell("C4").value = "Descrição do processo produtivo";
   rel.getCell("B5").fill = CREAM; rel.getCell("B5").value = "Descreva o processo produtivo visualizado.";
+  rel.getCell("B8").fill = CREAM; rel.getCell("B8").value = "Inserir imagem do MFV Estado Presente.";
+  rel.getCell("B66").fill = CREAM; rel.getCell("B66").value = "X";
   rel.getCell("C22").value = "Número de operadores por turno antes da intervenção"; rel.getCell("D22").fill = CREAM; rel.getCell("I22").fill = CREAM;
   rel.getCell("C23").value = "Quantidade de horas por turno"; rel.getCell("D23").fill = CREAM;
   rel.getCell("C24").value = "Quantidade produzida por turno"; rel.getCell("D24").fill = CREAM;
@@ -66,7 +72,7 @@ const state = () => {
 describe("Relatório de atendimento", () => {
   it("writes only cream cells found by label and keeps everything else", async () => {
     const targets = buildRelatorioTargets(state());
-    const { results, file } = await fillWorkbook(await fakeTemplate(), targets);
+    const { results, cleared, file } = await fillWorkbook(await fakeTemplate(), targets);
     const wb = await readBack(file!);
     const dg = wb.getWorksheet("DADOS GERAIS")!;
     const rel = wb.getWorksheet("RELATÓRIO")!;
@@ -76,7 +82,7 @@ describe("Relatório de atendimento", () => {
     expect(dg.getCell("D10").value).toBe("MICRO EMPRESA");
     expect(dg.getCell("D14").value).toBe("Cidade Exemplo"); // cidade da empresa, não a do SENAI
     expect(dg.getCell("D24").value).toBeNull();
-    expect(dg.getCell("D28").value).toBe("Consultor Exemplo");
+    expect(dg.getCell("D28").value).toBeNull(); // "Especialista em" é a especialidade da empresa, não o consultor
     expect(dg.getCell("D29").value).toBeNull();
     expect((dg.getCell("D11").value as ExcelJS.CellFormulaValue).formula).toContain("MICRO EMPRESA");
 
@@ -93,6 +99,13 @@ describe("Relatório de atendimento", () => {
     expect(rel.getCell("B5").value).toBe(buildDescricao(state().resumo).tela);
     expect(String(rel.getCell("B5").value)).toContain("corte, dobra e solda");
     expect(wb.getWorksheet("CONCLUSÃO")!.getCell("B4").value).toBe(buildConclusao(state()).textoTela);
+
+    // Limpeza: dados antigos saem, instruções e fórmulas ficam.
+    expect(dg.getCell("D9").value).toBeNull();
+    expect(rel.getCell("B66").value).toBeNull();
+    expect(rel.getCell("B8").value).toBe("Inserir imagem do MFV Estado Presente.");
+    expect((dg.getCell("D30").value as ExcelJS.CellFormulaValue).formula).toBe("1+1");
+    expect(cleared.map(c => `${c.sheet}!${c.ref}`).sort()).toEqual(["DADOS GERAIS!D28", "DADOS GERAIS!D9", "RELATÓRIO!B66"]);
 
     expect(rel.getCell("E330").value).toBeNull();
     expect(results.find(r => r.target.id === "invest")!.cells).toEqual([]);

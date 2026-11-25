@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { AlertTriangle, CheckCircle2, Download, FileSpreadsheet, Loader2, ShieldCheck, Trash2 } from "lucide-react";
 import type { AppState } from "@/store/useAppStore";
 import { buildRelatorioTargets, displayValue } from "@/lib/relatorio-map";
-import { fillWorkbook, type FillResult } from "@/lib/xlsx-fill";
+import { fillWorkbook, type ClearedCell, type FillResult } from "@/lib/xlsx-fill";
 import { deleteTemplate, loadTemplate, saveTemplate, type StoredTemplate } from "@/lib/template-store";
 
 interface Props {
@@ -20,6 +20,7 @@ export function RelatorioModule({ state }: Props) {
   const [dragging, setDragging] = useState(false);
   const [preview, setPreview] = useState<FillResult[]>([]);
   const [previewing, setPreviewing] = useState(false);
+  const [cleared, setCleared] = useState<ClearedCell[]>([]);
   const [downloaded, setDownloaded] = useState(false);
 
   const targets = useMemo(() => buildRelatorioTargets(state), [state]);
@@ -30,11 +31,11 @@ export function RelatorioModule({ state }: Props) {
 
   // Prévia: onde cada valor vai cair na versão carregada.
   useEffect(() => {
-    if (!template) { setPreview([]); return; }
+    if (!template) { setPreview([]); setCleared([]); return; }
     let alive = true;
     setPreviewing(true);
     fillWorkbook(template.data, targets, true)
-      .then(r => { if (alive) setPreview(r.results); })
+      .then(r => { if (alive) { setPreview(r.results); setCleared(r.cleared); } })
       .finally(() => { if (alive) setPreviewing(false); })
       .catch(() => { if (alive) setError("Não consegui ler esta planilha. Verifique se é o arquivo .xlsx do Relatório de Atendimento."); });
     return () => { alive = false; };
@@ -178,8 +179,21 @@ export function RelatorioModule({ state }: Props) {
             </>
           )}
 
+          {cleared.length > 0 && (
+            <details className="rounded-xl border border-amber-200 dark:border-amber-500/30 bg-amber-50/70 dark:bg-amber-500/10 p-3 text-xs text-amber-800 dark:text-amber-300">
+              <summary className="cursor-pointer font-medium">
+                Esta planilha tem dados de outro atendimento: {cleared.length} {cleared.length === 1 ? "célula será limpa" : "células serão limpas"} ao gerar. Os textos de instrução do modelo são mantidos.
+              </summary>
+              <ul className="mt-2 space-y-0.5 max-h-48 overflow-y-auto">
+                {cleared.map(c => (
+                  <li key={`${c.sheet}!${c.ref}`}><span className="text-amber-600/80 dark:text-amber-400/80">{c.sheet} {c.ref}:</span> {c.text.length > 80 ? `${c.text.slice(0, 80)}…` : c.text}</li>
+                ))}
+              </ul>
+            </details>
+          )}
+
           <div className="flex flex-wrap items-center gap-3 pt-1">
-            <button type="button" onClick={download} disabled={busy || previewing || found.length === 0}
+            <button type="button" onClick={download} disabled={busy || previewing || (found.length === 0 && cleared.length === 0)}
               className="inline-flex items-center gap-2 h-10 px-4 rounded-lg bg-[#1D4ED8] text-white text-sm font-semibold hover:bg-[#1E40AF] disabled:opacity-50 transition-colors">
               <Download className="h-4 w-4" /> Baixar relatório preenchido
             </button>

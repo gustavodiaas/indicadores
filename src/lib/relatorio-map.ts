@@ -112,7 +112,6 @@ export function buildRelatorioTargets(s: AppState): RelatorioTarget[] {
     { id: "numero", sheet: DG, label: "Nº", after: "Endereço da empresa", value: end?.numero, campo: "Número", origem: "Proposta" },
     { id: "bairro", sheet: DG, label: "Bairro", after: "Endereço da empresa", value: end?.bairro, campo: "Bairro", origem: "Proposta" },
     { id: "empresario", sheet: DG, label: "Empresário(a)", value: p?.responsavelLegal, campo: "Empresário(a)", origem: "Proposta" },
-    { id: "consultor", sheet: DG, label: "Consultor(a) SENAI:", value: r.especialista, campo: "Consultor(a) SENAI", origem: "Resumo (Especialista)" },
     { id: "proposta", sheet: RES, label: "Número da proposta comercial", value: p?.numero, campo: "Número da proposta comercial", origem: "Proposta" },
 
     { id: "opT1", sheet: REL, label: "Número de operadores por turno antes", value: prod.volumeT1 > 0 ? prod.operadoresT1 : 0, campo: "Operadores por turno (inicial)", origem: "Produtividade" },

@@ -239,7 +239,7 @@ export function PropostaModule({ data, state, onChange, onApply }: Props) {
               </div>
               <div className="min-w-0">
                 <Info label="E-mail" value={data.responsavelEmail} />
-                <SmartFactoryButton email={data.responsavelEmail} name={data.responsavelLegal} empresa={data.razaoSocial} remetente={state.resumo?.especialista ?? ""} />
+                <SmartFactoryButton email={data.responsavelEmail} name={data.responsavelLegal} empresa={data.razaoSocial} remetente="" />
               </div>
             </Section>
             <Section title="Acompanhamento do atendimento">
@@ -251,7 +251,7 @@ export function PropostaModule({ data, state, onChange, onApply }: Props) {
               </div>
               <div className="min-w-0">
                 <Info label="E-mail" value={data.acompanhamentoEmail} />
-                <SmartFactoryButton email={data.acompanhamentoEmail} name={data.acompanhamentoNome} empresa={data.razaoSocial} remetente={state.resumo?.especialista ?? ""} />
+                <SmartFactoryButton email={data.acompanhamentoEmail} name={data.acompanhamentoNome} empresa={data.razaoSocial} remetente="" />
               </div>
             </Section>
           </div>
