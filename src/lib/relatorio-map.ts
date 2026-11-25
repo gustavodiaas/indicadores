@@ -6,6 +6,7 @@ import {
   type AppState,
 } from "@/store/useAppStore";
 import { buildConclusao, buildDescricao } from "@/lib/resumo-textos";
+import { buildLaudoPayback, buildLaudoProdutividade } from "@/lib/laudos";
 
 export type CellValue = string | number;
 
@@ -134,6 +135,14 @@ export function buildRelatorioTargets(s: AppState): RelatorioTarget[] {
   const conclusao = r.conclusaoEditada ?? (resumoPreenchido ? buildConclusao(s).textoTela : "");
   if (descricao.trim()) targets.push({ kind: "block", id: "descricao", sheet: REL, label: "Descrição do processo produtivo", value: descricao, campo: "3.1 Descrição do processo produtivo", origem: "Resumo (Descrição do Processo)" });
   if (conclusao.trim()) targets.push({ kind: "block", id: "conclusao", sheet: "CONCLUSÃO", label: "5 - Conclusão", value: conclusao, campo: "5 Conclusão", origem: "Resumo (Conclusão do Projeto)" });
+
+  // Laudos das abas Produtividade (3.11) e Payback (3.12), o editado na tela se houver.
+  const prodPreenchida = prod.volumeT1 > 0 && prod.volumeT3 > 0;
+  const paybackPreenchido = s.payback.salarioBaseInicial > 0 || s.payback.valorConsultoria > 0;
+  const laudoProd = prod.laudoEditado ?? (prodPreenchida ? buildLaudoProdutividade(prod) : "");
+  const laudoPay = s.payback.laudoEditado ?? (paybackPreenchido ? buildLaudoPayback(s.payback, prod, r) : "");
+  if (laudoProd.trim()) targets.push({ kind: "block", id: "laudoProd", sheet: REL, label: "Análise dos indicadores", value: laudoProd, campo: "3.11 Análise dos indicadores", origem: "Produtividade (Laudo Operacional)" });
+  if (laudoPay.trim()) targets.push({ kind: "block", id: "laudoPay", sheet: REL, label: "Análise do retorno do programa", value: laudoPay, campo: "3.12 Análise do retorno do programa", origem: "Payback (Laudo de Payback)" });
 
   indicadoresExtras(s).slice(0, 5).forEach((ind, i) => {
     targets.push({

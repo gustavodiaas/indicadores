@@ -3,6 +3,7 @@ import { type ProdutividadeData, calcProdutividade } from "@/store/useAppStore";
 import { KpiCard } from "@/components/KpiCard";
 import { ComparisonChart } from "@/components/ComparisonChart";
 import { EditableLaudoCard } from "@/components/EditableLaudoCard";
+import { buildLaudoProdutividade } from "@/lib/laudos";
 import { Info } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -16,8 +17,6 @@ export function ProdutividadeModule({ data, onChange }: Props) {
   const chartData = [{ name: `Produtividade`, T1: Number(r.pphT1.toFixed(6)), T3: Number(r.pphT3.toFixed(6)) }];
 
   const u = data.unidade || "peças";
-  const opTxt1 = data.operadoresT1 === 1 ? "operador" : "operadores";
-  const opTxt3 = data.operadoresT3 === 1 ? "operador" : "operadores";
 
   const parseDecimal = (val: string) => {
     if (!val) return 0;
@@ -26,7 +25,7 @@ export function ProdutividadeModule({ data, onChange }: Props) {
     return isNaN(parsed) ? 0 : parsed;
   };
 
-  const laudo = `No estágio inicial, a produtividade era de ${r.pphT1.toFixed(6).replace(".", ",")} ${u}/h/op, produzindo ${data.volumeT1 || 0} ${u} com ${data.operadoresT1 || 0} ${opTxt1} em ${data.horasT1 || 0}h. Após as melhorias, a produtividade subiu para ${r.pphT3.toFixed(6).replace(".", ",")} ${u}/h/op, produzindo ${data.volumeT3 || 0} ${u} com ${data.operadoresT3 || 0} ${opTxt3} em ${data.horasT3 || 0}h. Isso representa um ganho direto de ${r.ganho.toFixed(6).replace(".", ",")}% na produtividade operacional da célula.`;
+  const laudo = buildLaudoProdutividade(data);
 
   return (
     <div className="analysis-layout">
@@ -105,7 +104,7 @@ export function ProdutividadeModule({ data, onChange }: Props) {
       <div className="analysis-results">
         <KpiCard label="Ganho de Produtividade" value={r.ganho.toFixed(6).replace(".", ",")} suffix="%" trend={r.ganho} />
 
-        <EditableLaudoCard title="Laudo Operacional" laudo={laudo} />
+        <EditableLaudoCard title="Laudo Operacional" laudo={laudo} override={data.laudoEditado ?? null} onOverrideChange={v => onChange({ laudoEditado: v })} />
 
         <div className="analysis-chart">
           <ComparisonChart data={chartData} title={`Evolução (${u}/h/op)`} />

@@ -4,6 +4,7 @@ import { fillWorkbook } from "./xlsx-fill";
 import { buildRelatorioTargets, splitEndereco, type RelatorioTarget } from "./relatorio-map";
 import { defaultState } from "@/store/useAppStore";
 import { buildConclusao, buildDescricao } from "./resumo-textos";
+import { buildLaudoPayback, buildLaudoProdutividade } from "./laudos";
 
 const CREAM = { type: "pattern", pattern: "solid", fgColor: { argb: "FFFFF7D6" } } as const;
 const GOLD = { type: "pattern", pattern: "solid", fgColor: { argb: "FFFEF2CB" } } as const;
@@ -45,6 +46,10 @@ async function fakeTemplate() {
   rel.getCell("C312").value = "Produtividade (Final)";
   for (const r of [313, 314]) { rel.getCell(`C${r}`).value = { formula: `C${r - 287}` }; rel.getCell(`D${r}`).fill = CREAM; }
   rel.getCell("C329").value = "Ganho Financeiro mensal na empresa"; rel.getCell("E329").fill = CREAM;
+  rel.getCell("B334").value = "3.11"; rel.getCell("C334").value = "Análise dos INDICADORES";
+  rel.getCell("C335").fill = CREAM; rel.getCell("C335").value = "Descrever os impactos dos indicadores para empresa";
+  rel.getCell("B338").value = "3.12"; rel.getCell("C338").value = "Análise do Retorno do Programa";
+  rel.getCell("C339").fill = CREAM; rel.getCell("C339").value = "Gastos utilizados (Capex)";
   // Rótulo sem célula creme ao lado: não pode ser escrito.
   rel.getCell("C330").value = "Somatório de Investimento em Ações"; rel.getCell("E330").fill = BLUE;
   const conc = wb.addWorksheet("CONCLUSÃO");
@@ -65,7 +70,7 @@ const state = () => {
   s.produtividade = { ...s.produtividade, volumeT1: 120.5, volumeT3: 150, horasT1: 8, horasT3: 7.5, operadoresT1: 3, operadoresT3: 2 };
   s.qualidade = { quantidadeT1: 1000, perdasT1: 50, quantidadeT3: 1000, perdasT3: 20 };
   s.area = { areaT1: 80, areaT3: 60, valorAluguel: 0 };
-  s.payback = { ...s.payback, investimentoExtra: 5000 };
+  s.payback = { ...s.payback, investimentoExtra: 5000, salarioBaseInicial: 9000, salarioBaseFinal: 6000 };
   return s;
 };
 
@@ -107,6 +112,9 @@ describe("Relatório de atendimento", () => {
     expect((dg.getCell("D30").value as ExcelJS.CellFormulaValue).formula).toBe("1+1");
     expect(cleared.map(c => `${c.sheet}!${c.ref}`).sort()).toEqual(["DADOS GERAIS!D28", "DADOS GERAIS!D9", "RELATÓRIO!B66"]);
 
+    expect(rel.getCell("C335").value).toBe(buildLaudoProdutividade(state().produtividade));
+    expect(rel.getCell("C339").value).toBe(buildLaudoPayback(state().payback, state().produtividade, state().resumo));
+
     expect(rel.getCell("E330").value).toBeNull();
     expect(results.find(r => r.target.id === "invest")!.cells).toEqual([]);
     expect(results.find(r => r.target.id === "cidade")!.cells).toEqual(["D14"]);
@@ -122,9 +130,13 @@ describe("Relatório de atendimento", () => {
   it("uses the texts edited on the Resumo screen", () => {
     const s = state();
     s.resumo = { ...s.resumo, descricaoEditada: "Descrição escrita à mão.", conclusaoEditada: "Conclusão escrita à mão." };
+    s.produtividade = { ...s.produtividade, laudoEditado: "Laudo operacional à mão." };
+    s.payback = { ...s.payback, laudoEditado: "Laudo de payback à mão." };
     const t = buildRelatorioTargets(s);
     expect(t.find(x => x.id === "descricao")).toMatchObject({ value: "Descrição escrita à mão." });
     expect(t.find(x => x.id === "conclusao")).toMatchObject({ value: "Conclusão escrita à mão." });
+    expect(t.find(x => x.id === "laudoProd")).toMatchObject({ value: "Laudo operacional à mão." });
+    expect(t.find(x => x.id === "laudoPay")).toMatchObject({ value: "Laudo de payback à mão." });
   });
 
   it("skips empty data and splits clear addresses only", () => {

@@ -8,6 +8,8 @@ export interface ProdutividadeData {
   horasT1: number; horasT3: number; 
   operadoresT1: number; operadoresT3: number; 
   unidade: string; 
+  /** Laudo Operacional editado à mão (null/ausente = texto gerado). */
+  laudoEditado?: string | null;
 }
 export interface PaybackData { 
   tipoSalario: "bruto" | "encargos"; 
@@ -20,6 +22,8 @@ export interface PaybackData {
   dedicacaoFinal: number; 
   valorConsultoria: number; 
   investimentoExtra: number; 
+  /** Laudo de Payback editado à mão (null/ausente = texto gerado). */
+  laudoEditado?: string | null;
 }
 
 export interface MovimentacaoData { 

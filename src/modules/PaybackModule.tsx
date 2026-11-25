@@ -3,6 +3,7 @@ import { KpiCard } from "@/components/KpiCard";
 import { ComparisonChart } from "@/components/ComparisonChart";
 import { ChevronDown } from "lucide-react";
 import { EditableLaudoCard } from "@/components/EditableLaudoCard";
+import { buildLaudoPayback } from "@/lib/laudos";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 interface Props {
@@ -32,10 +33,8 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
   // Rótulo dos cartões de custo: "peças" -> "peça", "unidades" -> "unidade"; unidades como "kg" ficam iguais.
   const unidadeSingular = /[^s]s$/i.test(u.trim()) ? u.trim().slice(0, -1) : u.trim();
 
-  const colabTxt1 = op1 === 1 ? "colaborador" : "colaboradores";
-  const colabTxt3 = op3 === 1 ? "colaborador" : "colaboradores";
 
-  const laudo = `No estágio inicial, havia ${op1} ${colabTxt1}, com custo total por mês de ${formatBRL(r.salI)}, ${data.dedicacaoInicial || 100}% utilizados na operação. Produziam-se ${r.prodMensalI.toLocaleString("pt-BR")} ${u}/mês, a custo de mão de obra de ${formatBRL(r.custoI)}. Após intervenção, permaneceram ${op3} ${colabTxt3}, com custo total por mês de ${formatBRL(r.salF)}, ${data.dedicacaoFinal || 100}% utilizado no processo. Passaram a produzir ${r.prodMensalF.toLocaleString("pt-BR")} ${u}/mês, a custo de mão de obra de ${formatBRL(r.custoF)}. Reduziu-se então ${formatBRL(Math.max(0, r.custoI - r.custoF))} no custo de mão de obra por ${u}, que gerou o retorno mensal de ${formatBRL(r.reducaoMensal)}. Portanto, um payback de ${r.paybackMeses > 0 ? r.paybackMeses.toFixed(2) : "0,00"} ${r.paybackMeses === 1 ? "mês" : "meses"}.`;
+  const laudo = buildLaudoPayback(data, prodData, resumoData);
 
   const parseDecimal = (val: string) => {
     if (!val) return 0;
@@ -218,7 +217,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
           <KpiCard label="Payback" value={r.paybackMeses > 0 ? r.paybackMeses.toFixed(2).replace(".", ",") : "0,00"} suffix={r.paybackMeses === 1 ? "mês" : "meses"} />
         </div>
 
-          <EditableLaudoCard title="Laudo de Payback" laudo={laudo} />
+          <EditableLaudoCard title="Laudo de Payback" laudo={laudo} override={data.laudoEditado ?? null} onOverrideChange={v => onChange({ laudoEditado: v })} />
 
         <div className="analysis-chart">
           <ComparisonChart data={chartData} title={`Evolução do Custo por ${u.slice(0, -1)}`} />
