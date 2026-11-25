@@ -233,7 +233,10 @@ export function PropostaModule({ data, state, onChange, onApply }: Props) {
             <Section title="Responsável legal">
               <Info label="Nome" value={data.responsavelLegal} />
               <Info label="Cargo" value={data.responsavelCargo} />
-              <Info label="Telefone" value={data.responsavelTelefone} />
+              <div className="min-w-0">
+                <Info label="Telefone" value={data.responsavelTelefone} />
+                <WhatsAppButton phone={data.responsavelTelefone} name={data.responsavelLegal} />
+              </div>
               <div className="min-w-0">
                 <Info label="E-mail" value={data.responsavelEmail} />
                 <SmartFactoryButton email={data.responsavelEmail} name={data.responsavelLegal} empresa={data.razaoSocial} remetente={state.resumo?.especialista ?? ""} />
