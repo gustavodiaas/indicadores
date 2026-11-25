@@ -81,10 +81,32 @@ export interface A3Data {
   observacoes: string;
 }
 
+/** Campos do Relatório de Atendimento que não existem em outras abas. */
+export interface RelatorioData {
+  /** null = usar o texto do Resumo. */
+  linha: string | null;
+  motivo: string | null;
+  familia: string;
+  /** [0] = Consultor(a) SENAI (obrigatório); [1..4] = se aplicável. */
+  consultores: string[];
+  /** UOs além da IST - Mecatrônica (se aplicável). */
+  outrasUOs: string[];
+  /** Datas no formato AAAA-MM-DD. */
+  dataAceitacao: string;
+  dataExecucao: string;
+  dataEncerramento: string;
+}
+
+export const emptyRelatorio: RelatorioData = {
+  linha: null, motivo: null, familia: "", consultores: ["", "", "", "", ""], outrasUOs: ["", ""],
+  dataAceitacao: "", dataExecucao: "", dataEncerramento: "",
+};
+
 export interface AppState { 
   produtividade: ProdutividadeData; payback: PaybackData; movimentacao: MovimentacaoData; 
   qualidade: QualidadeData; disponibilidade: DisponibilidadeData; leadtime: LeadTimeData; 
   area: AreaData; resumo: ResumoData; gbo: GboData; planoAcao: PlanoAcaoData; a3: A3Data; proposta: PropostaData;
+  relatorio: RelatorioData;
 }
 
 export const defaultState: AppState = {
@@ -99,7 +121,8 @@ export const defaultState: AppState = {
   gbo: { turnoTempo: 0, turnoUnidade: "hours", demanda: 0, demandaUnidade: "peças", tempoUnidade: "seconds", operacoes: [], tituloGrafico: "Gráfico de Balanceamento de Operações (GBO)" },
   planoAcao: { metadata: { dataCriacao: "", respCriacao: "", objetivo: "", meta: "", dataRevisao: "", respRevisao: "", indicador: "" }, acoes: [] },
   a3: { titulo: "", data: "", aprovacoes: "", background: "", objetivos: "", estadoAtual: "", analise: "", estadoFuturo: "", planoAcao: [], indicadores: [], observacoes: "" },
-  proposta: emptyProposta
+  proposta: emptyProposta,
+  relatorio: emptyRelatorio,
 };
 
 const mergeDeep = (target: any, source: any) => {

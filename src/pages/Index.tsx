@@ -327,7 +327,7 @@ const Index = () => {
       case "planoAcao": return <PlanoAcaoModule data={state.planoAcao} onChange={d => updateModule("planoAcao", d)} />;
       case "a3": return <A3Module data={state.a3} onChange={d => updateModule("a3", d)} />;
       case "proposta": return <PropostaModule data={state.proposta} state={state} onChange={d => updateModule("proposta", d)} onApply={patches => (Object.keys(patches) as (keyof typeof patches)[]).forEach(k => updateModule(k, patches[k] as any))} />;
-      case "relatorio": return <RelatorioModule state={state} />;
+      case "relatorio": return <RelatorioModule state={state} onChange={d => updateModule("relatorio", d)} />;
       case "manual": return <ManualModule />;
       default: return null;
     }

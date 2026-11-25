@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import ExcelJS from "exceljs";
 import { fillWorkbook } from "./xlsx-fill";
-import { buildRelatorioTargets, pendingTexts, reportFileName, splitEndereco, type RelatorioTarget } from "./relatorio-map";
+import { buildRelatorioTargets, excelDate, missingRequired, pendingTexts, reportFileName, splitEndereco, type RelatorioTarget } from "./relatorio-map";
 import { defaultState } from "@/store/useAppStore";
 import { buildConclusao, buildDescricao } from "./resumo-textos";
 import { buildLaudoPayback, buildLaudoProdutividade } from "./laudos";
@@ -22,6 +22,9 @@ async function fakeTemplate() {
   dg.getCell("B14").value = "Cidade:"; dg.getCell("D14").fill = GOLD;
   dg.getCell("B23").value = "Cidade e estado do SENAI/DR";
   dg.getCell("B24").value = "Cidade:"; dg.getCell("D24").fill = CREAM;
+  dg.getCell("B7").value = "Linha de produção, processo e/ou produto"; dg.getCell("D7").fill = GOLD;
+  dg.getCell("B8").value = "Motivo para a seleção da linha:"; dg.getCell("D8").fill = GOLD;
+  dg.getCell("B27").value = "Consultor(es) SENAI/DR";
   dg.getCell("B28").value = "Consultor(a) SENAI:"; dg.getCell("D28").fill = CREAM;
   dg.getCell("B29").value = "Consultor(a) SENAI (se aplicável):"; dg.getCell("D29").fill = CREAM;
   // Dados de um atendimento anterior e textos de instrução do modelo.
@@ -33,7 +36,10 @@ async function fakeTemplate() {
   rel.getCell("B4").value = "3.1"; rel.getCell("C4").value = "Descrição do processo produtivo";
   rel.getCell("B5").fill = CREAM; rel.getCell("B5").value = "Descreva o processo produtivo visualizado.";
   rel.getCell("B8").fill = CREAM; rel.getCell("B8").value = "Inserir imagem do MFV Estado Presente.";
-  rel.getCell("B66").fill = CREAM; rel.getCell("B66").value = "X";
+  rel.getCell("C65").value = "Ferramentas utilizadas";
+  rel.getCell("B66").fill = CREAM; rel.getCell("C66").value = "Mapa de Fluxo de Valor";
+  rel.getCell("B67").fill = CREAM; rel.getCell("C67").value = "Poka Yoke"; rel.getCell("B67").value = "X";
+  rel.getCell("B68").fill = CREAM; rel.getCell("C68").value = "Gerenciamento Diário - Gestão Visual - KPIs";
   rel.getCell("C22").value = "Número de operadores por turno antes da intervenção"; rel.getCell("D22").fill = CREAM; rel.getCell("I22").fill = CREAM;
   rel.getCell("C23").value = "Quantidade de horas por turno"; rel.getCell("D23").fill = CREAM;
   rel.getCell("C24").value = "Quantidade produzida por turno"; rel.getCell("D24").fill = CREAM;
@@ -54,6 +60,9 @@ async function fakeTemplate() {
   // Rótulo sem célula creme ao lado: não pode ser escrito.
   rel.getCell("C331").value = "Valor da consultoria"; rel.getCell("E331").fill = BLUE;
   const res = wb.addWorksheet("RESUMO");
+  res.getCell("B4").value = "Data de Aceitação:"; res.getCell("C4").fill = CREAM;
+  res.getCell("B5").value = "Data de Execução:"; res.getCell("C5").fill = CREAM;
+  res.getCell("B6").value = "Data de Encerramento Técnico:"; res.getCell("C6").fill = CREAM;
   res.getCell("B11").value = "Nome UO"; for (const r of [12, 13, 14]) res.getCell(`B${r}`).fill = CREAM;
   const conc = wb.addWorksheet("CONCLUSÃO");
   conc.getCell("B2").value = "5 - CONCLUSÃO"; conc.getCell("B4").fill = CREAM;
@@ -112,10 +121,11 @@ describe("Relatório de atendimento", () => {
 
     // Limpeza: dados antigos saem, instruções e fórmulas ficam.
     expect(dg.getCell("D9").value).toBeNull();
-    expect(rel.getCell("B66").value).toBeNull();
+    // Ferramentas obrigatórias sempre marcadas; outras marcações antigas são limpas.
+    expect([rel.getCell("B66").value, rel.getCell("B67").value, rel.getCell("B68").value]).toEqual(["X", null, "X"]);
     expect(rel.getCell("B8").value).toBe("Inserir imagem do MFV Estado Presente.");
     expect((dg.getCell("D30").value as ExcelJS.CellFormulaValue).formula).toBe("1+1");
-    expect(cleared.map(c => `${c.sheet}!${c.ref}`).sort()).toEqual(["DADOS GERAIS!D28", "DADOS GERAIS!D9", "RELATÓRIO!B66"]);
+    expect(cleared.map(c => `${c.sheet}!${c.ref}`).sort()).toEqual(["DADOS GERAIS!D28", "DADOS GERAIS!D9", "RELATÓRIO!B67"]);
 
     expect(rel.getCell("C335").value).toBe(buildLaudoProdutividade(state().produtividade));
     expect(rel.getCell("C339").value).toBe(buildLaudoPayback(state().payback, state().produtividade, state().resumo));
@@ -160,8 +170,29 @@ describe("Relatório de atendimento", () => {
     expect(reportFileName(s, "T4.2_V10.xlsx")).toBe("T4.2_V10 - Empresa Fictícia Ltda.xlsx");
   });
 
+  it("writes the Relatório form fields and requires them before download", async () => {
+    const s = state();
+    expect(missingRequired(s)).toEqual(["Motivo para a seleção da linha", "Família de produto", "Consultor(a) SENAI", "Data de aceitação", "Data de execução", "Data de encerramento técnico"]);
+    s.resumo = { ...s.resumo, atuacao: "Linha de montagem", motivacao: "Gargalo de entrega" }; // vêm do Resumo
+    s.relatorio = { ...s.relatorio, familia: "Família A", consultores: ["Consultor Um", "Consultor Dois", "", "", ""], dataAceitacao: "2026-11-25", dataExecucao: "2026-12-01", dataEncerramento: "2027-01-15" };
+    expect(missingRequired(s)).toEqual([]);
+    expect(excelDate("2026-11-25")).toBe(46351);
+
+    const { file } = await fillWorkbook(await fakeTemplate(), buildRelatorioTargets(s));
+    const wb = await readBack(file!);
+    const dg = wb.getWorksheet("DADOS GERAIS")!, res = wb.getWorksheet("RESUMO")!;
+    expect([dg.getCell("D7").value, dg.getCell("D8").value, dg.getCell("D9").value]).toEqual(["Linha de montagem", "Gargalo de entrega", "Família A"]);
+    expect([dg.getCell("D28").value, dg.getCell("D29").value]).toEqual(["Consultor Um", "Consultor Dois"]);
+    // Datas como número do Excel (a célula do modelo real tem formato dd/mm/aaaa).
+    expect([res.getCell("C4").value, res.getCell("C5").value, res.getCell("C6").value]).toEqual([46351, 46357, 46402]);
+
+    // Texto editado no Relatório substitui o do Resumo.
+    s.relatorio = { ...s.relatorio, linha: "Linha editada", motivo: "" };
+    expect(missingRequired(s)).toEqual(["Motivo para a seleção da linha"]);
+  });
+
   it("skips empty data and splits clear addresses only", () => {
-    expect(buildRelatorioTargets(structuredClone(defaultState)).map(t => t.id)).toEqual(["senaiCidade", "senaiEstado", "invest", "nomeUO"]);
+    expect(buildRelatorioTargets(structuredClone(defaultState)).map(t => t.id)).toEqual(["senaiCidade", "senaiEstado", "ferrMFV", "ferrGD", "invest", "nomeUO"]);
     expect(splitEndereco("RUA DAS FLORES, 100, CENTRO, 95000000")).toEqual({ rua: "RUA DAS FLORES", numero: "100", bairro: "CENTRO" });
     expect(splitEndereco("Rodovia sem número")).toBeNull();
   });

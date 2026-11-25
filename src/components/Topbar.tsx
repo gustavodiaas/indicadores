@@ -28,6 +28,7 @@ export function Topbar({ onExportWord, state, loadState }: Props) {
         qualidade: state.qualidade,
         leadtime: state.leadtime,
         proposta: state.proposta,
+        relatorio: state.relatorio,
       };
 
       const json = JSON.stringify(exportData, null, 2);
@@ -64,6 +65,7 @@ export function Topbar({ onExportWord, state, loadState }: Props) {
         leadtime: { ...state.leadtime, ...(parsedData?.leadtime || {}) },
         area: { ...state.area, ...(parsedData?.area || {}) },
         proposta: { ...state.proposta, ...(parsedData?.proposta || {}) },
+        relatorio: { ...state.relatorio, ...(parsedData?.relatorio || {}) },
       };
 
       loadState(newState as AppState);

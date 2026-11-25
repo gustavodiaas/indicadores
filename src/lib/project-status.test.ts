@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { buildResults, isModuleFilled, trackedModules } from "./project-status";
 import { emptyProposta } from "./proposta-parser";
+import { emptyRelatorio } from "@/store/useAppStore";
 import type { AppState } from "@/store/useAppStore";
 
 const base = (): AppState => ({
@@ -16,6 +17,7 @@ const base = (): AppState => ({
   planoAcao: { metadata: { dataCriacao: "", respCriacao: "", objetivo: "", meta: "", dataRevisao: "", respRevisao: "", indicador: "" }, acoes: [] },
   a3: { titulo: "", data: "", aprovacoes: "", background: "", objetivos: "", estadoAtual: "", analise: "", estadoFuturo: "", planoAcao: [], indicadores: [], observacoes: "" },
   proposta: emptyProposta,
+  relatorio: emptyRelatorio,
 });
 
 describe("project status", () => {
