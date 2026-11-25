@@ -1,5 +1,7 @@
 import { useMemo, useRef, useState } from "react";
-import { CheckCircle2, FileUp, Loader2, AlertTriangle, MessageCircle, ShieldCheck, Wand2 } from "lucide-react";
+import { CheckCircle2, ChevronDown, ExternalLink, FileUp, Loader2, AlertTriangle, Mail, MessageCircle, ShieldCheck, Wand2 } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { buildSmartFactoryEmail, gmailUrl, isValidEmail, mailtoUrl } from "@/lib/smart-factory";
 import type { AppState } from "@/store/useAppStore";
 import { camposEncontrados, emptyProposta, extractPdfText, parseProposta, whatsappUrl, type PropostaData } from "@/lib/proposta-parser";
 import { buildFillItems, buildPatches, defaultSelection, type FillModule } from "@/lib/proposta-fill";
@@ -31,6 +33,30 @@ function WhatsAppButton({ phone, name }: { phone: string; name: string }) {
       className="mt-2 inline-flex items-center gap-1.5 h-8 px-3 rounded-lg bg-[#1D4ED8] text-white text-xs font-semibold hover:bg-[#1E40AF] transition-colors">
       <MessageCircle className="h-3.5 w-3.5" /> Abrir no WhatsApp
     </a>
+  );
+}
+
+function SmartFactoryButton({ email, name, empresa, remetente }: { email: string; name: string; empresa: string; remetente: string }) {
+  if (!isValidEmail(email)) return null;
+  const msg = buildSmartFactoryEmail({ nome: name, empresa, remetente });
+  const item = "flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-md cursor-pointer text-slate-700 dark:text-slate-200 outline-none focus:bg-black/[0.05] dark:focus:bg-white/10";
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button type="button" aria-label={`Enviar o Formulário Smart Factory para ${name || email}`}
+          className="mt-2 inline-flex items-center gap-1.5 h-8 px-3 rounded-lg bg-[#1D4ED8] text-white text-xs font-semibold hover:bg-[#1E40AF] transition-colors">
+          <Mail className="h-3.5 w-3.5" /> Enviar Formulário Smart Factory <ChevronDown className="h-3.5 w-3.5 opacity-80" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="z-[2000] min-w-[220px] p-1">
+        <DropdownMenuItem asChild className={item}>
+          <a href={gmailUrl(email, msg)} target="_blank" rel="noopener noreferrer"><ExternalLink className="h-3.5 w-3.5" /> Abrir no Gmail</a>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild className={item}>
+          <a href={mailtoUrl(email, msg)}><Mail className="h-3.5 w-3.5" /> Abrir no Outlook / app de e-mail</a>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 
@@ -208,7 +234,10 @@ export function PropostaModule({ data, state, onChange, onApply }: Props) {
               <Info label="Nome" value={data.responsavelLegal} />
               <Info label="Cargo" value={data.responsavelCargo} />
               <Info label="Telefone" value={data.responsavelTelefone} />
-              <Info label="E-mail" value={data.responsavelEmail} />
+              <div className="min-w-0">
+                <Info label="E-mail" value={data.responsavelEmail} />
+                <SmartFactoryButton email={data.responsavelEmail} name={data.responsavelLegal} empresa={data.razaoSocial} remetente={state.resumo?.especialista ?? ""} />
+              </div>
             </Section>
             <Section title="Acompanhamento do atendimento">
               <Info label="Nome" value={data.acompanhamentoNome} />
@@ -217,7 +246,10 @@ export function PropostaModule({ data, state, onChange, onApply }: Props) {
                 <Info label="Telefone" value={data.acompanhamentoTelefone} />
                 <WhatsAppButton phone={data.acompanhamentoTelefone} name={data.acompanhamentoNome} />
               </div>
-              <Info label="E-mail" value={data.acompanhamentoEmail} />
+              <div className="min-w-0">
+                <Info label="E-mail" value={data.acompanhamentoEmail} />
+                <SmartFactoryButton email={data.acompanhamentoEmail} name={data.acompanhamentoNome} empresa={data.razaoSocial} remetente={state.resumo?.especialista ?? ""} />
+              </div>
             </Section>
           </div>
 
