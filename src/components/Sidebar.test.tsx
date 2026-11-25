@@ -2,6 +2,7 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { Sidebar } from "./Sidebar";
 import { TooltipProvider } from "./ui/tooltip";
+import { navigationModules } from "@/lib/module-navigation";
 
 afterEach(cleanup);
 
@@ -11,54 +12,24 @@ function setup() {
   return { sidebar: screen.getByLabelText("Navegação principal"), onSelect };
 }
 
-function pointer(target: HTMLElement, type: string, pointerType: string) {
-  const event = new MouseEvent(type, { bubbles: true });
-  Object.defineProperty(event, "pointerType", { value: pointerType });
-  fireEvent(target, event);
-}
-
-describe("Sidebar expansion", () => {
-  it("keeps module names inside the sidebar without floating tooltip triggers", () => {
+describe("Sidebar", () => {
+  it("stays collapsed: one icon button per module and no expand toggle", () => {
     const { sidebar } = setup();
-    for (const button of sidebar.querySelectorAll("button")) {
-      pointer(button, "pointerover", "mouse");
-      pointer(button, "pointerout", "mouse");
-      expect(button).not.toHaveAttribute("data-state");
-      expect(button).not.toHaveAttribute("aria-describedby");
-      expect(button).not.toHaveAttribute("title");
-    }
-    expect(document.querySelector('[role="tooltip"]')).toBeNull();
-    expect(screen.getByRole("button", { name: "Gantt" })).toBeInTheDocument();
+    expect(sidebar.className).toContain("w-[60px]");
+    expect(sidebar.querySelectorAll("nav button")).toHaveLength(navigationModules.length);
+    expect(screen.queryByRole("button", { name: /barra lateral/i })).toBeNull();
   });
 
-  it("expands on mouse entry and collapses on exit", () => {
-    const { sidebar } = setup();
-    expect(sidebar).toHaveAttribute("data-expanded", "false");
-    pointer(sidebar, "pointerover", "mouse");
-    expect(sidebar).toHaveAttribute("data-expanded", "true");
-    pointer(sidebar, "pointerout", "mouse");
-    expect(sidebar).toHaveAttribute("data-expanded", "false");
+  it("shows the module name in a tooltip on focus", async () => {
+    setup();
+    fireEvent.focus(screen.getByRole("button", { name: "Gantt" }));
+    expect(await screen.findByRole("tooltip")).toHaveTextContent("Gantt");
   });
 
-  it("uses the toggle on touch and closes after selecting a module", () => {
-    const { sidebar, onSelect } = setup();
-    pointer(sidebar, "pointerover", "touch");
-    expect(sidebar).toHaveAttribute("data-expanded", "false");
-    fireEvent.click(screen.getByRole("button", { name: "Expandir barra lateral" }));
-    expect(sidebar).toHaveAttribute("data-expanded", "true");
+  it("selects a module and marks the active one", () => {
+    const { onSelect } = setup();
+    expect(screen.getByRole("button", { name: "Home" })).toHaveAttribute("aria-current", "page");
     fireEvent.click(screen.getByRole("button", { name: "Gantt" }));
     expect(onSelect).toHaveBeenCalledWith("gantt");
-    expect(sidebar).toHaveAttribute("data-expanded", "false");
-  });
-
-  it("allows closing the hovered sidebar with its button or Escape", () => {
-    const { sidebar } = setup();
-    pointer(sidebar, "pointerover", "mouse");
-    fireEvent.click(screen.getByRole("button", { name: "Recuar barra lateral" }));
-    expect(sidebar).toHaveAttribute("data-expanded", "false");
-    pointer(sidebar, "pointerout", "mouse");
-    pointer(sidebar, "pointerover", "mouse");
-    fireEvent.keyDown(sidebar, { key: "Escape" });
-    expect(sidebar).toHaveAttribute("data-expanded", "false");
   });
 });
