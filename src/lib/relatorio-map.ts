@@ -5,6 +5,7 @@ import {
   calcDisponibilidade, calcPayback, calcQualidade,
   type AppState,
 } from "@/store/useAppStore";
+import { buildConclusao, buildDescricao } from "@/lib/resumo-textos";
 
 export type CellValue = string | number;
 
@@ -36,7 +37,18 @@ export interface SlotTarget {
   origem: string;
 }
 
-export type RelatorioTarget = LabelTarget | SlotTarget;
+/** Texto longo: primeira célula creme logo abaixo de um título (ex.: "3.1 Descrição do processo produtivo"). */
+export interface BlockTarget {
+  kind: "block";
+  id: string;
+  sheet: string;
+  label: string;
+  value: string;
+  campo: string;
+  origem: string;
+}
+
+export type RelatorioTarget = LabelTarget | SlotTarget | BlockTarget;
 
 const DG = "DADOS GERAIS";
 const RES = "RESUMO";
@@ -117,6 +129,13 @@ export function buildRelatorioTargets(s: AppState): RelatorioTarget[] {
     .filter(t => has(t.value))
     .map(t => ({ ...t, kind: "label", value: t.value as CellValue }));
 
+  // Textos do Resumo (o editado na tela, se houver).
+  const resumoPreenchido = Boolean(r.nomeEmpresa?.trim() || r.processos?.trim());
+  const descricao = r.descricaoEditada ?? (resumoPreenchido ? buildDescricao(r).tela : "");
+  const conclusao = r.conclusaoEditada ?? (resumoPreenchido ? buildConclusao(s).textoTela : "");
+  if (descricao.trim()) targets.push({ kind: "block", id: "descricao", sheet: REL, label: "Descrição do processo produtivo", value: descricao, campo: "3.1 Descrição do processo produtivo", origem: "Resumo (Descrição do Processo)" });
+  if (conclusao.trim()) targets.push({ kind: "block", id: "conclusao", sheet: "CONCLUSÃO", label: "5 - Conclusão", value: conclusao, campo: "5 Conclusão", origem: "Resumo (Conclusão do Projeto)" });
+
   indicadoresExtras(s).slice(0, 5).forEach((ind, i) => {
     targets.push({
       kind: "slot", id: `indI${i}`, sheet: REL, below: "Produtividade (medição inicial)", index: i,
@@ -135,6 +154,7 @@ export function buildRelatorioTargets(s: AppState): RelatorioTarget[] {
 
 /** Valor como aparece na lista da tela (vírgula decimal, sem arredondar). */
 export function displayValue(t: RelatorioTarget): string {
+  if (t.kind === "block") return t.value.length > 160 ? `${t.value.slice(0, 160).trimEnd()}…` : t.value;
   const v = t.kind === "label" ? t.value : t.values.find(x => typeof x.value === "number")?.value ?? "";
   return typeof v === "number" ? String(v).replace(".", ",") : v;
 }

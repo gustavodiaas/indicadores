@@ -8,12 +8,18 @@ interface EditableLaudoCardProps {
   laudo: string;
   /** Texto que vai para o Word (pode ser diferente do laudo de tela) */
   laudoWord?: string;
+  /** Texto editado guardado fora do card (para não se perder ao trocar de aba). */
+  override?: string | null;
+  onOverrideChange?: (v: string | null) => void;
 }
 
-export function EditableLaudoCard({ title, laudo, laudoWord }: EditableLaudoCardProps) {
+export function EditableLaudoCard({ title, laudo, laudoWord, override: overrideProp, onOverrideChange }: EditableLaudoCardProps) {
   const [copied, setCopied] = useState(false);
   const [editing, setEditing] = useState(false);
-  const [override, setOverride] = useState<string | null>(null);
+  const [localOverride, setLocalOverride] = useState<string | null>(null);
+  const controlled = onOverrideChange !== undefined;
+  const override = controlled ? (overrideProp ?? null) : localOverride;
+  const setOverride = (v: string | null) => (controlled ? onOverrideChange!(v) : setLocalOverride(v));
   const [draft, setDraft] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 

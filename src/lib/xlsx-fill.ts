@@ -115,6 +115,14 @@ function locate(cells: Cell[], t: RelatorioTarget): { el: Element; ref: string; 
     const target = lab && creamInRow(cells, lab.row, lab.col)[0];
     return target ? [{ el: target.el, ref: target.ref, value: t.value }] : [];
   }
+  if (t.kind === "block") {
+    const title = findLabel(cells, t.label);
+    if (!title) return [];
+    const target = cells
+      .filter(c => c.cream && c.row > title.row && c.row <= title.row + 5)
+      .sort((a, b) => a.row - b.row || a.col - b.col)[0];
+    return target ? [{ el: target.el, ref: target.ref, value: t.value }] : [];
+  }
   const head = findLabel(cells, t.below);
   if (!head) return [];
   // Linhas seguidas com células creme logo abaixo do rótulo; cada uma é um espaço.

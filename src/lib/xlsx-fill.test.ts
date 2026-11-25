@@ -3,6 +3,7 @@ import ExcelJS from "exceljs";
 import { fillWorkbook } from "./xlsx-fill";
 import { buildRelatorioTargets, splitEndereco, type RelatorioTarget } from "./relatorio-map";
 import { defaultState } from "@/store/useAppStore";
+import { buildConclusao, buildDescricao } from "./resumo-textos";
 
 const CREAM = { type: "pattern", pattern: "solid", fgColor: { argb: "FFFFF7D6" } } as const;
 const GOLD = { type: "pattern", pattern: "solid", fgColor: { argb: "FFFEF2CB" } } as const;
@@ -24,6 +25,8 @@ async function fakeTemplate() {
   dg.getCell("B29").value = "Consultor(a) SENAI (se aplicável):"; dg.getCell("D29").fill = CREAM;
 
   const rel = wb.addWorksheet("RELATÓRIO");
+  rel.getCell("B4").value = "3.1"; rel.getCell("C4").value = "Descrição do processo produtivo";
+  rel.getCell("B5").fill = CREAM; rel.getCell("B5").value = "Descreva o processo produtivo visualizado.";
   rel.getCell("C22").value = "Número de operadores por turno antes da intervenção"; rel.getCell("D22").fill = CREAM; rel.getCell("I22").fill = CREAM;
   rel.getCell("C23").value = "Quantidade de horas por turno"; rel.getCell("D23").fill = CREAM;
   rel.getCell("C24").value = "Quantidade produzida por turno"; rel.getCell("D24").fill = CREAM;
@@ -38,6 +41,8 @@ async function fakeTemplate() {
   rel.getCell("C329").value = "Ganho Financeiro mensal na empresa"; rel.getCell("E329").fill = CREAM;
   // Rótulo sem célula creme ao lado: não pode ser escrito.
   rel.getCell("C330").value = "Somatório de Investimento em Ações"; rel.getCell("E330").fill = BLUE;
+  const conc = wb.addWorksheet("CONCLUSÃO");
+  conc.getCell("B2").value = "5 - CONCLUSÃO"; conc.getCell("B4").fill = CREAM;
   return new Uint8Array(await wb.xlsx.writeBuffer());
 }
 
@@ -50,7 +55,7 @@ async function readBack(bytes: Uint8Array) {
 const state = () => {
   const s = structuredClone(defaultState);
   s.proposta = { ...s.proposta, cnpj: "00.000.000/0001-00", razaoSocial: "Empresa Fictícia Ltda", porte: "micro", cidade: "Cidade Exemplo", uf: "RS" };
-  s.resumo = { ...s.resumo, especialista: "Consultor Exemplo" };
+  s.resumo = { ...s.resumo, especialista: "Consultor Exemplo", nomeEmpresa: "Empresa Fictícia Ltda", processos: "corte, dobra e solda" };
   s.produtividade = { ...s.produtividade, volumeT1: 120.5, volumeT3: 150, horasT1: 8, horasT3: 7.5, operadoresT1: 3, operadoresT3: 2 };
   s.qualidade = { quantidadeT1: 1000, perdasT1: 50, quantidadeT3: 1000, perdasT3: 20 };
   s.area = { areaT1: 80, areaT3: 60, valorAluguel: 0 };
@@ -85,6 +90,10 @@ describe("Relatório de atendimento", () => {
     expect([rel.getCell("C27").value, rel.getCell("D27").value, rel.getCell("I27").value]).toEqual(["Área ocupada", 80, "m²"]);
     expect([rel.getCell("D313").value, rel.getCell("D314").value]).toEqual([98, 60]);
 
+    expect(rel.getCell("B5").value).toBe(buildDescricao(state().resumo).tela);
+    expect(String(rel.getCell("B5").value)).toContain("corte, dobra e solda");
+    expect(wb.getWorksheet("CONCLUSÃO")!.getCell("B4").value).toBe(buildConclusao(state()).textoTela);
+
     expect(rel.getCell("E330").value).toBeNull();
     expect(results.find(r => r.target.id === "invest")!.cells).toEqual([]);
     expect(results.find(r => r.target.id === "cidade")!.cells).toEqual(["D14"]);
@@ -95,6 +104,14 @@ describe("Relatório de atendimento", () => {
     const { results, file } = await fillWorkbook(await fakeTemplate(), targets, true);
     expect(file).toBeNull();
     expect(results[0].cells).toEqual(["D5"]);
+  });
+
+  it("uses the texts edited on the Resumo screen", () => {
+    const s = state();
+    s.resumo = { ...s.resumo, descricaoEditada: "Descrição escrita à mão.", conclusaoEditada: "Conclusão escrita à mão." };
+    const t = buildRelatorioTargets(s);
+    expect(t.find(x => x.id === "descricao")).toMatchObject({ value: "Descrição escrita à mão." });
+    expect(t.find(x => x.id === "conclusao")).toMatchObject({ value: "Conclusão escrita à mão." });
   });
 
   it("skips empty data and splits clear addresses only", () => {

@@ -45,6 +45,9 @@ export interface ResumoData {
   metodo: "empurrada" | "puxada" | ""; origem: string; oportunidades: string; 
   problemas: string; atuacao: string; motivacao: string; ferramentas: string; 
   indicadoresConclusao: string[]; 
+  /** Textos editados à mão na tela do Resumo (null/ausente = texto gerado). */
+  descricaoEditada?: string | null;
+  conclusaoEditada?: string | null;
 }
 export interface GboOperation { id: string; name: string; time: number; }
 export interface GboData { turnoTempo: number; turnoUnidade: "minutes" | "hours"; demanda: number; demandaUnidade: string; tempoUnidade: "minutes" | "seconds"; operacoes: GboOperation[]; tituloGrafico?: string; }
