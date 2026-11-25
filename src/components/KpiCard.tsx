@@ -12,7 +12,7 @@ export function KpiCard({ label, value, suffix, trend }: Props) {
   const isNegative = trend !== undefined && trend < 0;
   
   const trendColor = isPositive 
-    ? "text-emerald-700 bg-emerald-50 border-emerald-100 dark:text-emerald-400 dark:bg-emerald-500/10 dark:border-emerald-500/20" 
+    ? "text-blue-700 bg-blue-50 border-blue-100 dark:text-blue-300 dark:bg-blue-500/10 dark:border-blue-500/20" 
     : isNegative 
       ? "text-rose-600 bg-rose-50 border-rose-100 dark:text-rose-400 dark:bg-rose-950/30 dark:border-rose-900/50" 
       : "text-slate-600 bg-slate-100 border-slate-200 dark:text-slate-400 dark:bg-white/[0.06] dark:border-white/10";

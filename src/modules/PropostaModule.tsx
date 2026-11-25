@@ -28,7 +28,7 @@ function WhatsAppButton({ phone, name }: { phone: string; name: string }) {
   if (!url) return null;
   return (
     <a href={url} target="_blank" rel="noopener noreferrer" aria-label={`Abrir conversa no WhatsApp com ${name || phone}`}
-      className="mt-2 inline-flex items-center gap-1.5 h-8 px-3 rounded-lg bg-[#25D366] text-white text-xs font-semibold hover:bg-[#1ebe5b] transition-colors">
+      className="mt-2 inline-flex items-center gap-1.5 h-8 px-3 rounded-lg bg-[#1D4ED8] text-white text-xs font-semibold hover:bg-[#1E40AF] transition-colors">
       <MessageCircle className="h-3.5 w-3.5" /> Abrir no WhatsApp
     </a>
   );
@@ -176,7 +176,7 @@ export function PropostaModule({ data, state, onChange, onApply }: Props) {
                 <Wand2 className="h-4 w-4" /> Preencher {selected.size} {selected.size === 1 ? "campo" : "campos"}
               </button>
               {applied > 0 && (
-                <span role="status" className="inline-flex items-center gap-1.5 text-sm text-emerald-600 dark:text-emerald-400">
+                <span role="status" className="inline-flex items-center gap-1.5 text-sm text-blue-700 dark:text-blue-400">
                   <CheckCircle2 className="h-4 w-4" /> {applied} {applied === 1 ? "campo preenchido" : "campos preenchidos"}.
                 </span>
               )}
