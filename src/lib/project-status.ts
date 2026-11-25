@@ -6,17 +6,17 @@ import {
 // Módulos cujo andamento a Home acompanha. Gantt e MFV guardam os dados à parte e ficam de fora.
 const filledRules: Partial<Record<ModuleKey, (s: AppState) => boolean>> = {
   proposta: s => Boolean(s.proposta?.importadoEm),
-  resumo: s => Boolean(s.resumo.nomeEmpresa?.trim() || s.resumo.processos?.trim()),
   planoAcao: s => (s.planoAcao.acoes?.length ?? 0) > 0,
-  a3: s => Boolean(s.a3.titulo?.trim() || s.a3.background?.trim() || s.a3.estadoAtual?.trim()),
-  gbo: s => (s.gbo?.operacoes?.length ?? 0) > 0,
+  resumo: s => Boolean(s.resumo.nomeEmpresa?.trim() || s.resumo.processos?.trim()),
   produtividade: s => s.produtividade.volumeT1 > 0 && s.produtividade.volumeT3 > 0,
   payback: s => s.payback.valorConsultoria > 0 || s.payback.salarioBaseInicial > 0,
+  gbo: s => (s.gbo?.operacoes?.length ?? 0) > 0,
   movimentacao: s => s.movimentacao.distanciaT1 > 0 || s.movimentacao.tempoT1 > 0,
   qualidade: s => s.qualidade.quantidadeT1 > 0,
   disponibilidade: s => [s.disponibilidade.paradasPlanT1, s.disponibilidade.paradasNaoPlanT1, s.disponibilidade.paradasPlanT3, s.disponibilidade.paradasNaoPlanT3].some(v => v > 0),
   leadtime: s => (s.leadtime.leadTimeT1 || s.leadtime.tempoT1 || 0) > 0,
   area: s => s.area.areaT1 > 0,
+  a3: s => Boolean(s.a3.titulo?.trim() || s.a3.background?.trim() || s.a3.estadoAtual?.trim()),
 };
 
 export const trackedModules = Object.keys(filledRules) as ModuleKey[];
