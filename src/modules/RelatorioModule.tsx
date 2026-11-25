@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { AlertTriangle, CheckCircle2, Download, FileSpreadsheet, Loader2, ShieldCheck, Trash2 } from "lucide-react";
+import { AlertTriangle, CheckCircle2, ChevronDown, ChevronUp, Download, FileSpreadsheet, Loader2, ShieldCheck, Trash2 } from "lucide-react";
 import { emptyRelatorio, type AppState, type RelatorioData } from "@/store/useAppStore";
 import { buildRelatorioTargets, displayValue, missingRequired, pendingTexts, relatorioLinha, relatorioMotivo, reportFileName } from "@/lib/relatorio-map";
 import { fillWorkbook, type ClearedCell, type FillResult } from "@/lib/xlsx-fill";
@@ -28,6 +28,8 @@ function Field({ label, required, children }: { label: string; required?: boolea
 export function RelatorioModule({ state, onChange }: Props) {
   const rel = { ...emptyRelatorio, ...(state.relatorio ?? {}) };
   const missingFields = useMemo(() => missingRequired(state), [state]);
+  const extrasPreenchidos = [...(rel.consultores ?? []).slice(1), ...(rel.outrasUOs ?? [])].filter(v => v?.trim()).length;
+  const [showExtras, setShowExtras] = useState(extrasPreenchidos > 0);
   const setList = (key: "consultores" | "outrasUOs", size: number, i: number, v: string) => {
     const list = Array.from({ length: size }, (_, n) => rel[key]?.[n] ?? "");
     list[i] = v;
@@ -175,6 +177,14 @@ export function RelatorioModule({ state, onChange }: Props) {
           <Field label="Consultor(a) SENAI" required>
             <input className={fieldClass} value={rel.consultores?.[0] ?? ""} onChange={e => setList("consultores", 5, 0, e.target.value)} />
           </Field>
+        </div>
+        <button type="button" onClick={() => setShowExtras(v => !v)} aria-expanded={showExtras}
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-[#1D4ED8] dark:text-[#60A5FA] hover:underline">
+          {showExtras ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+          {showExtras ? "Ocultar" : "Adicionar"} outros consultores ou UOs (se aplicável){!showExtras && extrasPreenchidos > 0 ? ` · ${extrasPreenchidos} preenchido${extrasPreenchidos > 1 ? "s" : ""}` : ""}
+        </button>
+        {showExtras && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {[1, 2, 3, 4].map(i => (
             <Field key={i} label="Consultor(a) SENAI (se aplicável)">
               <input className={fieldClass} value={rel.consultores?.[i] ?? ""} onChange={e => setList("consultores", 5, i, e.target.value)} />
@@ -186,6 +196,7 @@ export function RelatorioModule({ state, onChange }: Props) {
             </Field>
           ))}
         </div>
+        )}
       </div>
 
       {template && (
