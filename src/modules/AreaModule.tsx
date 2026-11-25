@@ -1,3 +1,4 @@
+import { useBlankZeroText } from "@/lib/number-input";
 import { type AreaData, calcArea } from "@/store/useAppStore";
 import { KpiCard } from "@/components/KpiCard";
 import { ComparisonChart } from "@/components/ComparisonChart";
@@ -9,6 +10,7 @@ interface Props {
 }
 
 function LocalInputField({ label, value, onChange, suffix, type = "number" }: { label: string; value: any; onChange: (v: string) => void; suffix?: string; type?: string }) {
+  const [text, setText] = useBlankZeroText(value);
   return (
     <div className="space-y-1.5 w-full">
       <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 pl-1">
@@ -17,8 +19,8 @@ function LocalInputField({ label, value, onChange, suffix, type = "number" }: { 
       <div className="relative flex items-center">
         <input
           type={type}
-          value={value ?? ""}
-          onChange={(e) => onChange(e.target.value)}
+          value={text}
+          onChange={(e) => { setText(e.target.value); onChange(e.target.value); }}
           className="w-full h-10 px-3 pr-16 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#2C2C2E] text-slate-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-[#1D4ED8] transition-all"
         />
         {suffix && (

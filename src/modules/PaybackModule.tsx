@@ -24,7 +24,7 @@ export function PaybackModule({ data, prodData, resumoData, onChange }: Props) {
   const chartData = [{ name: "Custo Unitário (R$)", T1: Number(r.custoI.toFixed(2)), T3: Number(r.custoF.toFixed(2)) }];
   const formatBRL = (v: number) => `R$ ${v.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-  const formatDec = (v: number | undefined) => v !== undefined && !isNaN(v) ? v.toFixed(2).replace(".", ",") : "";
+  const formatDec = (v: number | undefined) => v !== undefined && !isNaN(v) && v !== 0 ? v.toFixed(2).replace(".", ",") : "";
 
   const op1 = prodData.operadoresT1 || 0;
   const op3 = prodData.operadoresT3 || 0;
