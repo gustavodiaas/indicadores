@@ -50,8 +50,9 @@ async function fakeTemplate() {
   rel.getCell("C335").fill = CREAM; rel.getCell("C335").value = "Descrever os impactos dos indicadores para empresa";
   rel.getCell("B338").value = "3.12"; rel.getCell("C338").value = "Análise do Retorno do Programa";
   rel.getCell("C339").fill = CREAM; rel.getCell("C339").value = "Gastos utilizados (Capex)";
+  rel.getCell("C330").value = "Somatório de Investimento em Ações"; rel.getCell("E330").fill = CREAM; rel.getCell("E330").value = 1234;
   // Rótulo sem célula creme ao lado: não pode ser escrito.
-  rel.getCell("C330").value = "Somatório de Investimento em Ações"; rel.getCell("E330").fill = BLUE;
+  rel.getCell("C331").value = "Valor da consultoria"; rel.getCell("E331").fill = BLUE;
   const res = wb.addWorksheet("RESUMO");
   res.getCell("B11").value = "Nome UO"; for (const r of [12, 13, 14]) res.getCell(`B${r}`).fill = CREAM;
   const conc = wb.addWorksheet("CONCLUSÃO");
@@ -119,8 +120,8 @@ describe("Relatório de atendimento", () => {
     expect(rel.getCell("C335").value).toBe(buildLaudoProdutividade(state().produtividade));
     expect(rel.getCell("C339").value).toBe(buildLaudoPayback(state().payback, state().produtividade, state().resumo));
 
-    expect(rel.getCell("E330").value).toBeNull();
-    expect(results.find(r => r.target.id === "invest")!.cells).toEqual([]);
+    expect(rel.getCell("E330").value).toBe(0); // investimento sempre R$ 0,00
+    expect(results.find(r => r.target.id === "invest")!.cells).toEqual(["E330"]);
     expect(results.find(r => r.target.id === "cidade")!.cells).toEqual(["D14"]);
   });
 
@@ -160,7 +161,7 @@ describe("Relatório de atendimento", () => {
   });
 
   it("skips empty data and splits clear addresses only", () => {
-    expect(buildRelatorioTargets(structuredClone(defaultState)).map(t => t.id)).toEqual(["senaiCidade", "senaiEstado", "nomeUO"]);
+    expect(buildRelatorioTargets(structuredClone(defaultState)).map(t => t.id)).toEqual(["senaiCidade", "senaiEstado", "invest", "nomeUO"]);
     expect(splitEndereco("RUA DAS FLORES, 100, CENTRO, 95000000")).toEqual({ rua: "RUA DAS FLORES", numero: "100", bairro: "CENTRO" });
     expect(splitEndereco("Rodovia sem número")).toBeNull();
   });

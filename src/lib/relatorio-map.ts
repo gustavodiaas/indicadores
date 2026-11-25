@@ -130,13 +130,14 @@ export function buildRelatorioTargets(s: AppState): RelatorioTarget[] {
     { id: "hT3", sheet: REL, label: "Quantidade de horas por turno", after: "Medições Finais", value: prod.volumeT3 > 0 ? prod.horasT3 : 0, campo: "Horas por turno (final)", origem: "Produtividade" },
     { id: "volT3", sheet: REL, label: "Quantidade produzida", after: "Medições Finais", value: prod.volumeT3, campo: "Quantidade produzida por turno (final)", origem: "Produtividade" },
     { id: "ganho", sheet: REL, label: "Ganho Financeiro mensal", value: pay.reducaoMensal, campo: "Ganho financeiro mensal (R$)", origem: "Payback" },
-    { id: "invest", sheet: REL, label: "Somatório de Investimento", value: s.payback.investimentoExtra, campo: "Investimento em ações (R$)", origem: "Payback" },
   ];
 
   const targets: RelatorioTarget[] = labels
     .filter(t => has(t.value))
     .map(t => ({ ...t, kind: "label", value: t.value as CellValue }));
 
+  // Somatório de Investimento em Ações (E330:G330): sempre R$ 0,00.
+  targets.push({ kind: "label", id: "invest", sheet: REL, label: "Somatório de Investimento", value: 0, campo: "Investimento em ações (R$)", origem: "Fixo" });
   targets.push({ kind: "block", id: "nomeUO", sheet: RES, label: "Nome UO", value: NOME_UO, campo: "Nome UO", origem: "Fixo" });
 
   // Textos do Resumo (o editado na tela, se houver).
