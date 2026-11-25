@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AlertTriangle, CheckCircle2, Download, FileSpreadsheet, Loader2, ShieldCheck, Trash2 } from "lucide-react";
 import type { AppState } from "@/store/useAppStore";
-import { buildRelatorioTargets, displayValue } from "@/lib/relatorio-map";
+import { buildRelatorioTargets, displayValue, pendingTexts, reportFileName } from "@/lib/relatorio-map";
 import { fillWorkbook, type ClearedCell, type FillResult } from "@/lib/xlsx-fill";
 import { deleteTemplate, loadTemplate, saveTemplate, type StoredTemplate } from "@/lib/template-store";
 
@@ -66,12 +66,10 @@ export function RelatorioModule({ state }: Props) {
     try {
       const { file } = await fillWorkbook(template.data, targets);
       if (!file) return;
-      const cliente = (state.proposta?.razaoSocial || state.resumo.nomeEmpresa || "").replace(/[\\/:*?"<>|]+/g, "").trim();
-      const base = template.name.replace(/\.xlsx$/i, "");
       const url = URL.createObjectURL(new Blob([file as BlobPart], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
       const a = document.createElement("a");
       a.href = url;
-      a.download = `${base}${cliente ? ` - ${cliente}` : ""}.xlsx`;
+      a.download = reportFileName(state, template.name);
       a.click();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
       setDownloaded(true);
@@ -88,6 +86,7 @@ export function RelatorioModule({ state }: Props) {
     setDownloaded(false);
   };
 
+  const pending = useMemo(() => pendingTexts(state, targets), [state, targets]);
   const found = preview.filter(r => r.cells.length > 0);
   const missing = preview.filter(r => r.cells.length === 0);
 
@@ -171,6 +170,14 @@ export function RelatorioModule({ state }: Props) {
                   </tbody>
                 </table>
               </div>
+              {pending.length > 0 && (
+                <div className="text-xs text-slate-500 dark:text-slate-400">
+                  <p className="font-medium text-slate-600 dark:text-slate-300">Textos que ainda não vão para o relatório:</p>
+                  <ul className="mt-1 list-disc pl-5 space-y-0.5">
+                    {pending.map(p => <li key={p.campo}>{p.campo}: {p.falta}.</li>)}
+                  </ul>
+                </div>
+              )}
               {missing.length > 0 && (
                 <p className="text-xs text-amber-600 dark:text-amber-400">
                   Não encontrei nesta versão: {missing.map(m => m.target.campo).join(", ")}.

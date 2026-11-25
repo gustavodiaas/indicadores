@@ -147,8 +147,9 @@ export function buildRelatorioTargets(s: AppState): RelatorioTarget[] {
   if (conclusao.trim()) targets.push({ kind: "block", id: "conclusao", sheet: "CONCLUSÃO", label: "5 - Conclusão", value: conclusao, campo: "5 Conclusão", origem: "Resumo (Conclusão do Projeto)" });
 
   // Laudos das abas Produtividade (3.11) e Payback (3.12), o editado na tela se houver.
-  const prodPreenchida = prod.volumeT1 > 0 && prod.volumeT3 > 0;
-  const paybackPreenchido = s.payback.salarioBaseInicial > 0 || s.payback.valorConsultoria > 0;
+  const prodPreenchida = prod.volumeT1 > 0 || prod.volumeT3 > 0;
+  const pb = s.payback;
+  const paybackPreenchido = [pb.salarioBaseInicial, pb.salarioBaseFinal, pb.valorConsultoria, pb.investimentoExtra].some(v => (v || 0) > 0);
   const laudoProd = prod.laudoEditado ?? (prodPreenchida ? buildLaudoProdutividade(prod) : "");
   const laudoPay = s.payback.laudoEditado ?? (paybackPreenchido ? buildLaudoPayback(s.payback, prod, r) : "");
   if (laudoProd.trim()) targets.push({ kind: "block", id: "laudoProd", sheet: REL, label: "Análise dos indicadores", value: laudoProd, campo: "3.11 Análise dos indicadores", origem: "Produtividade (Laudo Operacional)" });
@@ -171,6 +172,25 @@ export function buildRelatorioTargets(s: AppState): RelatorioTarget[] {
 }
 
 /** Valor como aparece na lista da tela (vírgula decimal, sem arredondar). */
+/** Textos do relatório que ainda não têm de onde vir, com o que falta preencher. */
+export function pendingTexts(s: AppState, targets: RelatorioTarget[]): { campo: string; falta: string }[] {
+  const has = (id: string) => targets.some(t => t.id === id);
+  const out: { campo: string; falta: string }[] = [];
+  if (!has("descricao")) out.push({ campo: "3.1 Descrição do processo produtivo", falta: "preencha a aba Resumo (empresa ou processo)" });
+  if (!has("laudoProd")) out.push({ campo: "3.11 Análise dos indicadores", falta: "preencha o Volume na aba Produtividade" });
+  if (!has("laudoPay")) out.push({ campo: "3.12 Análise do retorno do programa", falta: "preencha os salários ou o porte na aba Payback" });
+  if (!has("conclusao")) out.push({ campo: "5 Conclusão", falta: "preencha a aba Resumo (empresa ou processo)" });
+  return out;
+}
+
+/** Nome do arquivo baixado: CNPJ só com números + "_RA" (ex.: 00000000000100_RA.xlsx). */
+export function reportFileName(s: AppState, templateName: string): string {
+  const cnpj = (s.proposta?.cnpj || "").replace(/\D/g, "");
+  if (cnpj) return `${cnpj}_RA.xlsx`;
+  const cliente = (s.proposta?.razaoSocial || s.resumo.nomeEmpresa || "").replace(/[\\/:*?"<>|]+/g, "").trim();
+  return `${templateName.replace(/\.xlsx$/i, "")}${cliente ? ` - ${cliente}` : ""}.xlsx`;
+}
+
 export function displayValue(t: RelatorioTarget): string {
   if (t.kind === "block") return t.value.length > 160 ? `${t.value.slice(0, 160).trimEnd()}…` : t.value;
   const v = t.kind === "label" ? t.value : t.values.find(x => typeof x.value === "number")?.value ?? "";

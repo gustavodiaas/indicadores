@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import ExcelJS from "exceljs";
 import { fillWorkbook } from "./xlsx-fill";
-import { buildRelatorioTargets, splitEndereco, type RelatorioTarget } from "./relatorio-map";
+import { buildRelatorioTargets, pendingTexts, reportFileName, splitEndereco, type RelatorioTarget } from "./relatorio-map";
 import { defaultState } from "@/store/useAppStore";
 import { buildConclusao, buildDescricao } from "./resumo-textos";
 import { buildLaudoPayback, buildLaudoProdutividade } from "./laudos";
@@ -141,6 +141,22 @@ describe("Relatório de atendimento", () => {
     expect(t.find(x => x.id === "conclusao")).toMatchObject({ value: "Conclusão escrita à mão." });
     expect(t.find(x => x.id === "laudoProd")).toMatchObject({ value: "Laudo operacional à mão." });
     expect(t.find(x => x.id === "laudoPay")).toMatchObject({ value: "Laudo de payback à mão." });
+  });
+
+  it("sends laudos as soon as the tab has data and lists what is missing", () => {
+    const s = structuredClone(defaultState);
+    s.produtividade = { ...s.produtividade, volumeT1: 100 }; // só o inicial
+    s.payback = { ...s.payback, valorConsultoria: 16516 }; // só o porte
+    const t = buildRelatorioTargets(s);
+    expect(t.map(x => x.id)).toEqual(expect.arrayContaining(["laudoProd", "laudoPay"]));
+    expect(pendingTexts(s, t).map(p => p.campo)).toEqual(["3.1 Descrição do processo produtivo", "5 Conclusão"]);
+  });
+
+  it("names the file with the CNPJ digits and _RA", () => {
+    const s = state();
+    expect(reportFileName(s, "T4.2_V10.xlsx")).toBe("00000000000100_RA.xlsx");
+    s.proposta = { ...s.proposta, cnpj: "" };
+    expect(reportFileName(s, "T4.2_V10.xlsx")).toBe("T4.2_V10 - Empresa Fictícia Ltda.xlsx");
   });
 
   it("skips empty data and splits clear addresses only", () => {
