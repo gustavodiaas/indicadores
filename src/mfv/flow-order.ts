@@ -1,4 +1,4 @@
-import { LIBRARY, type CanvasArrow, type CanvasElement } from './canvas-types.ts';
+import { LIBRARY, kaizenAutoSize, type CanvasArrow, type CanvasElement } from './canvas-types.ts';
 
 /**
  * Setas que levam material no sentido em que foram desenhadas. As setas retas genéricas também
@@ -21,8 +21,9 @@ const LOOSE_END_MARGIN = 24;
 
 function boxOf(element: CanvasElement) {
   const item = LIBRARY.find((candidate) => candidate.kind === element.kind);
-  const width = Math.min(1200, Math.max(30, Number(element.data.width) || item?.w || 120));
-  const height = Math.min(800, Math.max(30, Number(element.data.height) || item?.h || 80));
+  const auto = element.kind === 'kaizen' ? kaizenAutoSize(element.label) : { width: item?.w || 120, height: item?.h || 80 };
+  const width = Math.min(1200, Math.max(30, Number(element.data.width) || auto.width));
+  const height = Math.min(800, Math.max(30, Number(element.data.height) || auto.height));
   return { left: element.x, top: element.y, right: element.x + width, bottom: element.y + height };
 }
 

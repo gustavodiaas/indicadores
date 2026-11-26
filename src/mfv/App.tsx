@@ -891,7 +891,7 @@ const FIELD_DEFS: Partial<Record<ElementKind, { key: string; label: string; type
   'kanban-post':        [{ key: 'label', label: 'Título', type: 'text' }],
   'sequenced-pull':     [{ key: 'label', label: 'Rótulo', type: 'text' },{ key: 'pitch', label: 'Pitch', suffix: 'min' }],
   operator:             [{ key: 'qty', label: 'Quantidade', suffix: 'pess.' }],
-  kaizen:               [{ key: 'label', label: 'Texto', type: 'text' }],
+  kaizen:               [{ key: 'label', label: 'Ferramentas (uma por linha)', type: 'textarea' }],
   intervention:         [{ key: 'label', label: 'Texto', type: 'text' }],
   note:                 [{ key: 'label', label: 'Texto', type: 'text' }],
   timeline:             [{ key: 'label', label: 'Descrição', type: 'text' }],
@@ -946,6 +946,7 @@ function renderElement(el: CanvasElement, selected: boolean, onEdit: () => void,
     case 'legend':              symbol = <LegendSymbol {...p} />; break;
     default:                    symbol = <ExtendedSymbol {...p} />;
   }
+  if (el.kind === 'kaizen') return symbol; // a estrela se desenha no próprio tamanho, sem esticar a letra
   const defaults = defaultElementDimensions(el);
   const size = elementDimensions(el);
   if (size.width === defaults.width && size.height === defaults.height) return symbol;

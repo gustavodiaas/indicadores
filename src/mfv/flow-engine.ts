@@ -1,7 +1,7 @@
 // Motor de cálculo do MFV: takt, nivelamento, kanban, carga dos processos, lead time e fluxo ao vivo.
 // Fica fora do App.tsx para ser testado direto no Node (por isso os imports com extensão .ts).
 import { batchLeadTime, batchSettings, piecesPerCycleOf } from './batch.ts';
-import { LIBRARY, makeId, type CanvasElement, type CanvasState, type ElementKind, type ProductMixItem, type ScenarioAssumptions } from './canvas-types.ts';
+import { LIBRARY, kaizenAutoSize, makeId, type CanvasElement, type CanvasState, type ElementKind, type ProductMixItem, type ScenarioAssumptions } from './canvas-types.ts';
 import { materialFlowOrder } from './flow-order.ts';
 import { percentValue } from './numbers.ts';
 
@@ -18,7 +18,8 @@ export interface HeijunkaSlot {
 
 export const PRODUCT_SEQUENCE_COLORS = ['#2f80ed','#f2994a','#27ae60','#9b51e0','#eb5757','#00a6a6','#c08b00','#536d8c'];
 
-export function defaultElementDimensions(element: Pick<CanvasElement, 'kind'>) {
+export function defaultElementDimensions(element: Pick<CanvasElement, 'kind'> & { label?: string }) {
+  if (element.kind === 'kaizen') return kaizenAutoSize(element.label ?? '');
   if (element.kind === 'identification') return { width: 390, height: 100 };
   if (element.kind === 'planning') return { width: 190, height: 170 };
   const item = LIBRARY.find((candidate) => candidate.kind === element.kind);

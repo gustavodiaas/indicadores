@@ -135,6 +135,23 @@ export const ARROW_KINDS: ElementKind[] = [
   'arrow-info-manual-straight', 'arrow-info-electronic-straight',
 ];
 
+/** Texto inicial do Kaizen: as ferramentas, uma por linha (como no MFV do Excel). */
+export const KAIZEN_DEFAULT_TEXT = 'GERENCIAMENTO DIÁRIO\nTRABALHO PADRONIZADO\nDIAGRAMA DE ESPAGUETE';
+export const KAIZEN_FONT_SIZE = 11;
+export const KAIZEN_LINE_HEIGHT = 14;
+
+/** Tamanho do Kaizen burst ajustado ao texto, para as ferramentas caberem dentro da estrela. */
+export function kaizenAutoSize(label: string) {
+  const lines = (label || 'Kaizen').split('\n').map((line) => line.trim()).filter(Boolean);
+  const longest = Math.max(6, ...lines.map((line) => line.length));
+  const textWidth = longest * KAIZEN_FONT_SIZE * 0.66;
+  const textHeight = Math.max(1, lines.length) * KAIZEN_LINE_HEIGHT;
+  return {
+    width: Math.round(Math.min(1200, Math.max(150, textWidth * 2 + 50))),
+    height: Math.round(Math.min(800, Math.max(110, textHeight * 2.4 + 60))),
+  };
+}
+
 export const LIBRARY: LibraryItem[] = [
   // ── Material
   { kind: 'supplier',          label: 'Fornecedor',         group: 'material',   defaultLabel: 'Fornecedor',          defaultData: { freq: 1, color: DEFAULT_TRUCK_COLOR },           w: 170, h: 120 },
@@ -195,7 +212,7 @@ export const LIBRARY: LibraryItem[] = [
   { kind: 'arrow-info-manual-straight', label: 'Info manual reta', group: 'fluxo', defaultLabel: '', defaultData: {}, w: 0, h: 0 },
   { kind: 'arrow-info-electronic-straight', label: 'Info eletrônica reta', group: 'fluxo', defaultLabel: '', defaultData: {}, w: 0, h: 0 },
   // ── Anotação
-  { kind: 'kaizen',            label: 'Kaizen burst',       group: 'anotacao',   defaultLabel: 'Kaizen',              defaultData: {},                                               w: 78,  h: 78  },
+  { kind: 'kaizen',            label: 'Kaizen (ferramentas)', group: 'anotacao', defaultLabel: KAIZEN_DEFAULT_TEXT,        defaultData: {},                                               w: 260, h: 150 },
   { kind: 'intervention',      label: 'Ponto intervenção',  group: 'anotacao',   defaultLabel: 'Melhoria',            defaultData: {},                                               w: 70,  h: 70  },
   { kind: 'note',              label: 'Nota / Post-it',     group: 'anotacao',   defaultLabel: 'Nota...',             defaultData: {},                                               w: 120, h: 80  },
   { kind: 'timeline',          label: 'Linha do tempo',     group: 'anotacao',   defaultLabel: '',                    defaultData: { leadtime: 0, tprocess: 0 },                    w: 400, h: 70  },

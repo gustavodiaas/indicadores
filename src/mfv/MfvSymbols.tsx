@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { DEFAULT_TRUCK_COLOR, type CanvasElement } from './canvas-types';
+import { DEFAULT_TRUCK_COLOR, KAIZEN_FONT_SIZE, KAIZEN_LINE_HEIGHT, kaizenAutoSize, type CanvasElement } from './canvas-types';
 import { percentValue } from './numbers';
 import { batchSizeOf, piecesPerCycleOf } from './batch';
 import truckThreeQuarter from './assets/truck-three-quarter.png';
@@ -844,18 +844,31 @@ export function OperatorSymbol({ el, selected, onEdit, accentColor }: SymProps) 
 }
 
 // ── Kaizen burst ──────────────────────────────────────────────────────────────
+// Estrela amarela com as ferramentas dentro, uma por linha (como no MFV do Excel).
+// O tamanho acompanha o texto; a letra não distorce quando a estrela muda de tamanho.
+const KAIZEN_SPIKES = [1, 0.86, 1.08, 0.9, 1.04, 0.82, 1.1, 0.88, 1, 0.84, 1.06, 0.92];
 export function KaizenSymbol({ el, selected, onEdit }: SymProps) {
-  const r = 34;
-  const pts = Array.from({length:16},(_,i)=>{const a=(i/16)*Math.PI*2;const rad=i%2===0?r:r*.64;return `${r+4+rad*Math.cos(a)},${r+4+rad*Math.sin(a)}`;}).join(' ');
-  const label = el.label || 'Kaizen';
+  const auto = kaizenAutoSize(el.label);
+  const w = Math.min(1200, Math.max(30, Number(el.data.width) || auto.width));
+  const h = Math.min(800, Math.max(30, Number(el.data.height) || auto.height));
+  const cx = w / 2; const cy = h / 2;
+  const n = KAIZEN_SPIKES.length * 2;
+  const pts = Array.from({ length: n }, (_, i) => {
+    const a = (i / n) * Math.PI * 2 - Math.PI / 2;
+    const outer = i % 2 === 0;
+    const k = outer ? KAIZEN_SPIKES[i / 2] : 0.7;
+    return `${cx + (w / 2 - 2) * k / 1.1 * Math.cos(a)},${cy + (h / 2 - 2) * k / 1.1 * Math.sin(a)}`;
+  }).join(' ');
+  const lines = (el.label || 'Kaizen').split('\n').map((line) => line.trim()).filter(Boolean);
+  const top = cy - ((lines.length - 1) * KAIZEN_LINE_HEIGHT) / 2 + KAIZEN_FONT_SIZE * 0.35;
   return (
     <g>
-      {selected && <rect x={-2} y={-2} width={78+4} height={78+4} rx={4} fill="none" stroke="#0071e3" strokeWidth={2} strokeDasharray="4 2" opacity={0.7} />}
-      <polygon points={pts} fill={selected?'#ffe888':'#ffe04b'} stroke={sel(selected,'#b8930f')} strokeWidth={selW(selected)} />
-      {label.split('\n').map((ln,i) =>
-        <text key={i} x={r+4} y={r+2+(i-(label.split('\n').length-1)/2)*10} textAnchor="middle" fontSize={7.5} fontWeight="800" fontFamily="Arial" fill="#6b4c00">{ln}</text>
+      {selected && <SelectionRect w={w} h={h} />}
+      <polygon points={pts} fill={selected ? '#ffd24d' : '#ffc000'} stroke={sel(selected, '#c99700')} strokeWidth={selW(selected)} strokeLinejoin="round" />
+      {lines.map((ln, i) =>
+        <text key={i} x={cx} y={top + i * KAIZEN_LINE_HEIGHT} textAnchor="middle" fontSize={KAIZEN_FONT_SIZE} fontWeight="800" fontFamily="Arial" fill="#1f1a00">{ln}</text>
       )}
-      <EditBtn onEdit={onEdit} x={r*2+2} y={2} />
+      <EditBtn onEdit={onEdit} x={w - 4} y={4} />
     </g>
   );
 }
