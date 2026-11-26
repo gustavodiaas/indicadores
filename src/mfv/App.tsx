@@ -20,7 +20,7 @@ import {
   ShippingPointSymbol, SupermarketSymbol, TimelineSymbol, TruckSymbol, MACHINE_TYPES,
   WorkCellSymbol,
 } from './MfvSymbols';
-import { exportJPEG, exportPDF, exportSVG, type PaperSize } from './export';
+import { captureMapJPEG, exportJPEG, exportPDF, exportSVG, type PaperSize } from './export';
 import { cloneCanvas, syncCanvasForward } from './canvas-sync';
 import { runStressTest, type StressTestSettings } from './stress-test';
 import { batchLeadTime, batchSettings } from './batch';
@@ -2598,6 +2598,33 @@ export default function App() {
   const [reportVisible, setReportVisible] = useState(true);
   const reportRef = useRef<HTMLElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
+  const activeKindRef = useRef(activeKind);
+  activeKindRef.current = activeKind;
+
+  // O app principal (aba Relatório) pede uma foto do mapa do Estado Atual, sem o painel.
+  useEffect(() => {
+    const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+    const onMessage = async (event: MessageEvent) => {
+      if (event.origin !== window.location.origin || event.data?.type !== 'mfv-capture-current') return;
+      const reply = (message: Record<string, unknown>) =>
+        (event.source as Window | null)?.postMessage({ type: 'mfv-capture-result', requestId: event.data.requestId, ...message }, window.location.origin);
+      const hasProcesses = workspaceRef.current.current.elements.some((element) => element.kind === 'process' || element.kind === 'shared-process');
+      if (!hasProcesses) { reply({ status: 'empty' }); return; }
+      const previous = activeKindRef.current;
+      try {
+        if (previous !== 'current') { setActiveKind('current'); await wait(250); }
+        const svg = svgRef.current;
+        if (!svg) throw new Error('Mapa indisponível.');
+        reply({ status: 'ok', ...(await captureMapJPEG(svg)) });
+      } catch (error) {
+        reply({ status: 'error', error: error instanceof Error ? error.message : String(error) });
+      } finally {
+        if (previous !== 'current') setActiveKind(previous);
+      }
+    };
+    window.addEventListener('message', onMessage);
+    return () => window.removeEventListener('message', onMessage);
+  }, []);
   const leanFloatingRef = useRef<HTMLDivElement>(null);
   const dragMovedRef = useRef(false);
   const canvasClipboardRef = useRef<CanvasClipboard | null>(null);

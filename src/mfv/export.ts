@@ -69,7 +69,7 @@ async function croppedSvg(svg: SVGSVGElement) {
   return { source, width, height };
 }
 
-async function rasterize(svg: SVGSVGElement) {
+async function rasterize(svg: SVGSVGElement, maxSide = 7200) {
   const cropped = await croppedSvg(svg);
   const blob = new Blob([cropped.source], { type: 'image/svg+xml;charset=utf-8' });
   const url = URL.createObjectURL(blob);
@@ -82,7 +82,7 @@ async function rasterize(svg: SVGSVGElement) {
     });
 
     const longestSide = Math.max(cropped.width, cropped.height);
-    const scale = Math.max(1, Math.min(3, 7200 / longestSide));
+    const scale = Math.max(maxSide < 7200 ? 0.5 : 1, Math.min(3, maxSide / longestSide));
     const canvas = document.createElement('canvas');
     canvas.width = Math.ceil(cropped.width * scale);
     canvas.height = Math.ceil(cropped.height * scale);
@@ -164,6 +164,12 @@ export async function exportJPEG(svg: SVGSVGElement, filename: string, report?: 
   context.drawImage(canvas, 0, 0);
   context.drawImage(reportCanvas, 0, canvas.height + gap, canvas.width, reportHeight);
   download(combined.toDataURL('image/jpeg', 0.96), `${filename}.jpg`);
+}
+
+/** Foto só do mapa (sem o relatório da simulação), em JPEG, para o Relatório de Atendimento. */
+export async function captureMapJPEG(svg: SVGSVGElement, maxSide = 3000) {
+  const { canvas } = await rasterize(svg, maxSide);
+  return { dataUrl: canvas.toDataURL('image/jpeg', 0.92), width: canvas.width, height: canvas.height };
 }
 
 export async function exportSVG(svg: SVGSVGElement, filename: string) {

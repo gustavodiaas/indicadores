@@ -3,6 +3,7 @@
 // Regra do Departamento Nacional: só células com fundo creme (amarelo claro) podem receber valor.
 import JSZip from "jszip";
 import type { CellValue, RelatorioTarget } from "@/lib/relatorio-map";
+import { addPictureToCell } from "@/lib/xlsx-image";
 
 /** Tons de amarelo claro usados nas células editáveis do modelo. */
 export const CREAM_FILLS = new Set(["FFFFF7D6", "FFFEF2CB"]);
@@ -118,13 +119,13 @@ function locate(cells: Cell[], t: RelatorioTarget): { el: Element; ref: string; 
       : creamInRow(cells, lab.row, lab.col)[0]);
     return target ? [{ el: target.el, ref: target.ref, value: t.value }] : [];
   }
-  if (t.kind === "block") {
+  if (t.kind === "block" || t.kind === "image") {
     const title = findLabel(cells, t.label);
     if (!title) return [];
     const target = cells
       .filter(c => c.cream && c.row > title.row && c.row <= title.row + 5)
       .sort((a, b) => a.row - b.row || a.col - b.col)[0];
-    return target ? [{ el: target.el, ref: target.ref, value: t.value }] : [];
+    return target ? [{ el: target.el, ref: target.ref, value: t.kind === "block" ? t.value : "" }] : [];
   }
   const head = findLabel(cells, t.below);
   if (!head) return [];
@@ -179,10 +180,17 @@ export async function fillWorkbook(data: ArrayBuffer | Uint8Array, targets: Rela
     for (const r of results.filter(x => normalize(x.target.sheet) === sheet)) {
       const spots = locate(cells, r.target);
       r.cells = spots.map(s => s.ref);
-      spots.forEach(s => {
+      for (const s of spots) {
         written.add(s.ref);
-        if (!dryRun) { writeCell(doc, s.el, s.value); changed = true; }
-      });
+        if (dryRun) continue;
+        if (r.target.kind === "image") {
+          clearCell(s.el); // tira a instrução "Inserir imagem…" e põe a figura no lugar
+          await addPictureToCell(zip, path, doc, s.ref, r.target.image, r.target.campo);
+        } else {
+          writeCell(doc, s.el, s.value);
+        }
+        changed = true;
+      }
     }
 
     for (const c of cells) {

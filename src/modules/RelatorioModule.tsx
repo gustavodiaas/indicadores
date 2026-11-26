@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { AlertTriangle, CheckCircle2, ChevronDown, ChevronUp, Download, FileSpreadsheet, Loader2, ShieldCheck, Trash2 } from "lucide-react";
+import { AlertTriangle, CheckCircle2, ChevronDown, ChevronUp, RefreshCw, Download, FileSpreadsheet, Loader2, ShieldCheck, Trash2 } from "lucide-react";
 import { emptyRelatorio, type AppState, type RelatorioData } from "@/store/useAppStore";
-import { buildRelatorioTargets, displayValue, missingRequired, pendingTexts, relatorioLinha, relatorioMotivo, reportFileName } from "@/lib/relatorio-map";
+import { buildRelatorioTargets, mfvImageTarget, displayValue, missingRequired, pendingTexts, relatorioLinha, relatorioMotivo, reportFileName } from "@/lib/relatorio-map";
 import { fillWorkbook, type ClearedCell, type FillResult } from "@/lib/xlsx-fill";
+import { captureMfvCurrentMap, type MfvCaptureResult } from "@/lib/mfv-capture";
 import { deleteTemplate, loadTemplate, saveTemplate, type StoredTemplate } from "@/lib/template-store";
 
 interface Props {
@@ -46,7 +47,22 @@ export function RelatorioModule({ state, onChange }: Props) {
   const [cleared, setCleared] = useState<ClearedCell[]>([]);
   const [downloaded, setDownloaded] = useState(false);
 
-  const targets = useMemo(() => buildRelatorioTargets(state), [state]);
+  const [mfv, setMfv] = useState<MfvCaptureResult | null>(null);
+  const [capturing, setCapturing] = useState(false);
+  const captureMfv = async () => {
+    setCapturing(true);
+    try {
+      const result = await captureMfvCurrentMap();
+      setMfv(result);
+      return result;
+    } finally {
+      setCapturing(false);
+    }
+  };
+  useEffect(() => { void captureMfv(); }, []);
+
+  const baseTargets = useMemo(() => buildRelatorioTargets(state), [state]);
+  const targets = useMemo(() => (mfv?.status === "ok" ? [...baseTargets, mfvImageTarget(mfv.image)] : baseTargets), [baseTargets, mfv]);
 
   useEffect(() => {
     loadTemplate().then(t => { if (t) setTemplate(t); }).finally(() => setLoading(false));
@@ -90,7 +106,10 @@ export function RelatorioModule({ state, onChange }: Props) {
     setBusy(true);
     setError("");
     try {
-      const { file } = await fillWorkbook(template.data, targets);
+      // Foto atualizada do MFV no momento do download.
+      const shot = await captureMfv();
+      const finalTargets = shot.status === "ok" ? [...baseTargets, mfvImageTarget(shot.image)] : baseTargets;
+      const { file } = await fillWorkbook(template.data, finalTargets);
       if (!file) return;
       const url = URL.createObjectURL(new Blob([file as BlobPart], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
       const a = document.createElement("a");
@@ -210,6 +229,29 @@ export function RelatorioModule({ state, onChange }: Props) {
                 <Trash2 className="h-3.5 w-3.5" />
               </button>
             </span>
+          </div>
+
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4 rounded-xl border border-slate-200 dark:border-white/10 p-3">
+            <div className="shrink-0 w-full sm:w-56 h-32 rounded-lg bg-slate-50 dark:bg-[#2C2C2E] border border-slate-200 dark:border-white/10 flex items-center justify-center overflow-hidden">
+              {mfv?.status === "ok"
+                ? <img src={mfv.image.dataUrl} alt="Mapa do Estado Atual do MFV" className="max-w-full max-h-full object-contain bg-white" />
+                : capturing
+                  ? <Loader2 className="h-5 w-5 animate-spin text-slate-400" />
+                  : <span className="text-[11px] text-slate-400 px-3 text-center">Sem imagem</span>}
+            </div>
+            <div className="min-w-0 space-y-1.5">
+              <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">3.2 MFV Estado Presente</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {capturing ? "Tirando a foto do mapa do MFV…"
+                  : mfv?.status === "ok" ? "A foto do mapa do Estado Atual (sem o painel) vai para a planilha. Ela é tirada de novo ao baixar."
+                  : mfv?.status === "empty" ? "Desenhe o Estado Atual na aba MFV para a imagem ir ao relatório."
+                  : "Não consegui tirar a foto do MFV. Abra a aba MFV uma vez e tente de novo."}
+              </p>
+              <button type="button" onClick={() => void captureMfv()} disabled={capturing}
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-[#1D4ED8] dark:text-[#60A5FA] hover:underline disabled:opacity-50">
+                <RefreshCw className="h-3.5 w-3.5" /> Atualizar foto
+              </button>
+            </div>
           </div>
 
           {previewing && preview.length === 0 ? (

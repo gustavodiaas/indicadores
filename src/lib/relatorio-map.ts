@@ -7,6 +7,7 @@ import {
 } from "@/store/useAppStore";
 import { buildConclusao, buildDescricao } from "@/lib/resumo-textos";
 import { buildLaudoPayback, buildLaudoProdutividade } from "@/lib/laudos";
+import type { SheetImage } from "@/lib/xlsx-image";
 
 export type CellValue = string | number;
 
@@ -51,7 +52,23 @@ export interface BlockTarget {
   origem: string;
 }
 
-export type RelatorioTarget = LabelTarget | SlotTarget | BlockTarget;
+/** Imagem colocada na área creme logo abaixo de um título (ex.: "3.2 MFV Estado Presente"). */
+export interface ImageTarget {
+  kind: "image";
+  id: string;
+  sheet: string;
+  label: string;
+  image: SheetImage;
+  campo: string;
+  origem: string;
+}
+
+export type RelatorioTarget = LabelTarget | SlotTarget | BlockTarget | ImageTarget;
+
+/** Foto do mapa do Estado Atual do MFV no item 3.2. */
+export function mfvImageTarget(image: SheetImage): ImageTarget {
+  return { kind: "image", id: "mfvAtual", sheet: REL, label: "MFV Estado Presente", image, campo: "3.2 MFV Estado Presente", origem: "MFV (Estado Atual)" };
+}
 
 const DG = "DADOS GERAIS";
 const RES = "RESUMO";
@@ -237,6 +254,7 @@ export function reportFileName(s: AppState, templateName: string): string {
 }
 
 export function displayValue(t: RelatorioTarget): string {
+  if (t.kind === "image") return "Imagem do mapa (Estado Atual)";
   if (t.kind === "block") return t.value.length > 160 ? `${t.value.slice(0, 160).trimEnd()}…` : t.value;
   if (t.kind === "label" && t.id.startsWith("data") && typeof t.value === "number") {
     return new Date(Date.UTC(1899, 11, 30) + t.value * 86400000).toLocaleDateString("pt-BR", { timeZone: "UTC" });

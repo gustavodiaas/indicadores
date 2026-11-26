@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import ExcelJS from "exceljs";
 import { fillWorkbook } from "./xlsx-fill";
-import { buildRelatorioTargets, excelDate, missingRequired, pendingTexts, reportFileName, splitEndereco, type RelatorioTarget } from "./relatorio-map";
+import JSZip from "jszip";
+import { buildRelatorioTargets, mfvImageTarget, excelDate, missingRequired, pendingTexts, reportFileName, splitEndereco, type RelatorioTarget } from "./relatorio-map";
 import { defaultState } from "@/store/useAppStore";
 import { buildConclusao, buildDescricao } from "./resumo-textos";
 import { buildLaudoPayback, buildLaudoProdutividade } from "./laudos";
@@ -35,7 +36,9 @@ async function fakeTemplate() {
   const rel = wb.addWorksheet("RELATÓRIO");
   rel.getCell("B4").value = "3.1"; rel.getCell("C4").value = "Descrição do processo produtivo";
   rel.getCell("B5").fill = CREAM; rel.getCell("B5").value = "Descreva o processo produtivo visualizado.";
+  rel.getCell("B7").value = "3.2"; rel.getCell("C7").value = "MFV Estado Presente";
   rel.getCell("B8").fill = CREAM; rel.getCell("B8").value = "Inserir imagem do MFV Estado Presente.";
+  rel.mergeCells("B8:G9");
   rel.getCell("C65").value = "Ferramentas utilizadas";
   rel.getCell("B66").fill = CREAM; rel.getCell("C66").value = "Mapa de Fluxo de Valor";
   rel.getCell("B67").fill = CREAM; rel.getCell("C67").value = "Poka Yoke"; rel.getCell("B67").value = "X";
@@ -189,6 +192,31 @@ describe("Relatório de atendimento", () => {
     // Texto editado no Relatório substitui o do Resumo.
     s.relatorio = { ...s.relatorio, linha: "Linha editada", motivo: "" };
     expect(missingRequired(s)).toEqual(["Motivo para a seleção da linha"]);
+  });
+
+  it("places the MFV map picture in 3.2 without touching other parts", async () => {
+    const image = { data: new Uint8Array([0xff, 0xd8, 0xff, 0xd9]), width: 1600, height: 900 };
+    const { results, file } = await fillWorkbook(await fakeTemplate(), [mfvImageTarget(image)]);
+    expect(results[0].cells).toEqual(["B8"]);
+    const zip = await JSZip.loadAsync(file!);
+    const media = Object.keys(zip.files).filter(f => /^xl\/media\/image\d+\.jpeg$/.test(f));
+    expect(media).toHaveLength(1);
+    expect(await zip.file("[Content_Types].xml")!.async("string")).toContain(`Extension="jpeg"`);
+    const sheet = await zip.file("xl/worksheets/sheet2.xml")!.async("string");
+    const rels = await zip.file("xl/worksheets/_rels/sheet2.xml.rels")!.async("string");
+    const drawingTarget = /Type="[^"]*\/drawing" Target="\.\.\/drawings\/(drawing\d+\.xml)"/.exec(rels)?.[1];
+    expect(drawingTarget).toBeTruthy();
+    expect(sheet).toMatch(/<drawing r:id="rId\d+"\/>/);
+    const drawing = await zip.file(`xl/drawings/${drawingTarget}`)!.async("string");
+    expect(drawing).toContain("<xdr:pic>");
+    // Dentro da área B8:G9 (colunas 1 a 6 e linhas 7 a 8, contadas a partir de 0).
+    const [fromCol, fromRow] = [...drawing.matchAll(/<xdr:from><xdr:col>(\d+)<\/xdr:col><xdr:colOff>\d+<\/xdr:colOff><xdr:row>(\d+)</g)][0].slice(1).map(Number);
+    const [toCol, toRow] = [...drawing.matchAll(/<xdr:to><xdr:col>(\d+)<\/xdr:col><xdr:colOff>\d+<\/xdr:colOff><xdr:row>(\d+)</g)][0].slice(1).map(Number);
+    expect([fromCol >= 1, toCol <= 6, fromRow >= 7, toRow <= 8]).toEqual([true, true, true, true]);
+    const dRels = await zip.file(`xl/drawings/_rels/${drawingTarget}.rels`)!.async("string");
+    expect(dRels).toContain(media[0].replace("xl/", "../"));
+    const wb = await readBack(file!);
+    expect(wb.getWorksheet("RELATÓRIO")!.getCell("B8").value).toBeNull(); // instrução substituída pela figura
   });
 
   it("skips empty data and splits clear addresses only", () => {
