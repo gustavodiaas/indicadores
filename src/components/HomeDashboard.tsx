@@ -1,8 +1,13 @@
 import { useState } from "react";
-import { ArrowUpRight, Search, X, LockKeyhole, SunMedium, MoonStar, Monitor, Check, FileUp, MapPin, FileText, TrendingUp, TrendingDown } from "lucide-react";
+import { ArrowUpRight, Search, X, LockKeyhole, Trash2, SunMedium, MoonStar, Monitor, Check, FileUp, MapPin, FileText, TrendingUp, TrendingDown } from "lucide-react";
 import { moduleGroups, navigationModules } from "@/lib/module-navigation";
 import { buildResults, isModuleFilled, trackedModules } from "@/lib/project-status";
 import type { AppState, ModuleKey } from "@/store/useAppStore";
+import { requestWipe } from "@/lib/wipe";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription,
+  AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 type Theme = "light" | "dark" | "system";
 interface Props {
@@ -28,6 +33,39 @@ function ThemeSwitch({ theme, onThemeChange }: Pick<Props, "theme" | "onThemeCha
         ))}
       </div>
     </fieldset>
+  );
+}
+
+function EraseDataButton() {
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <button className="inline-flex items-center justify-center gap-2 rounded-xl bg-rose-600 px-4 py-2.5 text-xs font-semibold text-white shadow-[0_4px_14px_rgba(225,29,72,0.25)] hover:bg-rose-700 transition-colors active:scale-[0.98]">
+          <Trash2 aria-hidden="true" className="h-4 w-4" /> Apagar dados
+        </button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Apagar todos os dados deste navegador?</AlertDialogTitle>
+          <AlertDialogDescription asChild>
+            <div className="space-y-3 text-sm text-muted-foreground">
+              <p>Serão apagados:</p>
+              <ul className="list-disc pl-5 space-y-1">
+                <li>os dados do projeto em todas as abas (Proposta, Resumo, indicadores, 5W2H, A3, GBO e Relatório);</li>
+                <li>a planilha do relatório carregada;</li>
+                <li>o mapa e os projetos salvos do MFV;</li>
+                <li>as atividades e os vídeos carregados no Gantt.</li>
+              </ul>
+              <p className="font-medium text-rose-600 dark:text-rose-400">Não dá para desfazer. Se quiser guardar uma cópia, cancele e use “Salvar” na barra de cima de qualquer módulo.</p>
+            </div>
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogAction onClick={() => { void requestWipe(); }} className="bg-rose-600 text-white hover:bg-rose-700">Apagar tudo</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
 
@@ -142,7 +180,10 @@ export function HomeDashboard({ onSelect, theme, onThemeChange, state }: Props) 
           <h1 className="text-3xl md:text-[40px] leading-tight font-semibold tracking-[-0.04em]">Seu espaço de análise.</h1>
           <p className="mt-3 text-sm md:text-base leading-relaxed text-muted-foreground">Do diagnóstico aos resultados: encontre as ferramentas para cada etapa do seu projeto.</p>
         </div>
-        <ThemeSwitch theme={theme} onThemeChange={onThemeChange} />
+        <div className="flex flex-wrap items-end gap-4">
+          <ThemeSwitch theme={theme} onThemeChange={onThemeChange} />
+          <EraseDataButton />
+        </div>
       </header>
 
       {state && <ProjectPanel state={state} onSelect={onSelect} />}
